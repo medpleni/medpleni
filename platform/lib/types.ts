@@ -1,12 +1,14 @@
 /**
  * MedPleni — Types
- * Tipagens globais do sistema
+ * Interfaces TypeScript para todos os dados do sistema
  */
 
-// ── Sub-brands ──────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// ENUMS & UNIONS
+// ══════════════════════════════════════════════════════════
+
 export type SubBrand = "RESID" | "ENAMED" | "REVALIDA" | "ESPECIALISTA";
 
-// ── Provas-alvo ─────────────────────────────────────────────────────
 export type ProvAlvo =
   | "USP"
   | "UNIFESP"
@@ -18,70 +20,84 @@ export type ProvAlvo =
   | "HC-UFMG"
   | "ENARE"
   | "REVALIDA"
-  | "ENADE";
+  | "ENAMED";
 
-// ── Especialidades / Áreas ──────────────────────────────────────────
 export type Area =
   | "Clínica Médica"
-  | "Saúde Coletiva"
   | "Cirurgia Geral"
+  | "Saúde Coletiva"
   | "Pediatria"
   | "Ginecologia e Obstetrícia"
   | "Psiquiatria"
   | "Urgência e Emergência"
   | "Cardiologia"
   | "Neurologia"
-  | "Pneumologia";
+  | "Pneumologia"
+  | "Infectologia"
+  | "Endocrinologia"
+  | "Reumatologia"
+  | "Gastroenterologia";
 
-// ── Planos ──────────────────────────────────────────────────────────
 export type Plano = "diagnostico" | "residente" | "aprovacao";
 
-// ── Status de performance ────────────────────────────────────────────
 export type PerformanceStatus = "excelente" | "bom" | "atencao" | "critico";
 
-// ── Dificuldade ─────────────────────────────────────────────────────
 export type Dificuldade = "facil" | "media" | "alta" | "muito-alta";
 
-// ── Status da questão no simulado ────────────────────────────────────
 export type QuestaoStatus = "pendente" | "respondida" | "pulada" | "atual";
 
-// ── Confiança do candidato ───────────────────────────────────────────
-export type NivelConfianca = 1 | 2 | 3;
+export type NivelConfianca = 1 | 2 | 3 | 4 | 5;
 
-// ── Usuário ──────────────────────────────────────────────────────────
+export type SimuladoStatus = "nao_iniciado" | "em_andamento" | "concluido";
+
+export type HeatmapIntensidade = 0 | 1 | 2 | 3 | 4 | 5;
+
+// ══════════════════════════════════════════════════════════
+// ENTITIES
+// ══════════════════════════════════════════════════════════
+
+/** Usuário logado */
 export interface Usuario {
   id: string;
   nome: string;
   email: string;
   crm?: string;
   plano: Plano;
-  provaAlvo: ProvAlvo;
+  provaAlvo: ProvAlvo[];
   subBrand: SubBrand;
   avatarUrl?: string;
+  iniciais: string;
   streakDias: number;
   dataProva?: string;
 }
 
-// ── KPIs do Dashboard ────────────────────────────────────────────────
+/** KPIs do Dashboard */
 export interface DashboardKPIs {
-  predicaoAprovacao: number; // 0-100
+  predicaoAprovacao: number;
   simuladosRealizados: number;
-  taxaAcerto: number; // 0-100
+  taxaAcerto: number;
   streakDias: number;
-  rankingNacional?: number;
+  rankingNacional: number;
 }
 
-// ── Desempenho por área ──────────────────────────────────────────────
+/** Desempenho por área */
 export interface DesempenhoArea {
   area: Area;
-  percentualAcerto: number; // 0-100
+  percentualAcerto: number;
   status: PerformanceStatus;
   totalQuestoes: number;
 }
 
-// ── Questão ──────────────────────────────────────────────────────────
+/** Alternativa de questão */
+export interface Alternativa {
+  letra: "A" | "B" | "C" | "D" | "E";
+  texto: string;
+}
+
+/** Questão completa */
 export interface Questao {
   id: string;
+  numero?: number;
   enunciado: string;
   contextoClinico?: string;
   alternativas: Alternativa[];
@@ -91,15 +107,11 @@ export interface Questao {
   dificuldade: Dificuldade;
   instituicao: ProvAlvo;
   ano: number;
-  explicacao?: string;
+  explicacao: string;
+  tags?: string[];
 }
 
-export interface Alternativa {
-  letra: "A" | "B" | "C" | "D" | "E";
-  texto: string;
-}
-
-// ── Simulado ─────────────────────────────────────────────────────────
+/** Simulado */
 export interface Simulado {
   id: string;
   titulo: string;
@@ -107,23 +119,25 @@ export interface Simulado {
   area: Area;
   totalQuestoes: number;
   duracaoMinutos: number;
-  status: "nao_iniciado" | "em_andamento" | "concluido";
+  status: SimuladoStatus;
   percentualAcerto?: number;
   dataRealizacao?: string;
+  descricao?: string;
 }
 
-// ── Flashcard ────────────────────────────────────────────────────────
+/** Flashcard */
 export interface Flashcard {
   id: string;
   frente: string;
   verso: string;
   area: Area;
+  subarea: string;
   proximaRevisao: string;
   intervaloDias: number;
   facilidade: number;
 }
 
-// ── Recomendação IA ──────────────────────────────────────────────────
+/** Recomendação da IA */
 export interface Recomendacao {
   rank: number;
   titulo: string;
@@ -131,14 +145,41 @@ export interface Recomendacao {
   area: Area;
   status: PerformanceStatus;
   totalQuestoes: number;
-  impactoEstimado: number; // pp de ganho na predição
+  impactoEstimado: number;
+  dificuldade: Dificuldade;
 }
 
-// ── Heatmap ─────────────────────────────────────────────────────────
-export type HeatmapIntensidade = 0 | 1 | 2 | 3 | 4 | 5;
-
+/** Célula do heatmap */
 export interface HeatmapCell {
-  dia: string;
   area: Area;
+  dia: string; // "SEG" | "TER" etc.
   intensidade: HeatmapIntensidade;
+}
+
+/** Linha do heatmap (área + 7 dias) */
+export interface HeatmapRow {
+  area: string;
+  dias: HeatmapIntensidade[];
+}
+
+/** Ponto de evolução de score */
+export interface ScorePoint {
+  simulado: string;
+  score: number;
+}
+
+/** Bloco de cronograma */
+export interface BlocoEstudo {
+  horario: string;
+  area: Area;
+  tipo: "simulado" | "questoes" | "revisao" | "flashcards" | "descanso";
+  duracao: string;
+  descricao: string;
+}
+
+/** Dia do cronograma */
+export interface DiaEstudo {
+  dia: string;
+  diaSemana: string;
+  blocos: BlocoEstudo[];
 }

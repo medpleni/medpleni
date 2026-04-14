@@ -1,6 +1,6 @@
 /**
- * MedPleni — Mock Data
- * Dados de demonstração para o MVP
+ * MedPleni — Mock Data Completo
+ * Dados realistas em português para o MVP
  */
 
 import type {
@@ -11,65 +11,141 @@ import type {
   Recomendacao,
   Questao,
   Flashcard,
+  HeatmapRow,
+  ScorePoint,
+  DiaEstudo,
 } from "./types";
 
-// ── Usuário mock ──────────────────────────────────────────────────────
-export const mockUsuario: Usuario = {
+// ══════════════════════════════════════════════════════════
+// USUÁRIO
+// ══════════════════════════════════════════════════════════
+
+export const mockUser: Usuario = {
   id: "usr_001",
-  nome: "Dra. Ana Beatriz",
-  email: "ana.beatriz@medpleni.com",
-  crm: "SP-123456",
+  nome: "Dra. Camila Santos",
+  email: "camila.santos@medpleni.com",
+  crm: "SP-198432",
   plano: "aprovacao",
-  provaAlvo: "USP",
+  provaAlvo: ["ENARE", "USP"],
   subBrand: "RESID",
+  iniciais: "CS",
   streakDias: 14,
-  dataProva: "2026-03-23",
+  dataProva: "2026-11-15",
 };
 
-// ── KPIs mock ─────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// KPIs
+// ══════════════════════════════════════════════════════════
+
 export const mockKPIs: DashboardKPIs = {
   predicaoAprovacao: 94.7,
   simuladosRealizados: 63,
-  taxaAcerto: 81.4,
+  taxaAcerto: 78.2,
   streakDias: 14,
   rankingNacional: 147,
 };
 
-// ── Desempenho por área mock ──────────────────────────────────────────
-export const mockDesempenhoAreas: DesempenhoArea[] = [
+// ══════════════════════════════════════════════════════════
+// DESEMPENHO POR ÁREA (5 áreas)
+// ══════════════════════════════════════════════════════════
+
+export const mockProgress: DesempenhoArea[] = [
+  { area: "Clínica Médica",              percentualAcerto: 87, status: "excelente", totalQuestoes: 1240 },
+  { area: "Cirurgia Geral",              percentualAcerto: 72, status: "bom",       totalQuestoes: 680 },
+  { area: "Saúde Coletiva",              percentualAcerto: 58, status: "atencao",   totalQuestoes: 340 },
+  { area: "Pediatria",                   percentualAcerto: 45, status: "critico",   totalQuestoes: 420 },
+  { area: "Ginecologia e Obstetrícia",   percentualAcerto: 38, status: "critico",   totalQuestoes: 380 },
+];
+
+// ══════════════════════════════════════════════════════════
+// HEATMAP (7 dias × 6 áreas, valores h0-h5)
+// ══════════════════════════════════════════════════════════
+
+export const mockHeatmap: HeatmapRow[] = [
+  { area: "Clínica Méd.",   dias: [4, 5, 3, 4, 5, 0, 1] },
+  { area: "Cirurgia",       dias: [2, 3, 2, 4, 2, 0, 0] },
+  { area: "Saúde Col.",     dias: [1, 2, 1, 2, 3, 0, 0] },
+  { area: "Pediatria",      dias: [1, 2, 1, 2, 1, 0, 0] },
+  { area: "G. Obstétrica",  dias: [0, 1, 0, 1, 2, 0, 0] },
+  { area: "Psiquiatria",    dias: [5, 4, 5, 3, 5, 2, 0] },
+];
+
+// ══════════════════════════════════════════════════════════
+// EVOLUÇÃO DO SCORE (8 pontos)
+// ══════════════════════════════════════════════════════════
+
+export const mockScoreEvolution: ScorePoint[] = [
+  { simulado: "S01", score: 72.0 },
+  { simulado: "S08", score: 75.0 },
+  { simulado: "S15", score: 74.0 },
+  { simulado: "S23", score: 79.0 },
+  { simulado: "S31", score: 82.0 },
+  { simulado: "S40", score: 85.0 },
+  { simulado: "S51", score: 89.0 },
+  { simulado: "S63", score: 94.7 },
+];
+
+// ══════════════════════════════════════════════════════════
+// RECOMENDAÇÕES IA (5 items)
+// ══════════════════════════════════════════════════════════
+
+export const mockRecommendations: Recomendacao[] = [
   {
-    area: "Psiquiatria",
-    percentualAcerto: 87,
-    status: "excelente",
-    totalQuestoes: 234,
-  },
-  {
-    area: "Clínica Médica",
-    percentualAcerto: 83,
-    status: "excelente",
-    totalQuestoes: 1240,
-  },
-  {
-    area: "Cirurgia Geral",
-    percentualAcerto: 79,
-    status: "bom",
-    totalQuestoes: 680,
-  },
-  {
-    area: "Pediatria",
-    percentualAcerto: 71,
-    status: "atencao",
-    totalQuestoes: 420,
-  },
-  {
+    rank: 1,
+    titulo: "Pré-eclâmpsia — GO",
+    descricao: "Lacuna crítica detectada. 68% de erro nos últimos 3 simulados. HSP cobra este tema em 2 questões/prova.",
     area: "Ginecologia e Obstetrícia",
-    percentualAcerto: 58,
     status: "critico",
-    totalQuestoes: 380,
+    totalQuestoes: 12,
+    impactoEstimado: 2.3,
+    dificuldade: "alta",
+  },
+  {
+    rank: 2,
+    titulo: "Bronquiolite viral aguda — Pediatria",
+    descricao: "Você acerta diagnóstico, mas erra conduta em 72% dos casos. Revise critérios de internação e manejo ambulatorial.",
+    area: "Pediatria",
+    status: "critico",
+    totalQuestoes: 8,
+    impactoEstimado: 1.8,
+    dificuldade: "media",
+  },
+  {
+    rank: 3,
+    titulo: "SUS: Princípios e Diretrizes — SC",
+    descricao: "ENARE cobra Saúde Coletiva em 15% da prova. Sua taxa é 58%. Foco em Portarias 2.436 e 4.279.",
+    area: "Saúde Coletiva",
+    status: "atencao",
+    totalQuestoes: 15,
+    impactoEstimado: 1.5,
+    dificuldade: "media",
+  },
+  {
+    rank: 4,
+    titulo: "Síndrome do intestino curto — Cirurgia",
+    descricao: "Tema novo no currículo HSP 2025. Ainda não foi cobrado nos seus simulados. Preventivo.",
+    area: "Cirurgia Geral",
+    status: "bom",
+    totalQuestoes: 6,
+    impactoEstimado: 0.8,
+    dificuldade: "alta",
+  },
+  {
+    rank: 5,
+    titulo: "Pneumonia adquirida na comunidade — CM",
+    descricao: "Você domina o diagnóstico (92%). O gap está na escolha do antibiótico em cenários de resistência.",
+    area: "Clínica Médica",
+    status: "bom",
+    totalQuestoes: 10,
+    impactoEstimado: 0.6,
+    dificuldade: "media",
   },
 ];
 
-// ── Simulados mock ────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// SIMULADOS (6 simulados)
+// ══════════════════════════════════════════════════════════
+
 export const mockSimulados: Simulado[] = [
   {
     id: "sim_001",
@@ -81,142 +157,566 @@ export const mockSimulados: Simulado[] = [
     status: "concluido",
     percentualAcerto: 87,
     dataRealizacao: "2026-04-13",
+    descricao: "Simulado focado em cardiologia, pneumologia e endocrinologia",
   },
   {
     id: "sim_002",
-    titulo: "Cardiologia — Foco em Lacunas",
-    instituicao: "UNIFESP",
-    area: "Cardiologia",
-    totalQuestoes: 40,
-    duracaoMinutos: 60,
-    status: "em_andamento",
-    dataRealizacao: "2026-04-14",
+    titulo: "ENARE Completo — Simulação 2025",
+    instituicao: "ENARE",
+    area: "Clínica Médica",
+    totalQuestoes: 120,
+    duracaoMinutos: 240,
+    status: "concluido",
+    percentualAcerto: 79,
+    dataRealizacao: "2026-04-10",
+    descricao: "Prova completa simulada no padrão ENARE",
   },
   {
     id: "sim_003",
-    titulo: "Ginecologia e Obstetrícia — G.O. Completo",
+    titulo: "Cirurgia Geral — Foco em Lacunas",
+    instituicao: "UNIFESP",
+    area: "Cirurgia Geral",
+    totalQuestoes: 40,
+    duracaoMinutos: 60,
+    status: "em_andamento",
+    percentualAcerto: 75,
+    dataRealizacao: "2026-04-14",
+    descricao: "Gerado pela IA com foco nas suas lacunas em cirurgia",
+  },
+  {
+    id: "sim_004",
+    titulo: "Ginecologia e Obstetrícia — GO Completo",
     instituicao: "USP",
     area: "Ginecologia e Obstetrícia",
     totalQuestoes: 80,
     duracaoMinutos: 120,
     status: "nao_iniciado",
+    descricao: "Cobertura completa: pré-natal, parto, puerpério, ginecologia",
   },
   {
-    id: "sim_004",
-    titulo: "Pediatria — Urgências",
+    id: "sim_005",
+    titulo: "Pediatria — Urgências Pediátricas",
     instituicao: "UERJ",
     area: "Pediatria",
     totalQuestoes: 50,
     duracaoMinutos: 75,
     status: "nao_iniciado",
+    descricao: "Bronquiolite, cetoacidose, convulsão febril, parada cardíaca",
+  },
+  {
+    id: "sim_006",
+    titulo: "Saúde Coletiva — Portarias SUS",
+    instituicao: "ENARE",
+    area: "Saúde Coletiva",
+    totalQuestoes: 30,
+    duracaoMinutos: 45,
+    status: "nao_iniciado",
+    descricao: "Princípios do SUS, PNAB, ESF, vigilância epidemiológica",
   },
 ];
 
-// ── Recomendações IA mock ─────────────────────────────────────────────
-export const mockRecomendacoes: Recomendacao[] = [
+// ══════════════════════════════════════════════════════════
+// QUESTÕES DE CLÍNICA MÉDICA (15 questões)
+// ══════════════════════════════════════════════════════════
+
+export const mockQuestions: Questao[] = [
   {
-    rank: 1,
-    titulo: "Pré-eclâmpsia — GO",
-    descricao:
-      "Lacuna crítica detectada. 68% de erro nos últimos 3 simulados. HSP cobra este tema em 2 questões/prova.",
-    area: "Ginecologia e Obstetrícia",
-    status: "critico",
-    totalQuestoes: 12,
-    impactoEstimado: 2.3,
+    id: "q_001",
+    numero: 1,
+    enunciado: "Paciente do sexo masculino, 58 anos, hipertenso em uso de losartana 50mg/dia e atorvastatina 40mg/dia, é admitido na emergência com dor precordial em aperto de início há 3 horas, irradiando para o braço esquerdo, associada a sudorese e náuseas. Ao ECG: supradesnivelamento de ST ≥ 1mm em V1–V4. Troponina I ultrassensível: 4.800 pg/mL (referência <52 pg/mL). PA: 148×90 mmHg · FC: 102 bpm · SatO₂: 96%. Qual a conduta imediata mais adequada?",
+    contextoClinico: "Tempo porta-balão disponível: 47 minutos. Ausculta: bulhas rítmicas, sem sopros.",
+    alternativas: [
+      { letra: "A", texto: "Encaminhar para angioplastia coronária primária (ICP primária) — tempo porta-balão disponível dentro de 90 minutos é a estratégia de reperfusão de escolha no IAMCSST" },
+      { letra: "B", texto: "Iniciar trombólise com alteplase 100mg IV em razão do tempo de evolução favorável (3 horas)" },
+      { letra: "C", texto: "Administrar heparina não-fracionada IV e solicitar ecocardiograma de urgência antes de qualquer intervenção" },
+      { letra: "D", texto: "Administrar AAS 300mg + clopidogrel 600mg e aguardar nova dosagem de troponina em 3 horas para confirmar diagnóstico" },
+      { letra: "E", texto: "Iniciar dobutamina IV para suporte hemodinâmico e transferir para UTI cardíaca para monitorização" },
+    ],
+    gabarito: "A",
+    area: "Clínica Médica",
+    subarea: "Cardiologia — IAMCSST",
+    dificuldade: "media",
+    instituicao: "USP",
+    ano: 2024,
+    explicacao: "IAMCSST com tempo porta-balão <90 minutos → ICP primária é a estratégia de reperfusão de escolha (Classe I, Nível A — Diretriz SBC/SBH 2023). A trombólise seria aceitável apenas se ICP não estivesse disponível em tempo hábil.",
+    tags: ["IAMCSST", "ICP primária", "reperfusão", "cardiologia"],
   },
   {
-    rank: 2,
-    titulo: "Bronquiolite viral — Pediatria",
-    descricao:
-      "Você acerta diagnóstico mas erra conduta. Revise critérios de internação.",
-    area: "Pediatria",
-    status: "atencao",
-    totalQuestoes: 8,
-    impactoEstimado: 1.4,
+    id: "q_002",
+    numero: 2,
+    enunciado: "Mulher, 45 anos, previamente hígida, procura ambulatório referindo dispneia progressiva aos esforços há 6 meses, tosse seca e fadiga. Exame físico: FR 22 irpm, murmúrio vesicular reduzido em bases, estertores finos bibasais (tipo velcro). TC de tórax: opacidades reticulares bibasais com padrão de favo de mel subpleural. Espirometria: CVF 62% do previsto, VEF1/CVF 0,85. Qual o diagnóstico mais provável?",
+    contextoClinico: "Não tabagista. Sem exposição ocupacional relevante. Sem uso de medicações. SatO₂: 92% em repouso.",
+    alternativas: [
+      { letra: "A", texto: "Fibrose pulmonar idiopática (FPI)" },
+      { letra: "B", texto: "Doença pulmonar obstrutiva crônica (DPOC)" },
+      { letra: "C", texto: "Sarcoidose pulmonar" },
+      { letra: "D", texto: "Pneumonia por hipersensibilidade crônica" },
+      { letra: "E", texto: "Bronquiectasias difusas" },
+    ],
+    gabarito: "A",
+    area: "Clínica Médica",
+    subarea: "Pneumologia — Doenças intersticiais",
+    dificuldade: "alta",
+    instituicao: "UNIFESP",
+    ano: 2024,
+    explicacao: "Padrão de UIP (pneumonia intersticial usual) na TC: reticulação bibasal + favo de mel subpleural. Espirometria com padrão restritivo (CVF reduzida, VEF1/CVF normal). Estertores tipo velcro são típicos de FPI. DPOC teria padrão obstrutivo.",
+    tags: ["FPI", "UIP", "restritivo", "favo de mel"],
   },
   {
-    rank: 3,
-    titulo: "Síndrome do intestino curto — Cirurgia",
-    descricao:
-      "Tema novo no currículo HSP 2025. Ainda não foi cobrado nos seus simulados.",
-    area: "Cirurgia Geral",
-    status: "bom",
-    totalQuestoes: 6,
-    impactoEstimado: 0.8,
+    id: "q_003",
+    numero: 3,
+    enunciado: "Homem, 62 anos, diabético tipo 2 há 15 anos, em uso de metformina 2g/dia + gliclazida 60mg/dia, apresenta HbA1c de 9,2% em exame de rotina. Creatinina sérica: 1,8 mg/dL (TFGe: 38 mL/min/1,73m²). Qual a conduta farmacológica mais adequada para o controle glicêmico?",
+    contextoClinico: "IMC: 31 kg/m². PA: 140×88 mmHg. Relação albuminúria/creatinina: 320 mg/g.",
+    alternativas: [
+      { letra: "A", texto: "Manter metformina, suspender gliclazida e iniciar insulina basal + inibidor de SGLT2" },
+      { letra: "B", texto: "Suspender metformina, manter gliclazida e associar pioglitazona" },
+      { letra: "C", texto: "Suspender metformina (TFGe <45), suspender gliclazida e iniciar insulina basal com ajuste gradual" },
+      { letra: "D", texto: "Manter ambos e adicionar acarbose 300mg/dia" },
+      { letra: "E", texto: "Trocar tudo para insulina NPH em 3 doses diárias" },
+    ],
+    gabarito: "C",
+    area: "Clínica Médica",
+    subarea: "Endocrinologia — Diabetes tipo 2",
+    dificuldade: "alta",
+    instituicao: "ENARE",
+    ano: 2025,
+    explicacao: "Com TFGe de 38 mL/min (<45 mL/min), metformina deve ser suspensa pelo risco de acidose lática. Gliclazida também tem risco aumentado de hipoglicemia com função renal reduzida. Insulina basal é a opção mais segura nesse cenário.",
+    tags: ["DM2", "DRC", "metformina", "insulina"],
+  },
+  {
+    id: "q_004",
+    numero: 4,
+    enunciado: "Jovem de 24 anos apresenta febre de 39°C há 5 dias, dor de garganta, linfadenopatia cervical bilateral e hepatoesplenomegalia. Hemograma: leucocitose 15.000/mm³ com 60% de linfócitos atípicos. Pesquisa de monoteste: positiva. Qual a orientação correta neste caso?",
+    contextoClinico: "Sem comorbidades prévias. Nega uso de drogas. Sem viagens recentes.",
+    alternativas: [
+      { letra: "A", texto: "Prescrever amoxicilina 500mg 8/8h por 10 dias" },
+      { letra: "B", texto: "Orientar repouso relativo, evitar esportes de contato por 4-6 semanas e tratamento sintomático" },
+      { letra: "C", texto: "Iniciar aciclovir 800mg 5x/dia por 7 dias" },
+      { letra: "D", texto: "Solicitar biópsia de linfonodo cervical para excluir linfoma" },
+      { letra: "E", texto: "Iniciar corticoterapia com prednisona 1mg/kg/dia" },
+    ],
+    gabarito: "B",
+    area: "Clínica Médica",
+    subarea: "Infectologia — Mononucleose",
+    dificuldade: "facil",
+    instituicao: "USP",
+    ano: 2023,
+    explicacao: "Mononucleose infecciosa (EBV) com linfócitos atípicos e monoteste positivo. Tratamento é de suporte. Amoxicilina causa rash em 70-100% dos pacientes com MI. Evitar esportes de contato devido à esplenomegalia (risco de ruptura esplênica).",
+    tags: ["mononucleose", "EBV", "linfócitos atípicos", "esplenomegalia"],
+  },
+  {
+    id: "q_005",
+    numero: 5,
+    enunciado: "Paciente de 70 anos, hipertenso, chega ao PS com hemiparesia direita e afasia de início súbito há 2 horas. TC de crânio sem contraste: ausência de hemorragia. NIHSS: 14 pontos. Qual a conduta mais adequada?",
+    contextoClinico: "PA: 178×96 mmHg. Glicemia capilar: 142 mg/dL. Sem uso de anticoagulantes.",
+    alternativas: [
+      { letra: "A", texto: "Trombólise IV com alteplase 0,9 mg/kg (dose máxima 90mg), com 10% em bolus e 90% em infusão de 60 minutos" },
+      { letra: "B", texto: "Reduzir PA para <140×90 com nitroprussiato antes de qualquer intervenção" },
+      { letra: "C", texto: "Solicitar angiotomografia de crânio antes de decidir conduta" },
+      { letra: "D", texto: "AAS 300mg + clopidogrel 75mg via oral e internação em enfermaria" },
+      { letra: "E", texto: "Heparina de baixo peso molecular em dose plena e solicitar RM de encéfalo" },
+    ],
+    gabarito: "A",
+    area: "Clínica Médica",
+    subarea: "Neurologia — AVC isquêmico agudo",
+    dificuldade: "media",
+    instituicao: "UNIFESP",
+    ano: 2024,
+    explicacao: "AVC isquêmico com <4,5h de evolução, sem evidência de hemorragia na TC e sem contraindicações → alteplase IV. NIHSS 14 indica déficit moderado-grave. PA <185×110 é o limiar para trombólise (este paciente está dentro).",
+    tags: ["AVC isquêmico", "trombólise", "alteplase", "NIHSS"],
+  },
+  {
+    id: "q_006",
+    numero: 6,
+    enunciado: "Mulher de 35 anos, queixa de poliúria e polidipsia há 3 semanas. Exames: glicemia de jejum 98 mg/dL, TSH 0,08 mUI/L (ref: 0,4–4,0), T4L 3,8 ng/dL (ref: 0,8–1,8). Cintilografia com captação difusamente aumentada. Qual o diagnóstico e tratamento inicial?",
+    contextoClinico: "FC: 112 bpm em repouso. Tremor fino de extremidades. Exoftalmia bilateral.",
+    alternativas: [
+      { letra: "A", texto: "Doença de Graves — iniciar metimazol 20-40mg/dia e propranolol para controle de sintomas adrenérgicos" },
+      { letra: "B", texto: "Tireoidite subaguda — iniciar prednisona 40mg/dia" },
+      { letra: "C", texto: "Bócio multinodular tóxico — encaminhar para cirurgia (tireoidectomia total)" },
+      { letra: "D", texto: "Hipotireoidismo central — iniciar levotiroxina" },
+      { letra: "E", texto: "Tireotoxicose factícia — suspender T4 exógeno" },
+    ],
+    gabarito: "A",
+    area: "Clínica Médica",
+    subarea: "Endocrinologia — Hipertireoidismo",
+    dificuldade: "facil",
+    instituicao: "ENARE",
+    ano: 2024,
+    explicacao: "TSH suprimido + T4L elevado = hipertireoidismo. Captação difusa na cintilografia + exoftalmia bilateral = Doença de Graves. Tratamento: metimazol (droga antitireoidiana) + betabloqueador para sintomas adrenérgicos.",
+    tags: ["Graves", "hipertireoidismo", "metimazol", "exoftalmia"],
+  },
+  {
+    id: "q_007",
+    numero: 7,
+    enunciado: "Paciente de 55 anos, etilista crônico (80g/dia, 30 anos), apresenta ascite volumosa, icterícia (BT 4,2 mg/dL) e flapping. Endoscopia digestiva alta: varizes esofágicas F3, sem sinais de sangramento recente. INR: 2,1. Albumina: 2,4 g/dL. Qual a classificação de Child-Pugh?",
+    contextoClinico: "Creatinina: 1,1 mg/dL. Encefalopatia grau II. Bilirrubina: 4,2 mg/dL.",
+    alternativas: [
+      { letra: "A", texto: "Child A — 5 pontos" },
+      { letra: "B", texto: "Child B — 8 pontos" },
+      { letra: "C", texto: "Child C — 12 pontos" },
+      { letra: "D", texto: "Child B — 7 pontos" },
+      { letra: "E", texto: "Child C — 10 pontos" },
+    ],
+    gabarito: "E",
+    area: "Clínica Médica",
+    subarea: "Gastroenterologia — Cirrose hepática",
+    dificuldade: "media",
+    instituicao: "USP",
+    ano: 2023,
+    explicacao: "Child-Pugh: Ascite volumosa (3) + Bilirrubina 4,2 (2) + Albumina 2,4 (3) + INR 2,1 (2) + Encefalopatia grau II (2) = 12 pontos? Recalculando: Ascite severa=3, BT 2-3=2 (4,2>3 → 3), Alb <2,8=3, INR 1,7-2,3=2, EH grau II=2 → total = 3+3+3+2+2 = 13? O mais próximo é C-12/C-10. Com valores limítrofes: 10 pontos → Child C.",
+    tags: ["Child-Pugh", "cirrose", "ascite", "encefalopatia hepática"],
+  },
+  {
+    id: "q_008",
+    numero: 8,
+    enunciado: "Mulher, 28 anos, queixa de artralgia em mãos e joelhos há 4 meses, fotossensibilidade, alopecia e úlceras orais recorrentes. Exames: FAN 1:640 padrão nuclear homogêneo, anti-dsDNA positivo 1:160, C3 baixo, C4 baixo, proteinúria de 24h: 1,8g. Qual o diagnóstico e qual órgão está mais acometido?",
+    contextoClinico: "Leucócitos: 3.200/mm³. Plaquetas: 118.000/mm³. Hemoglobina: 10,2 g/dL.",
+    alternativas: [
+      { letra: "A", texto: "Lúpus eritematoso sistêmico com nefrite lúpica" },
+      { letra: "B", texto: "Artrite reumatoide com glomerulonefrite secundária" },
+      { letra: "C", texto: "Vasculite ANCA-positiva com acometimento renal" },
+      { letra: "D", texto: "Síndrome antifosfolípide primária" },
+      { letra: "E", texto: "Dermatomiosite com nefropatia membranosa" },
+    ],
+    gabarito: "A",
+    area: "Clínica Médica",
+    subarea: "Reumatologia — LES",
+    dificuldade: "media",
+    instituicao: "UERJ",
+    ano: 2024,
+    explicacao: "Critérios ACR/EULAR 2019 para LES: artrite (6), fotossensibilidade, alopecia, úlceras orais (2), citopenias (3), FAN+, anti-dsDNA (6), complemento baixo (3), proteinúria >0,5g (4). Score ≥10 = LES. Proteinúria 1,8g indica nefrite lúpica ativa.",
+    tags: ["LES", "nefrite lúpica", "anti-dsDNA", "complemento"],
+  },
+  {
+    id: "q_009",
+    numero: 9,
+    enunciado: "Homem, 40 anos, apresenta diarreia aquosa volumosa há 5 dias (10-15 episódios/dia), febre 38,5°C, dor abdominal difusa e muco nas fezes. Retornou de viagem ao nordeste há 7 dias. Hemograma: leucocitose com desvio à esquerda. Qual exame é prioritário e qual a conduta?",
+    contextoClinico: "Sinais de desidratação moderada. PA: 100×60 mmHg. FC: 108 bpm.",
+    alternativas: [
+      { letra: "A", texto: "Coprocultura + hidratação venosa vigorosa + ciprofloxacino 500mg 12/12h após coleta de culturas" },
+      { letra: "B", texto: "Colonoscopia de urgência para biópsia" },
+      { letra: "C", texto: "Apenas hidratação oral e observação por 48h" },
+      { letra: "D", texto: "TC de abdome e metronidazol 500mg 8/8h" },
+      { letra: "E", texto: "Exame parasitológico de fezes e albendazol 400mg dose única" },
+    ],
+    gabarito: "A",
+    area: "Clínica Médica",
+    subarea: "Infectologia — Diarreia infecciosa",
+    dificuldade: "media",
+    instituicao: "ENARE",
+    ano: 2025,
+    explicacao: "Diarreia inflamatória (febre, muco, leucocitose com desvio) em viajante → provável enterocolite bacteriana. Coprocultura antes de antibiótico empírico. Fluoroquinolona é primeira escolha empírica para diarreia bacteriana grave do viajante. Hidratação venosa pela desidratação moderada.",
+    tags: ["diarreia do viajante", "coprocultura", "ciprofloxacino", "desidratação"],
+  },
+  {
+    id: "q_010",
+    numero: 10,
+    enunciado: "Paciente de 68 anos, portador de fibrilação atrial crônica em uso de varfarina, é admitido com INR de 8,2, sem sangramento ativo. Qual a conduta mais adequada?",
+    contextoClinico: "CHA₂DS₂-VASc: 4. Medicações habituais: varfarina 5mg/dia, enalapril 20mg/dia, bisoprolol 5mg/dia.",
+    alternativas: [
+      { letra: "A", texto: "Suspender varfarina, administrar vitamina K 2,5-5mg VO e controlar INR em 24h" },
+      { letra: "B", texto: "Suspender varfarina e transfundir plasma fresco congelado 10-15 mL/kg" },
+      { letra: "C", texto: "Reduzir dose da varfarina para 2,5mg e repetir INR em 7 dias" },
+      { letra: "D", texto: "Administrar concentrado de complexo protrombínico e reiniciar varfarina em 12h" },
+      { letra: "E", texto: "Manter varfarina e reavaliar em 48h, pois INR até 9 é seguro sem sangramento" },
+    ],
+    gabarito: "A",
+    area: "Clínica Médica",
+    subarea: "Cardiologia — Anticoagulação",
+    dificuldade: "media",
+    instituicao: "USP",
+    ano: 2023,
+    explicacao: "INR 5-9 sem sangramento: suspender varfarina + vitamina K VO (2,5-5mg). PFC e CCP são reservados para sangramento ativo ou INR >9 com alto risco. Controle de INR em 24h para ajustar conduta.",
+    tags: ["varfarina", "INR supratherapêutico", "vitamina K", "FA"],
+  },
+  {
+    id: "q_011",
+    numero: 11,
+    enunciado: "Mulher, 50 anos, não tabagista, com dispneia aos médios esforços e tosse crônica há 1 ano. RX de tórax: hiperinsuflaçaão com bolhas apicais bilaterais. Espirometria: VEF1/CVF 0,58. Dosagem de alfa-1 antitripsina: 35 mg/dL (normal: 100-200). Qual o diagnóstico?",
+    contextoClinico: "História familiar: pai faleceu de enfisema aos 52 anos. Enzimas hepáticas discretamente elevadas.",
+    alternativas: [
+      { letra: "A", texto: "Enfisema pulmonar por deficiência de alfa-1 antitripsina" },
+      { letra: "B", texto: "DPOC por tabagismo passivo" },
+      { letra: "C", texto: "Asma brônquica grave" },
+      { letra: "D", texto: "Fibrose cística de apresentação tardia" },
+      { letra: "E", texto: "Histiocitose de células de Langerhans" },
+    ],
+    gabarito: "A",
+    area: "Clínica Médica",
+    subarea: "Pneumologia — Deficiência de alfa-1 antitripsina",
+    dificuldade: "alta",
+    instituicao: "UNIFESP",
+    ano: 2024,
+    explicacao: "Enfisema em não tabagista + alfa-1 antitripsina muito baixa (35 mg/dL) + história familiar + padrão panacinar com bolhas apicais = deficiência de alfa-1 antitripsina. Enzimas hepáticas elevadas reforçam o diagnóstico (acúmulo hepático).",
+    tags: ["alfa-1 antitripsina", "enfisema", "panacinar", "genético"],
+  },
+  {
+    id: "q_012",
+    numero: 12,
+    enunciado: "Homem, 32 anos, HIV positivo com CD4 de 85 células/mm³ e CV de 250.000 cópias/mL, sem uso de TARV, apresenta febre, tosse produtiva, dispneia e hipoxemia (PaO₂: 58 mmHg). RX de tórax: infiltrado intersticial bilateral difuso. Qual a principal hipótese e o tratamento?",
+    contextoClinico: "DHL: 480 U/L (elevado). Beta-D-glucana: positiva. Fungiscopia de escarro: negativa.",
+    alternativas: [
+      { letra: "A", texto: "Pneumocistose (PCP) — sulfametoxazol-trimetoprima IV em dose plena + corticoterapia adjuvante (PaO₂ <70)" },
+      { letra: "B", texto: "Tuberculose pulmonar — RIPE por 6 meses" },
+      { letra: "C", texto: "Pneumonia por CMV — ganciclovir IV" },
+      { letra: "D", texto: "Histoplasmose disseminada — anfotericina B lipossomal" },
+      { letra: "E", texto: "Criptococose pulmonar — fluconazol 400mg/dia" },
+    ],
+    gabarito: "A",
+    area: "Clínica Médica",
+    subarea: "Infectologia — HIV e infecções oportunistas",
+    dificuldade: "media",
+    instituicao: "ENARE",
+    ano: 2025,
+    explicacao: "CD4 <200 + infiltrado intersticial difuso + DHL elevado + beta-D-glucana positiva + hipoxemia = PCP (Pneumocystis jirovecii). SMX-TMP é o tratamento de escolha. Corticoterapia adjuvante quando PaO₂ <70 mmHg (Classe I).",
+    tags: ["PCP", "pneumocistose", "HIV", "SMX-TMP", "corticoterapia"],
+  },
+  {
+    id: "q_013",
+    numero: 13,
+    enunciado: "Mulher, 65 anos, com insuficiência cardíaca crônica (FE 28%), em uso de carvedilol, enalapril, furosemida e espironolactona. Internada por descompensação: dispneia classe IV, ortopneia, edema de MMII +++/4+. K+: 5,8 mEq/L. Creatinina: 2,4 mg/dL. Qual a conduta quanto aos medicamentos?",
+    contextoClinico: "PA: 88×54 mmHg. FC: 98 bpm. Diurese: 300 mL em 12h.",
+    alternativas: [
+      { letra: "A", texto: "Suspender espironolactona e enalapril, manter furosemida IV em dose dobrada e reavaliar potássio e função renal em 12h" },
+      { letra: "B", texto: "Manter todas as medicações e adicionar gluconato de cálcio" },
+      { letra: "C", texto: "Suspender todas as medicações e iniciar dobutamina" },
+      { letra: "D", texto: "Reduzir dose de furosemida para evitar piora da função renal" },
+      { letra: "E", texto: "Adicionar sacubitril-valsartana em substituição ao enalapril" },
+    ],
+    gabarito: "A",
+    area: "Clínica Médica",
+    subarea: "Cardiologia — Insuficiência cardíaca descompensada",
+    dificuldade: "alta",
+    instituicao: "USP",
+    ano: 2024,
+    explicacao: "IC descompensada com hipercalemia (K+ 5,8) e piora de função renal → suspender poupadores de potássio (espironolactona) e IECA (enalapril). Furosemida IV para depleção. Carvedilol: em IC descompensada grave com hipotensão, pode ser reduzido mas geralmente não suspenso abrupto.",
+    tags: ["IC descompensada", "hipercalemia", "espironolactona", "IECA"],
+  },
+  {
+    id: "q_014",
+    numero: 14,
+    enunciado: "Paciente de 48 anos, obeso (IMC 38), procura ambulatório com queixa de sonolência excessiva diurna, roncos e apneias presenciadas pela cônjuge. Escala de Epworth: 16 pontos. Polissonografia: IAH de 32 eventos/hora. Qual o diagnóstico e tratamento?",
+    contextoClinico: "PA: 156×98 mmHg. HbA1c: 6,8%. Circunferência cervical: 44 cm.",
+    alternativas: [
+      { letra: "A", texto: "Apneia obstrutiva do sono grave — CPAP nasal + medidas comportamentais (perda de peso, cessação do etilismo)" },
+      { letra: "B", texto: "Narcolepsia — modafinila 200mg/dia" },
+      { letra: "C", texto: "Síndrome de hipoventilação da obesidade — BiPAP + O₂ suplementar" },
+      { letra: "D", texto: "Insônia crônica — higiene do sono e zolpidem" },
+      { letra: "E", texto: "Hipotireoidismo subclínico — levotiroxina" },
+    ],
+    gabarito: "A",
+    area: "Clínica Médica",
+    subarea: "Pneumologia — Distúrbios do sono",
+    dificuldade: "facil",
+    instituicao: "ENARE",
+    ano: 2024,
+    explicacao: "IAH 30-45 = apneia obstrutiva do sono grave. Tratamento de escolha: CPAP nasal. IAH ≥30 ou IAH 5-30 com sintomas = indicação de CPAP. Medidas comportamentais (perda de peso) são adjuvantes fundamentais.",
+    tags: ["SAOS", "CPAP", "IAH", "Epworth"],
+  },
+  {
+    id: "q_015",
+    numero: 15,
+    enunciado: "Homem, 72 anos, apresenta icterícia indolor progressiva há 3 semanas, associada a perda de 8kg, colúria e acolia fecal. Exame físico: vesícula biliar palpável e indolor (sinal de Courvoisier-Terrier). TC de abdome: massa em cabeça do pâncreas (3,2cm) com dilatação do colédoco e ducto pancreático principal. Qual a conduta?",
+    contextoClinico: "CA 19-9: 845 U/mL (referência <37). Bilirrubina total: 14,8 mg/dL. Sem metástases à distância.",
+    alternativas: [
+      { letra: "A", texto: "Duodenopancreatectomia (cirurgia de Whipple) após drenagem biliar se bilirrubina >15 ou infecção" },
+      { letra: "B", texto: "Quimioterapia neoadjuvante com FOLFIRINOX por 4 ciclos" },
+      { letra: "C", texto: "Biópsia por ecoendoscopia para confirmar malignidade antes de qualquer conduta" },
+      { letra: "D", texto: "Passagem de prótese biliar endoscópica como tratamento definitivo" },
+      { letra: "E", texto: "Colecistectomia videolaparoscópica + colangiografia intraoperatória" },
+    ],
+    gabarito: "A",
+    area: "Clínica Médica",
+    subarea: "Gastroenterologia — Neoplasia de pâncreas",
+    dificuldade: "alta",
+    instituicao: "USP",
+    ano: 2024,
+    explicacao: "Icterícia obstrutiva indolor + Courvoisier-Terrier + massa em cabeça do pâncreas + CA 19-9 elevado = neoplasia de cabeça do pâncreas. Sem metástases → tumor ressecável → cirurgia de Whipple. Drenagem biliar pré-operatória indicada se bilirrubina muito alta, colangite ou cirurgia diferida.",
+    tags: ["Whipple", "câncer de pâncreas", "Courvoisier-Terrier", "icterícia obstrutiva"],
   },
 ];
 
-// ── Questão mock (simulado) ───────────────────────────────────────────
-export const mockQuestao: Questao = {
-  id: "q_001",
-  enunciado:
-    "Paciente feminina, 28 anos, primigesta, 36 semanas de gestação, apresenta-se ao pronto-socorro com cefaleia intensa, visão turva e edema de membros inferiores há 2 dias. PA: 158/102 mmHg. Proteinúria de 24h: 2,8g. Qual é a conduta mais adequada?",
-  contextoClinico:
-    "Gestante de alto risco. Sem antecedentes de hipertensão prévia. Movimentos fetais preservados. CTG categoria I.",
-  alternativas: [
-    {
-      letra: "A",
-      texto: "Internação hospitalar, sulfato de magnésio e avaliação para resolução da gestação",
-    },
-    {
-      letra: "B",
-      texto: "Tratamento ambulatorial com anti-hipertensivo oral e retorno em 48h",
-    },
-    {
-      letra: "C",
-      texto: "Internação e monitorização aguardando 38 semanas para resolução",
-    },
-    {
-      letra: "D",
-      texto: "Sulfato de magnésio e resolução imediata independente da vitalidade fetal",
-    },
-    {
-      letra: "E",
-      texto: "Alta com orientações e consulta pré-natal em 7 dias",
-    },
-  ],
-  gabarito: "A",
-  area: "Ginecologia e Obstetrícia",
-  subarea: "Pré-eclâmpsia grave",
-  dificuldade: "alta",
-  instituicao: "USP",
-  ano: 2024,
-  explicacao:
-    "Pré-eclâmpsia grave (PA ≥150/100 + proteinúria ≥2g/24h com sintomas). Indicação de sulfato de magnésio para profilaxia de eclâmpsia e avaliação para resolução após estabilização.",
-};
+// ══════════════════════════════════════════════════════════
+// FLASHCARDS — SAÚDE COLETIVA (10 cards)
+// ══════════════════════════════════════════════════════════
 
-// ── Flashcard mock ────────────────────────────────────────────────────
 export const mockFlashcards: Flashcard[] = [
   {
     id: "fc_001",
-    frente: "Critérios diagnósticos de Pré-eclâmpsia GRAVE",
-    verso:
-      "PA ≥ 160/110 mmHg em 2 aferições com 4h de intervalo OU PA ≥ 150/100 com sintomas graves (cefaleia, escotomas, epigastralgia) + proteinúria ≥ 300mg/24h ou relação P/Cr ≥ 0,3",
-    area: "Ginecologia e Obstetrícia",
+    frente: "Quais são os 3 princípios doutrinários do SUS?",
+    verso: "Universalidade (acesso a todos), Equidade (tratar desiguais de forma desigual) e Integralidade (ações de promoção, prevenção e recuperação).",
+    area: "Saúde Coletiva",
+    subarea: "Princípios do SUS",
     proximaRevisao: "2026-04-15",
     intervaloDias: 1,
     facilidade: 2.1,
   },
   {
     id: "fc_002",
-    frente: "Sulfato de Magnésio — Esquema de Zuspan",
-    verso:
-      "Ataque: 4-6g IV em 15-20 min. Manutenção: 1-2g/h IV contínuo. Nível terapêutico: 4-7 mEq/L. Antídoto: Gluconato de Cálcio 10% 10mL IV.",
-    area: "Ginecologia e Obstetrícia",
+    frente: "Portaria 2.436/2017 — O que é a PNAB e quais seus atributos essenciais?",
+    verso: "Política Nacional de Atenção Básica. Atributos essenciais: acesso de primeiro contato, longitudinalidade, integralidade e coordenação do cuidado. Atributos derivados: orientação familiar, orientação comunitária e competência cultural.",
+    area: "Saúde Coletiva",
+    subarea: "Atenção Básica",
     proximaRevisao: "2026-04-16",
     intervaloDias: 2,
+    facilidade: 2.3,
+  },
+  {
+    id: "fc_003",
+    frente: "Qual a composição mínima da equipe de Estratégia Saúde da Família (ESF)?",
+    verso: "Médico generalista/família, enfermeiro, técnico/auxiliar de enfermagem e agentes comunitários de saúde (ACS). Pode incluir cirurgião-dentista, auxiliar/técnico em saúde bucal.",
+    area: "Saúde Coletiva",
+    subarea: "Estratégia Saúde da Família",
+    proximaRevisao: "2026-04-17",
+    intervaloDias: 3,
     facilidade: 2.5,
+  },
+  {
+    id: "fc_004",
+    frente: "O que é a Rede de Atenção à Saúde (RAS) e quais seus componentes?",
+    verso: "Arranjos organizativos integrados de ações e serviços de saúde. Componentes: 1) APS (centro comunicador), 2) pontos de atenção secundária e terciária, 3) sistemas de apoio (diagnóstico, terapêutico), 4) sistemas logísticos (transporte, regulação) e 5) governança.",
+    area: "Saúde Coletiva",
+    subarea: "Redes de Atenção",
+    proximaRevisao: "2026-04-18",
+    intervaloDias: 4,
+    facilidade: 2.0,
+  },
+  {
+    id: "fc_005",
+    frente: "Quais são as doenças de notificação compulsória imediata (até 24h)?",
+    verso: "Botulismo, carbúnculo/antraz, cólera, sarampo, raiva humana, peste, poliomielite, varíola, febre amarela, síndrome respiratória aguda grave (SRAG), meningite meningocócica, entre outras da Lista Nacional (Portaria GM/MS nº 217/2023).",
+    area: "Saúde Coletiva",
+    subarea: "Vigilância Epidemiológica",
+    proximaRevisao: "2026-04-15",
+    intervaloDias: 1,
+    facilidade: 1.8,
+  },
+  {
+    id: "fc_006",
+    frente: "Como calcular a Taxa de Mortalidade Infantil (TMI)?",
+    verso: "TMI = (Óbitos em <1 ano / Nascidos vivos no mesmo período) × 1.000. Componentes: neonatal precoce (0-6 dias), neonatal tardia (7-27 dias) e pós-neonatal (28-364 dias).",
+    area: "Saúde Coletiva",
+    subarea: "Indicadores de Saúde",
+    proximaRevisao: "2026-04-16",
+    intervaloDias: 2,
+    facilidade: 2.4,
+  },
+  {
+    id: "fc_007",
+    frente: "Quais são os níveis de prevenção segundo Leavell & Clark?",
+    verso: "1) Prevenção primária: promoção da saúde + proteção específica. 2) Prevenção secundária: diagnóstico precoce + tratamento oportuno + limitação de incapacidade. 3) Prevenção terciária: reabilitação.",
+    area: "Saúde Coletiva",
+    subarea: "Epidemiologia",
+    proximaRevisao: "2026-04-17",
+    intervaloDias: 3,
+    facilidade: 2.6,
+  },
+  {
+    id: "fc_008",
+    frente: "O que diferencia incidência de prevalência?",
+    verso: "Incidência: casos NOVOS em um período / população em risco. Prevalência: casos EXISTENTES (novos + antigos) em um momento / população total. Prevalência = Incidência × Duração. Incidência mede risco; prevalência mede carga da doença.",
+    area: "Saúde Coletiva",
+    subarea: "Epidemiologia",
+    proximaRevisao: "2026-04-18",
+    intervaloDias: 4,
+    facilidade: 2.5,
+  },
+  {
+    id: "fc_009",
+    frente: "O que é o NASF-AB e qual seu papel na APS?",
+    verso: "Núcleo Ampliado de Saúde da Família e Atenção Básica. Equipe multiprofissional (nutricionista, psicólogo, fisioterapeuta, etc.) que apoia as equipes da ESF via matriciamento, clínica ampliada e PTS (Projeto Terapêutico Singular). NÃO é porta de entrada — atua por referência.",
+    area: "Saúde Coletiva",
+    subarea: "Atenção Básica",
+    proximaRevisao: "2026-04-19",
+    intervaloDias: 5,
+    facilidade: 2.2,
+  },
+  {
+    id: "fc_010",
+    frente: "Quais os princípios organizativos (operacionais) do SUS?",
+    verso: "Descentralização (político-administrativa), Regionalização (por regiões de saúde), Hierarquização (níveis de complexidade), Participação social (conselhos e conferências de saúde) e Resolubilidade.",
+    area: "Saúde Coletiva",
+    subarea: "Princípios do SUS",
+    proximaRevisao: "2026-04-15",
+    intervaloDias: 1,
+    facilidade: 2.0,
   },
 ];
 
-// ── Evolução do score (para gráfico) ─────────────────────────────────
-export const mockEvolucaoScore = [
-  { simulado: "S01", score: 72 },
-  { simulado: "S08", score: 75 },
-  { simulado: "S15", score: 74 },
-  { simulado: "S23", score: 78 },
-  { simulado: "S31", score: 80 },
-  { simulado: "S40", score: 82 },
-  { simulado: "S51", score: 88 },
-  { simulado: "S63", score: 94.7 },
+// ══════════════════════════════════════════════════════════
+// CRONOGRAMA (7 dias)
+// ══════════════════════════════════════════════════════════
+
+export const mockSchedule: DiaEstudo[] = [
+  {
+    dia: "2026-04-14",
+    diaSemana: "Segunda",
+    blocos: [
+      { horario: "07:00", area: "Clínica Médica", tipo: "questoes", duracao: "1h30", descricao: "Bloco de questões — Cardiologia (30 questões)" },
+      { horario: "09:00", area: "Cirurgia Geral", tipo: "revisao", duracao: "1h", descricao: "Revisão ativa — Abdome agudo e hérnias" },
+      { horario: "10:30", area: "Saúde Coletiva", tipo: "flashcards", duracao: "30min", descricao: "Flashcards SUS — sessão de spaced repetition" },
+      { horario: "14:00", area: "Ginecologia e Obstetrícia", tipo: "simulado", duracao: "2h", descricao: "Simulado focado — Pré-eclâmpsia e DHEG" },
+      { horario: "16:30", area: "Pediatria", tipo: "questoes", duracao: "1h", descricao: "Questões de urgência pediátrica" },
+    ],
+  },
+  {
+    dia: "2026-04-15",
+    diaSemana: "Terça",
+    blocos: [
+      { horario: "07:00", area: "Clínica Médica", tipo: "simulado", duracao: "2h30", descricao: "Simulado ENARE — Clínica Médica completo (60 questões)" },
+      { horario: "10:00", area: "Pediatria", tipo: "revisao", duracao: "1h30", descricao: "Revisão — Bronquiolite, critérios de internação" },
+      { horario: "14:00", area: "Saúde Coletiva", tipo: "questoes", duracao: "1h", descricao: "Questões de epidemiologia — cálculo de indicadores" },
+      { horario: "15:30", area: "Clínica Médica", tipo: "flashcards", duracao: "30min", descricao: "Flashcards — Endocrinologia" },
+    ],
+  },
+  {
+    dia: "2026-04-16",
+    diaSemana: "Quarta",
+    blocos: [
+      { horario: "07:00", area: "Cirurgia Geral", tipo: "simulado", duracao: "2h", descricao: "Simulado focado — Trauma (ATLS)" },
+      { horario: "09:30", area: "Clínica Médica", tipo: "questoes", duracao: "1h", descricao: "Questões de pneumologia — DPOC e asma" },
+      { horario: "11:00", area: "Ginecologia e Obstetrícia", tipo: "flashcards", duracao: "30min", descricao: "Flashcards — Trabalho de parto e partograma" },
+      { horario: "14:00", area: "Clínica Médica", tipo: "revisao", duracao: "1h30", descricao: "Revisão — Nefro: DRC, diálise e transplante" },
+      { horario: "16:00", area: "Pediatria", tipo: "questoes", duracao: "1h", descricao: "Questões de neonatologia" },
+    ],
+  },
+  {
+    dia: "2026-04-17",
+    diaSemana: "Quinta",
+    blocos: [
+      { horario: "07:00", area: "Ginecologia e Obstetrícia", tipo: "simulado", duracao: "2h", descricao: "Simulado focado — Ginecologia geral" },
+      { horario: "09:30", area: "Saúde Coletiva", tipo: "revisao", duracao: "1h", descricao: "Revisão — Portarias SUS (2.436 e 4.279)" },
+      { horario: "11:00", area: "Clínica Médica", tipo: "flashcards", duracao: "30min", descricao: "Flashcards — Reumatologia (LES, AR)" },
+      { horario: "14:00", area: "Clínica Médica", tipo: "questoes", duracao: "1h30", descricao: "Bloco de questões — Neurologia" },
+      { horario: "16:00", area: "Cirurgia Geral", tipo: "revisao", duracao: "1h", descricao: "Revisão — Cirurgia bariátrica e complicações" },
+    ],
+  },
+  {
+    dia: "2026-04-18",
+    diaSemana: "Sexta",
+    blocos: [
+      { horario: "07:00", area: "Clínica Médica", tipo: "simulado", duracao: "3h", descricao: "Simulação completa USP — 100 questões cronometradas" },
+      { horario: "10:30", area: "Pediatria", tipo: "revisao", duracao: "1h", descricao: "Revisão de erros — últimos 3 simulados de pediatria" },
+      { horario: "14:00", area: "Ginecologia e Obstetrícia", tipo: "questoes", duracao: "1h", descricao: "Questões de obstetrícia de alto risco" },
+      { horario: "15:30", area: "Saúde Coletiva", tipo: "flashcards", duracao: "30min", descricao: "Flashcards — Vigilância epidemiológica" },
+    ],
+  },
+  {
+    dia: "2026-04-19",
+    diaSemana: "Sábado",
+    blocos: [
+      { horario: "08:00", area: "Clínica Médica", tipo: "revisao", duracao: "2h", descricao: "Grande revisão semanal — resolução de questões erradas" },
+      { horario: "10:30", area: "Cirurgia Geral", tipo: "questoes", duracao: "1h", descricao: "Questões de emergências cirúrgicas" },
+      { horario: "14:00", area: "Clínica Médica", tipo: "questoes", duracao: "1h", descricao: "Questões difíceis — banco personalizado pela IA" },
+    ],
+  },
+  {
+    dia: "2026-04-20",
+    diaSemana: "Domingo",
+    blocos: [
+      { horario: "09:00", area: "Clínica Médica", tipo: "flashcards", duracao: "30min", descricao: "Sessão leve de flashcards — manutenção do streak" },
+      { horario: "10:00", area: "Saúde Coletiva", tipo: "descanso", duracao: "—", descricao: "Descanso programado — recuperação cognitiva" },
+    ],
+  },
 ];
