@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────
+   MedPleni — Design Tokens
+   Extraídos dos arquivos: brand-book-medpleni.html,
+   design-system-medpleni.html, medpleni-part3-dashboard.html
+───────────────────────────────────────────── */
+
+:root {
+  /* ── Estruturais (backgrounds e superfícies) ── */
+  --abismo:       #1A1F2E;   /* Background primário - dark mode nativo */
+  --petroleo:     #2B3A52;   /* Superfícies: cards, painéis */
+  --sinal:        #3D5A80;   /* Bordas, divisores */
+  --neblina:      #E0E6F0;   /* Texto de corpo */
+  --chumbo:       #8A9AB5;   /* Texto secundário, labels */
+  --lab:          #F0F4FA;   /* Background alternativo (light) */
+
+  /* ── Marca (acento e identidade) ── */
+  --pulso:        #00C2A8;   /* Cor principal, CTA, destaques, ações positivas */
+  --resid:        #0077B6;   /* Sub-brand RESID, progresso */
+  --resid-light:  #64B5E8;   /* Variação clara para textos sobre escuro */
+  --indigo:       #6B5CE7;   /* Sub-brand REVALIDA, elementos especiais */
+  --indigo-light: #A99EF5;   /* Variação clara do índigo */
+  --ambar:        #C98A0A;   /* Sub-brand ESPECIALISTA */
+  --white:        #FFFFFF;
+
+  /* ── Sistema (feedback) ── */
+  --danger:       #FF6B6B;   /* Erros, alertas críticos, questões incorretas */
+  --warn:         #F5A623;   /* Atenção, questões puladas, pendentes */
+  --success:      #22C55E;   /* Sucesso, questões corretas */
+
+  /* ── Border Radius Tokens ── */
+  --r-sm:         3px;       /* Tags pequenas */
+  --r-md:         8px;       /* Botões, inputs */
+  --r-lg:         10px;      /* Cards intermediários */
+  --r-xl:         12px;      /* Cards principais */
+  --r-full:       9999px;    /* Pills, badges redondos */
+}
+
+/* ─────────────────────────────────────────────
+   Reset & Base
+───────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--abismo);
+  color: var(--neblina);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─────────────────────────────────────────────
+   Scrollbar - Custom Dark
+───────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--abismo);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--sinal);
+  border-radius: var(--r-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--chumbo);
+}
+
+/* ─────────────────────────────────────────────
+   Selection
+───────────────────────────────────────────── */
+::selection {
+  background: rgba(0, 194, 168, 0.2);
+  color: var(--white);
+}
