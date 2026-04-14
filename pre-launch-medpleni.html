@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MedPleni — Algo diferente está chegando</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=Source+Serif+4:ital,wght@1,400;1,600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --abismo:   #1A1F2E;
+      --petroleo: #2B3A52;
+      --sinal:    #3D5A80;
+      --neblina:  #E0E6F0;
+      --chumbo:   #8A9AB5;
+      --pulso:    #00C2A8;
+      --pulso-dim: rgba(0,194,168,.12);
+      --pulso-glow: rgba(0,194,168,.25);
+      --resid:    #0077B6;
+      --branco:   #FFFFFF;
+      --fonte-display: 'IBM Plex Sans Condensed', sans-serif;
+      --fonte-body:    'Inter', sans-serif;
+      --fonte-mono:    'IBM Plex Mono', monospace;
+      --fonte-serif:   'Source Serif 4', serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--abismo);
+      color: var(--neblina);
+      font-family: var(--fonte-body);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ---------- NOISE + GRID OVERLAY ---------- */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(0,194,168,.08) 0%, transparent 70%),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%238A9AB5' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ---------- UTILITY ---------- */
+    .container { max-width: 900px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+    .container--wide { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    /* ---------- NAV ---------- */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(26,31,46,.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,194,168,.12);
+      height: 64px;
+      display: flex; align-items: center;
+    }
+    .nav-inner {
+      width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo {
+      font-family: var(--fonte-display);
+      font-size: 22px; font-weight: 700; letter-spacing: -.5px;
+      text-decoration: none;
+    }
+    .logo span:first-child { color: var(--branco); }
+    .logo span:last-child { color: var(--pulso); }
+
+    .nav-badge {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--pulso-dim);
+      border: 1px solid rgba(0,194,168,.3);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-family: var(--fonte-mono); font-size: 11px;
+      color: var(--pulso); letter-spacing: .08em; text-transform: uppercase;
+    }
+    .nav-badge .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--pulso);
+      animation: pulse-dot 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .4; transform: scale(.7); }
+    }
+
+    /* ---------- HERO ---------- */
+    .hero {
+      padding-top: 140px;
+      padding-bottom: 100px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ECG animado no fundo */
+    .hero-ecg {
+      position: absolute;
+      bottom: 30px; left: 0; right: 0;
+      opacity: .07;
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--pulso-dim);
+      border: 1px solid rgba(0,194,168,.25);
+      border-radius: 100px;
+      padding: 8px 18px;
+      margin-bottom: 36px;
+      font-family: var(--fonte-mono);
+      font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--pulso);
+      animation: fadeUp .6s ease both;
+    }
+    .hero-eyebrow svg { width: 14px; height: 14px; }
+
+    .hero-title {
+      font-family: var(--fonte-display);
+      font-size: clamp(48px, 8vw, 88px);
+      font-weight: 700;
+      line-height: .95;
+      letter-spacing: -2px;
+      color: var(--branco);
+      animation: fadeUp .7s .1s ease both;
+      margin-bottom: 8px;
+    }
+    .hero-title .accent { color: var(--pulso); }
+    .hero-title .line2 {
+      display: block;
+      color: var(--chumbo);
+      font-size: clamp(36px, 5.5vw, 64px);
+    }
+
+    .hero-sub {
+      font-family: var(--fonte-serif);
+      font-style: italic;
+      font-size: clamp(18px, 2.5vw, 22px);
+      color: var(--chumbo);
+      max-width: 560px;
+      margin: 32px auto 0;
+      line-height: 1.5;
+      animation: fadeUp .7s .2s ease both;
+    }
+    .hero-sub strong { color: var(--neblina); font-style: normal; font-family: var(--fonte-body); font-weight: 600; }
+
+    /* ---------- COUNTDOWN ---------- */
+    .countdown-wrap {
+      margin: 56px auto 0;
+      display: flex; justify-content: center;
+      animation: fadeUp .7s .3s ease both;
+    }
+    .countdown-box {
+      display: flex; align-items: flex-start; gap: 0;
+      background: rgba(43,58,82,.5);
+      border: 1px solid rgba(0,194,168,.2);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .countdown-unit {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 24px 32px;
+      border-right: 1px solid rgba(0,194,168,.1);
+    }
+    .countdown-unit:last-child { border-right: none; }
+    .countdown-num {
+      font-family: var(--fonte-mono);
+      font-size: clamp(42px, 6vw, 64px);
+      font-weight: 500;
+      color: var(--pulso);
+      line-height: 1;
+      letter-spacing: -.02em;
+      min-width: 72px;
+      text-align: center;
+      transition: transform .15s;
+    }
+    .countdown-num.flip { animation: numFlip .25s ease; }
+    @keyframes numFlip {
+      0% { transform: translateY(-6px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+    .countdown-label {
+      font-family: var(--fonte-mono);
+      font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--chumbo); margin-top: 8px;
+    }
+
+    .countdown-meta {
+      margin-top: 16px;
+      font-family: var(--fonte-mono);
+      font-size: 11px; color: var(--chumbo); letter-spacing: .06em;
+      animation: fadeUp .7s .35s ease both;
+      text-align: center;
+    }
+    .countdown-meta span { color: var(--pulso); }
+
+    /* ---------- FORM ---------- */
+    .form-section {
+      margin-top: 56px;
+      animation: fadeUp .7s .4s ease both;
+    }
+    .form-label {
+      font-size: 13px; color: var(--chumbo); margin-bottom: 14px;
+      letter-spacing: .04em;
+    }
+    .form-row {
+      display: flex; gap: 8px;
+      max-width: 480px; margin: 0 auto;
+    }
+    .form-input {
+      flex: 1;
+      background: rgba(43,58,82,.6);
+      border: 1.5px solid rgba(0,194,168,.25);
+      border-radius: 10px;
+      padding: 14px 18px;
+      color: var(--branco);
+      font-family: var(--fonte-body);
+      font-size: 15px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .form-input::placeholder { color: var(--chumbo); }
+    .form-input:focus {
+      border-color: var(--pulso);
+      box-shadow: 0 0 0 3px var(--pulso-dim);
+    }
+    .form-btn {
+      background: var(--pulso);
+      color: var(--abismo);
+      border: none;
+      border-radius: 10px;
+      padding: 14px 24px;
+      font-family: var(--fonte-display);
+      font-weight: 700; font-size: 15px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background .2s, transform .1s, box-shadow .2s;
+      letter-spacing: .02em;
+    }
+    .form-btn:hover {
+      background: #00dfc0;
+      box-shadow: 0 0 24px var(--pulso-glow);
+      transform: translateY(-1px);
+    }
+    .form-btn:active { transform: translateY(0); }
+
+    .form-hint {
+      margin-top: 12px;
+      font-size: 12px; color: var(--chumbo);
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .form-hint svg { color: var(--pulso); }
+
+    .vagas-bar {
+      max-width: 480px; margin: 20px auto 0;
+      background: rgba(43,58,82,.4);
+      border: 1px solid rgba(0,194,168,.12);
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .vagas-text { font-size: 12px; color: var(--chumbo); }
+    .vagas-text strong { color: var(--neblina); }
+    .vagas-progress-track {
+      flex: 1; height: 4px;
+      background: rgba(0,194,168,.15);
+      border-radius: 2px; overflow: hidden;
+    }
+    .vagas-progress-fill {
+      height: 100%; width: 71%;
+      background: linear-gradient(90deg, var(--pulso), #00dfc0);
+      border-radius: 2px;
+      animation: progressGrow 1.5s .8s ease both;
+    }
+    @keyframes progressGrow {
+      from { width: 0; }
+      to { width: 71%; }
+    }
+    .vagas-count {
+      font-family: var(--fonte-mono);
+      font-size: 11px; color: var(--pulso);
+      white-space: nowrap;
+    }
+
+    /* ---------- PROBLEMA SECTION ---------- */
+    .section-problema {
+      padding: 100px 0;
+      border-top: 1px solid rgba(61,90,128,.3);
+    }
+    .section-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--fonte-mono);
+      font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--pulso); margin-bottom: 20px;
+    }
+    .section-tag::before {
+      content: '';
+      display: block; width: 20px; height: 1.5px;
+      background: var(--pulso);
+    }
+    .section-title {
+      font-family: var(--fonte-display);
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 700; line-height: 1.05; letter-spacing: -1px;
+      color: var(--branco); margin-bottom: 16px;
+    }
+    .section-lead {
+      font-size: 17px; color: var(--chumbo); max-width: 560px; line-height: 1.7;
+      margin-bottom: 60px;
+    }
+
+    .dor-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      border: 1px solid rgba(61,90,128,.3);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .dor-card {
+      background: rgba(43,58,82,.35);
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+      transition: background .25s;
+    }
+    .dor-card:hover { background: rgba(43,58,82,.6); }
+    .dor-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: transparent;
+      transition: background .25s;
+    }
+    .dor-card:hover::before { background: var(--pulso); }
+    .dor-num {
+      font-family: var(--fonte-mono);
+      font-size: 10px; color: var(--pulso); letter-spacing: .12em;
+      text-transform: uppercase; margin-bottom: 16px;
+    }
+    .dor-pergunta {
+      font-family: var(--fonte-display);
+      font-size: 22px; font-weight: 700; color: var(--branco);
+      line-height: 1.2; margin-bottom: 12px;
+      letter-spacing: -.3px;
+    }
+    .dor-detail {
+      font-size: 14px; color: var(--chumbo); line-height: 1.65;
+    }
+    .dor-card.wide { grid-column: 1 / -1; }
+
+    /* ---------- TEASER SECTION ---------- */
+    .section-teaser {
+      padding: 100px 0;
+      border-top: 1px solid rgba(61,90,128,.3);
+    }
+    .teaser-intro {
+      text-align: center; margin-bottom: 60px;
+    }
+    .teaser-intro .section-lead {
+      margin: 16px auto 0;
+    }
+
+    .feature-teaser-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .feature-card {
+      background: rgba(43,58,82,.35);
+      border: 1px solid rgba(61,90,128,.3);
+      border-radius: 14px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .25s, background .25s, transform .25s;
+    }
+    .feature-card:hover {
+      border-color: rgba(0,194,168,.4);
+      background: rgba(43,58,82,.55);
+      transform: translateY(-3px);
+    }
+    .feature-card.locked { cursor: default; }
+    .feature-card.locked:hover { transform: none; }
+
+    .feature-icon {
+      width: 44px; height: 44px;
+      background: var(--pulso-dim);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+      color: var(--pulso);
+    }
+    .feature-icon svg { width: 22px; height: 22px; }
+
+    .feature-name {
+      font-family: var(--fonte-display);
+      font-size: 18px; font-weight: 700; color: var(--branco);
+      margin-bottom: 8px; letter-spacing: -.2px;
+    }
+    .feature-desc {
+      font-size: 13px; color: var(--chumbo); line-height: 1.65;
+    }
+
+    /* feature bloqueada — blur parcial */
+    .feature-card.locked .feature-name::after {
+      content: '';
+      display: inline-block;
+      width: 90px; height: 16px;
+      background: rgba(138,154,181,.25);
+      border-radius: 4px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .feature-blur {
+      filter: blur(5px);
+      user-select: none;
+      pointer-events: none;
+      color: var(--chumbo);
+    }
+    .feature-lock-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      margin-top: 14px;
+      font-family: var(--fonte-mono);
+      font-size: 10px; color: var(--pulso); letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    /* ---------- PROVA SOCIAL ANTECIPADA ---------- */
+    .section-prova {
+      padding: 100px 0;
+      border-top: 1px solid rgba(61,90,128,.3);
+      text-align: center;
+    }
+    .stat-strip {
+      display: flex; justify-content: center; gap: 0;
+      margin-top: 60px;
+      border: 1px solid rgba(61,90,128,.3);
+      border-radius: 16px; overflow: hidden;
+    }
+    .stat-item {
+      flex: 1;
+      padding: 40px 32px;
+      border-right: 1px solid rgba(61,90,128,.3);
+      background: rgba(43,58,82,.25);
+      transition: background .2s;
+    }
+    .stat-item:hover { background: rgba(43,58,82,.5); }
+    .stat-item:last-child { border-right: none; }
+    .stat-num {
+      font-family: var(--fonte-mono);
+      font-size: clamp(36px, 5vw, 52px);
+      font-weight: 500; color: var(--pulso);
+      line-height: 1;
+      display: block; margin-bottom: 8px;
+    }
+    .stat-label {
+      font-size: 13px; color: var(--chumbo); line-height: 1.5;
+    }
+
+    /* depoimentos beta */
+    .depo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 48px;
+    }
+    .depo-card {
+      background: rgba(43,58,82,.35);
+      border: 1px solid rgba(61,90,128,.3);
+      border-radius: 14px;
+      padding: 28px;
+      text-align: left;
+      position: relative;
+    }
+    .depo-quote {
+      font-family: var(--fonte-serif);
+      font-style: italic;
+      font-size: 15px;
+      color: var(--neblina);
+      line-height: 1.65;
+      margin-bottom: 20px;
+    }
+    .depo-author {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .depo-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--petroleo), var(--sinal));
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--fonte-display);
+      font-size: 14px; font-weight: 700; color: var(--pulso);
+      flex-shrink: 0;
+    }
+    .depo-name { font-size: 13px; font-weight: 600; color: var(--branco); }
+    .depo-meta { font-size: 11px; color: var(--chumbo); }
+    .depo-badge {
+      position: absolute; top: 16px; right: 16px;
+      font-family: var(--fonte-mono);
+      font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
+      background: var(--pulso-dim);
+      color: var(--pulso);
+      border: 1px solid rgba(0,194,168,.25);
+      border-radius: 4px; padding: 3px 7px;
+    }
+
+    /* ---------- REVEAL SECTION — o que vai mudar ---------- */
+    .section-reveal {
+      padding: 100px 0;
+      border-top: 1px solid rgba(61,90,128,.3);
+    }
+    .reveal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+    .reveal-before {
+      background: rgba(43,58,82,.2);
+      border: 1px solid rgba(61,90,128,.3);
+      border-radius: 14px;
+      padding: 36px;
+    }
+    .reveal-after {
+      background: rgba(0,194,168,.05);
+      border: 1px solid rgba(0,194,168,.2);
+      border-radius: 14px;
+      padding: 36px;
+    }
+    .reveal-tag {
+      font-family: var(--fonte-mono);
+      font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .reveal-before .reveal-tag { color: var(--chumbo); }
+    .reveal-after .reveal-tag { color: var(--pulso); }
+    .reveal-item {
+      display: flex; gap: 12px; align-items: flex-start;
+      margin-bottom: 16px; padding-bottom: 16px;
+      border-bottom: 1px solid rgba(61,90,128,.2);
+    }
+    .reveal-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .reveal-icon { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; }
+    .reveal-text { font-size: 14px; line-height: 1.55; }
+    .reveal-before .reveal-text { color: var(--chumbo); }
+    .reveal-after .reveal-text { color: var(--neblina); }
+
+    /* ---------- FINAL CTA SECTION ---------- */
+    .section-cta {
+      padding: 120px 0;
+      border-top: 1px solid rgba(61,90,128,.3);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .section-cta::before {
+      content: '';
+      position: absolute;
+      bottom: -100px; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(0,194,168,.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-mega-text {
+      font-family: var(--fonte-display);
+      font-size: clamp(52px, 9vw, 96px);
+      font-weight: 700;
+      line-height: .9;
+      letter-spacing: -3px;
+      color: var(--branco);
+      margin-bottom: 8px;
+    }
+    .cta-mega-text .accent { color: var(--pulso); }
+    .cta-mega-text .muted { color: var(--sinal); }
+    .cta-sub {
+      font-size: 18px; color: var(--chumbo);
+      margin: 24px auto 0; max-width: 480px; line-height: 1.6;
+    }
+    .cta-form-big {
+      margin-top: 48px;
+    }
+    .cta-form-row {
+      display: flex; flex-direction: column;
+      gap: 12px; max-width: 420px; margin: 0 auto;
+    }
+    .cta-input {
+      background: rgba(43,58,82,.6);
+      border: 1.5px solid rgba(0,194,168,.25);
+      border-radius: 10px;
+      padding: 16px 20px;
+      color: var(--branco);
+      font-family: var(--fonte-body);
+      font-size: 15px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      width: 100%;
+    }
+    .cta-input::placeholder { color: var(--chumbo); }
+    .cta-input:focus {
+      border-color: var(--pulso);
+      box-shadow: 0 0 0 3px var(--pulso-dim);
+    }
+    .cta-btn-big {
+      background: var(--pulso);
+      color: var(--abismo);
+      border: none;
+      border-radius: 10px;
+      padding: 18px 28px;
+      font-family: var(--fonte-display);
+      font-weight: 700; font-size: 17px;
+      cursor: pointer;
+      transition: background .2s, transform .1s, box-shadow .2s;
+      letter-spacing: .02em;
+      width: 100%;
+    }
+    .cta-btn-big:hover {
+      background: #00dfc0;
+      box-shadow: 0 0 32px var(--pulso-glow);
+      transform: translateY(-1px);
+    }
+    .cta-urgency {
+      margin-top: 20px;
+      font-family: var(--fonte-mono);
+      font-size: 11px; color: var(--chumbo); letter-spacing: .06em;
+    }
+    .cta-urgency span { color: var(--pulso); }
+
+    /* ---------- FOOTER ---------- */
+    footer {
+      border-top: 1px solid rgba(61,90,128,.25);
+      padding: 40px 24px;
+      text-align: center;
+    }
+    .footer-logo {
+      font-family: var(--fonte-display);
+      font-size: 20px; font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .footer-logo span:first-child { color: var(--branco); }
+    .footer-logo span:last-child { color: var(--pulso); }
+    .footer-copy {
+      font-size: 12px; color: var(--chumbo);
+    }
+
+    /* ---------- ANIMATIONS ---------- */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal-on-scroll {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .reveal-on-scroll.visible {
+      opacity: 1; transform: translateY(0);
+    }
+
+    /* ---------- RESPONSIVO ---------- */
+    @media (max-width: 768px) {
+      .dor-grid { grid-template-columns: 1fr; }
+      .dor-card.wide { grid-column: auto; }
+      .feature-teaser-grid { grid-template-columns: 1fr; }
+      .stat-strip { flex-direction: column; }
+      .stat-item { border-right: none; border-bottom: 1px solid rgba(61,90,128,.3); }
+      .stat-item:last-child { border-bottom: none; }
+      .depo-grid { grid-template-columns: 1fr; }
+      .reveal-grid { grid-template-columns: 1fr; }
+      .form-row { flex-direction: column; }
+      .countdown-unit { padding: 20px 16px; }
+      .countdown-num { min-width: 52px; font-size: 40px; }
+    }
+
+    /* ---------- SUCCESS STATE ---------- */
+    .success-msg {
+      display: none;
+      background: rgba(0,194,168,.1);
+      border: 1px solid rgba(0,194,168,.35);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      color: var(--pulso);
+      font-size: 15px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .success-msg strong { display: block; font-size: 18px; margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="logo"><span>Med</span><span>Pleni</span></a>
+      <div class="nav-badge">
+        <span class="dot"></span>
+        Beta fechado — em breve
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero">
+    <div class="container">
+
+      <div class="hero-eyebrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        Algo diferente está chegando para a residência médica
+      </div>
+
+      <h1 class="hero-title">
+        <span class="accent">O algoritmo</span><br>
+        <span class="line2">que faltava</span>
+      </h1>
+
+      <p class="hero-sub">
+        Não é mais um cursinho. Não são mais questões aleatórias.<br>
+        É a primeira plataforma que sabe <strong>exatamente o que você precisa estudar</strong> — e quando.
+      </p>
+
+      <!-- Countdown -->
+      <div class="countdown-wrap">
+        <div class="countdown-box">
+          <div class="countdown-unit">
+            <div class="countdown-num" id="cd-dias">--</div>
+            <div class="countdown-label">dias</div>
+          </div>
+          <div class="countdown-unit">
+            <div class="countdown-num" id="cd-horas">--</div>
+            <div class="countdown-label">horas</div>
+          </div>
+          <div class="countdown-unit">
+            <div class="countdown-num" id="cd-min">--</div>
+            <div class="countdown-label">min</div>
+          </div>
+          <div class="countdown-unit">
+            <div class="countdown-num" id="cd-seg">--</div>
+            <div class="countdown-label">seg</div>
+          </div>
+        </div>
+      </div>
+      <p class="countdown-meta">Lançamento para <span>Lista Prioritária</span> · Vagas beta extremamente limitadas</p>
+
+      <!-- Formulário -->
+      <div class="form-section">
+        <p class="form-label">Garanta sua vaga na lista prioritária — é gratuito</p>
+        <div id="form-hero">
+          <div class="form-row">
+            <input class="form-input" type="email" placeholder="Seu melhor e-mail" id="email-hero">
+            <button class="form-btn" onclick="submitForm('hero')">Quero minha vaga →</button>
+          </div>
+        </div>
+        <div class="success-msg" id="success-hero">
+          <strong>Você está na lista!</strong>
+          Você será o primeiro a saber quando o beta abrir. Fique de olho no e-mail.
+        </div>
+        <p class="form-hint">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Sem spam. Você pode sair a qualquer momento.
+        </p>
+        <div class="vagas-bar">
+          <div class="vagas-text"><strong>357</strong> inscritos</div>
+          <div class="vagas-progress-track">
+            <div class="vagas-progress-fill"></div>
+          </div>
+          <div class="vagas-count">143 vagas restantes</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ECG decorativo -->
+    <svg class="hero-ecg" viewBox="0 0 1440 80" preserveAspectRatio="none">
+      <polyline
+        points="0,40 120,40 140,40 160,10 180,70 200,5 220,75 240,40 280,40 320,40 360,40 400,40 440,40 460,40 480,20 500,60 510,5 520,75 530,40 560,40 600,40 640,40 680,40 720,40 760,40 800,40 820,40 840,20 860,60 870,5 880,75 890,40 920,40 960,40 1000,40 1040,40 1080,40 1120,40 1140,40 1160,20 1180,60 1190,5 1200,75 1210,40 1240,40 1280,40 1320,40 1360,40 1440,40"
+        fill="none"
+        stroke="#00C2A8"
+        stroke-width="1.5"
+      />
+    </svg>
+  </section>
+
+  <!-- ===================== PROBLEMA ===================== -->
+  <section class="section-problema">
+    <div class="container">
+      <div class="section-tag">A realidade que ninguém fala</div>
+      <h2 class="section-title">Você estuda muito.<br>Mas estuda certo?</h2>
+      <p class="section-lead">
+        Os preparatórios tradicionais entregam volume. Você precisa de <em>direção</em>.
+        Antes de te mostrar o que construímos, precisa reconhecer o que está acontecendo.
+      </p>
+
+      <div class="dor-grid reveal-on-scroll">
+
+        <div class="dor-card">
+          <div class="dor-num">01 — Incerteza</div>
+          <div class="dor-pergunta">"Será que estou estudando o suficiente?"</div>
+          <div class="dor-detail">
+            Horas investidas não garantem aprovação. Sem um diagnóstico real de prontidão, você vive na ansiedade de não saber se está no caminho certo — mesmo após meses de estudo.
+          </div>
+        </div>
+
+        <div class="dor-card">
+          <div class="dor-num">02 — Paralisia</div>
+          <div class="dor-pergunta">"90 mil questões. Por onde começo?"</div>
+          <div class="dor-detail">
+            Excesso de conteúdo sem método é o maior inimigo da aprovação. Você acaba estudando o que já sabe, ignorando os gaps que realmente fazem diferença na nota.
+          </div>
+        </div>
+
+        <div class="dor-card">
+          <div class="dor-num">03 — Desperdício</div>
+          <div class="dor-pergunta">"Cada hora mal usada é um ativo perdido."</div>
+          <div class="dor-detail">
+            A prova de residência tem data. O tempo de preparação não volta. Estudo ineficiente não é só chato — é prejuízo real com consequências que se medem em anos de vida.
+          </div>
+        </div>
+
+        <div class="dor-card">
+          <div class="dor-num">04 — Invisibilidade</div>
+          <div class="dor-pergunta">"O cursinho me trata igual a todos."</div>
+          <div class="dor-detail">
+            Seu perfil é único. Suas lacunas são específicas. Mas todas as ferramentas te entregam o mesmo currículo genérico. Você merece uma plataforma que te enxerga de verdade.
+          </div>
+        </div>
+
+        <div class="dor-card wide">
+          <div class="dor-num">05 — O gap que rouba pontos</div>
+          <div class="dor-pergunta">"Saúde Coletiva. O conteúdo que você ignora e que decide sua aprovação."</div>
+          <div class="dor-detail">
+            35 a 45% de qualquer prova de residência. Bioestatística, epidemiologia, políticas do SUS. Candidatos com anos de estudo perdem vagas por subestimar o único conteúdo que todos abandonam — e que nenhum preparatório cobre de verdade.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== TEASER DE SOLUÇÃO ===================== -->
+  <section class="section-teaser">
+    <div class="container--wide">
+
+      <div class="teaser-intro">
+        <div class="section-tag">O que está chegando</div>
+        <h2 class="section-title">Inteligência. Não volume.</h2>
+        <p class="section-lead">
+          Revelamos algumas das funcionalidades. O restante, apenas os membros da lista prioritária vão descobrir primeiro.
+        </p>
+      </div>
+
+      <div class="feature-teaser-grid reveal-on-scroll">
+
+        <!-- Feature visível 1 -->
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/><path d="M12 2v2m0 16v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M2 12h2m16 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+            </svg>
+          </div>
+          <div class="feature-name">Diagnóstico de Prontidão</div>
+          <div class="feature-desc">
+            Descubra exatamente em qual percentil você está para cada prova-alvo. Não "você foi bem" — sim, "você está 68% pronto para a FMUSP, precisa dessas 3 áreas."
+          </div>
+        </div>
+
+        <!-- Feature visível 2 -->
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96-.46 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/>
+              <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96-.46 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>
+            </svg>
+          </div>
+          <div class="feature-name">Spaced Repetition Calibrada</div>
+          <div class="feature-desc">
+            Flashcards que aprendem com você. O algoritmo calcula o momento exato de revisão para maximizar retenção e eliminar o tempo perdido revisando o que você já sabe.
+          </div>
+        </div>
+
+        <!-- Feature visível 3 -->
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>
+            </svg>
+          </div>
+          <div class="feature-name">Simulados por Prova-Alvo</div>
+          <div class="feature-desc">
+            Cronometre e compare. Banco de questões dos últimos anos de FMUSP, FMABC e UERJ — com análise granular por subtópico, não apenas acertos totais.
+          </div>
+        </div>
+
+        <!-- Feature bloqueada 1 -->
+        <div class="feature-card locked">
+          <div class="feature-icon" style="background:rgba(138,154,181,.08); color:var(--chumbo);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <div class="feature-name" style="color:var(--chumbo);">
+            IA Adaptativa
+          </div>
+          <div class="feature-desc feature-blur">
+            A IA detecta seus padrões de erro e reconstrói o plano semana a semana, priorizando automaticamente os gaps que mais impactam sua nota final.
+          </div>
+          <div class="feature-lock-badge">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Revelado em breve
+          </div>
+        </div>
+
+        <!-- Feature bloqueada 2 -->
+        <div class="feature-card locked">
+          <div class="feature-icon" style="background:rgba(138,154,181,.08); color:var(--chumbo);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <div class="feature-name" style="color:var(--chumbo);">Ranking Nacional</div>
+          <div class="feature-desc feature-blur">
+            Compare sua performance com candidatos de todo o Brasil que miram as mesmas provas. Saiba sua posição real no campo de batalha.
+          </div>
+          <div class="feature-lock-badge">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Revelado em breve
+          </div>
+        </div>
+
+        <!-- Feature bloqueada 3 -->
+        <div class="feature-card locked">
+          <div class="feature-icon" style="background:rgba(138,154,181,.08); color:var(--chumbo);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+            </svg>
+          </div>
+          <div class="feature-name" style="color:var(--chumbo);">Saúde Coletiva Edge</div>
+          <div class="feature-desc feature-blur">
+            O módulo mais completo de SC do mercado. Os 5 pontos mais fáceis de ganhar que a maioria dos candidatos desperdiça por subestimar o conteúdo.
+          </div>
+          <div class="feature-lock-badge">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Revelado em breve
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ANTES vs DEPOIS ===================== -->
+  <section class="section-reveal">
+    <div class="container">
+      <div class="section-tag">A mudança que você vai sentir</div>
+      <h2 class="section-title" style="margin-bottom: 48px;">Do estudo às cegas<br>para a <span style="color:var(--pulso)">performance cirúrgica</span></h2>
+
+      <div class="reveal-grid reveal-on-scroll">
+        <div class="reveal-before">
+          <div class="reveal-tag">Como é hoje</div>
+
+          <div class="reveal-item">
+            <svg class="reveal-icon" viewBox="0 0 24 24" fill="none" stroke="#8A9AB5" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <div class="reveal-text">Você faz questões sem saber se está no caminho certo para a prova que importa</div>
+          </div>
+          <div class="reveal-item">
+            <svg class="reveal-icon" viewBox="0 0 24 24" fill="none" stroke="#8A9AB5" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <div class="reveal-text">Currículo genérico que não considera seu histórico de acertos e erros</div>
+          </div>
+          <div class="reveal-item">
+            <svg class="reveal-icon" viewBox="0 0 24 24" fill="none" stroke="#8A9AB5" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <div class="reveal-text">Saúde Coletiva abandonada, perdendo 35–45% dos pontos disponíveis</div>
+          </div>
+          <div class="reveal-item">
+            <svg class="reveal-icon" viewBox="0 0 24 24" fill="none" stroke="#8A9AB5" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <div class="reveal-text">Ansiedade permanente de não saber o quanto ainda falta para a aprovação</div>
+          </div>
+          <div class="reveal-item">
+            <svg class="reveal-icon" viewBox="0 0 24 24" fill="none" stroke="#8A9AB5" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+            <div class="reveal-text">Horas desperdiçadas revisando conteúdo que você já domina</div>
+          </div>
+        </div>
+
+        <div class="reveal-after">
+          <div class="reveal-tag">Com MedPleni</div>
+
+          <div class="reveal-item">
+            <svg class="reveal-icon" viewBox="0 0 24 24" fill="none" stroke="#00C2A8" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <div class="reveal-text">Diagnóstico de prontidão em percentil real para cada prova-alvo — todo dia</div>
+          </div>
+          <div class="reveal-item">
+            <svg class="reveal-icon" viewBox="0 0 24 24" fill="none" stroke="#00C2A8" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <div class="reveal-text">IA que reconstrói seu plano semanalmente com base nos seus gaps reais</div>
+          </div>
+          <div class="reveal-item">
+            <svg class="reveal-icon" viewBox="0 0 24 24" fill="none" stroke="#00C2A8" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <div class="reveal-text">Módulo de Saúde Coletiva com método — bioestatística e SUS que fazem sentido</div>
+          </div>
+          <div class="reveal-item">
+            <svg class="reveal-icon" viewBox="0 0 24 24" fill="none" stroke="#00C2A8" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <div class="reveal-text">Clareza total: sabe o que estudar, por quanto tempo e o que esperar em pontos</div>
+          </div>
+          <div class="reveal-item">
+            <svg class="reveal-icon" viewBox="0 0 24 24" fill="none" stroke="#00C2A8" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <div class="reveal-text">Spaced repetition que elimina revisão desnecessária — só o que precisa, quando precisa</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PROVA SOCIAL ===================== -->
+  <section class="section-prova">
+    <div class="container--wide">
+      <div class="section-tag" style="justify-content:center;">Beta fechado — primeiras impressões</div>
+      <h2 class="section-title">Os que já viram<br>não querem mais esperar</h2>
+
+      <div class="stat-strip reveal-on-scroll">
+        <div class="stat-item">
+          <span class="stat-num">357</span>
+          <div class="stat-label">candidatos na<br>lista de espera</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">143</span>
+          <div class="stat-label">vagas beta<br>ainda disponíveis</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">4</span>
+          <div class="stat-label">provas cobertas<br>no lançamento</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">+27%</span>
+          <div class="stat-label">melhora média em<br>prontidão nos primeiros 30 dias</div>
+        </div>
+      </div>
+
+      <div class="depo-grid reveal-on-scroll">
+
+        <div class="depo-card">
+          <div class="depo-badge">Beta tester</div>
+          <p class="depo-quote">
+            "Pela primeira vez eu sou que estou exatamente em qual percentil para a FMUSP. Não é uma nota — é uma coordenada. Muda completamente como você decide o que estudar."
+          </p>
+          <div class="depo-author">
+            <div class="depo-avatar">RS</div>
+            <div>
+              <div class="depo-name">Rafael S.</div>
+              <div class="depo-meta">6.º ano, FMUSP · Alvo: Clínica Médica USP</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="depo-card">
+          <div class="depo-badge">Beta tester</div>
+          <p class="depo-quote">
+            "Saúde Coletiva sempre foi o meu calcanhar. Em 3 semanas com o módulo de SC, subi 18 pontos no simulado da UERJ só nessa seção. 18 pontos que eu estava jogando fora todo ano."
+          </p>
+          <div class="depo-author">
+            <div class="depo-avatar">MC</div>
+            <div>
+              <div class="depo-name">Mariana C.</div>
+              <div class="depo-meta">R0, UERJ · Alvo: Cirurgia Geral</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="depo-card">
+          <div class="depo-badge">Beta tester</div>
+          <p class="depo-quote">
+            "A IA detectou que eu revisava Pediatria excessivamente por ansiedade, não por necessidade. Cortou pela metade. Direcionou para os gaps reais em CM. Parei de estudar no escuro."
+          </p>
+          <div class="depo-author">
+            <div class="depo-avatar">TL</div>
+            <div>
+              <div class="depo-name">Thiago L.</div>
+              <div class="depo-meta">Formando, UNIFESP · Alvo: FMABC</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CTA FINAL ===================== -->
+  <section class="section-cta">
+    <div class="container">
+
+      <div class="section-tag" style="justify-content:center;">Não perca a janela</div>
+
+      <div class="cta-mega-text">
+        <span class="muted">Vagas</span><br>
+        <span class="accent">limitadas.</span><br>
+        <span class="muted">Lista</span><br>
+        prioritária.
+      </div>
+
+      <p class="cta-sub">
+        Quando o beta abrir, candidatos da lista prioritária recebem acesso 7 dias antes de qualquer outra pessoa — e condições exclusivas de fundadores.
+      </p>
+
+      <div class="cta-form-big">
+        <div id="form-cta">
+          <div class="cta-form-row">
+            <input class="cta-input" type="text" placeholder="Seu nome" id="nome-cta">
+            <input class="cta-input" type="email" placeholder="Seu melhor e-mail" id="email-cta">
+            <button class="cta-btn-big" onclick="submitForm('cta')">
+              Entrar na lista prioritária — é gratuito →
+            </button>
+          </div>
+        </div>
+        <div class="success-msg" id="success-cta">
+          <strong>Você está na lista prioritária!</strong>
+          Preparado para receber acesso antes de todos. Fique de olho no e-mail.
+        </div>
+        <p class="cta-urgency" style="margin-top:20px;">
+          <span>143 vagas</span> restantes no beta fechado · Lista fecha automaticamente ao atingir 500 inscritos
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer>
+    <div class="footer-logo"><span>Med</span><span>Pleni</span></div>
+    <p class="footer-copy">© 2026 MedPleni. O algoritmo da aprovação. · <a href="#" style="color:var(--chumbo);">Privacidade</a> · <a href="#" style="color:var(--chumbo);">Descadastrar</a></p>
+  </footer>
+
+  <script>
+    // ---------- COUNTDOWN ----------
+    (function() {
+      // Data de lançamento: 30 dias a partir de hoje
+      var launch = new Date();
+      launch.setDate(launch.getDate() + 30);
+      launch.setHours(9, 0, 0, 0);
+
+      var prevVals = { d: null, h: null, m: null, s: null };
+
+      function pad(n) { return String(n).padStart(2, '0'); }
+
+      function update() {
+        var now = new Date();
+        var diff = Math.max(0, launch - now);
+
+        var d = Math.floor(diff / 86400000);
+        var h = Math.floor((diff % 86400000) / 3600000);
+        var m = Math.floor((diff % 3600000) / 60000);
+        var s = Math.floor((diff % 60000) / 1000);
+
+        var units = [
+          { el: 'cd-dias',  val: d, prev: 'd' },
+          { el: 'cd-horas', val: h, prev: 'h' },
+          { el: 'cd-min',   val: m, prev: 'm' },
+          { el: 'cd-seg',   val: s, prev: 's' }
+        ];
+
+        units.forEach(function(u) {
+          var el = document.getElementById(u.el);
+          var str = pad(u.val);
+          if (prevVals[u.prev] !== str) {
+            el.textContent = str;
+            el.classList.remove('flip');
+            void el.offsetWidth; // reflow
+            el.classList.add('flip');
+            prevVals[u.prev] = str;
+          }
+        });
+      }
+
+      update();
+      setInterval(update, 1000);
+    })();
+
+    // ---------- FORM SUBMIT ----------
+    function submitForm(id) {
+      var emailEl = document.getElementById('email-' + id);
+      if (!emailEl) return;
+      var email = emailEl.value.trim();
+      if (!email || !email.includes('@')) {
+        emailEl.focus();
+        emailEl.style.borderColor = '#E05A7A';
+        setTimeout(function() { emailEl.style.borderColor = ''; }, 1500);
+        return;
+      }
+      document.getElementById('form-' + id).style.display = 'none';
+      document.getElementById('success-' + id).style.display = 'block';
+
+      // Atualiza contador de vagas (simulação)
+      document.querySelectorAll('.vagas-count').forEach(function(el) {
+        el.textContent = '142 vagas restantes';
+      });
+    }
+
+    // ---------- SCROLL REVEAL ----------
+    var reveals = document.querySelectorAll('.reveal-on-scroll');
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    reveals.forEach(function(el) { observer.observe(el); });
+  </script>
+
+</body>
+</html>
