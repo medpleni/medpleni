@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MedPleni — Brand Book</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@700&family=Inter:wght@300;400;500;600&family=Source+Serif+4:ital,wght@0,400;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --abismo:    #1A1F2E;
+      --petroleo:  #2B3A52;
+      --sinal:     #3D5A80;
+      --neblina:   #E0E6F0;
+      --chumbo:    #8A9AB5;
+      --lab:       #F0F4FA;
+      --pulso:     #00C2A8;
+      --resid:     #0077B6;
+      --indigo:    #6B5CE7;
+      --white:     #FFFFFF;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--abismo);
+      color: var(--neblina);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(26, 31, 46, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,194,168,0.15);
+      padding: 0 40px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: 'IBM Plex Sans Condensed', sans-serif;
+      font-size: 18px;
+      color: var(--white);
+      letter-spacing: 0.04em;
+    }
+    .nav-logo span { color: var(--pulso); }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a {
+      color: var(--chumbo);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--pulso); }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 40px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+      width: 800px; height: 800px;
+      background: radial-gradient(circle, rgba(61,90,128,0.3) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--pulso);
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: 'IBM Plex Sans Condensed', sans-serif;
+      font-size: clamp(52px, 8vw, 96px);
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+    .hero h1 span { color: var(--pulso); }
+    .hero-sub {
+      font-family: 'IBM Plex Sans Condensed', sans-serif;
+      font-size: clamp(20px, 3vw, 28px);
+      color: var(--chumbo);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 40px;
+    }
+    .hero-tagline {
+      font-family: 'Source Serif 4', serif;
+      font-size: clamp(16px, 2vw, 20px);
+      font-style: italic;
+      color: var(--neblina);
+      max-width: 600px;
+      opacity: 0.8;
+    }
+    .hero-meta {
+      margin-top: 64px;
+      display: flex;
+      gap: 48px;
+      align-items: center;
+    }
+    .hero-meta-item { text-align: center; }
+    .hero-meta-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--chumbo);
+      margin-bottom: 4px;
+    }
+    .hero-meta-value {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      color: var(--pulso);
+    }
+    .hero-divider {
+      width: 1px;
+      height: 40px;
+      background: rgba(138,154,181,0.3);
+    }
+
+    /* ─── LAYOUT ─── */
+    .page { padding-top: 60px; }
+    section {
+      padding: 100px 40px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+    section + section {
+      border-top: 1px solid rgba(61,90,128,0.25);
+    }
+
+    .section-tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--pulso);
+      margin-bottom: 16px;
+    }
+    h2 {
+      font-family: 'IBM Plex Sans Condensed', sans-serif;
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.01em;
+      line-height: 1.1;
+      margin-bottom: 48px;
+    }
+    h3 {
+      font-family: 'IBM Plex Sans Condensed', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 0.01em;
+      margin-bottom: 16px;
+      margin-top: 48px;
+    }
+    h3:first-of-type { margin-top: 0; }
+    p {
+      color: var(--neblina);
+      font-size: 15px;
+      line-height: 1.8;
+      max-width: 680px;
+      margin-bottom: 16px;
+    }
+
+    /* ─── CARD ─── */
+    .card {
+      background: var(--petroleo);
+      border: 1px solid rgba(61,90,128,0.5);
+      border-radius: 12px;
+      padding: 32px;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 32px;
+    }
+    .card-highlight {
+      background: linear-gradient(135deg, rgba(0,194,168,0.08), rgba(43,58,82,0.8));
+      border: 1px solid rgba(0,194,168,0.25);
+    }
+
+    /* ─── POSICIONAMENTO ─── */
+    .positioning-box {
+      background: var(--petroleo);
+      border-left: 3px solid var(--pulso);
+      border-radius: 0 12px 12px 0;
+      padding: 32px 40px;
+      margin: 32px 0;
+      font-family: 'Source Serif 4', serif;
+      font-size: 20px;
+      line-height: 1.6;
+      color: var(--white);
+      font-style: italic;
+    }
+
+    /* ─── VALORES ─── */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 32px;
+    }
+    .value-card {
+      background: var(--petroleo);
+      border: 1px solid rgba(61,90,128,0.5);
+      border-radius: 10px;
+      padding: 24px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .value-card:hover {
+      border-color: var(--pulso);
+      transform: translateY(-2px);
+    }
+    .value-name {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--pulso);
+      margin-bottom: 10px;
+    }
+    .value-desc {
+      font-size: 14px;
+      color: var(--neblina);
+      line-height: 1.5;
+      margin: 0;
+      max-width: none;
+    }
+
+    /* ─── ARQUITETURA ─── */
+    .arch-tree {
+      background: var(--petroleo);
+      border: 1px solid rgba(61,90,128,0.5);
+      border-radius: 12px;
+      padding: 40px;
+      margin: 32px 0;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .arch-root {
+      font-size: 13px;
+      color: var(--chumbo);
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .arch-main {
+      font-size: 20px;
+      color: var(--white);
+      margin: 12px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+    .arch-main::before {
+      content: '└──';
+      color: var(--pulso);
+      position: absolute;
+      left: 0; top: 0;
+      font-size: 14px;
+    }
+    .arch-subs { padding-left: 52px; margin-top: 8px; }
+    .arch-sub {
+      font-size: 14px;
+      color: var(--neblina);
+      margin: 6px 0;
+      position: relative;
+      padding-left: 24px;
+    }
+    .arch-sub::before {
+      content: '├──';
+      color: var(--sinal);
+      position: absolute;
+      left: 0;
+    }
+    .arch-sub:last-child::before { content: '└──'; }
+    .arch-sub-accent { color: var(--pulso); }
+
+    .submarcas-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 32px;
+    }
+    .submarca-card {
+      border-radius: 12px;
+      padding: 28px;
+      border-top: 3px solid;
+    }
+    .submarca-card.resid  { background: rgba(0,119,182,0.12); border-color: #0077B6; }
+    .submarca-card.enamed { background: rgba(0,194,168,0.12); border-color: #00C2A8; }
+    .submarca-card.revalida { background: rgba(107,92,231,0.12); border-color: #6B5CE7; }
+    .submarca-card.spec { background: rgba(201,138,10,0.12); border-color: #C98A0A; }
+    .submarca-name {
+      font-family: 'IBM Plex Sans Condensed', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    .submarca-badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .submarca-card.resid   .submarca-badge { background: rgba(0,119,182,0.3); color: #64B5E8; }
+    .submarca-card.enamed  .submarca-badge { background: rgba(0,194,168,0.3); color: #00C2A8; }
+    .submarca-card.revalida .submarca-badge { background: rgba(107,92,231,0.3); color: #A99EF5; }
+    .submarca-card.spec    .submarca-badge { background: rgba(201,138,10,0.3); color: #E8AA30; }
+    .submarca-meta { font-size: 13px; color: var(--chumbo); margin: 6px 0; line-height: 1.5; max-width: none; }
+    .submarca-meta strong { color: var(--neblina); }
+
+    /* ─── CORES ─── */
+    .color-group { margin-bottom: 48px; }
+    .color-group-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--chumbo);
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(61,90,128,0.3);
+    }
+    .color-swatches {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+    }
+    .swatch {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .swatch-color {
+      height: 80px;
+      width: 100%;
+    }
+    .swatch-info {
+      background: var(--petroleo);
+      padding: 14px 16px;
+    }
+    .swatch-name {
+      font-family: 'IBM Plex Sans Condensed', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .swatch-hex {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--chumbo);
+      letter-spacing: 0.05em;
+    }
+    .swatch-use {
+      font-size: 11px;
+      color: var(--chumbo);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+    .swatch-featured .swatch-color {
+      height: 120px;
+    }
+
+    /* ─── TIPOGRAFIA ─── */
+    .type-sample {
+      background: var(--petroleo);
+      border: 1px solid rgba(61,90,128,0.5);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 16px;
+    }
+    .type-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--chumbo);
+      margin-bottom: 20px;
+      display: flex;
+      gap: 24px;
+    }
+    .type-meta span { color: var(--pulso); }
+    .type-display {
+      font-family: 'IBM Plex Sans Condensed', sans-serif;
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+    }
+    .type-body-sample {
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      color: var(--neblina);
+      line-height: 1.7;
+      max-width: none;
+    }
+    .type-mono-sample {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 24px;
+      color: var(--pulso);
+      letter-spacing: 0.02em;
+    }
+    .type-serif-sample {
+      font-family: 'Source Serif 4', serif;
+      font-size: 22px;
+      color: var(--neblina);
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    /* ─── TOM DE VOZ ─── */
+    .voice-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 24px;
+    }
+    .voice-table th {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--chumbo);
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(61,90,128,0.4);
+    }
+    .voice-table td {
+      padding: 16px;
+      font-size: 14px;
+      border-bottom: 1px solid rgba(61,90,128,0.2);
+      vertical-align: top;
+    }
+    .voice-table tr:last-child td { border-bottom: none; }
+    .voice-table .col-tom {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--pulso);
+      white-space: nowrap;
+    }
+    .voice-table .col-sim { color: var(--neblina); }
+    .voice-table .col-nao { color: var(--chumbo); text-decoration: line-through; font-style: italic; }
+    .voice-table-wrap {
+      background: var(--petroleo);
+      border: 1px solid rgba(61,90,128,0.5);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    /* ─── COPY ─── */
+    .copy-block {
+      border-left: 2px solid var(--pulso);
+      padding: 20px 28px;
+      margin: 16px 0;
+      background: rgba(0,194,168,0.04);
+      border-radius: 0 8px 8px 0;
+    }
+    .copy-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--pulso);
+      margin-bottom: 10px;
+    }
+    .copy-text {
+      font-family: 'Source Serif 4', serif;
+      font-size: 18px;
+      color: var(--white);
+      font-style: italic;
+      line-height: 1.5;
+      margin: 0;
+      max-width: none;
+    }
+
+    /* ─── TAGLINES ─── */
+    .tagline-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 32px;
+    }
+    .tagline-card {
+      background: var(--petroleo);
+      border: 1px solid rgba(61,90,128,0.5);
+      border-radius: 10px;
+      padding: 24px;
+      transition: border-color 0.2s;
+    }
+    .tagline-card:hover { border-color: rgba(0,194,168,0.4); }
+    .tagline-brand {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--chumbo);
+      margin-bottom: 12px;
+    }
+    .tagline-text {
+      font-family: 'IBM Plex Sans Condensed', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+      font-style: italic;
+    }
+
+    /* ─── MANDATÓRIOS ─── */
+    .rules-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 32px;
+    }
+    .rules-card {
+      border-radius: 12px;
+      padding: 28px;
+    }
+    .rules-card.yes {
+      background: rgba(0,194,168,0.06);
+      border: 1px solid rgba(0,194,168,0.25);
+    }
+    .rules-card.no {
+      background: rgba(255,80,80,0.04);
+      border: 1px solid rgba(255,80,80,0.15);
+    }
+    .rules-card-title {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .rules-card.yes .rules-card-title { color: var(--pulso); }
+    .rules-card.no  .rules-card-title { color: #FF6B6B; }
+    .rules-card-title::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    .rule-item {
+      font-size: 13px;
+      color: var(--neblina);
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      line-height: 1.5;
+    }
+    .rule-item:last-child { border-bottom: none; }
+
+    /* ─── PRÓXIMOS PASSOS ─── */
+    .steps-list {
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: var(--petroleo);
+      border: 1px solid rgba(61,90,128,0.5);
+      border-radius: 10px;
+      padding: 20px 24px;
+    }
+    .step-priority {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .step-priority.alta   { background: rgba(0,194,168,0.15); color: var(--pulso); }
+    .step-priority.media  { background: rgba(61,90,128,0.4);  color: var(--neblina); }
+    .step-priority.baixa  { background: rgba(138,154,181,0.15); color: var(--chumbo); }
+    .step-name { font-size: 14px; color: var(--neblina); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid rgba(61,90,128,0.25);
+      padding: 60px 40px;
+      text-align: center;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+    .footer-logo {
+      font-family: 'IBM Plex Sans Condensed', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    .footer-logo span { color: var(--pulso); }
+    .footer-parent {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--chumbo);
+      margin-bottom: 32px;
+    }
+    .footer-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: rgba(138,154,181,0.5);
+    }
+
+    /* ─── UTILIDADES ─── */
+    .label {
+      display: inline-block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(0,194,168,0.12);
+      color: var(--pulso);
+      padding: 3px 10px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .divider-line {
+      border: none;
+      border-top: 1px solid rgba(61,90,128,0.25);
+      margin: 48px 0;
+    }
+    blockquote {
+      font-family: 'Source Serif 4', serif;
+      font-style: italic;
+      font-size: 20px;
+      color: var(--white);
+      border-left: 3px solid var(--pulso);
+      padding: 20px 28px;
+      margin: 32px 0;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      section { padding: 60px 24px; }
+      .submarcas-grid { grid-template-columns: 1fr; }
+      .rules-grid { grid-template-columns: 1fr; }
+      .hero { padding: 100px 24px 60px; }
+      .hero-meta { flex-direction: column; gap: 24px; }
+      .hero-divider { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="nav-logo">Med<span>Pleni</span></div>
+  <div class="nav-links">
+    <a href="#essencia">Essência</a>
+    <a href="#arquitetura">Arquitetura</a>
+    <a href="#cores">Cores</a>
+    <a href="#tipografia">Tipografia</a>
+    <a href="#voz">Tom de Voz</a>
+    <a href="#taglines">Taglines</a>
+    <a href="#mandatorios">Mandatórios</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">Brand Book · Versão 1.0 · 2025</div>
+    <h1>Med<span>Pleni</span></h1>
+    <div class="hero-sub">O Algoritmo da Aprovação</div>
+    <p class="hero-tagline">Não é um curso. É um sistema de inteligência que calcula o caminho mais curto entre onde você está e onde precisa chegar.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <div class="hero-meta-label">Marca Mãe</div>
+        <div class="hero-meta-value">Plenitude Educação</div>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-meta-item">
+        <div class="hero-meta-label">Segmento</div>
+        <div class="hero-meta-value">Prep. Médico</div>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-meta-item">
+        <div class="hero-meta-label">Submarcas</div>
+        <div class="hero-meta-value">3 linhas</div>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-meta-item">
+        <div class="hero-meta-label">Posição</div>
+        <div class="hero-meta-value">Tech · Preciso</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ESSÊNCIA -->
+  <section id="essencia">
+    <div class="section-tag">// 01 — Essência da Marca</div>
+    <h2>Propósito &amp; Posicionamento</h2>
+
+    <h3>Propósito</h3>
+    <p>Transformar a preparação médica de esforço genérico em performance cirúrgica — porque médicos merecem um método tão preciso quanto a medicina que praticam.</p>
+
+    <h3>Brand Idea</h3>
+    <div class="positioning-box">
+      "O Algoritmo da Aprovação"
+    </div>
+
+    <h3>Declaração de Posicionamento</h3>
+    <blockquote>MedPleni é o único preparatório médico brasileiro que usa inteligência preditiva para calcular e maximizar as chances reais de aprovação de cada candidato.</blockquote>
+
+    <h3>Valores de Marca</h3>
+    <div class="values-grid">
+      <div class="value-card">
+        <div class="value-name">Precisão</div>
+        <p class="value-desc">Nada é genérico. Tudo é calculado para o perfil de cada candidato.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-name">Inteligência</div>
+        <p class="value-desc">Tech a serviço do resultado clínico e da aprovação.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-name">Confiabilidade</div>
+        <p class="value-desc">Método baseado em dados, não em intuição ou promessas vazias.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-name">Sofisticação</div>
+        <p class="value-desc">Para quem já ultrapassou o básico e exige o melhor.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-name">Urgência Estratégica</div>
+        <p class="value-desc">Tempo é ativo. Cada hora de estudo deve ter retorno máximo.</p>
+      </div>
+    </div>
+
+    <h3>Arquétipos de Marca</h3>
+    <div class="card-grid">
+      <div class="card card-highlight">
+        <div class="label">Primário</div>
+        <div style="font-family:'IBM Plex Sans Condensed',sans-serif; font-size:24px; font-weight:700; color:var(--white); margin-bottom:8px;">O Sábio</div>
+        <p style="margin:0; font-size:14px;">Conhecimento + método. Fala com precisão, sem arrogância. A referência que você consulta antes de qualquer decisão importante.</p>
+      </div>
+      <div class="card">
+        <div class="label">Secundário</div>
+        <div style="font-family:'IBM Plex Sans Condensed',sans-serif; font-size:24px; font-weight:700; color:var(--white); margin-bottom:8px;">O Criador</div>
+        <p style="margin:0; font-size:14px;">Sistema + inovação. Constrói ferramentas que não existiam antes. A plataforma que redefine o que preparação significa.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARQUITETURA -->
+  <section id="arquitetura">
+    <div class="section-tag">// 02 — Arquitetura de Marca</div>
+    <h2>Estrutura &amp; Submarcas</h2>
+
+    <p>O MedPleni utiliza o modelo <strong>Endorsed Brand</strong>: as submarcas herdam credibilidade da Plenitude Educação via MedPleni, mas possuem identidade própria suficiente para comunicar especificidade de prova e público.</p>
+
+    <div class="arch-tree">
+      <div class="arch-root">PLENITUDE EDUCAÇÃO</div>
+      <div class="arch-main">Med<span style="color:var(--pulso)">Pleni</span> <span style="font-size:13px; color:var(--chumbo)">← marca principal</span></div>
+      <div class="arch-subs">
+        <div class="arch-sub">MedPleni <span class="arch-sub-accent">Resid</span> → Residência Médica</div>
+        <div class="arch-sub">MedPleni <span class="arch-sub-accent">Enamed</span> → ENAMED</div>
+        <div class="arch-sub">MedPleni <span class="arch-sub-accent">Revalida</span> → Médicos do exterior</div>
+        <div class="arch-sub">MedPleni <span class="arch-sub-accent" style="color:#C98A0A;">Spec</span> → Prova de Título de Especialista</div>
+      </div>
+    </div>
+
+    <div class="submarcas-grid">
+      <div class="submarca-card resid">
+        <div class="submarca-name">MedPleni Resid</div>
+        <span class="submarca-badge">Residência</span>
+        <p class="submarca-meta"><strong>Público:</strong> Graduandos / recém-formados</p>
+        <p class="submarca-meta"><strong>Tensão:</strong> Ansiedade de transição</p>
+        <p class="submarca-meta"><strong>Promessa:</strong> Aprovação no primeiro ciclo</p>
+        <p class="submarca-meta"><strong>Acento:</strong> #0077B6 — Azul profundo</p>
+      </div>
+      <div class="submarca-card enamed">
+        <div class="submarca-name">MedPleni Enamed</div>
+        <span class="submarca-badge">ENAMED</span>
+        <p class="submarca-meta"><strong>Público:</strong> Médicos residentes</p>
+        <p class="submarca-meta"><strong>Tensão:</strong> Exaustão + ambição</p>
+        <p class="submarca-meta"><strong>Promessa:</strong> Performance com pouco tempo</p>
+        <p class="submarca-meta"><strong>Acento:</strong> #00C2A8 — Pulso (herda master)</p>
+      </div>
+      <div class="submarca-card revalida">
+        <div class="submarca-name">MedPleni Revalida</div>
+        <span class="submarca-badge">Revalida</span>
+        <p class="submarca-meta"><strong>Público:</strong> Médicos do exterior</p>
+        <p class="submarca-meta"><strong>Tensão:</strong> Identidade + recomeço</p>
+        <p class="submarca-meta"><strong>Promessa:</strong> Reconhecimento merecido</p>
+        <p class="submarca-meta"><strong>Acento:</strong> #6B5CE7 — Índigo</p>
+      </div>
+      <div class="submarca-card spec">
+        <div class="submarca-name">MedPleni Spec</div>
+        <span class="submarca-badge">Especialista</span>
+        <p class="submarca-meta"><strong>Público:</strong> Médicos com especialidade buscando titulação</p>
+        <p class="submarca-meta"><strong>Tensão:</strong> Competência provada, título ainda pendente</p>
+        <p class="submarca-meta"><strong>Promessa:</strong> O título que a sua carreira já merece</p>
+        <p class="submarca-meta"><strong>Acento:</strong> #C98A0A — Âmbar (conquista, prestígio)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORES -->
+  <section id="cores">
+    <div class="section-tag">// 03 — Sistema de Cores</div>
+    <h2>Paleta Cromática</h2>
+    <p>A paleta é deliberadamente austera. Poucas cores, máximo impacto. O acento <strong style="color:var(--pulso)">Pulso</strong> é o único elemento de cor quente — reservado para dados positivos, CTAs e indicadores de performance.</p>
+
+    <div class="color-group">
+      <div class="color-group-title">Cores Primárias — Base estrutural</div>
+      <div class="color-swatches">
+        <div class="swatch swatch-featured">
+          <div class="swatch-color" style="background:#1A1F2E;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Abismo</div>
+            <div class="swatch-hex">#1A1F2E</div>
+            <div class="swatch-use">Background principal, credibilidade total</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#2B3A52;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Petróleo</div>
+            <div class="swatch-hex">#2B3A52</div>
+            <div class="swatch-use">Cards, surfaces, containers</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#3D5A80;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Sinal</div>
+            <div class="swatch-hex">#3D5A80</div>
+            <div class="swatch-use">Borders, separadores, hover states</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="color-group">
+      <div class="color-group-title">Cores Secundárias — Hierarquia e espaço</div>
+      <div class="color-swatches">
+        <div class="swatch">
+          <div class="swatch-color" style="background:#E0E6F0;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Neblina</div>
+            <div class="swatch-hex">#E0E6F0</div>
+            <div class="swatch-use">Texto primário sobre escuro</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#8A9AB5;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Chumbo</div>
+            <div class="swatch-hex">#8A9AB5</div>
+            <div class="swatch-use">Texto secundário, metadados</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#F0F4FA;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Lab</div>
+            <div class="swatch-hex">#F0F4FA</div>
+            <div class="swatch-use">Fundo claro, versão light do sistema</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="color-group">
+      <div class="color-group-title">Acento — Uso exclusivo e estratégico</div>
+      <div class="color-swatches">
+        <div class="swatch swatch-featured">
+          <div class="swatch-color" style="background:#00C2A8;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Pulso</div>
+            <div class="swatch-hex">#00C2A8</div>
+            <div class="swatch-use">CTAs, dados positivos, aprovação, scores de performance. Uso parcimonioso = impacto máximo.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="color-group">
+      <div class="color-group-title">Acentos de Submarcas</div>
+      <div class="color-swatches">
+        <div class="swatch">
+          <div class="swatch-color" style="background:#0077B6;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Resid</div>
+            <div class="swatch-hex">#0077B6</div>
+            <div class="swatch-use">MedPleni Resid — tradição, rigor</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#00C2A8;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Enamed</div>
+            <div class="swatch-hex">#00C2A8</div>
+            <div class="swatch-use">MedPleni Enamed — herda Pulso (master)</div>
+          </div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-color" style="background:#6B5CE7;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Revalida</div>
+            <div class="swatch-hex">#6B5CE7</div>
+            <div class="swatch-use">MedPleni Revalida — identidade, reconhecimento</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIPOGRAFIA -->
+  <section id="tipografia">
+    <div class="section-tag">// 04 — Sistema Tipográfico</div>
+    <h2>Tipografia</h2>
+    <p>A combinação <strong>IBM Plex</strong> (sans + mono) ancora a identidade no universo tech/científico. O serif aparece exclusivamente em contextos de autoridade clínica.</p>
+
+    <div class="type-sample">
+      <div class="type-meta">Display / Headlines <span>IBM Plex Sans Condensed Bold</span></div>
+      <div class="type-display">Performance<br/>Calculada.</div>
+    </div>
+
+    <div class="type-sample">
+      <div class="type-meta">Body / Interface <span>Inter Regular / Medium</span></div>
+      <p class="type-body-sample" style="max-width:none; margin:0;">O algoritmo analisa seu histórico de simulados, identifica as lacunas mais críticas para a sua prova específica, e recalibra seu plano de estudo em tempo real. Cada sessão é mais precisa que a anterior.</p>
+    </div>
+
+    <div class="type-sample">
+      <div class="type-meta">Dados / Scores / Código <span>IBM Plex Mono</span></div>
+      <div class="type-mono-sample">94.7% → Predição<br/>12 lacunas → Identificadas<br/>R3 UNIFESP → Target</div>
+    </div>
+
+    <div class="type-sample">
+      <div class="type-meta">Científico / Citações / Destaques <span>Source Serif 4 Italic</span></div>
+      <div class="type-serif-sample">"Sua formação tem valor. Vamos provar isso no papel."</div>
+    </div>
+
+    <h3>Hierarquia Tipográfica</h3>
+    <div style="background:var(--petroleo); border:1px solid rgba(61,90,128,0.5); border-radius:12px; padding:32px; margin-top:16px;">
+      <div style="font-family:'IBM Plex Sans Condensed',sans-serif; font-size:48px; font-weight:700; color:var(--white); margin-bottom:4px;">Display — 48px / 700</div>
+      <div style="font-family:'IBM Plex Sans Condensed',sans-serif; font-size:32px; font-weight:700; color:var(--white); margin-bottom:4px;">Heading 1 — 32px / 700</div>
+      <div style="font-family:'IBM Plex Sans Condensed',sans-serif; font-size:22px; font-weight:700; color:var(--white); margin-bottom:4px;">Heading 2 — 22px / 700</div>
+      <div style="font-family:'Inter',sans-serif; font-size:16px; font-weight:500; color:var(--neblina); margin-bottom:4px;">Body Large — 16px / 500</div>
+      <div style="font-family:'Inter',sans-serif; font-size:14px; color:var(--neblina); margin-bottom:4px;">Body — 14px / 400</div>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--chumbo); letter-spacing:0.1em; text-transform:uppercase;">CAPTION / META — 12PX MONO</div>
+    </div>
+  </section>
+
+  <!-- TOM DE VOZ -->
+  <section id="voz">
+    <div class="section-tag">// 05 — Tom de Voz</div>
+    <h2>Personalidade &amp; Comunicação</h2>
+
+    <h3>Personalidade de Marca</h3>
+    <div class="positioning-box">
+      O Estrategista Brilhante — aquele colega que virou referência na residência. Fala com precisão, sem arrogância. Direto, mas não frio. Sofisticado, mas acessível.
+    </div>
+
+    <h3>Atributos de Tom</h3>
+    <div class="voice-table-wrap">
+      <table class="voice-table">
+        <thead>
+          <tr>
+            <th>Tom</th>
+            <th>✓ Sim — Use assim</th>
+            <th>✗ Não — Evite isso</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="col-tom">Preciso</td>
+            <td class="col-sim">"Identifica suas lacunas com 94% de precisão"</td>
+            <td class="col-nao">"Aprenda tudo que precisa"</td>
+          </tr>
+          <tr>
+            <td class="col-tom">Direto</td>
+            <td class="col-sim">"Você passa. Calculamos como."</td>
+            <td class="col-nao">"Acreditamos no seu potencial"</td>
+          </tr>
+          <tr>
+            <td class="col-tom">Sofisticado</td>
+            <td class="col-sim">"Performance de aprovação"</td>
+            <td class="col-nao">"Ótimo custo-benefício"</td>
+          </tr>
+          <tr>
+            <td class="col-tom">Técnico</td>
+            <td class="col-sim">"Algoritmo adaptativo de gap analysis"</td>
+            <td class="col-nao">"Sistema inteligente revolucionário"</td>
+          </tr>
+          <tr>
+            <td class="col-tom">Urgente</td>
+            <td class="col-sim">"Cada simulado recalibra sua rota"</td>
+            <td class="col-nao">"Não perca tempo!"</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Exemplos de Copy</h3>
+
+    <div class="copy-block">
+      <div class="copy-label">Headline Principal</div>
+      <p class="copy-text">O algoritmo que calcula o caminho mais curto até a sua aprovação.</p>
+    </div>
+
+    <div class="copy-block">
+      <div class="copy-label">Subheadline</div>
+      <p class="copy-text">Identifica suas lacunas reais. Personaliza sua rota. Prediz sua performance. MedPleni.</p>
+    </div>
+
+    <div class="copy-block">
+      <div class="copy-label">Para MedPleni Resid</div>
+      <p class="copy-text">Residência não é sorte. É cálculo. Vamos calibrar o seu.</p>
+    </div>
+
+    <div class="copy-block">
+      <div class="copy-label">Para MedPleni Enamed</div>
+      <p class="copy-text">Você já passou pelo mais difícil. Agora é questão de método.</p>
+    </div>
+
+    <div class="copy-block">
+      <div class="copy-label">Para MedPleni Revalida</div>
+      <p class="copy-text">Sua formação tem valor. Vamos provar isso no papel.</p>
+    </div>
+  </section>
+
+  <!-- TAGLINES -->
+  <section id="taglines">
+    <div class="section-tag">// 06 — Taglines</div>
+    <h2>Sistema de Taglines</h2>
+    <p>Cada camada da arquitetura de marca possui uma tagline própria. As submarcas são específicas para o contexto emocional do seu público.</p>
+
+    <div class="tagline-grid">
+      <div class="tagline-card" style="border-color:rgba(0,194,168,0.3); background:rgba(0,194,168,0.06);">
+        <div class="tagline-brand">MedPleni — Master</div>
+        <div class="tagline-text">O Algoritmo da Aprovação</div>
+      </div>
+      <div class="tagline-card">
+        <div class="tagline-brand">MedPleni Resid</div>
+        <div class="tagline-text">Sua residência. Calculada.</div>
+      </div>
+      <div class="tagline-card">
+        <div class="tagline-brand">MedPleni Enamed</div>
+        <div class="tagline-text">Performance cirúrgica. Resultado garantido.</div>
+      </div>
+      <div class="tagline-card">
+        <div class="tagline-brand">MedPleni Revalida</div>
+        <div class="tagline-text">Sua medicina. Reconhecida.</div>
+      </div>
+      <div class="tagline-card" style="border-color:rgba(138,154,181,0.3);">
+        <div class="tagline-brand">Plenitude Educação — Endorsement</div>
+        <div class="tagline-text">Formando quem forma o Brasil</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MANDATÓRIOS -->
+  <section id="mandatorios">
+    <div class="section-tag">// 07 — Mandatórios de Marca</div>
+    <h2>O que Fazer e Não Fazer</h2>
+    <p>Mandatórios são as regras inegociáveis que protegem a integridade da marca em qualquer ponto de contato.</p>
+
+    <div class="rules-grid">
+      <div class="rules-card yes">
+        <div class="rules-card-title">Sempre</div>
+        <div class="rule-item">Dados concretos antes de promessas emocionais</div>
+        <div class="rule-item">Linguagem de precisão: percentuais, métricas, prazos</div>
+        <div class="rule-item">Hierarquia visual clara — informação antes de estética</div>
+        <div class="rule-item">Endosso da Plenitude Educação em materiais institucionais</div>
+        <div class="rule-item">Tipografia IBM Plex para dados e métricas</div>
+        <div class="rule-item">Paleta austera — poucas cores, máximo impacto</div>
+      </div>
+      <div class="rules-card no">
+        <div class="rules-card-title">Nunca</div>
+        <div class="rule-item">Clichês de motivação genérica ("você pode!", "acredite em você")</div>
+        <div class="rule-item">Comparações explícitas com concorrentes</div>
+        <div class="rule-item">Stock photos de médicos sorridentes com estetoscópio</div>
+        <div class="rule-item">Tom condescendente sobre a dificuldade das provas</div>
+        <div class="rule-item">Excesso de cores fora do sistema definido</div>
+        <div class="rule-item">Promessas sem base em dado ou mecanismo</div>
+      </div>
+    </div>
+
+    <h3>Fotografias &amp; Visuais</h3>
+    <div class="card-grid">
+      <div class="card">
+        <div class="label">Estilo fotográfico</div>
+        <p style="margin:0; font-size:14px;">Médicos em contexto real de estudo e performance. Paleta dessaturada com overlay em Petróleo (#2B3A52). Sem stock photo genérico.</p>
+      </div>
+      <div class="card">
+        <div class="label">Elementos gráficos nativos</div>
+        <p style="margin:0; font-size:14px;">Gráficos de gap de conhecimento, curvas de predição e heatmaps de performance são storytelling funcional — não decoração.</p>
+      </div>
+      <div class="card">
+        <div class="label">Iconografia</div>
+        <p style="margin:0; font-size:14px;">Linha fina, geométrica, sem serifas visuais. Ícones do universo médico + tech combinados: ECG + gráfico, bisturi + cursor.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- APLICAÇÕES -->
+  <section id="aplicacoes">
+    <div class="section-tag">// 08 — Aplicações</div>
+    <h2>Ecossistema de Comunicação</h2>
+
+    <h3>Digital — Core</h3>
+    <div class="card-grid">
+      <div class="card card-highlight">
+        <div class="label">Plataforma</div>
+        <div style="font-family:'IBM Plex Sans Condensed',sans-serif; font-size:18px; font-weight:700; color:var(--white); margin-bottom:8px;">Web App / Dashboard</div>
+        <p style="margin:0; font-size:14px;">Heatmaps de lacunas, score de predição de aprovação, simulados adaptativos. A plataforma é o produto — a marca vive aqui.</p>
+      </div>
+      <div class="card">
+        <div class="label">Email Marketing</div>
+        <div style="font-family:'IBM Plex Sans Condensed',sans-serif; font-size:18px; font-weight:700; color:var(--white); margin-bottom:8px;">Data-Driven Sequences</div>
+        <p style="margin:0; font-size:14px;">Séries segmentadas por submarca. Ex: "Sua performance nas últimas 2 semanas" — dados reais do aluno como gatilho de abertura.</p>
+      </div>
+      <div class="card">
+        <div class="label">Social Media</div>
+        <div style="font-family:'IBM Plex Sans Condensed',sans-serif; font-size:18px; font-weight:700; color:var(--white); margin-bottom:8px;">LinkedIn · Instagram · YouTube</div>
+        <p style="margin:0; font-size:14px;">LinkedIn: autoridade clínica. Instagram: motivação precisa, sem chavões. YouTube: conteúdo de alto nível, não tutoriais básicos.</p>
+      </div>
+    </div>
+
+    <h3>Próximos Passos — Entregáveis</h3>
+    <div class="steps-list">
+      <div class="step-item">
+        <span class="step-priority alta">Alta</span>
+        <span class="step-name">Logotipo master + submarcas (identidade visual completa)</span>
+      </div>
+      <div class="step-item">
+        <span class="step-priority alta">Alta</span>
+        <span class="step-name">Design system digital — tokens de cor, tipografia e espaçamento</span>
+      </div>
+      <div class="step-item">
+        <span class="step-priority alta">Alta</span>
+        <span class="step-name">Brand book completo em PDF para uso interno e agências</span>
+      </div>
+      <div class="step-item">
+        <span class="step-priority media">Média</span>
+        <span class="step-name">Templates de social media (LinkedIn, Instagram, Stories)</span>
+      </div>
+      <div class="step-item">
+        <span class="step-priority media">Média</span>
+        <span class="step-name">Deck institucional Plenitude Educação → MedPleni</span>
+      </div>
+      <div class="step-item">
+        <span class="step-priority baixa">Baixa</span>
+        <span class="step-name">Motion guidelines — animações de dados e performance</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Med<span>Pleni</span></div>
+    <div class="footer-parent">Uma marca da Plenitude Educação</div>
+    <div class="footer-meta">Brand Book v1.0 · Confidencial · 2025 · Todos os direitos reservados</div>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>MedPleni — Avatar / Foto de Perfil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:#0C111E;
+  font-family:'IBM Plex Mono',monospace;
+  color:#8A9AB5;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding:48px 24px 80px;
+  gap:56px;
+}
+header{text-align:center}
+header .eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#00C2A8;margin-bottom:10px}
+header h1{font-family:'IBM Plex Sans Condensed',sans-serif;font-size:28px;font-weight:700;color:#fff;letter-spacing:-.02em}
+header p{font-size:11px;color:#4A6280;margin-top:8px;line-height:1.6}
+
+.section-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#2D4460;margin-bottom:20px;text-align:center}
+
+.avatars-row{display:flex;gap:32px;flex-wrap:wrap;justify-content:center;align-items:flex-end}
+.avatar-item{display:flex;flex-direction:column;align-items:center;gap:12px}
+.avatar-label{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:#3D5A80}
+
+/* Dimensões dos contêineres */
+.av-800{width:800px;height:800px}
+.av-400{width:400px;height:400px;border-radius:200px;overflow:hidden}
+.av-180{width:180px;height:180px;border-radius:90px;overflow:hidden}
+.av-110{width:110px;height:110px;border-radius:55px;overflow:hidden}
+.av-110-sq{width:110px;height:110px;border-radius:14px;overflow:hidden}
+
+/* O SVG preenche o contêiner — viewBox="0 0 800 800" em todos */
+.av-800 svg,.av-400 svg,.av-180 svg,.av-110 svg,.av-110-sq svg{width:100%;height:100%}
+
+.export-tip{
+  background:rgba(0,194,168,.05);
+  border:1px solid rgba(0,194,168,.15);
+  border-radius:10px;
+  padding:22px 32px;
+  max-width:680px;
+  text-align:center;
+  font-size:11px;
+  line-height:1.8;
+  color:#5A7090;
+}
+.export-tip strong{color:#00C2A8}
+.tip-row{display:flex;gap:36px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.tip-item{display:flex;flex-direction:column;gap:3px;align-items:center}
+.tip-size{font-size:17px;font-weight:700;color:#fff;font-family:'IBM Plex Sans Condensed',sans-serif}
+.tip-dest{font-size:9px;color:#2D4460;letter-spacing:.1em;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">MedPleni · Assets</div>
+  <h1>Avatar — Foto de Perfil</h1>
+  <p>Screenshot o quadrado abaixo · Cmd+Shift+4 (Mac) para capturar área exata</p>
+</header>
+
+<!--
+  ══════════════════════════════════════════════════════════
+  AVATAR PRINCIPAL 800×800
+
+  Hierarquia:
+  ① Wordmark "MedPleni" — elemento dominante (font-size 160)
+  ② Ícone (cruz + ECG + nó) — secundário, ~40% da altura do texto
+
+  Ícone em coordenadas locais (0,0)→(210,56):
+    • Cruz V : x=16  y=1   w=18 h=54  rx=4
+    • Cruz H : x=0   y=20  w=50 h=18  rx=4
+    • Gap de 18px antes do ECG → Cruz direita em x=50, ECG começa x=68
+    • ECG     : 68,28 → 84,28 → 97,2 → 111,55 → 124,14 → 138,42 → 152,28 → 185,28
+    • Nó      : cx=185 cy=28 r=8
+    • Glow    : cx=185 cy=28 r=16 opacity=.28
+
+  Translate(295, 262) centra o ícone em x=400 (295+210/2=400 ✓)
+  ══════════════════════════════════════════════════════════
+-->
+
+<!-- ── SEÇÃO 01: AVATAR PARA EXPORTAÇÃO ─────────────────── -->
+<div>
+  <div class="section-label">// 01 · Screenshot este quadrado para exportar</div>
+  <div class="avatars-row">
+
+    <!-- NAVY PROFUNDO — recomendado -->
+    <div class="avatar-item">
+      <div class="av-800">
+        <svg viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="800" fill="#0E1628"/>
+          <!-- Glow suave centrado na composição -->
+          <radialGradient id="g-navy" cx="50%" cy="50%" r="42%">
+            <stop offset="0%" stop-color="#00C2A8" stop-opacity=".08"/>
+            <stop offset="100%" stop-color="#00C2A8" stop-opacity="0"/>
+          </radialGradient>
+          <rect width="800" height="800" fill="url(#g-navy)"/>
+
+          <!-- ① ÍCONE — secundário, compacto (210×56px local) -->
+          <g transform="translate(295,262)">
+            <!-- Cruz vertical -->
+            <rect x="16" y="1"  width="18" height="54" rx="4" fill="#00C2A8" opacity=".9"/>
+            <!-- Cruz horizontal -->
+            <rect x="0"  y="20" width="50" height="18" rx="4" fill="#00C2A8" opacity=".9"/>
+            <!-- Gap de 18px, ECG começa em x=68 -->
+            <polyline
+              points="68,28 84,28 97,2 111,55 124,14 138,42 152,28 185,28"
+              stroke="#00C2A8" stroke-width="5"
+              stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <!-- Nó de dado -->
+            <circle cx="185" cy="28" r="8"  fill="#00C2A8"/>
+            <circle cx="185" cy="28" r="16" fill="none" stroke="#00C2A8" stroke-width="1.5" opacity=".28"/>
+          </g>
+
+          <!-- ② WORDMARK — elemento dominante -->
+          <text x="400" y="512"
+            font-family="'IBM Plex Sans Condensed',sans-serif"
+            font-weight="700" font-size="160"
+            letter-spacing="-3"
+            text-anchor="middle">
+            <tspan fill="#FFFFFF">Med</tspan><tspan fill="#00C2A8">Pleni</tspan>
+          </text>
+        </svg>
+      </div>
+      <div class="avatar-label">Navy · 800 × 800 · recomendado</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── SEÇÃO 02: VARIANTES DE COR ───────────────────────── -->
+<div>
+  <div class="section-label">// 02 · Variantes de fundo — 400 × 400</div>
+  <div class="avatars-row">
+
+    <!-- Navy -->
+    <div class="avatar-item">
+      <div class="av-400">
+        <svg viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="800" fill="#0E1628"/>
+          <radialGradient id="g-v1" cx="50%" cy="50%" r="42%">
+            <stop offset="0%" stop-color="#00C2A8" stop-opacity=".08"/>
+            <stop offset="100%" stop-color="#00C2A8" stop-opacity="0"/>
+          </radialGradient>
+          <rect width="800" height="800" fill="url(#g-v1)"/>
+          <g transform="translate(295,262)">
+            <rect x="16" y="1"  width="18" height="54" rx="4" fill="#00C2A8" opacity=".9"/>
+            <rect x="0"  y="20" width="50" height="18" rx="4" fill="#00C2A8" opacity=".9"/>
+            <polyline points="68,28 84,28 97,2 111,55 124,14 138,42 152,28 185,28"
+              stroke="#00C2A8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <circle cx="185" cy="28" r="8"  fill="#00C2A8"/>
+            <circle cx="185" cy="28" r="16" fill="none" stroke="#00C2A8" stroke-width="1.5" opacity=".28"/>
+          </g>
+          <text x="400" y="512" font-family="'IBM Plex Sans Condensed',sans-serif"
+            font-weight="700" font-size="160" letter-spacing="-3" text-anchor="middle">
+            <tspan fill="#FFFFFF">Med</tspan><tspan fill="#00C2A8">Pleni</tspan>
+          </text>
+        </svg>
+      </div>
+      <div class="avatar-label">Navy</div>
+    </div>
+
+    <!-- Abismo -->
+    <div class="avatar-item">
+      <div class="av-400">
+        <svg viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="800" fill="#1A1F2E"/>
+          <radialGradient id="g-v2" cx="50%" cy="50%" r="42%">
+            <stop offset="0%" stop-color="#00C2A8" stop-opacity=".07"/>
+            <stop offset="100%" stop-color="#00C2A8" stop-opacity="0"/>
+          </radialGradient>
+          <rect width="800" height="800" fill="url(#g-v2)"/>
+          <g transform="translate(295,262)">
+            <rect x="16" y="1"  width="18" height="54" rx="4" fill="#00C2A8" opacity=".9"/>
+            <rect x="0"  y="20" width="50" height="18" rx="4" fill="#00C2A8" opacity=".9"/>
+            <polyline points="68,28 84,28 97,2 111,55 124,14 138,42 152,28 185,28"
+              stroke="#00C2A8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <circle cx="185" cy="28" r="8"  fill="#00C2A8"/>
+            <circle cx="185" cy="28" r="16" fill="none" stroke="#00C2A8" stroke-width="1.5" opacity=".28"/>
+          </g>
+          <text x="400" y="512" font-family="'IBM Plex Sans Condensed',sans-serif"
+            font-weight="700" font-size="160" letter-spacing="-3" text-anchor="middle">
+            <tspan fill="#FFFFFF">Med</tspan><tspan fill="#00C2A8">Pleni</tspan>
+          </text>
+        </svg>
+      </div>
+      <div class="avatar-label">Abismo</div>
+    </div>
+
+    <!-- Teal escuro -->
+    <div class="avatar-item">
+      <div class="av-400">
+        <svg viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="800" fill="#061B18"/>
+          <radialGradient id="g-v3" cx="50%" cy="50%" r="42%">
+            <stop offset="0%" stop-color="#00C2A8" stop-opacity=".12"/>
+            <stop offset="100%" stop-color="#00C2A8" stop-opacity="0"/>
+          </radialGradient>
+          <rect width="800" height="800" fill="url(#g-v3)"/>
+          <g transform="translate(295,262)">
+            <rect x="16" y="1"  width="18" height="54" rx="4" fill="#00C2A8" opacity=".9"/>
+            <rect x="0"  y="20" width="50" height="18" rx="4" fill="#00C2A8" opacity=".9"/>
+            <polyline points="68,28 84,28 97,2 111,55 124,14 138,42 152,28 185,28"
+              stroke="#00C2A8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <circle cx="185" cy="28" r="8"  fill="#00C2A8"/>
+            <circle cx="185" cy="28" r="16" fill="none" stroke="#00C2A8" stroke-width="1.5" opacity=".28"/>
+          </g>
+          <text x="400" y="512" font-family="'IBM Plex Sans Condensed',sans-serif"
+            font-weight="700" font-size="160" letter-spacing="-3" text-anchor="middle">
+            <tspan fill="#FFFFFF">Med</tspan><tspan fill="#00C2A8">Pleni</tspan>
+          </text>
+        </svg>
+      </div>
+      <div class="avatar-label">Teal Escuro</div>
+    </div>
+
+    <!-- Branco -->
+    <div class="avatar-item">
+      <div class="av-400">
+        <svg viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="800" fill="#FFFFFF"/>
+          <radialGradient id="g-v4" cx="50%" cy="50%" r="42%">
+            <stop offset="0%" stop-color="#009E95" stop-opacity=".06"/>
+            <stop offset="100%" stop-color="#009E95" stop-opacity="0"/>
+          </radialGradient>
+          <rect width="800" height="800" fill="url(#g-v4)"/>
+          <g transform="translate(295,262)">
+            <rect x="16" y="1"  width="18" height="54" rx="4" fill="#009E95" opacity=".9"/>
+            <rect x="0"  y="20" width="50" height="18" rx="4" fill="#009E95" opacity=".9"/>
+            <polyline points="68,28 84,28 97,2 111,55 124,14 138,42 152,28 185,28"
+              stroke="#009E95" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <circle cx="185" cy="28" r="8"  fill="#009E95"/>
+            <circle cx="185" cy="28" r="16" fill="none" stroke="#009E95" stroke-width="1.5" opacity=".28"/>
+          </g>
+          <text x="400" y="512" font-family="'IBM Plex Sans Condensed',sans-serif"
+            font-weight="700" font-size="160" letter-spacing="-3" text-anchor="middle">
+            <tspan fill="#1A1F2E">Med</tspan><tspan fill="#009E95">Pleni</tspan>
+          </text>
+        </svg>
+      </div>
+      <div class="avatar-label">Branco</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── SEÇÃO 03: PREVIEW EM TAMANHO REAL ─────────────────── -->
+<div>
+  <div class="section-label">// 03 · Preview em tamanho real</div>
+  <div class="avatars-row" style="align-items:center">
+
+    <div class="avatar-item">
+      <div class="av-180">
+        <svg viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="800" fill="#0E1628"/>
+          <radialGradient id="g-p1" cx="50%" cy="50%" r="42%">
+            <stop offset="0%" stop-color="#00C2A8" stop-opacity=".08"/><stop offset="100%" stop-color="#00C2A8" stop-opacity="0"/>
+          </radialGradient>
+          <rect width="800" height="800" fill="url(#g-p1)"/>
+          <g transform="translate(295,262)">
+            <rect x="16" y="1" width="18" height="54" rx="4" fill="#00C2A8" opacity=".9"/>
+            <rect x="0" y="20" width="50" height="18" rx="4" fill="#00C2A8" opacity=".9"/>
+            <polyline points="68,28 84,28 97,2 111,55 124,14 138,42 152,28 185,28"
+              stroke="#00C2A8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <circle cx="185" cy="28" r="8" fill="#00C2A8"/>
+            <circle cx="185" cy="28" r="16" fill="none" stroke="#00C2A8" stroke-width="1.5" opacity=".28"/>
+          </g>
+          <text x="400" y="512" font-family="'IBM Plex Sans Condensed',sans-serif"
+            font-weight="700" font-size="160" letter-spacing="-3" text-anchor="middle">
+            <tspan fill="#FFFFFF">Med</tspan><tspan fill="#00C2A8">Pleni</tspan>
+          </text>
+        </svg>
+      </div>
+      <div class="avatar-label">180 px · Instagram desktop</div>
+    </div>
+
+    <div class="avatar-item">
+      <div class="av-110">
+        <svg viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="800" fill="#0E1628"/>
+          <g transform="translate(295,262)">
+            <rect x="16" y="1" width="18" height="54" rx="4" fill="#00C2A8" opacity=".9"/>
+            <rect x="0" y="20" width="50" height="18" rx="4" fill="#00C2A8" opacity=".9"/>
+            <polyline points="68,28 84,28 97,2 111,55 124,14 138,42 152,28 185,28"
+              stroke="#00C2A8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <circle cx="185" cy="28" r="8" fill="#00C2A8"/>
+          </g>
+          <text x="400" y="512" font-family="'IBM Plex Sans Condensed',sans-serif"
+            font-weight="700" font-size="160" letter-spacing="-3" text-anchor="middle">
+            <tspan fill="#FFFFFF">Med</tspan><tspan fill="#00C2A8">Pleni</tspan>
+          </text>
+        </svg>
+      </div>
+      <div class="avatar-label">110 px · Instagram mobile</div>
+    </div>
+
+    <div class="avatar-item">
+      <div class="av-110-sq">
+        <svg viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="800" height="800" fill="#0E1628"/>
+          <g transform="translate(295,262)">
+            <rect x="16" y="1" width="18" height="54" rx="4" fill="#00C2A8" opacity=".9"/>
+            <rect x="0" y="20" width="50" height="18" rx="4" fill="#00C2A8" opacity=".9"/>
+            <polyline points="68,28 84,28 97,2 111,55 124,14 138,42 152,28 185,28"
+              stroke="#00C2A8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <circle cx="185" cy="28" r="8" fill="#00C2A8"/>
+          </g>
+          <text x="400" y="512" font-family="'IBM Plex Sans Condensed',sans-serif"
+            font-weight="700" font-size="160" letter-spacing="-3" text-anchor="middle">
+            <tspan fill="#FFFFFF">Med</tspan><tspan fill="#00C2A8">Pleni</tspan>
+          </text>
+        </svg>
+      </div>
+      <div class="avatar-label">110 px · WhatsApp</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── DICA ──────────────────────────────────────────────── -->
+<div class="export-tip">
+  <strong>Como exportar</strong> · Abra no Chrome em tela cheia · Cmd+Shift+4 (Mac) / Print Screen (Win) para capturar o quadrado da Seção 01
+  <div class="tip-row">
+    <div class="tip-item"><span class="tip-size">1080×1080</span><span class="tip-dest">Instagram recomendado</span></div>
+    <div class="tip-item"><span class="tip-size">800×800</span><span class="tip-dest">Mínimo aceitável</span></div>
+    <div class="tip-item"><span class="tip-size">640×640</span><span class="tip-dest">WhatsApp</span></div>
+    <div class="tip-item"><span class="tip-size">320×320</span><span class="tip-dest">Instagram mínimo</span></div>
+  </div>
+</div>
+
+</body>
+</html>

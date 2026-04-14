@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedPleni — Parte 3: Dashboard & Simulado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ab:#1A1F2E; --pe:#2B3A52; --si:#3D5A80;
+  --nb:#E0E6F0; --ch:#8A9AB5; --lab:#F0F4FA;
+  --pu:#00C2A8; --re:#0077B6; --rel:#64B5E8;
+  --in:#6B5CE7; --inl:#A99EF5;
+  --dg:#FF6B6B; --wn:#F5A623;
+  --df:'IBM Plex Sans Condensed',sans-serif;
+  --db:'Inter',sans-serif;
+  --dm:'IBM Plex Mono',monospace;
+  --r-md:8px; --r-lg:10px; --r-xl:12px; --r-full:9999px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--ab);color:var(--nb);font-family:var(--db);font-size:14px;-webkit-font-smoothing:antialiased;}
+
+/* ── DOC NAV ──────────────────────────────────── */
+.docnav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:48px;display:flex;align-items:center;gap:24px;
+  padding:0 32px;background:rgba(26,31,46,0.95);
+  backdrop-filter:blur(12px);border-bottom:1px solid rgba(61,90,128,0.4);
+}
+.docnav-brand{font-family:var(--df);font-weight:700;font-size:16px;color:#fff;display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.docnav-brand span{color:var(--pu);}
+.docnav a{font-size:11px;color:var(--ch);text-decoration:none;font-family:var(--dm);letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;}
+.docnav a:hover{color:var(--pu);}
+.docnav .badge{margin-left:auto;font-family:var(--dm);font-size:9px;letter-spacing:0.12em;color:var(--pu);border:1px solid rgba(0,194,168,0.3);padding:2px 8px;border-radius:var(--r-full);flex-shrink:0;}
+
+/* ── PAGE WRAPPER ─────────────────────────────── */
+.page-section{padding:64px 32px 80px;max-width:1200px;margin:0 auto;}
+.page-section+.page-section{border-top:1px solid rgba(61,90,128,0.2);}
+.sec-label{font-family:var(--dm);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--pu);margin-bottom:10px;}
+.sec-title{font-family:var(--df);font-weight:700;font-size:clamp(20px,2.5vw,30px);color:#fff;letter-spacing:-0.02em;margin-bottom:6px;}
+.sec-sub{font-size:13px;color:var(--ch);max-width:560px;margin-bottom:32px;}
+
+/* ══════════════════════════════════════════════
+   DASHBOARD SHELL
+══════════════════════════════════════════════ */
+.dashboard-shell{
+  border:1px solid rgba(61,90,128,0.35);
+  border-radius:16px;overflow:hidden;
+  background:#0D111C;
+  box-shadow:0 24px 64px rgba(0,0,0,0.5);
+}
+
+/* ── Sidebar ──────────────────────────────────── */
+.dashboard-layout{display:flex;min-height:680px;}
+.sidebar{
+  width:220px;flex-shrink:0;
+  background:#0D111C;
+  border-right:1px solid rgba(61,90,128,0.2);
+  display:flex;flex-direction:column;padding:20px 0;
+}
+.sidebar-logo{
+  display:flex;align-items:center;gap:8px;
+  padding:0 20px 20px;
+  border-bottom:1px solid rgba(61,90,128,0.15);
+  margin-bottom:16px;
+}
+.sidebar-logo-text{font-family:var(--df);font-weight:700;font-size:18px;color:#fff;letter-spacing:-0.01em;}
+.sidebar-logo-text span{color:var(--pu);}
+.nav-section{padding:0 12px;margin-bottom:8px;}
+.nav-section-label{
+  font-family:var(--dm);font-size:9px;letter-spacing:0.15em;
+  text-transform:uppercase;color:rgba(138,154,181,0.5);
+  padding:0 8px;margin-bottom:6px;
+}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 10px;border-radius:var(--r-md);
+  cursor:pointer;transition:all 0.15s;
+  font-size:13px;color:var(--ch);
+  margin-bottom:2px;
+}
+.nav-item:hover{background:rgba(61,90,128,0.15);color:var(--nb);}
+.nav-item.active{background:rgba(0,194,168,0.07);color:#fff;}
+.nav-item.active .nav-icon{color:var(--pu);}
+.nav-icon{width:16px;height:16px;flex-shrink:0;opacity:0.7;}
+.nav-item.active .nav-icon{opacity:1;}
+.sidebar-footer{margin-top:auto;padding:16px 12px 0;border-top:1px solid rgba(61,90,128,0.15);}
+.user-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--r-md);}
+.avatar{
+  width:32px;height:32px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#0077B6,#00C2A8);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--df);font-weight:700;font-size:13px;color:#fff;
+}
+.user-info .user-name{font-size:12px;font-weight:600;color:#fff;}
+.user-info .user-role{font-family:var(--dm);font-size:9px;letter-spacing:0.08em;color:var(--ch);}
+
+/* ── Main area ────────────────────────────────── */
+.main-area{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.topbar{
+  height:52px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;
+  border-bottom:1px solid rgba(61,90,128,0.2);
+  background:#0D111C;
+}
+.topbar-title{font-family:var(--df);font-size:18px;font-weight:700;color:#fff;letter-spacing:-0.01em;}
+.topbar-right{display:flex;align-items:center;gap:12px;}
+.topbar-badge{
+  font-family:var(--dm);font-size:9px;letter-spacing:0.1em;
+  text-transform:uppercase;padding:3px 9px;border-radius:var(--r-full);
+  background:rgba(0,194,168,0.1);color:var(--pu);
+  border:1px solid rgba(0,194,168,0.2);
+}
+.icon-btn{
+  width:32px;height:32px;border-radius:var(--r-md);
+  background:rgba(61,90,128,0.15);border:1px solid rgba(61,90,128,0.2);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  color:var(--ch);
+}
+.content-area{flex:1;padding:20px 24px;overflow-y:auto;background:var(--ab);}
+
+/* ── KPI row ─────────────────────────────────── */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+.kpi{
+  background:var(--pe);border:1px solid rgba(61,90,128,0.25);
+  border-radius:var(--r-xl);padding:16px;
+}
+.kpi-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
+.kpi-ic{
+  width:32px;height:32px;border-radius:var(--r-md);
+  display:flex;align-items:center;justify-content:center;
+}
+.kpi-delta{font-family:var(--dm);font-size:10px;letter-spacing:0.06em;}
+.kpi-delta.up{color:var(--pu);}
+.kpi-delta.dn{color:var(--dg);}
+.kpi-num{font-family:var(--df);font-size:28px;font-weight:700;color:#fff;letter-spacing:-0.02em;line-height:1;}
+.kpi-lbl{font-size:11px;color:var(--ch);margin-top:4px;}
+
+/* ── Main grid ───────────────────────────────── */
+.main-grid{display:grid;grid-template-columns:1fr 300px;gap:16px;}
+.col-left{display:flex;flex-direction:column;gap:16px;}
+.col-right{display:flex;flex-direction:column;gap:16px;}
+
+.card{
+  background:var(--pe);border:1px solid rgba(61,90,128,0.25);
+  border-radius:var(--r-xl);padding:18px;
+}
+.card-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:14px;
+}
+.card-title{font-family:var(--df);font-size:14px;font-weight:600;color:#fff;letter-spacing:-0.01em;}
+.card-meta{font-family:var(--dm);font-size:9px;letter-spacing:0.1em;color:var(--ch);text-transform:uppercase;}
+
+/* Score ring */
+.score-flex{display:flex;align-items:center;gap:20px;}
+.score-info{flex:1;}
+.score-main{font-family:var(--df);font-size:32px;font-weight:700;color:#fff;letter-spacing:-0.02em;line-height:1;}
+.score-sub{font-size:12px;color:var(--ch);margin-top:4px;line-height:1.5;}
+.score-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+.stag{
+  font-family:var(--dm);font-size:9px;letter-spacing:0.1em;
+  text-transform:uppercase;padding:2px 7px;border-radius:var(--r-full);
+}
+.stag-g{background:rgba(0,194,168,0.12);color:var(--pu);border:1px solid rgba(0,194,168,0.2);}
+.stag-w{background:rgba(245,166,35,0.1);color:var(--wn);border:1px solid rgba(245,166,35,0.15);}
+.stag-d{background:rgba(255,107,107,0.1);color:var(--dg);border:1px solid rgba(255,107,107,0.15);}
+
+/* Progress rows */
+.prog-row{display:flex;flex-direction:column;gap:10px;}
+.prog-item{display:flex;flex-direction:column;gap:4px;}
+.prog-hd{display:flex;justify-content:space-between;font-size:12px;}
+.prog-lbl{color:var(--nb);}
+.prog-val{font-family:var(--dm);font-size:11px;}
+.prog-track{height:5px;background:rgba(61,90,128,0.2);border-radius:var(--r-full);overflow:hidden;}
+.prog-fill{height:100%;border-radius:var(--r-full);}
+.pf-g{background:var(--pu);}
+.pf-r{background:var(--rel);}
+.pf-w{background:var(--wn);}
+.pf-d{background:var(--dg);}
+
+/* Heatmap grid */
+.heatmap-wrap{overflow-x:auto;}
+.hm-labels{display:grid;grid-template-columns:80px repeat(7,1fr);margin-bottom:4px;}
+.hm-day{font-family:var(--dm);font-size:8px;letter-spacing:0.08em;color:rgba(138,154,181,0.5);text-align:center;text-transform:uppercase;}
+.hm-row{display:grid;grid-template-columns:80px repeat(7,1fr);gap:3px;margin-bottom:3px;align-items:center;}
+.hm-area{font-family:var(--dm);font-size:9px;letter-spacing:0.04em;color:var(--ch);padding-right:8px;text-align:right;white-space:nowrap;}
+.hm-cell{aspect-ratio:1;border-radius:3px;min-width:24px;}
+.h0{background:rgba(61,90,128,0.12);}
+.h1{background:rgba(0,194,168,0.12);}
+.h2{background:rgba(0,194,168,0.25);}
+.h3{background:rgba(0,194,168,0.45);}
+.h4{background:rgba(0,194,168,0.70);}
+.h5{background:#00C2A8;}
+
+/* Line chart (SVG) */
+.chart-wrap{width:100%;overflow:hidden;}
+
+/* Recommendations */
+.rec-list{display:flex;flex-direction:column;gap:10px;}
+.rec-item{
+  display:flex;gap:12px;align-items:flex-start;
+  padding:12px;background:rgba(26,31,46,0.6);
+  border:1px solid rgba(61,90,128,0.2);border-radius:var(--r-lg);
+}
+.rec-rank{
+  font-family:var(--dm);font-size:10px;letter-spacing:0.1em;
+  color:var(--pu);min-width:20px;padding-top:1px;
+}
+.rec-content{}
+.rec-title{font-size:12px;font-weight:600;color:#fff;margin-bottom:3px;}
+.rec-desc{font-size:11px;color:var(--ch);line-height:1.5;}
+.rec-meta{display:flex;gap:6px;margin-top:6px;}
+
+/* ══════════════════════════════════════════════
+   SIMULADO SCREEN
+══════════════════════════════════════════════ */
+.sim-shell{
+  border:1px solid rgba(61,90,128,0.35);
+  border-radius:16px;overflow:hidden;
+  background:#0D111C;
+  box-shadow:0 24px 64px rgba(0,0,0,0.5);
+}
+.sim-topbar{
+  height:52px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;background:#0D111C;
+  border-bottom:1px solid rgba(61,90,128,0.2);
+}
+.sim-brand{font-family:var(--df);font-weight:700;font-size:17px;color:#fff;}
+.sim-brand span{color:var(--pu);}
+.sim-info{display:flex;align-items:center;gap:16px;}
+.sim-prog-bar{
+  width:160px;height:4px;background:rgba(61,90,128,0.2);
+  border-radius:var(--r-full);overflow:hidden;
+}
+.sim-prog-fill{height:100%;background:var(--pu);border-radius:var(--r-full);}
+.sim-qcount{font-family:var(--dm);font-size:10px;letter-spacing:0.08em;color:var(--ch);}
+.sim-timer{
+  font-family:var(--dm);font-size:15px;letter-spacing:0.04em;color:#fff;
+  background:rgba(61,90,128,0.2);padding:4px 12px;border-radius:var(--r-md);
+}
+.sim-timer span{color:var(--wn);}
+
+.sim-layout{display:flex;min-height:600px;}
+.sim-sidebar{
+  width:200px;flex-shrink:0;background:#0D111C;
+  border-right:1px solid rgba(61,90,128,0.15);
+  padding:16px;
+}
+.sim-nav-title{font-family:var(--dm);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--ch);margin-bottom:12px;}
+.sim-q-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;}
+.sim-q-num{
+  width:28px;height:28px;border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--dm);font-size:9px;letter-spacing:0.04em;
+  cursor:pointer;
+}
+.sq-done{background:rgba(0,194,168,0.12);color:var(--pu);border:1px solid rgba(0,194,168,0.2);}
+.sq-curr{background:var(--pu);color:#0A1A18;font-weight:700;}
+.sq-skip{background:rgba(245,166,35,0.1);color:var(--wn);border:1px solid rgba(245,166,35,0.15);}
+.sq-todo{background:rgba(61,90,128,0.1);color:var(--ch);border:1px solid rgba(61,90,128,0.15);}
+.sim-stats{margin-top:16px;border-top:1px solid rgba(61,90,128,0.15);padding-top:14px;}
+.sim-stat-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.sim-stat-lbl{font-size:11px;color:var(--ch);}
+.sim-stat-val{font-family:var(--dm);font-size:11px;}
+
+.sim-main{flex:1;background:var(--ab);display:flex;flex-direction:column;}
+.sim-header{
+  padding:20px 28px 16px;
+  border-bottom:1px solid rgba(61,90,128,0.15);
+}
+.sim-q-label{
+  font-family:var(--dm);font-size:10px;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--pu);margin-bottom:8px;
+}
+.sim-q-area{
+  font-family:var(--dm);font-size:10px;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--ch);margin-bottom:4px;
+}
+.sim-difficulty{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:var(--dm);font-size:9px;letter-spacing:0.1em;
+  text-transform:uppercase;padding:2px 7px;border-radius:var(--r-full);
+  background:rgba(245,166,35,0.1);color:var(--wn);border:1px solid rgba(245,166,35,0.15);
+}
+
+.sim-body{flex:1;padding:24px 28px;display:flex;gap:28px;}
+.sim-question{flex:1;}
+.sim-q-text{
+  font-size:14px;line-height:1.75;color:var(--nb);margin-bottom:6px;
+}
+.sim-q-text strong{color:#fff;}
+.sim-context{
+  margin:16px 0;padding:14px 16px;
+  background:rgba(43,58,82,0.4);
+  border:1px solid rgba(61,90,128,0.2);
+  border-left:3px solid rgba(0,194,168,0.4);
+  border-radius:var(--r-md);
+  font-size:13px;line-height:1.7;color:var(--ch);
+  font-style:italic;
+}
+.sim-options{display:flex;flex-direction:column;gap:8px;margin-top:20px;}
+.sim-opt{
+  display:flex;gap:14px;align-items:flex-start;
+  padding:12px 16px;
+  background:rgba(43,58,82,0.3);
+  border:1.5px solid rgba(61,90,128,0.25);
+  border-radius:var(--r-lg);cursor:pointer;
+  transition:all 0.15s;
+}
+.sim-opt:hover{background:rgba(43,58,82,0.6);border-color:rgba(61,90,128,0.5);}
+.sim-opt.selected{
+  background:rgba(0,194,168,0.06);
+  border-color:rgba(0,194,168,0.4);
+}
+.sim-opt-letter{
+  font-family:var(--dm);font-size:11px;letter-spacing:0.08em;
+  width:22px;height:22px;border-radius:6px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(61,90,128,0.2);color:var(--ch);margin-top:1px;
+}
+.sim-opt.selected .sim-opt-letter{background:var(--pu);color:#0A1A18;}
+.sim-opt-text{font-size:13px;line-height:1.6;color:var(--nb);}
+.sim-opt.selected .sim-opt-text{color:#fff;}
+
+.sim-panel{width:200px;flex-shrink:0;}
+.sim-panel-card{
+  background:var(--pe);border:1px solid rgba(61,90,128,0.25);
+  border-radius:var(--r-xl);padding:16px;margin-bottom:12px;
+}
+.sim-panel-title{font-family:var(--dm);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ch);margin-bottom:12px;}
+.mini-ring{display:flex;justify-content:center;}
+.sim-source{font-size:11px;color:var(--ch);line-height:1.5;}
+.sim-source strong{color:var(--nb);display:block;margin-bottom:4px;}
+
+.sim-footer{
+  padding:14px 28px;border-top:1px solid rgba(61,90,128,0.15);
+  display:flex;justify-content:space-between;align-items:center;
+  background:#0D111C;
+}
+.sim-nav-btns{display:flex;gap:8px;}
+.sim-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 16px;border-radius:var(--r-md);
+  font-family:var(--db);font-size:13px;font-weight:600;
+  cursor:pointer;border:none;transition:all 0.15s;
+}
+.sim-btn-ghost{background:transparent;color:var(--ch);border:1.5px solid rgba(61,90,128,0.3);}
+.sim-btn-ghost:hover{color:var(--nb);border-color:rgba(61,90,128,0.6);}
+.sim-btn-skip{background:transparent;color:var(--wn);border:1.5px solid rgba(245,166,35,0.25);}
+.sim-btn-primary{background:var(--pu);color:#0A1A18;box-shadow:0 4px 16px rgba(0,194,168,0.3);}
+.sim-btn-primary:hover{background:#00D4BE;}
+.sim-actions-right{display:flex;align-items:center;gap:10px;}
+.sim-confidence{font-size:11px;color:var(--ch);}
+.sim-confidence-dots{display:flex;gap:4px;margin-top:4px;}
+.sim-dot{width:20px;height:6px;border-radius:var(--r-full);background:rgba(61,90,128,0.2);cursor:pointer;}
+.sim-dot.active{background:var(--pu);}
+.sim-dot.partial{background:var(--wn);}
+
+/* ── FOOTER ────────────────────────────────── */
+footer{border-top:1px solid rgba(61,90,128,0.2);padding:24px 32px;max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;}
+footer p{font-family:var(--dm);font-size:10px;color:var(--ch);letter-spacing:0.08em;}
+footer span{color:var(--pu);}
+</style>
+</head>
+<body>
+
+<!-- ── DOC NAV ──────────────────────────────── -->
+<nav class="docnav" style="padding-top:0;margin-top:0;">
+  <div style="display:flex;align-items:center;gap:7px;font-family:'IBM Plex Sans Condensed',sans-serif;font-weight:700;font-size:16px;color:#fff;flex-shrink:0;">
+    <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#00C2A8" stroke-width="1.5"/><path d="M4 10h2.5l1.5-3 2 6 1.5-3H16" stroke="#00C2A8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Med<span style="color:#00C2A8;">Pleni</span>
+  </div>
+  <a href="#dashboard">Dashboard</a>
+  <a href="#simulado">Simulado</a>
+  <div class="badge">PARTE 3 / PRODUTO</div>
+</nav>
+
+<main style="padding-top:48px;">
+
+<!-- ════════════════════════════════════════════
+     SEÇÃO 1 — DASHBOARD DO ALUNO
+════════════════════════════════════════════ -->
+<div class="page-section" id="dashboard">
+  <div class="sec-label">08 — Tela de Produto</div>
+  <div class="sec-title">Dashboard do Aluno</div>
+  <p class="sec-sub">Score de predição 94.7% · Heatmap de lacunas · Evolução histórica · Recomendação algorítmica</p>
+
+  <div class="dashboard-shell">
+    <div class="dashboard-layout">
+
+      <!-- ── SIDEBAR ───────────────────────── -->
+      <aside class="sidebar">
+        <div class="sidebar-logo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="11" stroke="#00C2A8" stroke-width="1.5"/>
+            <path d="M5 12h3l2-4 3 8 2-4h4" stroke="#00C2A8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="sidebar-logo-text">Med<span>Pleni</span></span>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-label">Principal</div>
+          <div class="nav-item active">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+            Dashboard
+          </div>
+          <div class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M2 12V6l6-4 6 4v6H2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><rect x="6" y="9" width="4" height="3" rx="0.5" stroke="currentColor" stroke-width="1.2"/></svg>
+            Simulados
+          </div>
+          <div class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 4h10M3 8h10M3 12h6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            Questões
+          </div>
+          <div class="nav-item">
+            <svg class="nav-icon" viewBox="0 0 16 16" fill="none"><path d="M3 12V5l5-3 5 3v7H3z" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.2"/></svg>
+            Predição
+          </div>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-label">Sub-brands</div>
+          <div class="nav-item">
+            <span style="width:8px;height:8px;border-radius:50%;background:#0077B6;flex-shrink:0;"></span>
+            RESID
+          </div>
+          <div class="nav-item">
+            <span style="width:8px;height:8px;border-radius:50%;background:#00C2A8;flex-shrink:0;"></span>
+            ENAMED
+          </div>
+          <div class="nav-item">
+            <span style="width:8px;height:8px;border-radius:50%;background:#6B5CE7;flex-shrink:0;"></span>
+            REVALIDA
+          </div>
+        </div>
+
+        <div class="sidebar-footer">
+          <div class="user-row">
+            <div class="avatar">AB</div>
+            <div class="user-info">
+              <div class="user-name">Dra. Ana B.</div>
+              <div class="user-role">RESID · R1</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ── MAIN AREA ─────────────────────── -->
+      <div class="main-area">
+        <!-- Topbar -->
+        <div class="topbar">
+          <div class="topbar-title">Meu Dashboard</div>
+          <div class="topbar-right">
+            <span class="topbar-badge">RESID · HSP 2026</span>
+            <div class="icon-btn">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M3 13c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            </div>
+            <div class="icon-btn">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 11V6a5 5 0 00-10 0v5l-1.5 2h13L13 11z" stroke="currentColor" stroke-width="1.3"/><path d="M6.5 13a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.3"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content-area">
+
+          <!-- KPI Row -->
+          <div class="kpi-row">
+            <div class="kpi">
+              <div class="kpi-top">
+                <div class="kpi-ic" style="background:rgba(0,194,168,0.1);">
+                  <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2 12V7l3-2 3 2 3-3 3 1.5" stroke="#00C2A8" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <span class="kpi-delta up">↑ 3.1%</span>
+              </div>
+              <div class="kpi-num">94.7<span style="font-size:16px;color:#00C2A8;">%</span></div>
+              <div class="kpi-lbl">Predição de aprovação</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-top">
+                <div class="kpi-ic" style="background:rgba(0,119,182,0.1);">
+                  <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="#64B5E8" stroke-width="1.3"/><path d="M5 7h6M5 10h4" stroke="#64B5E8" stroke-width="1.2" stroke-linecap="round"/></svg>
+                </div>
+                <span class="kpi-delta up">↑ 8</span>
+              </div>
+              <div class="kpi-num">63</div>
+              <div class="kpi-lbl">Simulados realizados</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-top">
+                <div class="kpi-ic" style="background:rgba(107,92,231,0.1);">
+                  <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#A99EF5" stroke-width="1.3"/><path d="M8 5v3l2 2" stroke="#A99EF5" stroke-width="1.3" stroke-linecap="round"/></svg>
+                </div>
+                <span class="kpi-delta up">↑ 12</span>
+              </div>
+              <div class="kpi-num">#147</div>
+              <div class="kpi-lbl">Ranking nacional</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-top">
+                <div class="kpi-ic" style="background:rgba(245,166,35,0.1);">
+                  <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2l1.8 4.2L14 7l-3 3 .7 4.2L8 12l-3.7 2.2L5 10 2 7l4.2-.8z" stroke="#F5A623" stroke-width="1.3" stroke-linejoin="round"/></svg>
+                </div>
+                <span class="kpi-delta up">🔥 14d</span>
+              </div>
+              <div class="kpi-num">14</div>
+              <div class="kpi-lbl">Streak de dias</div>
+            </div>
+          </div>
+
+          <!-- Main 2-col grid -->
+          <div class="main-grid">
+            <div class="col-left">
+
+              <!-- Score card -->
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">Score de Predição de Aprovação</div>
+                  <span class="card-meta">HSP São Paulo · R1 Clínica Médica</span>
+                </div>
+                <div class="score-flex">
+                  <svg width="130" height="130" viewBox="0 0 140 140" fill="none">
+                    <circle cx="70" cy="70" r="58" fill="none" stroke="rgba(61,90,128,0.2)" stroke-width="14"/>
+                    <!-- background arcs for context -->
+                    <circle cx="70" cy="70" r="58" fill="none" stroke="rgba(0,194,168,0.07)" stroke-width="14" stroke-dasharray="364.4" stroke-dashoffset="0" transform="rotate(-90 70 70)"/>
+                    <!-- score fill 94.7% → dashoffset = 364.4*(1-0.947) = 19.3 -->
+                    <circle cx="70" cy="70" r="58" fill="none" stroke="#00C2A8" stroke-width="14"
+                      stroke-dasharray="364.4" stroke-dashoffset="19.3" stroke-linecap="round"
+                      transform="rotate(-90 70 70)"/>
+                    <text x="70" y="62" text-anchor="middle" font-family="'IBM Plex Mono'" font-size="26" fill="white">94.7</text>
+                    <text x="70" y="76" text-anchor="middle" font-family="'IBM Plex Mono'" font-size="11" fill="#00C2A8">%</text>
+                    <text x="70" y="90" text-anchor="middle" font-family="'Inter'" font-size="8.5" fill="#8A9AB5">aprovação</text>
+                  </svg>
+                  <div class="score-info">
+                    <div class="score-main">Excelente</div>
+                    <div class="score-sub">
+                      Você está no <strong style="color:#fff;">top 8%</strong> dos candidatos ao HSP 2026.<br>
+                      Acerto geral: <strong style="color:#fff;">81.4%</strong> · Meta: 78%
+                    </div>
+                    <div class="score-tags">
+                      <span class="stag stag-g">Psiquiatria ✓</span>
+                      <span class="stag stag-g">Clínica Méd. ✓</span>
+                      <span class="stag stag-w">Pediatria ~</span>
+                      <span class="stag stag-d">GO atenção</span>
+                    </div>
+                    <div style="margin-top:12px;font-size:11px;color:var(--ch);">
+                      Atualizado há 2h · baseado em 63 simulados · 3.840 questões respondidas
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Heatmap de lacunas -->
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">Heatmap de Lacunas por Área</div>
+                  <span class="card-meta">Últimas 4 semanas</span>
+                </div>
+                <div class="heatmap-wrap">
+                  <div class="hm-labels">
+                    <div></div>
+                    <div class="hm-day">SEG</div><div class="hm-day">TER</div><div class="hm-day">QUA</div>
+                    <div class="hm-day">QUI</div><div class="hm-day">SEX</div><div class="hm-day">SÁB</div><div class="hm-day">DOM</div>
+                  </div>
+                  <!-- Clínica Médica: bom -->
+                  <div class="hm-row">
+                    <div class="hm-area">Clínica Méd.</div>
+                    <div class="hm-cell h4"></div><div class="hm-cell h5"></div><div class="hm-cell h3"></div><div class="hm-cell h4"></div><div class="hm-cell h5"></div><div class="hm-cell h0"></div><div class="hm-cell h1"></div>
+                  </div>
+                  <!-- Cirurgia: moderado -->
+                  <div class="hm-row">
+                    <div class="hm-area">Cirurgia</div>
+                    <div class="hm-cell h2"></div><div class="hm-cell h3"></div><div class="hm-cell h2"></div><div class="hm-cell h4"></div><div class="hm-cell h2"></div><div class="hm-cell h0"></div><div class="hm-cell h0"></div>
+                  </div>
+                  <!-- Pediatria: baixo -->
+                  <div class="hm-row">
+                    <div class="hm-area">Pediatria</div>
+                    <div class="hm-cell h1"></div><div class="hm-cell h2"></div><div class="hm-cell h1"></div><div class="hm-cell h2"></div><div class="hm-cell h1"></div><div class="hm-cell h0"></div><div class="hm-cell h0"></div>
+                  </div>
+                  <!-- GO: crítico -->
+                  <div class="hm-row">
+                    <div class="hm-area">G. Obstétrica</div>
+                    <div class="hm-cell h0"></div><div class="hm-cell h1"></div><div class="hm-cell h0"></div><div class="hm-cell h1"></div><div class="hm-cell h2"></div><div class="hm-cell h0"></div><div class="hm-cell h0"></div>
+                  </div>
+                  <!-- Psiquiatria: ótimo -->
+                  <div class="hm-row">
+                    <div class="hm-area">Psiquiatria</div>
+                    <div class="hm-cell h5"></div><div class="hm-cell h4"></div><div class="hm-cell h5"></div><div class="hm-cell h3"></div><div class="hm-cell h5"></div><div class="hm-cell h2"></div><div class="hm-cell h0"></div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:8px;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid rgba(61,90,128,0.15);">
+                  <span style="font-family:var(--dm);font-size:9px;color:var(--ch);">Menos</span>
+                  <div style="width:16px;height:10px;border-radius:2px;" class="h0"></div>
+                  <div style="width:16px;height:10px;border-radius:2px;" class="h1"></div>
+                  <div style="width:16px;height:10px;border-radius:2px;" class="h2"></div>
+                  <div style="width:16px;height:10px;border-radius:2px;" class="h3"></div>
+                  <div style="width:16px;height:10px;border-radius:2px;" class="h4"></div>
+                  <div style="width:16px;height:10px;border-radius:2px;" class="h5"></div>
+                  <span style="font-family:var(--dm);font-size:9px;color:var(--ch);">Mais</span>
+                  <span style="margin-left:auto;font-size:11px;color:var(--ch);">⚠ GO e Pediatria precisam de atenção esta semana</span>
+                </div>
+              </div>
+
+              <!-- Evolução histórica (SVG chart) -->
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">Evolução do Score de Predição</div>
+                  <span class="card-meta">Últimos 8 simulados</span>
+                </div>
+                <div class="chart-wrap">
+                  <svg viewBox="0 0 560 140" preserveAspectRatio="xMidYMid meet" style="width:100%;height:140px;">
+                    <defs>
+                      <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#00C2A8" stop-opacity="0.18"/>
+                        <stop offset="100%" stop-color="#00C2A8" stop-opacity="0"/>
+                      </linearGradient>
+                    </defs>
+                    <!-- Grid lines -->
+                    <line x1="40" y1="10" x2="540" y2="10" stroke="rgba(61,90,128,0.15)" stroke-width="1"/>
+                    <line x1="40" y1="40" x2="540" y2="40" stroke="rgba(61,90,128,0.15)" stroke-width="1"/>
+                    <line x1="40" y1="70" x2="540" y2="70" stroke="rgba(61,90,128,0.15)" stroke-width="1"/>
+                    <line x1="40" y1="100" x2="540" y2="100" stroke="rgba(61,90,128,0.15)" stroke-width="1"/>
+                    <line x1="40" y1="130" x2="540" y2="130" stroke="rgba(61,90,128,0.15)" stroke-width="1"/>
+                    <!-- Y labels -->
+                    <text x="30" y="13" text-anchor="end" font-family="'IBM Plex Mono'" font-size="8" fill="#8A9AB5">100%</text>
+                    <text x="30" y="43" text-anchor="end" font-family="'IBM Plex Mono'" font-size="8" fill="#8A9AB5">90%</text>
+                    <text x="30" y="73" text-anchor="end" font-family="'IBM Plex Mono'" font-size="8" fill="#8A9AB5">80%</text>
+                    <text x="30" y="103" text-anchor="end" font-family="'IBM Plex Mono'" font-size="8" fill="#8A9AB5">70%</text>
+                    <text x="30" y="133" text-anchor="end" font-family="'IBM Plex Mono'" font-size="8" fill="#8A9AB5">60%</text>
+                    <!-- Data points: scores 72,75,74,78,80,82,88,94.7%
+                         y = 10 + (100-score)/40 * 120   (scaled 60-100 → 130-10) -->
+                    <!-- 72% → y=130  75→y=121  74→y=124  78→y=112  80→y=106  82→y=100  88→y=82  94.7→y=56 -->
+                    <!-- X positions: 80,145,210,275,340,405,470,535 -->
+                    <path d="M80,120 L145,109 L210,112 L275,97 L340,90 L405,82 L470,62 L535,40"
+                      fill="none" stroke="#00C2A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M80,120 L145,109 L210,112 L275,97 L340,90 L405,82 L470,62 L535,40 L535,130 L80,130 Z"
+                      fill="url(#chartGrad)"/>
+                    <!-- Data dots -->
+                    <circle cx="80" cy="120" r="3.5" fill="#00C2A8"/>
+                    <circle cx="145" cy="109" r="3.5" fill="#00C2A8"/>
+                    <circle cx="210" cy="112" r="3.5" fill="#00C2A8"/>
+                    <circle cx="275" cy="97" r="3.5" fill="#00C2A8"/>
+                    <circle cx="340" cy="90" r="3.5" fill="#00C2A8"/>
+                    <circle cx="405" cy="82" r="3.5" fill="#00C2A8"/>
+                    <circle cx="470" cy="62" r="3.5" fill="#00C2A8"/>
+                    <circle cx="535" cy="40" r="5" fill="#00C2A8" stroke="#0D111C" stroke-width="2"/>
+                    <!-- X labels -->
+                    <text x="80" y="145" text-anchor="middle" font-family="'IBM Plex Mono'" font-size="8" fill="#8A9AB5">S01</text>
+                    <text x="145" y="145" text-anchor="middle" font-family="'IBM Plex Mono'" font-size="8" fill="#8A9AB5">S08</text>
+                    <text x="210" y="145" text-anchor="middle" font-family="'IBM Plex Mono'" font-size="8" fill="#8A9AB5">S15</text>
+                    <text x="275" y="145" text-anchor="middle" font-family="'IBM Plex Mono'" font-size="8" fill="#8A9AB5">S23</text>
+                    <text x="340" y="145" text-anchor="middle" font-family="'IBM Plex Mono'" font-size="8" fill="#8A9AB5">S31</text>
+                    <text x="405" y="145" text-anchor="middle" font-family="'IBM Plex Mono'" font-size="8" fill="#8A9AB5">S40</text>
+                    <text x="470" y="145" text-anchor="middle" font-family="'IBM Plex Mono'" font-size="8" fill="#8A9AB5">S51</text>
+                    <text x="535" y="145" text-anchor="middle" font-family="'IBM Plex Mono'" font-size="8" fill="#00C2A8">S63</text>
+                    <!-- Annotation -->
+                    <text x="535" y="33" text-anchor="middle" font-family="'IBM Plex Mono'" font-size="9" fill="#00C2A8">94.7%</text>
+                  </svg>
+                </div>
+              </div>
+
+            </div><!-- /col-left -->
+
+            <div class="col-right">
+
+              <!-- Desempenho por área -->
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">Por área</div>
+                  <span class="card-meta">Acerto %</span>
+                </div>
+                <div class="prog-row">
+                  <div class="prog-item">
+                    <div class="prog-hd">
+                      <span class="prog-lbl">Psiquiatria</span>
+                      <span class="prog-val" style="color:#00C2A8;">87%</span>
+                    </div>
+                    <div class="prog-track"><div class="prog-fill pf-g" style="width:87%"></div></div>
+                  </div>
+                  <div class="prog-item">
+                    <div class="prog-hd">
+                      <span class="prog-lbl">Clínica Médica</span>
+                      <span class="prog-val" style="color:#00C2A8;">83%</span>
+                    </div>
+                    <div class="prog-track"><div class="prog-fill pf-g" style="width:83%"></div></div>
+                  </div>
+                  <div class="prog-item">
+                    <div class="prog-hd">
+                      <span class="prog-lbl">Cirurgia Geral</span>
+                      <span class="prog-val" style="color:#64B5E8;">79%</span>
+                    </div>
+                    <div class="prog-track"><div class="prog-fill pf-r" style="width:79%"></div></div>
+                  </div>
+                  <div class="prog-item">
+                    <div class="prog-hd">
+                      <span class="prog-lbl">Pediatria</span>
+                      <span class="prog-val" style="color:#F5A623;">71%</span>
+                    </div>
+                    <div class="prog-track"><div class="prog-fill pf-w" style="width:71%"></div></div>
+                  </div>
+                  <div class="prog-item">
+                    <div class="prog-hd">
+                      <span class="prog-lbl">G. Obstétrica</span>
+                      <span class="prog-val" style="color:#FF6B6B;">58%</span>
+                    </div>
+                    <div class="prog-track"><div class="prog-fill pf-d" style="width:58%"></div></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Recomendações algorítmicas -->
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">Recomendações IA</div>
+                  <span class="card-meta">Prioridade alta</span>
+                </div>
+                <div class="rec-list">
+                  <div class="rec-item">
+                    <div class="rec-rank">01</div>
+                    <div class="rec-content">
+                      <div class="rec-title">Pré-eclâmpsia — GO</div>
+                      <div class="rec-desc">Lacuna crítica detectada. 68% de erro nos últimos 3 simulados. HSP cobra este tema em 2 questões/prova.</div>
+                      <div class="rec-meta">
+                        <span class="stag stag-d">Crítico</span>
+                        <span class="stag" style="background:rgba(61,90,128,0.15);color:var(--ch);">12 questões</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="rec-item">
+                    <div class="rec-rank">02</div>
+                    <div class="rec-content">
+                      <div class="rec-title">Bronquiolite viral — Pediatria</div>
+                      <div class="rec-desc">Você acerta diagnóstico mas erra conduta. Revise critérios de internação.</div>
+                      <div class="rec-meta">
+                        <span class="stag stag-w">Moderado</span>
+                        <span class="stag" style="background:rgba(61,90,128,0.15);color:var(--ch);">8 questões</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="rec-item">
+                    <div class="rec-rank">03</div>
+                    <div class="rec-content">
+                      <div class="rec-title">Síndrome do intestino curto — Cirurgia</div>
+                      <div class="rec-desc">Tema novo no currículo HSP 2025. Ainda não foi cobrado nos seus simulados.</div>
+                      <div class="rec-meta">
+                        <span class="stag stag-g">Preventivo</span>
+                        <span class="stag" style="background:rgba(61,90,128,0.15);color:var(--ch);">6 questões</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-top:12px;">
+                  <button style="width:100%;padding:9px;background:rgba(0,194,168,0.08);border:1.5px solid rgba(0,194,168,0.2);border-radius:var(--r-md);font-family:var(--db);font-size:12px;font-weight:600;color:#00C2A8;cursor:pointer;">
+                    Iniciar simulado focado →
+                  </button>
+                </div>
+              </div>
+
+              <!-- Próxima prova -->
+              <div class="card" style="background:linear-gradient(135deg,rgba(0,119,182,0.08) 0%,rgba(0,194,168,0.04) 100%);border-color:rgba(0,119,182,0.2);">
+                <div class="card-header">
+                  <div class="card-title" style="color:#64B5E8;">RESID · HSP 2026</div>
+                  <span class="stag stag-g">Meta atingida</span>
+                </div>
+                <div style="display:flex;gap:16px;align-items:center;">
+                  <div style="text-align:center;">
+                    <div style="font-family:var(--dm);font-size:32px;color:#fff;line-height:1;">47</div>
+                    <div style="font-family:var(--dm);font-size:9px;letter-spacing:0.1em;color:var(--ch);text-transform:uppercase;margin-top:2px;">dias</div>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="font-size:12px;color:var(--ch);">Prova em 47 dias · 23 Mar 2026</div>
+                    <div style="height:4px;background:rgba(61,90,128,0.2);border-radius:var(--r-full);margin:8px 0;overflow:hidden;">
+                      <div style="width:74%;height:100%;background:#64B5E8;border-radius:var(--r-full);"></div>
+                    </div>
+                    <div style="font-size:11px;color:var(--ch);">74% do plano de estudos concluído</div>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- /col-right -->
+          </div><!-- /main-grid -->
+        </div><!-- /content-area -->
+      </div><!-- /main-area -->
+    </div><!-- /dashboard-layout -->
+  </div><!-- /dashboard-shell -->
+</div>
+
+<!-- ════════════════════════════════════════════
+     SEÇÃO 2 — TELA DE SIMULADO
+════════════════════════════════════════════ -->
+<div class="page-section" id="simulado">
+  <div class="sec-label">09 — Tela de Produto</div>
+  <div class="sec-title">Tela de Simulado</div>
+  <p class="sec-sub">Questão 23/120 · Timer · Navegador lateral · Nível de confiança · Contexto clínico</p>
+
+  <div class="sim-shell">
+    <!-- Sim topbar -->
+    <div class="sim-topbar">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div class="sim-brand">Med<span>Pleni</span></div>
+        <div style="width:1px;height:20px;background:rgba(61,90,128,0.3);"></div>
+        <div style="font-size:12px;color:var(--ch);font-family:var(--dm);">RESID · Simulado Intensivo 2026 · Clínica Médica</div>
+      </div>
+      <div class="sim-info">
+        <div>
+          <div class="sim-qcount">Q 23 / 120</div>
+          <div class="sim-prog-bar" style="margin-top:4px;">
+            <div class="sim-prog-fill" style="width:19.1%;"></div>
+          </div>
+        </div>
+        <div class="sim-timer">01:<span>47</span>:22</div>
+        <button style="padding:6px 14px;background:transparent;border:1.5px solid rgba(255,107,107,0.3);border-radius:var(--r-md);color:var(--dg);font-family:var(--db);font-size:12px;font-weight:600;cursor:pointer;">Encerrar</button>
+      </div>
+    </div>
+
+    <div class="sim-layout">
+      <!-- Sim sidebar -->
+      <div class="sim-sidebar">
+        <div class="sim-nav-title">Questões</div>
+        <div class="sim-q-grid">
+          <!-- Q1-22 done, Q23 current, Q24-25 skip, rest todo -->
+          <div class="sim-q-num sq-done">1</div>
+          <div class="sim-q-num sq-done">2</div>
+          <div class="sim-q-num sq-done">3</div>
+          <div class="sim-q-num sq-done">4</div>
+          <div class="sim-q-num sq-done">5</div>
+          <div class="sim-q-num sq-done">6</div>
+          <div class="sim-q-num sq-done">7</div>
+          <div class="sim-q-num sq-done">8</div>
+          <div class="sim-q-num sq-done">9</div>
+          <div class="sim-q-num sq-done">10</div>
+          <div class="sim-q-num sq-done">11</div>
+          <div class="sim-q-num sq-done">12</div>
+          <div class="sim-q-num sq-done">13</div>
+          <div class="sim-q-num sq-done">14</div>
+          <div class="sim-q-num sq-done">15</div>
+          <div class="sim-q-num sq-done">16</div>
+          <div class="sim-q-num sq-done">17</div>
+          <div class="sim-q-num sq-done">18</div>
+          <div class="sim-q-num sq-done">19</div>
+          <div class="sim-q-num sq-done">20</div>
+          <div class="sim-q-num sq-done">21</div>
+          <div class="sim-q-num sq-done">22</div>
+          <div class="sim-q-num sq-curr">23</div>
+          <div class="sim-q-num sq-skip">24</div>
+          <div class="sim-q-num sq-skip">25</div>
+          <div class="sim-q-num sq-todo">26</div>
+          <div class="sim-q-num sq-todo">27</div>
+          <div class="sim-q-num sq-todo">28</div>
+          <div class="sim-q-num sq-todo">29</div>
+          <div class="sim-q-num sq-todo">30</div>
+        </div>
+        <div style="font-family:var(--dm);font-size:9px;letter-spacing:0.08em;color:rgba(138,154,181,0.4);text-align:center;margin-top:6px;">... 90 questões</div>
+        <div class="sim-stats">
+          <div class="sim-stat-row">
+            <span class="sim-stat-lbl">Respondidas</span>
+            <span class="sim-stat-val" style="color:#00C2A8;">22</span>
+          </div>
+          <div class="sim-stat-row">
+            <span class="sim-stat-lbl">Puladas</span>
+            <span class="sim-stat-val" style="color:#F5A623;">2</span>
+          </div>
+          <div class="sim-stat-row">
+            <span class="sim-stat-lbl">Acerto parcial</span>
+            <span class="sim-stat-val" style="color:#fff;">~82%</span>
+          </div>
+          <div class="sim-stat-row">
+            <span class="sim-stat-lbl">Tempo médio</span>
+            <span class="sim-stat-val" style="color:var(--ch);">1m 52s</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sim main content -->
+      <div class="sim-main">
+        <div class="sim-header">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+            <span class="sim-q-label">Questão 23</span>
+            <span class="sim-q-area">Clínica Médica · Cardiologia</span>
+            <span class="sim-difficulty">Média</span>
+            <span style="margin-left:auto;font-family:var(--dm);font-size:9px;letter-spacing:0.08em;color:rgba(138,154,181,0.4);">FMUSP-HC 2023 · adaptada</span>
+          </div>
+        </div>
+
+        <div class="sim-body">
+          <div class="sim-question">
+            <div class="sim-q-text">
+              Paciente do sexo masculino, 58 anos, hipertenso em uso de losartana 50mg/dia e atorvastatina 40mg/dia, é admitido na emergência com dor precordial em aperto de <strong>início há 3 horas</strong>, irradiando para o braço esquerdo, associada a sudorese e náuseas. Ao ECG: supradesnivelamento de ST ≥ 1mm em V1–V4. Troponina I ultrassensível: <strong>4.800 pg/mL</strong> (referência &lt;52 pg/mL).
+            </div>
+
+            <div class="sim-context">
+              PA: 148×90 mmHg · FC: 102 bpm · SatO₂: 96% em ar ambiente ·
+              Ausculta: bulhas rítmicas, sem sopros · Tempo porta-balão disponível: 47 minutos
+            </div>
+
+            <div style="font-size:13px;color:var(--nb);margin-bottom:16px;">
+              Qual a conduta <strong style="color:#fff;">imediata</strong> mais adequada para este paciente?
+            </div>
+
+            <div class="sim-options">
+              <div class="sim-opt">
+                <div class="sim-opt-letter">A</div>
+                <div class="sim-opt-text">Administrar heparina não-fracionada IV e solicitar ecocardiograma de urgência antes de qualquer intervenção</div>
+              </div>
+              <div class="sim-opt">
+                <div class="sim-opt-letter">B</div>
+                <div class="sim-opt-text">Iniciar trombólise com alteplase 100mg IV em razão do tempo de evolução favorável (3 horas)</div>
+              </div>
+              <div class="sim-opt selected">
+                <div class="sim-opt-letter">C</div>
+                <div class="sim-opt-text">Encaminhar para angioplastia coronária primária (ICP primária) — tempo porta-balão disponível dentro de 60 minutos é a estratégia de reperfusão de escolha no IAMCSST</div>
+              </div>
+              <div class="sim-opt">
+                <div class="sim-opt-letter">D</div>
+                <div class="sim-opt-text">Administrar AAS 300mg + clopidogrel 600mg e aguardar nova dosagem de troponina em 3 horas para confirmar diagnóstico</div>
+              </div>
+              <div class="sim-opt">
+                <div class="sim-opt-letter">E</div>
+                <div class="sim-opt-text">Iniciar dobutamina IV para suporte hemodinâmico e transferir para UTI cardíaca para monitorização</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Side panel -->
+          <div class="sim-panel">
+            <div class="sim-panel-card">
+              <div class="sim-panel-title">Meu desempenho em Cardiologia</div>
+              <div class="mini-ring">
+                <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                  <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(61,90,128,0.2)" stroke-width="8"/>
+                  <circle cx="40" cy="40" r="32" fill="none" stroke="#64B5E8" stroke-width="8"
+                    stroke-dasharray="201.1" stroke-dashoffset="40.2" stroke-linecap="round"
+                    transform="rotate(-90 40 40)"/>
+                  <text x="40" y="36" text-anchor="middle" font-family="'IBM Plex Mono'" font-size="14" fill="white">80%</text>
+                  <text x="40" y="48" text-anchor="middle" font-family="'Inter'" font-size="7" fill="#8A9AB5">acerto</text>
+                </svg>
+              </div>
+              <div style="font-family:var(--dm);font-size:9px;letter-spacing:0.08em;color:var(--ch);text-align:center;margin-top:8px;">
+                42 questões respondidas
+              </div>
+            </div>
+
+            <div class="sim-panel-card">
+              <div class="sim-panel-title">Fonte</div>
+              <div class="sim-source">
+                <strong>IAMCSST — Diretriz</strong>
+                SBC/SBH 2023 · Classe I, Nível A para ICP primária quando disponível em &lt;90 min
+              </div>
+            </div>
+
+            <div class="sim-panel-card">
+              <div class="sim-panel-title">Tags relacionadas</div>
+              <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                <span class="stag stag-g">IAMCSST</span>
+                <span class="stag stag-w">ICP primária</span>
+                <span class="stag" style="background:rgba(61,90,128,0.15);color:var(--ch);">trombólise</span>
+                <span class="stag" style="background:rgba(61,90,128,0.15);color:var(--ch);">reperfusão</span>
+              </div>
+            </div>
+          </div>
+        </div><!-- /sim-body -->
+
+        <!-- Sim footer -->
+        <div class="sim-footer">
+          <div class="sim-nav-btns">
+            <button class="sim-btn sim-btn-ghost">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              Anterior
+            </button>
+            <button class="sim-btn sim-btn-skip">Pular questão</button>
+          </div>
+          <div class="sim-actions-right">
+            <div>
+              <div class="sim-confidence">Nível de confiança</div>
+              <div class="sim-confidence-dots">
+                <div class="sim-dot active"></div>
+                <div class="sim-dot active"></div>
+                <div class="sim-dot active"></div>
+                <div class="sim-dot partial"></div>
+                <div class="sim-dot"></div>
+              </div>
+            </div>
+            <button class="sim-btn sim-btn-primary">
+              Confirmar resposta
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </div>
+
+      </div><!-- /sim-main -->
+    </div><!-- /sim-layout -->
+  </div><!-- /sim-shell -->
+</div>
+
+</main>
+
+<footer>
+  <p>MedPleni Design System · <span>Parte 3 de 3</span> · Dashboard + Simulado</p>
+  <p>v1.0.0 · 2026-03-25 · WCAG 2.1 AA · Score 94.7%</p>
+</footer>
+
+</body>
+</html>
