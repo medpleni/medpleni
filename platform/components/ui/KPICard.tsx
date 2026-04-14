@@ -3,7 +3,7 @@ import React from "react";
 interface KPICardProps {
   icon: React.ReactNode;
   label: string;
-  value: string | number;
+  value: React.ReactNode;
   delta?: string;
   deltaDirection?: "up" | "down" | "neutral";
   iconBg?: string;
