@@ -133,7 +133,7 @@ export default function SimuladoPage() {
             Med<span style={{ color: V.pu }}>Pleni</span>
           </div>
           <div style={{ width: 1, height: 20, background: "rgba(61,90,128,0.3)" }} />
-          <div style={{ fontSize: 12, color: V.ch, fontFamily: V.dm }}>
+          <div className="sim-topbar-info" style={{ fontSize: 12, color: V.ch, fontFamily: V.dm }}>
             RESID · Simulado Intensivo 2026 · Clínica Médica
           </div>
         </div>
@@ -163,14 +163,10 @@ export default function SimuladoPage() {
       </div>
 
       {/* ── SIM LAYOUT: 3 columns ── */}
-      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+      <div className="sim-layout">
 
         {/* ── LEFT SIDEBAR (200px) ── */}
-        <div style={{
-          width: 200, flexShrink: 0, background: "#0D111C",
-          borderRight: "1px solid rgba(61,90,128,0.15)", padding: 16,
-          overflowY: "auto",
-        }}>
+        <div className="sim-left-sidebar">
           <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.15em", textTransform: "uppercase", color: V.ch, marginBottom: 12 }}>
             Questões
           </div>
@@ -205,7 +201,7 @@ export default function SimuladoPage() {
         </div>
 
         {/* ── MAIN CONTENT ── */}
-        <div style={{ flex: 1, background: V.ab, display: "flex", flexDirection: "column" }}>
+        <div className="sim-main">
           {/* Header */}
           <div style={{ padding: "20px 28px 16px", borderBottom: "1px solid rgba(61,90,128,0.15)" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
@@ -230,7 +226,7 @@ export default function SimuladoPage() {
           </div>
 
           {/* Body: question + panel */}
-          <div style={{ flex: 1, padding: "24px 28px", display: "flex", gap: 28, overflowY: "auto" }}>
+          <div className="sim-body">
             {/* Question */}
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: 14, lineHeight: 1.75, color: V.nb, marginBottom: 6 }}
@@ -273,7 +269,7 @@ export default function SimuladoPage() {
             </div>
 
             {/* Side panel (200px) */}
-            <div style={{ width: 200, flexShrink: 0 }}>
+            <div className="sim-right-panel">
               {/* Mini ring */}
               <div style={{
                 background: V.pe, border: "1px solid rgba(61,90,128,0.25)",

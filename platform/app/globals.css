@@ -86,3 +86,104 @@ body {
   background: rgba(0, 194, 168, 0.2);
   color: var(--white);
 }
+
+/* ─────────────────────────────────────────────
+   Dashboard — Responsive Grids
+───────────────────────────────────────────── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 16px;
+}
+
+.main-grid > .col-left,
+.main-grid > .col-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (max-width: 1024px) {
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Simulado — Responsive Layout
+───────────────────────────────────────────── */
+.sim-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.sim-left-sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  background: #0D111C;
+  border-right: 1px solid rgba(61,90,128,0.15);
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.sim-main {
+  flex: 1;
+  background: var(--abismo);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sim-body {
+  flex: 1;
+  padding: 24px 28px;
+  display: flex;
+  gap: 28px;
+  overflow-y: auto;
+}
+
+.sim-right-panel {
+  width: 200px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 1024px) {
+  .sim-right-panel {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .sim-left-sidebar {
+    display: none;
+  }
+
+  .sim-body {
+    padding: 16px;
+  }
+
+  .sim-topbar-info {
+    display: none;
+  }
+}

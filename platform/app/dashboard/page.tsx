@@ -98,12 +98,7 @@ export default function DashboardPage() {
       onNavigate={setActiveNav}
     >
       {/* ── KPI Row ── */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(4, 1fr)",
-        gap: "14px",
-        marginBottom: "20px",
-      }}>
+      <div className="kpi-grid">
         <KPICard
           icon={<IcPred />}
           iconBg="rgba(0,194,168,0.1)"
@@ -139,13 +134,9 @@ export default function DashboardPage() {
       </div>
 
       {/* ── Main Grid: left + right ── */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "1fr 300px",
-        gap: "16px",
-      }}>
+      <div className="main-grid">
         {/* ── LEFT COLUMN ── */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <div className="col-left">
 
           {/* Score de Predição */}
           <Card hoverable={false}>
@@ -270,7 +261,7 @@ export default function DashboardPage() {
         </div>
 
         {/* ── RIGHT COLUMN (300px) ── */}
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <div className="col-right">
 
           {/* Desempenho por área */}
           <Card hoverable={false}>
