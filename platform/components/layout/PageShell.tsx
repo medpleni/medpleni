@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import BottomNav from "./BottomNav";
@@ -13,126 +14,47 @@ interface PageShellProps {
   onNavigate?: (id: string) => void;
 }
 
-/* ── Default nav sections with SVG icons from the dashboard HTML ── */
+/* ── Route map for nav IDs ── */
+const routeMap: Record<string, string> = {
+  dashboard: "/dashboard",
+  simulados: "/simulados",
+  questoes: "/questoes",
+  predicao: "/predicao",
+  flashcards: "/flashcards",
+  cronograma: "/cronograma",
+  perfil: "/perfil",
+  planos: "/planos",
+  resid: "/dashboard",
+  enamed: "/dashboard",
+  revalida: "/dashboard",
+};
+
+/* ── Default nav sections ── */
 const defaultSections = [
   {
     label: "Principal",
     items: [
-      {
-        id: "dashboard",
-        label: "Dashboard",
-        icon: (
-          <svg viewBox="0 0 16 16" fill="none" width="16" height="16">
-            <rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3" />
-            <rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3" />
-            <rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3" />
-            <rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3" />
-          </svg>
-        ),
-      },
-      {
-        id: "simulados",
-        label: "Simulados",
-        icon: (
-          <svg viewBox="0 0 16 16" fill="none" width="16" height="16">
-            <rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" strokeWidth="1.3" />
-            <path d="M5 7h6M5 10h4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-          </svg>
-        ),
-      },
-      {
-        id: "questoes",
-        label: "Questões",
-        icon: (
-          <svg viewBox="0 0 16 16" fill="none" width="16" height="16">
-            <path d="M3 4h10M3 8h10M3 12h6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-          </svg>
-        ),
-      },
-      {
-        id: "predicao",
-        label: "Predição",
-        icon: (
-          <svg viewBox="0 0 16 16" fill="none" width="16" height="16">
-            <path d="M3 12V5l5-3 5 3v7H3z" stroke="currentColor" strokeWidth="1.3" />
-            <circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.2" />
-          </svg>
-        ),
-      },
-      {
-        id: "flashcards",
-        label: "Flashcards",
-        icon: (
-          <svg viewBox="0 0 16 16" fill="none" width="16" height="16">
-            <rect x="3" y="4" width="10" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.3" />
-            <path d="M5 2h6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-          </svg>
-        ),
-      },
-      {
-        id: "cronograma",
-        label: "Cronograma",
-        icon: (
-          <svg viewBox="0 0 16 16" fill="none" width="16" height="16">
-            <rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.3" />
-            <path d="M2 7h12" stroke="currentColor" strokeWidth="1.2" />
-            <path d="M5 1v3M11 1v3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-          </svg>
-        ),
-      },
+      { id: "dashboard", label: "Dashboard", icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3" /><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3" /><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3" /><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3" /></svg> },
+      { id: "simulados", label: "Simulados", icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" strokeWidth="1.3" /><path d="M5 7h6M5 10h4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" /></svg> },
+      { id: "questoes", label: "Questões", icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><path d="M3 4h10M3 8h10M3 12h6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" /></svg> },
+      { id: "predicao", label: "Predição", icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><path d="M3 12V5l5-3 5 3v7H3z" stroke="currentColor" strokeWidth="1.3" /><circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.2" /></svg> },
+      { id: "flashcards", label: "Flashcards", icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><rect x="3" y="4" width="10" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.3" /><path d="M5 2h6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" /></svg> },
+      { id: "cronograma", label: "Cronograma", icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" strokeWidth="1.3" /><path d="M2 7h12" stroke="currentColor" strokeWidth="1.2" /><path d="M5 1v3M11 1v3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" /></svg> },
     ],
   },
   {
     label: "Sub-brands",
     items: [
-      {
-        id: "resid",
-        label: "RESID",
-        icon: (
-          <span
-            style={{
-              width: "8px",
-              height: "8px",
-              borderRadius: "50%",
-              background: "#0077B6",
-              display: "inline-block",
-              flexShrink: 0,
-            }}
-          />
-        ),
-      },
-      {
-        id: "enamed",
-        label: "ENAMED",
-        icon: (
-          <span
-            style={{
-              width: "8px",
-              height: "8px",
-              borderRadius: "50%",
-              background: "#00C2A8",
-              display: "inline-block",
-              flexShrink: 0,
-            }}
-          />
-        ),
-      },
-      {
-        id: "revalida",
-        label: "REVALIDA",
-        icon: (
-          <span
-            style={{
-              width: "8px",
-              height: "8px",
-              borderRadius: "50%",
-              background: "#6B5CE7",
-              display: "inline-block",
-              flexShrink: 0,
-            }}
-          />
-        ),
-      },
+      { id: "resid", label: "RESID", icon: <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--resid)", display: "inline-block" }} /> },
+      { id: "enamed", label: "ENAMED", icon: <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--pulso)", display: "inline-block" }} /> },
+      { id: "revalida", label: "REVALIDA", icon: <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--indigo)", display: "inline-block" }} /> },
+    ],
+  },
+  {
+    label: "Conta",
+    items: [
+      { id: "perfil", label: "Meu Perfil", icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><circle cx="8" cy="5" r="2.5" stroke="currentColor" strokeWidth="1.3" /><path d="M3 13c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" /></svg> },
+      { id: "planos", label: "Planos", icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><path d="M8 2l1.5 3.5L14 6l-3 3 .7 4L8 11l-3.7 2L5 9 2 6l4.5-.5z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" /></svg> },
     ],
   },
 ];
@@ -144,6 +66,8 @@ export default function PageShell({
   activeNavId = "dashboard",
   onNavigate,
 }: PageShellProps) {
+  const router = useRouter();
+  const pathname = usePathname();
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -153,57 +77,37 @@ export default function PageShell({
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  /* ── Dashboard shell from medpleni-part3-dashboard.html ── */
-  const shellStyle: React.CSSProperties = {
-    display: "flex",
-    flexDirection: "column",
-    minHeight: "100vh",
-    background: "#0D111C",
-  };
-
-  const layoutStyle: React.CSSProperties = {
-    display: "flex",
-    flex: 1,
-    overflow: "hidden",
-  };
-
-  const mainAreaStyle: React.CSSProperties = {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    overflow: "hidden",
-  };
-
-  const contentStyle: React.CSSProperties = {
-    flex: 1,
-    padding: isMobile ? "16px" : "20px 24px",
-    paddingBottom: isMobile ? "76px" : "20px",
-    overflowY: "auto",
-    background: "var(--abismo)",
+  const handleNavigate = (id: string) => {
+    onNavigate?.(id);
+    const route = routeMap[id];
+    if (route && route !== pathname) {
+      router.push(route);
+    }
   };
 
   return (
-    <div style={shellStyle}>
-      <div style={layoutStyle}>
-        {/* Sidebar — desktop only */}
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: "#0D111C" }}>
+      <style>{`@keyframes pageFadeIn { from { opacity:0; } to { opacity:1; } }`}</style>
+      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
         {!isMobile && (
-          <Sidebar
-            sections={defaultSections}
-            activeId={activeNavId}
-            onNavigate={onNavigate}
-          />
+          <Sidebar sections={defaultSections} activeId={activeNavId} onNavigate={handleNavigate} />
         )}
-
-        {/* Main area */}
-        <div style={mainAreaStyle}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
           <Topbar title={title} badgeText={badgeText} />
-          <div style={contentStyle}>{children}</div>
+          <div style={{
+            flex: 1,
+            padding: isMobile ? "16px" : "20px 24px",
+            paddingBottom: isMobile ? "76px" : "20px",
+            overflowY: "auto",
+            background: "var(--abismo)",
+            animation: "pageFadeIn 0.3s ease",
+          }}>
+            {children}
+          </div>
         </div>
       </div>
-
-      {/* BottomNav — mobile only */}
       {isMobile && (
-        <BottomNav activeId={activeNavId} onNavigate={onNavigate} />
+        <BottomNav activeId={activeNavId} onNavigate={handleNavigate} />
       )}
     </div>
   );

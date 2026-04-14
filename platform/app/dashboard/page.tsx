@@ -197,7 +197,7 @@ export default function DashboardPage() {
                   {row.area}
                 </div>
                 {row.dias.map((h, ci) => (
-                  <HeatmapCell key={ci} intensity={h as 0|1|2|3|4|5} tooltip={`${row.area} — ${hmDays[ci]}`} />
+                  <HeatmapCell key={ci} intensity={h as 0|1|2|3|4|5} tooltip={`${row.area} — ${hmDays[ci]}`} delay={ri * 7 + ci} />
                 ))}
               </div>
             ))}
