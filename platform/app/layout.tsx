@@ -38,23 +38,30 @@ const sourceSerif4 = Source_Serif_4({
 });
 
 export const metadata: Metadata = {
-  title: "MedPleni — O Algoritmo da Aprovação",
+  title: "MedPleni — Prepare-se para o ENAMED 2027",
   description:
-    "Plataforma de preparação para residência médica com IA adaptativa, spaced repetition e analytics clínico. Medicina com propósito. Tecnologia com precisão.",
+    "A plataforma de inteligência adaptativa para médicos que precisam passar no ENAMED 2027. Diagnóstico Raio-X, banco de questões comentadas, simulados e cronograma personalizado.",
   keywords: [
-    "residência médica",
+    "ENAMED 2027",
     "preparatório médico",
     "ENARE",
     "simulados medicina",
-    "spaced repetition",
-    "IA médica",
+    "residência médica",
+    "Matriz DCN",
+    "Saúde Coletiva",
+    "spaced repetition médico",
   ],
-  authors: [{ name: "Grupo Plenitude" }],
+  authors: [{ name: "Plenitude Educação" }],
   metadataBase: new URL("https://medpleni.com"),
+  icons: {
+    icon: "/logo.svg",
+    shortcut: "/logo.svg",
+    apple: "/logo.svg",
+  },
   openGraph: {
-    title: "MedPleni — O Algoritmo da Aprovação",
+    title: "MedPleni — Prepare-se para o ENAMED 2027",
     description:
-      "Medicina com propósito. Tecnologia com precisão.",
+      "Diagnóstico de lacunas, questões comentadas por área DCN, simulados cronometrados e predição de aprovação. Medicina com propósito. Tecnologia com precisão.",
     siteName: "MedPleni",
     locale: "pt_BR",
     type: "website",
