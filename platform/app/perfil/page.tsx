@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import { PageShell } from "@/components/layout";
-import { Card, Badge, Button } from "@/components/ui";
+import { Card, Badge } from "@/components/ui";
 import { mockUser } from "@/lib/mock-data";
+import { useUser } from "@/lib/supabase/use-user";
 
 const V = {
   pu: "#00C2A8", re: "#0077B6", ind: "#6B5CE7",
@@ -26,11 +27,24 @@ const chipStyle = (selected: boolean): React.CSSProperties => ({
 });
 
 export default function PerfilPage() {
+  const { user, signOut } = useUser();
   const [activeNav, setActiveNav] = useState("perfil");
   const [provasSel, setProvasSel] = useState<Set<string>>(new Set(mockUser.provaAlvo));
   const [diasSel, setDiasSel] = useState<Set<string>>(new Set(["Seg", "Ter", "Qua", "Qui", "Sex"]));
   const [horas, setHoras] = useState(20);
   const [notifs, setNotifs] = useState({ estudos: true, simulados: true, streak: true, ranking: false, promos: false });
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  const displayNome = user?.user_metadata?.full_name || mockUser.nome;
+  const displayEmail = user?.email || mockUser.email;
+  const displayIniciais = displayNome
+    ? displayNome
+        .split(" ")
+        .map((n: string) => n[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase()
+    : "MP";
 
   const toggle = (set: Set<string>, item: string) => {
     const n = new Set(set);
@@ -59,6 +73,11 @@ export default function PerfilPage() {
     diagnostico: V.ch, residente: V.re, aprovacao: V.pu,
   };
 
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    await signOut();
+  };
+
   return (
     <PageShell title="Meu Perfil" badgeText="Configurações" activeNavId={activeNav} onNavigate={setActiveNav}>
       {/* ── Avatar + Info ── */}
@@ -71,13 +90,13 @@ export default function PerfilPage() {
             display: "flex", alignItems: "center", justifyContent: "center",
             fontFamily: V.df, fontSize: 24, fontWeight: 700, color: V.pu,
           }}>
-            {mockUser.iniciais}
+            {displayIniciais}
           </div>
           <div>
             <div style={{ fontFamily: V.df, fontSize: 22, fontWeight: 700, color: "#fff", marginBottom: 2 }}>
-              {mockUser.nome}
+              {displayNome}
             </div>
-            <div style={{ fontSize: 13, color: V.ch, marginBottom: 6 }}>{mockUser.email}</div>
+            <div style={{ fontSize: 13, color: V.ch, marginBottom: 6 }}>{displayEmail}</div>
             <div style={{ display: "flex", gap: 6 }}>
               <Badge variant={mockUser.plano === "aprovacao" ? "green" : "blue"}>
                 {planoLabel[mockUser.plano]}
@@ -104,8 +123,8 @@ export default function PerfilPage() {
               Dados Pessoais
             </div>
             {[
-              { label: "Nome", value: mockUser.nome },
-              { label: "E-mail", value: mockUser.email },
+              { label: "Nome", value: displayNome },
+              { label: "E-mail", value: displayEmail },
               { label: "CRM", value: mockUser.crm || "—" },
               { label: "Sub-brand", value: mockUser.subBrand },
               { label: "Streak atual", value: `${mockUser.streakDias} dias 🔥` },
@@ -226,12 +245,17 @@ export default function PerfilPage() {
               }}>
                 Exportar meus dados
               </button>
-              <button style={{
-                width: "100%", padding: "10px", borderRadius: 8,
-                background: "rgba(255,107,107,0.08)", border: "1.5px solid rgba(255,107,107,0.25)",
-                color: V.dg, fontFamily: V.db, fontSize: 12, fontWeight: 600, cursor: "pointer",
-              }}>
-                Sair da conta
+              <button
+                onClick={handleLogout}
+                disabled={loggingOut}
+                style={{
+                  width: "100%", padding: "10px", borderRadius: 8,
+                  background: "rgba(255,107,107,0.08)", border: "1.5px solid rgba(255,107,107,0.25)",
+                  color: V.dg, fontFamily: V.db, fontSize: 12, fontWeight: 600, cursor: loggingOut ? "wait" : "pointer",
+                  transition: "all 0.15s",
+                }}
+              >
+                {loggingOut ? "Encerrando sessão..." : "Sair da conta"}
               </button>
             </div>
           </Card>

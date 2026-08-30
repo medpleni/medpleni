@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import Link from "next/link";
 
 interface TopbarProps {
   title?: string;
@@ -60,6 +63,7 @@ export default function Topbar({
     justifyContent: "center",
     cursor: "pointer",
     color: "var(--chumbo)",
+    textDecoration: "none",
   };
 
   return (
@@ -70,7 +74,7 @@ export default function Topbar({
         {actions || (
           <>
             {/* User icon */}
-            <button style={iconBtnStyle} aria-label="Perfil">
+            <Link href="/perfil" style={iconBtnStyle} aria-label="Perfil">
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
                 <circle
                   cx="8"
@@ -86,7 +90,7 @@ export default function Topbar({
                   strokeLinecap="round"
                 />
               </svg>
-            </button>
+            </Link>
             {/* Bell icon */}
             <button style={iconBtnStyle} aria-label="Notificações">
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none">

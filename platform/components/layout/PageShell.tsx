@@ -5,6 +5,8 @@ import { useRouter, usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import BottomNav from "./BottomNav";
+import { useUser } from "@/lib/supabase/use-user";
+import { mockUser } from "@/lib/mock-data";
 
 interface PageShellProps {
   children: React.ReactNode;
@@ -68,7 +70,18 @@ export default function PageShell({
 }: PageShellProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const { user } = useUser();
   const [isMobile, setIsMobile] = useState(false);
+
+  const displayNome = user?.user_metadata?.full_name || mockUser.nome;
+  const displayIniciais = displayNome
+    ? displayNome
+        .split(" ")
+        .map((n: string) => n[0])
+        .slice(0, 2)
+        .join("")
+        .toUpperCase()
+    : "MP";
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -90,7 +103,13 @@ export default function PageShell({
       <style>{`@keyframes pageFadeIn { from { opacity:0; } to { opacity:1; } }`}</style>
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
         {!isMobile && (
-          <Sidebar sections={defaultSections} activeId={activeNavId} onNavigate={handleNavigate} />
+          <Sidebar
+            sections={defaultSections}
+            activeId={activeNavId}
+            onNavigate={handleNavigate}
+            userName={displayNome}
+            userInitials={displayIniciais}
+          />
         )}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
           <Topbar title={title} badgeText={badgeText} />
