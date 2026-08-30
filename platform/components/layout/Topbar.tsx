@@ -11,7 +11,7 @@ interface TopbarProps {
 
 export default function Topbar({
   title = "Meu Dashboard",
-  badgeText = "RESID · HSP 2026",
+  badgeText = "ENAMED · 2027",
   actions,
 }: TopbarProps) {
   /* Estilos extraídos de .topbar no medpleni-part3-dashboard.html */

@@ -44,7 +44,7 @@ export default function Sidebar({
   activeId = "dashboard",
   onNavigate,
   userName = "Dra. Camila S.",
-  userRole = "RESID · R1",
+  userRole = "ENAMED · 2027",
   userInitials = "CS",
 }: SidebarProps) {
   /* ── Estilos extraídos de .sidebar no medpleni-part3-dashboard.html ── */

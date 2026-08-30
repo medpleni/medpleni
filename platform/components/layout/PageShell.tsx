@@ -45,14 +45,6 @@ const defaultSections = [
     ],
   },
   {
-    label: "Sub-brands",
-    items: [
-      { id: "resid", label: "RESID", icon: <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--resid)", display: "inline-block" }} /> },
-      { id: "enamed", label: "ENAMED", icon: <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--pulso)", display: "inline-block" }} /> },
-      { id: "revalida", label: "REVALIDA", icon: <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--indigo)", display: "inline-block" }} /> },
-    ],
-  },
-  {
     label: "Conta",
     items: [
       { id: "perfil", label: "Meu Perfil", icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><circle cx="8" cy="5" r="2.5" stroke="currentColor" strokeWidth="1.3" /><path d="M3 13c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" /></svg> },
@@ -108,6 +100,7 @@ export default function PageShell({
             activeId={activeNavId}
             onNavigate={handleNavigate}
             userName={displayNome}
+            userRole="ENAMED · 2027"
             userInitials={displayIniciais}
           />
         )}
