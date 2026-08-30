@@ -207,24 +207,29 @@ export default function PredicaoPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {data.alertasEnamed.map((al) => (
                 <div key={al.area} style={{
-                  padding: "12px", background: "rgba(43,58,82,0.3)",
-                  borderRadius: 10, border: "1px solid rgba(61,90,128,0.2)",
-                  borderLeft: `3px solid ${al.pct < 60 ? V.dg : V.wn}`,
+                  padding: "14px 16px", background: "rgba(43,58,82,0.35)",
+                  borderRadius: 10, border: "1px solid rgba(61,90,128,0.25)",
                 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-                    <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>{al.area}</span>
-                    <span style={{ fontFamily: V.dm, fontSize: 11, color: al.pct < 60 ? V.dg : V.wn }}>
-                      {al.pct}%
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>{al.area}</span>
+                    <span style={{
+                      fontFamily: V.dm, fontSize: 9, fontWeight: 600,
+                      padding: "2px 6px", borderRadius: 4,
+                      background: al.pct < 60 ? "rgba(255,107,107,0.12)" : "rgba(245,166,35,0.12)",
+                      color: al.pct < 60 ? V.dg : V.wn,
+                    }}>
+                      {al.pct}% acerto
                     </span>
                   </div>
-                  <div style={{ fontSize: 11, color: V.ch, lineHeight: 1.5, marginBottom: 8 }}>
+                  <div style={{ fontSize: 12, color: V.ch, lineHeight: 1.5, marginBottom: 10 }}>
                     {al.desc}
                   </div>
                   <div style={{
-                    fontSize: 10, color: V.pu, background: "rgba(0,194,168,0.06)",
-                    padding: "6px 8px", borderRadius: 6,
+                    fontSize: 11, color: V.nb, background: "rgba(13,17,28,0.5)",
+                    border: "1px solid rgba(61,90,128,0.2)",
+                    padding: "6px 10px", borderRadius: 6,
                   }}>
-                    🎯 <strong>Conduta:</strong> {al.rec}
+                    🎯 <strong style={{ color: V.pu }}>Conduta:</strong> {al.rec}
                   </div>
                 </div>
               ))}

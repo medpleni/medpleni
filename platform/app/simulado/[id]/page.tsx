@@ -349,7 +349,7 @@ export default function SimuladoDetailPage() {
                 <div style={{ fontSize: 13, color: V.nb, lineHeight: 1.6, marginBottom: 10 }}>
                   {questions[selectedReviewQIdx].enunciado}
                 </div>
-                <div style={{ fontSize: 12, color: V.ch, lineHeight: 1.6, background: "rgba(0,194,168,0.05)", padding: "10px 12px", borderRadius: 8, borderLeft: `3px solid ${V.pu}` }}>
+                <div style={{ fontSize: 12, color: V.ch, lineHeight: 1.6, background: "rgba(13,17,28,0.45)", border: "1px solid rgba(0,194,168,0.25)", padding: "12px 14px", borderRadius: 8 }}>
                   <strong style={{ color: V.pu }}>Explicação:</strong> {questions[selectedReviewQIdx].explicacao}
                 </div>
               </div>
@@ -506,9 +506,9 @@ export default function SimuladoDetailPage() {
 
               {q.contextoClinico && (
                 <div style={{
-                  margin: "16px 0", padding: "14px 16px",
-                  background: "rgba(43,58,82,0.4)", border: "1px solid rgba(61,90,128,0.2)",
-                  borderLeft: "3px solid rgba(0,194,168,0.4)", borderRadius: 8,
+                  margin: "16px 0", padding: "14px 18px",
+                  background: "rgba(13,17,28,0.45)", border: "1px solid rgba(61,90,128,0.25)",
+                  borderRadius: 8,
                   fontSize: 13, lineHeight: 1.7, color: V.ch, fontStyle: "italic",
                 }}>
                   {q.contextoClinico}

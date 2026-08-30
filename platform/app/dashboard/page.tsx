@@ -264,24 +264,35 @@ export default function DashboardPage() {
                 <div
                   key={i}
                   style={{
-                    padding: "10px 12px",
-                    background: "rgba(43,58,82,0.3)",
-                    border: "1px solid rgba(61,90,128,0.2)",
-                    borderRadius: "8px",
-                    borderLeft: `3px solid ${rec.pct < 60 ? "#FF6B6B" : "#00C2A8"}`,
+                    padding: "12px 14px",
+                    background: "rgba(43,58,82,0.35)",
+                    border: "1px solid rgba(61,90,128,0.25)",
+                    borderRadius: "10px",
                   }}
                 >
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
-                    <span style={{ fontSize: "12px", fontWeight: 600, color: "#fff" }}>{rec.area}</span>
-                    <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "10px", color: "#00C2A8" }}>
-                      {rec.pct}%
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+                    <span style={{
+                      fontFamily: "var(--font-display)", fontSize: "12px", fontWeight: 700, color: "#fff",
+                    }}>
+                      {rec.area}
+                    </span>
+                    <span style={{
+                      fontFamily: "'IBM Plex Mono'", fontSize: "9px", fontWeight: 600,
+                      padding: "2px 6px", borderRadius: 4,
+                      background: rec.pct < 60 ? "rgba(255,107,107,0.12)" : "rgba(0,194,168,0.12)",
+                      color: rec.pct < 60 ? "#FF6B6B" : "#00C2A8",
+                    }}>
+                      {rec.pct}% de domínio
                     </span>
                   </div>
-                  <div style={{ fontSize: "11px", color: "var(--chumbo)", lineHeight: "1.4", marginBottom: "6px" }}>
+                  <div style={{ fontSize: "11px", color: "var(--chumbo)", lineHeight: "1.45", marginBottom: "8px" }}>
                     {rec.desc}
                   </div>
-                  <div style={{ fontSize: "10px", color: "#00C2A8", background: "rgba(0,194,168,0.06)", padding: "4px 6px", borderRadius: "4px" }}>
-                    🎯 {rec.rec}
+                  <div style={{
+                    fontSize: "10.5px", color: "#E0E6F0", background: "rgba(13,17,28,0.5)",
+                    border: "1px solid rgba(61,90,128,0.2)", padding: "5px 8px", borderRadius: "6px",
+                  }}>
+                    🎯 <strong style={{ color: "#00C2A8" }}>Conduta:</strong> {rec.rec}
                   </div>
                 </div>
               ))}

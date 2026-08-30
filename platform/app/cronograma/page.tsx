@@ -114,18 +114,24 @@ export default function CronogramaPage() {
                     const bc = areaColor[b.area] || V.ch;
                     return (
                       <div key={i} style={{
-                        padding: "8px 10px", borderRadius: 8,
-                        background: `${bc}10`, borderLeft: `3px solid ${bc}`,
+                        padding: "9px 10px", borderRadius: 8,
+                        background: "rgba(13,17,28,0.4)",
+                        border: "1px solid rgba(61,90,128,0.22)",
                         transition: "all 0.15s",
                       }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 2 }}>
-                          <span style={{ fontFamily: V.dm, fontSize: 9, color: bc }}>{b.horario}</span>
-                          <span style={{ fontSize: 10 }}>{tipoIcon[b.tipo]}</span>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                          <span style={{
+                            fontFamily: V.dm, fontSize: 9, fontWeight: 600, color: bc,
+                            background: `${bc}15`, padding: "2px 5px", borderRadius: 4,
+                          }}>
+                            {b.horario}
+                          </span>
+                          <span style={{ fontSize: 11 }}>{tipoIcon[b.tipo]}</span>
                         </div>
-                        <div style={{ fontSize: 10, fontWeight: 600, color: V.nb, lineHeight: 1.3, marginBottom: 2 }}>
+                        <div style={{ fontSize: 11, fontWeight: 600, color: "#fff", lineHeight: 1.3, marginBottom: 2 }}>
                           {b.area}
                         </div>
-                        <div style={{ fontSize: 9, color: V.ch, lineHeight: 1.3 }}>
+                        <div style={{ fontSize: 9.5, color: V.ch, lineHeight: 1.3 }}>
                           {b.descricao}
                         </div>
                       </div>

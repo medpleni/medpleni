@@ -242,9 +242,9 @@ export default function QuestoesPage() {
 
                     {q.contextoClinico && (
                       <div style={{
-                        margin: "12px 0", padding: "12px 14px",
-                        background: "rgba(43,58,82,0.5)", borderLeft: `3px solid ${V.pu}`,
-                        borderRadius: 6, fontSize: 13, lineHeight: 1.6, color: V.ch, fontStyle: "italic",
+                        margin: "12px 0", padding: "12px 16px",
+                        background: "rgba(13,17,28,0.45)", border: "1px solid rgba(61,90,128,0.25)",
+                        borderRadius: 8, fontSize: 13, lineHeight: 1.6, color: V.ch, fontStyle: "italic",
                       }}>
                         {q.contextoClinico}
                       </div>
