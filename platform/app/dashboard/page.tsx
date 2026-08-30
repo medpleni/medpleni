@@ -207,74 +207,86 @@ export default function DashboardPage() {
             </div>
           </Card>
 
-          {/* 3. Atividade da Semana */}
+          {/* 3. Evolução do Índice de Prontidão */}
           <Card hoverable={false}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
-              <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "14px", color: "#fff" }}>
-                Atividade da Semana
-              </span>
-              <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "9px", color: "var(--chumbo)", textTransform: "uppercase" }}>
-                Últimos 7 dias
-              </span>
+            {/* Cabeçalho */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "12px" }}>
+              <div>
+                <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "14px", color: "#fff", display: "block" }}>
+                  Evolução do Índice
+                </span>
+                <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "9px", color: "var(--chumbo)" }}>
+                  Últimos 8 simulados
+                </span>
+              </div>
+              {/* Delta */}
+              <div style={{
+                display: "flex", alignItems: "center", gap: "4px",
+                background: "rgba(0,194,168,0.1)", border: "1px solid rgba(0,194,168,0.25)",
+                borderRadius: "6px", padding: "3px 8px",
+              }}>
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                  <path d="M5 8V2M2 5l3-3 3 3" stroke="#00C2A8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "10px", fontWeight: 700, color: "#00C2A8" }}>
+                  +22.7pts
+                </span>
+              </div>
             </div>
 
-            {/* Pills de dias da semana */}
-            <div style={{ display: "flex", gap: "6px", marginBottom: "16px" }}>
-              {[
-                { d: "S", active: true, today: false },
-                { d: "T", active: true, today: false },
-                { d: "Q", active: true, today: false },
-                { d: "Q", active: false, today: false },
-                { d: "S", active: true, today: false },
-                { d: "S", active: false, today: false },
-                { d: "D", active: false, today: true },
-              ].map((item, i) => (
-                <div key={i} style={{
-                  flex: 1, aspectRatio: "1 / 1", borderRadius: "8px",
-                  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-                  background: item.today
-                    ? "rgba(0,194,168,0.15)"
-                    : item.active
-                    ? "rgba(0,194,168,0.08)"
-                    : "rgba(43,58,82,0.25)",
-                  border: `1px solid ${item.today ? "rgba(0,194,168,0.5)" : item.active ? "rgba(0,194,168,0.2)" : "rgba(61,90,128,0.2)"}`,
-                }}>
-                  <span style={{
-                    fontFamily: "'IBM Plex Mono'", fontSize: "9px",
-                    color: item.active || item.today ? "#00C2A8" : "var(--chumbo)",
-                    fontWeight: item.today ? 700 : 400,
-                  }}>
-                    {item.d}
-                  </span>
-                  <span style={{ fontSize: "14px", marginTop: "1px" }}>
-                    {item.active || item.today ? "●" : "·"}
-                  </span>
-                </div>
-              ))}
-            </div>
+            {/* Gráfico */}
+            <ResponsiveContainer width="100%" height={110}>
+              <AreaChart data={mockScoreEvolution} margin={{ top: 4, right: 4, left: -28, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="scoreGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#00C2A8" stopOpacity={0.25} />
+                    <stop offset="95%" stopColor="#00C2A8" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis
+                  dataKey="simulado"
+                  tick={{ fontFamily: "'IBM Plex Mono'", fontSize: 8, fill: "var(--chumbo)" }}
+                  axisLine={false} tickLine={false}
+                />
+                <YAxis
+                  domain={[65, 100]}
+                  tick={{ fontFamily: "'IBM Plex Mono'", fontSize: 8, fill: "var(--chumbo)" }}
+                  axisLine={false} tickLine={false}
+                />
+                <RTooltip
+                  contentStyle={{
+                    background: "var(--petroleo)", border: "1px solid rgba(61,90,128,0.4)",
+                    borderRadius: "8px", fontSize: "11px", color: "#fff",
+                  }}
+                  formatter={(v) => [`${v ?? ""}%`, "Score"]}
+                />
+                {/* Linha de meta */}
+                <line x1="0%" y1="30%" x2="100%" y2="30%" stroke="#F5A623" strokeWidth={1} strokeDasharray="3 3" />
+                <Area
+                  type="monotone" dataKey="score"
+                  stroke="#00C2A8" strokeWidth={2}
+                  fill="url(#scoreGrad)"
+                  dot={{ fill: "#00C2A8", r: 2.5, strokeWidth: 0 }}
+                  activeDot={{ r: 4, fill: "#00C2A8", stroke: "rgba(0,194,168,0.3)", strokeWidth: 4 }}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
 
-            {/* Métricas rápidas da semana */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px" }}>
-              {[
-                { label: "Questões", value: "48", icon: "❓", color: "#64B5E8" },
-                { label: "Flashcards", value: "120", icon: "🔁", color: "#00C2A8" },
-                { label: "Simulados", value: "2", icon: "⏱️", color: "#A99EF5" },
-              ].map((m) => (
-                <div key={m.label} style={{
-                  background: "rgba(43,58,82,0.3)", borderRadius: "8px",
-                  border: "1px solid rgba(61,90,128,0.2)",
-                  padding: "10px 10px 8px",
-                  textAlign: "center",
-                }}>
-                  <div style={{ fontSize: "16px", marginBottom: "4px" }}>{m.icon}</div>
-                  <div style={{ fontFamily: "'IBM Plex Mono'", fontSize: "15px", fontWeight: 700, color: m.color, lineHeight: 1 }}>
-                    {m.value}
-                  </div>
-                  <div style={{ fontSize: "9px", color: "var(--chumbo)", marginTop: "4px", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-                    {m.label}
-                  </div>
+            {/* Rodapé: score atual vs meta */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "8px", paddingTop: "10px", borderTop: "1px solid rgba(61,90,128,0.2)" }}>
+              <div style={{ display: "flex", gap: "14px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                  <span style={{ display: "inline-block", width: 8, height: 2, background: "#00C2A8", borderRadius: 2 }} />
+                  <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "9px", color: "var(--chumbo)" }}>Seu índice</span>
                 </div>
-              ))}
+                <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                  <span style={{ display: "inline-block", width: 8, height: 1, background: "#F5A623", borderRadius: 2, borderTop: "1px dashed #F5A623" }} />
+                  <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "9px", color: "var(--chumbo)" }}>Meta aprovação</span>
+                </div>
+              </div>
+              <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "11px", fontWeight: 700, color: "#00C2A8" }}>
+                94.7% atual
+              </span>
             </div>
           </Card>
         </div>
