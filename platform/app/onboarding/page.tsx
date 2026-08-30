@@ -40,16 +40,19 @@ const especialidades = ["Clínica Médica", "Cirurgia Geral", "Pediatria", "Gine
 const diasSemana = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 const periodos = ["Manhã", "Tarde", "Noite", "Madrugada"];
 
+import { createClient } from "@/lib/supabase/client";
+import { saveOnboardingData } from "@/lib/supabase/profile";
+
 export default function OnboardingPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState(1); // 1 = forward, -1 = back
 
   // Step 1
-  const [foco, setFoco] = useState<string | null>(null);
+  const [foco, setFoco] = useState<string | null>("residencia");
   // Step 2
-  const [provasSel, setProvasSel] = useState<Set<string>>(new Set());
-  const [espSel, setEspSel] = useState<Set<string>>(new Set());
+  const [provasSel, setProvasSel] = useState<Set<string>>(new Set(["ENARE", "USP"]));
+  const [espSel, setEspSel] = useState<Set<string>>(new Set(["Clínica Médica"]));
   const [dataProva, setDataProva] = useState("");
   // Step 3
   const [horas, setHoras] = useState(20);
@@ -72,9 +75,32 @@ export default function OnboardingPage() {
     setStep(s);
   };
 
-  const handleFinish = () => {
+  const handleFinish = async () => {
     setGenerating(true);
-    setTimeout(() => router.push("/dashboard"), 2800);
+
+    try {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (user) {
+        await saveOnboardingData(user.id, {
+          foco: foco || "residencia",
+          provas: Array.from(provasSel),
+          especialidades: Array.from(espSel),
+          dataProva: dataProva || undefined,
+          horasSemanais: horas,
+          diasSemana: Array.from(diasSel),
+          periodos: Array.from(perSel),
+        });
+      }
+    } catch (err) {
+      console.warn("Aviso ao salvar onboarding no Supabase:", err);
+    }
+
+    setTimeout(() => {
+      router.push("/dashboard");
+      router.refresh();
+    }, 2400);
   };
 
   const toggle = (set: Set<string>, item: string) => {

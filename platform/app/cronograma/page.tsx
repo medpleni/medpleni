@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { PageShell } from "@/components/layout";
-import { Card, Badge } from "@/components/ui";
-import { mockSchedule } from "@/lib/mock-data";
+import { Badge } from "@/components/ui";
+import { useUser } from "@/lib/supabase/use-user";
+import { generateAdaptiveWeeklySchedule } from "@/lib/supabase/schedule";
+import type { DiaEstudo } from "@/lib/types";
 
 const V = {
   pu: "#00C2A8", re: "#0077B6", rel: "#64B5E8", ind: "#6B5CE7",
@@ -28,31 +30,54 @@ const tipoLabel: Record<string, string> = {
   simulado: "Simulado", questoes: "Questões", revisao: "Revisão", flashcards: "Flashcards", descanso: "Descanso",
 };
 
-/* Donut chart data */
-const donutData = [
-  { label: "Lacunas", pct: 70, color: V.dg },
-  { label: "Manutenção", pct: 30, color: V.pu },
-];
-
 export default function CronogramaPage() {
+  const { profile } = useUser();
   const [activeNav, setActiveNav] = useState("cronograma");
+  const [schedule, setSchedule] = useState<DiaEstudo[]>([]);
+  const [reajusting, setReajusting] = useState(false);
+  const [lastAdjusted, setLastAdjusted] = useState("Hoje");
+
+  useEffect(() => {
+    const s = generateAdaptiveWeeklySchedule({ profile });
+    setSchedule(s);
+  }, [profile]);
+
+  const handleReajust = () => {
+    setReajusting(true);
+    setTimeout(() => {
+      const s = generateAdaptiveWeeklySchedule({ profile });
+      setSchedule(s);
+      setReajusting(false);
+      setLastAdjusted(`Agora · ${new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}`);
+    }, 600);
+  };
 
   return (
-    <PageShell title="Cronograma de Estudos" badgeText="Semana 14 · Abr 2026" activeNavId={activeNav} onNavigate={setActiveNav}>
+    <PageShell
+      title="Cronograma de Estudos"
+      badgeText={`Meta: ${profile?.weekly_study_hours || 20}h/semana`}
+      activeNavId={activeNav}
+      onNavigate={setActiveNav}
+    >
       {/* ── Header bar ── */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, flexWrap: "wrap", gap: 10 }}>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <Badge variant="green">Ajustado pela IA</Badge>
           <span style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.08em", color: V.ch }}>
-            Último ajuste: 12/04/2026 · 14:32
+            Último ajuste: {lastAdjusted} · Foco: 70% lacunas / 30% manutenção
           </span>
         </div>
-        <button style={{
-          padding: "8px 18px", borderRadius: 8,
-          background: "transparent", border: "1.5px solid rgba(0,194,168,0.3)",
-          color: V.pu, fontFamily: V.db, fontSize: 12, fontWeight: 600, cursor: "pointer",
-        }}>
-          Reajustar cronograma
+        <button
+          onClick={handleReajust}
+          disabled={reajusting}
+          style={{
+            padding: "8px 18px", borderRadius: 8,
+            background: "transparent", border: "1.5px solid rgba(0,194,168,0.3)",
+            color: V.pu, fontFamily: V.db, fontSize: 12, fontWeight: 600, cursor: "pointer",
+            transition: "all 0.15s",
+          }}
+        >
+          {reajusting ? "Recalculando..." : "Reajustar cronograma"}
         </button>
       </div>
 
@@ -68,7 +93,7 @@ export default function CronogramaPage() {
               @media (max-width:640px) { .cronograma-grid { grid-template-columns: 1fr !important; } }
             `}</style>
 
-            {mockSchedule.map((dia) => (
+            {schedule.map((dia) => (
               <div key={dia.dia} style={{
                 background: V.pe, border: "1px solid rgba(61,90,128,0.2)",
                 borderRadius: 12, padding: "12px", minHeight: 200,
@@ -98,13 +123,10 @@ export default function CronogramaPage() {
                           <span style={{ fontSize: 10 }}>{tipoIcon[b.tipo]}</span>
                         </div>
                         <div style={{ fontSize: 10, fontWeight: 600, color: V.nb, lineHeight: 1.3, marginBottom: 2 }}>
-                          {tipoLabel[b.tipo]}
+                          {b.area}
                         </div>
                         <div style={{ fontSize: 9, color: V.ch, lineHeight: 1.3 }}>
-                          {b.area.length > 16 ? b.area.slice(0, 14) + "…" : b.area}
-                        </div>
-                        <div style={{ fontFamily: V.dm, fontSize: 8, color: "rgba(138,154,181,0.4)", marginTop: 2 }}>
-                          {b.duracao}
+                          {b.descricao}
                         </div>
                       </div>
                     );
@@ -115,74 +137,59 @@ export default function CronogramaPage() {
           </div>
         </div>
 
-        {/* RIGHT — Stats */}
+        {/* RIGHT — Summary */}
         <div className="col-right">
-          {/* Donut */}
-          <Card hoverable={false}>
+          {/* Distribuição */}
+          <div style={{
+            background: V.pe, border: "1px solid rgba(61,90,128,0.2)",
+            borderRadius: 14, padding: "20px", marginBottom: 14,
+          }}>
             <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 14 }}>
-              Distribuição do Plano
+              Distribuição da Semana
             </div>
-            <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
-              <svg width="120" height="120" viewBox="0 0 120 120">
-                {/* Background */}
-                <circle cx="60" cy="60" r="45" fill="none" stroke="rgba(61,90,128,0.15)" strokeWidth="14" />
-                {/* Lacunas (70%) */}
-                <circle cx="60" cy="60" r="45" fill="none" stroke={V.dg} strokeWidth="14"
-                  strokeDasharray={`${0.7 * 283} ${0.3 * 283}`}
-                  strokeLinecap="round" transform="rotate(-90 60 60)" />
-                {/* Manutenção (30%) */}
-                <circle cx="60" cy="60" r="45" fill="none" stroke={V.pu} strokeWidth="14"
-                  strokeDasharray={`${0.3 * 283} ${0.7 * 283}`}
-                  strokeDashoffset={`-${0.7 * 283}`}
-                  strokeLinecap="round" transform="rotate(-90 60 60)" />
-                <text x="60" y="56" textAnchor="middle" fontFamily={V.dm} fontSize="10" fill={V.ch}>foco</text>
-                <text x="60" y="70" textAnchor="middle" fontFamily={V.dm} fontSize="14" fill="#fff" fontWeight="600">70/30</text>
-              </svg>
-            </div>
-            <div style={{ display: "flex", justifyContent: "center", gap: 20 }}>
-              {donutData.map((d) => (
-                <div key={d.label} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: d.color }} />
-                  <span style={{ fontFamily: V.dm, fontSize: 10, color: V.ch }}>{d.label} {d.pct}%</span>
-                </div>
-              ))}
-            </div>
-          </Card>
-
-          {/* Weekly stats */}
-          <Card hoverable={false}>
-            <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 14 }}>
-              Resumo Semanal
-            </div>
-            {[
-              { label: "Horas planejadas", value: "22h30", color: V.nb },
-              { label: "Simulados", value: "4", color: V.pu },
-              { label: "Questões", value: "~280", color: V.rel },
-              { label: "Flashcards", value: "4 sessões", color: V.ind },
-              { label: "Revisões", value: "5 blocos", color: V.wn },
-              { label: "Descanso", value: "Domingo", color: V.ch },
-            ].map((s) => (
-              <div key={s.label} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid rgba(61,90,128,0.1)" }}>
-                <span style={{ fontSize: 12, color: V.ch }}>{s.label}</span>
-                <span style={{ fontFamily: V.dm, fontSize: 12, color: s.color }}>{s.value}</span>
+            {/* Donut bar */}
+            <div style={{ marginBottom: 14 }}>
+              <div style={{ display: "flex", height: 8, borderRadius: 9999, overflow: "hidden", gap: 2 }}>
+                <div style={{ width: "70%", background: V.dg, borderRadius: "9999px 0 0 9999px" }} />
+                <div style={{ width: "30%", background: V.pu, borderRadius: "0 9999px 9999px 0" }} />
               </div>
-            ))}
-          </Card>
-
-          {/* Legend */}
-          <Card hoverable={false}>
-            <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 12 }}>
-              Legenda por Área
+              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
+                <span style={{ fontFamily: V.dm, fontSize: 10, color: V.dg }}>70% Lacunas (SC, GO, Cirurgia)</span>
+                <span style={{ fontFamily: V.dm, fontSize: 10, color: V.pu }}>30% Manutenção (CM, Ped)</span>
+              </div>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              {Object.entries(areaColor).map(([area, color]) => (
-                <div key={area} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <div style={{ width: 12, height: 12, borderRadius: 3, background: color, flexShrink: 0 }} />
-                  <span style={{ fontSize: 11, color: V.nb }}>{area}</span>
+            {/* Legend */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, borderTop: "1px solid rgba(61,90,128,0.15)", paddingTop: 12 }}>
+              {[
+                { tipo: "simulado", label: "Simulados cronometrados", horas: "9h30" },
+                { tipo: "questoes", label: "Blocos de questões", horas: "6h30" },
+                { tipo: "revisao", label: "Revisão ativa", horas: "6h00" },
+                { tipo: "flashcards", label: "Flashcards SRS", horas: "2h00" },
+              ].map((t) => (
+                <div key={t.tipo} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span>{tipoIcon[t.tipo]}</span>
+                    <span style={{ fontSize: 12, color: V.nb }}>{t.label}</span>
+                  </div>
+                  <span style={{ fontFamily: V.dm, fontSize: 11, color: V.ch }}>{t.horas}</span>
                 </div>
               ))}
             </div>
-          </Card>
+          </div>
+
+          {/* Dica da IA */}
+          <div style={{
+            background: "linear-gradient(135deg, rgba(0,194,168,0.06) 0%, rgba(0,119,182,0.04) 100%)",
+            border: "1px solid rgba(0,194,168,0.2)",
+            borderRadius: 14, padding: "16px",
+          }}>
+            <div style={{ fontFamily: V.df, fontSize: 13, fontWeight: 600, color: V.pu, marginBottom: 6 }}>
+              💡 Recomendação da IA MedPleni
+            </div>
+            <div style={{ fontSize: 12, color: V.nb, lineHeight: 1.6 }}>
+              Concentre seu estudo de <strong>Saúde Coletiva</strong> nos flashcards matinais e resolva o simulado de <strong>Trauma (Cirurgia)</strong> na quarta-feira para consolidar o índice de corte da sua banca.
+            </div>
+          </div>
         </div>
       </div>
     </PageShell>

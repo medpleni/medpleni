@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>MedPleni — Arquitetura de Planos &amp; Briefing de Copy · v2.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@600;700&family=Inter:wght@300;400;500;600&family=Source+Serif+4:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --abismo:#1A1F2E;--petroleo:#2B3A52;--sinal:#3D5A80;
+  --neblina:#E0E6F0;--chumbo:#8A9AB5;--lab:#F0F4FA;
+  --pulso:#00C2A8;--resid:#0077B6;--indigo:#6B5CE7;--white:#FFFFFF;
+  --danger:#FF6B6B;--warn:#F5A623;--deep:#111620;--deeper:#0D111C;
+}
+html{scroll-behavior:smooth}
+body{background:var(--abismo);color:var(--neblina);font-family:'Inter',sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(26,31,46,.94);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,194,168,.15);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;gap:20px}
+.nav-logo{font-family:'IBM Plex Sans Condensed',sans-serif;font-size:17px;color:var(--white);letter-spacing:.04em;white-space:nowrap}
+.nav-logo span.t{color:var(--pulso)}
+.nav-logo span.d{color:var(--chumbo);font-size:11px;font-family:'IBM Plex Mono',monospace;margin-left:10px;letter-spacing:.1em}
+.nav-links{display:flex;gap:22px;overflow-x:auto}
+.nav-links a{color:var(--chumbo);text-decoration:none;font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;transition:color .2s;white-space:nowrap}
+.nav-links a:hover{color:var(--pulso)}
+
+/* LAYOUT */
+.page{padding-top:56px}
+section{padding:72px 40px;max-width:1140px;margin:0 auto}
+section+section{border-top:1px solid rgba(61,90,128,.22)}
+.stag{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--pulso);margin-bottom:14px}
+h2{font-family:'IBM Plex Sans Condensed',sans-serif;font-size:clamp(26px,3.6vw,40px);font-weight:700;color:var(--white);letter-spacing:-.01em;line-height:1.08;margin-bottom:14px}
+h3{font-family:'IBM Plex Sans Condensed',sans-serif;font-size:19px;font-weight:700;color:var(--white);margin:42px 0 16px;letter-spacing:-.005em}
+h4{font-family:'IBM Plex Sans Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--white);margin-bottom:8px}
+p{color:var(--neblina);font-size:14px;line-height:1.75;max-width:760px;margin-bottom:12px}
+p.lead{font-size:16px;color:var(--chumbo);max-width:800px;margin-bottom:8px}
+strong{color:var(--white);font-weight:600}
+em{font-family:'Source Serif 4',serif;font-style:italic;color:var(--neblina)}
+a{color:var(--pulso)}
+.mono{font-family:'IBM Plex Mono',monospace}
+
+/* HERO */
+.hero{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:88px 40px 64px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:760px;height:760px;background:radial-gradient(circle,rgba(0,194,168,.13) 0%,transparent 68%);pointer-events:none}
+.hero>*{position:relative;z-index:2}
+.hero-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--pulso);margin-bottom:20px}
+.hero h1{font-family:'IBM Plex Sans Condensed',sans-serif;font-size:clamp(34px,5.4vw,60px);font-weight:700;color:var(--white);letter-spacing:-.02em;line-height:1.03;margin-bottom:16px;max-width:900px}
+.hero h1 span{color:var(--pulso)}
+.hero-sub{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--chumbo);letter-spacing:.08em;margin-bottom:26px}
+.hero-meta{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+
+/* BADGES */
+.badge{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:4px 11px;border-radius:20px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+.badge.green{background:rgba(0,194,168,.15);color:var(--pulso)}
+.badge.blue{background:rgba(0,119,182,.18);color:#64B5E8}
+.badge.purple{background:rgba(107,92,231,.15);color:#A99EF5}
+.badge.warn{background:rgba(245,166,35,.13);color:var(--warn)}
+.badge.danger{background:rgba(255,107,107,.13);color:var(--danger)}
+.badge.neutral{background:rgba(138,154,181,.13);color:var(--chumbo)}
+.badge.nodot::before{display:none}
+
+/* CARDS */
+.card{background:var(--petroleo);border:1px solid rgba(61,90,128,.5);border-radius:12px;padding:26px}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;margin-top:20px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:16px;margin-top:20px}
+
+/* CALLOUT */
+.callout{border-radius:12px;padding:22px 26px;margin-top:22px;display:flex;gap:16px;align-items:flex-start}
+.callout p{margin-bottom:0;font-size:14px}
+.callout p+p{margin-top:10px}
+.callout.teal{background:linear-gradient(135deg,rgba(0,194,168,.09),rgba(43,58,82,.5));border:1px solid rgba(0,194,168,.28)}
+.callout.warn{background:linear-gradient(135deg,rgba(245,166,35,.09),rgba(43,58,82,.5));border:1px solid rgba(245,166,35,.3)}
+.callout.danger{background:linear-gradient(135deg,rgba(255,107,107,.09),rgba(43,58,82,.5));border:1px solid rgba(255,107,107,.3)}
+.callout.blue{background:linear-gradient(135deg,rgba(0,119,182,.1),rgba(43,58,82,.5));border:1px solid rgba(0,119,182,.35)}
+.callout-title{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}
+.callout.teal .callout-title{color:var(--pulso)}
+.callout.warn .callout-title{color:var(--warn)}
+.callout.danger .callout-title{color:var(--danger)}
+.callout.blue .callout-title{color:#64B5E8}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;margin-top:20px;border:1px solid rgba(61,90,128,.45);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:600px}
+thead th{background:var(--deeper);font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--chumbo);text-align:left;padding:13px 18px;font-weight:400;border-bottom:1px solid rgba(61,90,128,.45)}
+tbody td{padding:14px 18px;border-bottom:1px solid rgba(61,90,128,.22);color:var(--neblina);vertical-align:top;line-height:1.6}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:nth-child(even){background:rgba(43,58,82,.28)}
+td.k{color:var(--white);font-weight:500;white-space:nowrap}
+td.num{font-family:'IBM Plex Mono',monospace;color:var(--pulso);white-space:nowrap}
+.tick{color:var(--pulso);font-weight:600}
+.cross{color:rgba(138,154,181,.55)}
+
+/* PLANOS */
+.plan-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px;margin-top:26px}
+.plan{background:var(--petroleo);border:1px solid rgba(61,90,128,.5);border-radius:14px;padding:28px 26px;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.plan.feature{border-color:rgba(0,194,168,.45);background:linear-gradient(165deg,rgba(0,194,168,.07),var(--petroleo) 45%)}
+.plan.feature::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--pulso),rgba(0,194,168,.1))}
+.plan-tag{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--chumbo);margin-bottom:12px}
+.plan.feature .plan-tag{color:var(--pulso)}
+.plan-name{font-family:'IBM Plex Sans Condensed',sans-serif;font-size:27px;font-weight:700;color:var(--white);line-height:1.05;margin-bottom:6px}
+.plan-desc{font-size:13px;color:var(--chumbo);line-height:1.6;margin-bottom:20px;min-height:42px}
+.plan-price{font-family:'IBM Plex Sans Condensed',sans-serif;font-size:40px;font-weight:700;color:var(--white);line-height:1;letter-spacing:-.02em}
+.plan-price small{font-size:15px;font-weight:600;color:var(--chumbo);letter-spacing:0}
+.plan-price .cur{font-size:20px;color:var(--chumbo);margin-right:2px}
+.plan-sub{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--pulso);margin-top:8px;line-height:1.6}
+.plan-sub.mute{color:var(--chumbo)}
+.plan-divider{border:none;border-top:1px solid rgba(61,90,128,.4);margin:20px 0 16px}
+.plan-list{list-style:none;display:flex;flex-direction:column;gap:9px;flex:1}
+.plan-list li{font-size:13px;color:var(--neblina);display:flex;gap:9px;line-height:1.5;align-items:flex-start}
+.plan-list li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--pulso);flex-shrink:0;margin-top:7px}
+.plan-list li.off{color:rgba(138,154,181,.7)}
+.plan-list li.off::before{background:rgba(138,154,181,.4)}
+.plan-cta{margin-top:22px;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;padding:11px 20px;border-radius:8px;border:none;text-align:center;letter-spacing:.01em}
+.plan-cta.primary{background:var(--pulso);color:#0a1a18}
+.plan-cta.ghost{background:transparent;color:var(--neblina);border:1.5px solid rgba(61,90,128,.7)}
+
+/* NAMING */
+.name-box{background:var(--deeper);border:1px solid rgba(61,90,128,.45);border-radius:12px;padding:24px 26px;margin-top:18px}
+.name-row{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;padding:11px 0;border-bottom:1px solid rgba(61,90,128,.22)}
+.name-row:last-child{border-bottom:none}
+.name-lbl{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--chumbo);width:150px;flex-shrink:0}
+.name-val{font-family:'IBM Plex Sans Condensed',sans-serif;font-size:19px;font-weight:700;color:var(--white)}
+.name-val .accent{color:var(--pulso)}
+.name-note{font-size:12.5px;color:var(--chumbo);flex:1;min-width:200px}
+
+/* FUNIL */
+.funnel{display:flex;flex-direction:column;gap:0;margin-top:26px}
+.fstep{display:grid;grid-template-columns:56px 1fr;gap:20px;position:relative;padding-bottom:26px}
+.fstep:last-child{padding-bottom:0}
+.fstep::before{content:'';position:absolute;left:27px;top:50px;bottom:-4px;width:1.5px;background:linear-gradient(180deg,rgba(0,194,168,.5),rgba(0,194,168,.12))}
+.fstep:last-child::before{display:none}
+.fnum{width:54px;height:54px;border-radius:14px;background:rgba(0,194,168,.1);border:1px solid rgba(0,194,168,.3);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:15px;color:var(--pulso);flex-shrink:0;z-index:2;position:relative}
+.fbody{background:var(--petroleo);border:1px solid rgba(61,90,128,.45);border-radius:12px;padding:20px 24px}
+.fbody h4{margin-bottom:6px}
+.fbody p{font-size:13.5px;color:var(--chumbo);margin-bottom:0}
+.fmeta{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+
+/* BENEFICIOS */
+.benefit{background:var(--petroleo);border:1px solid rgba(61,90,128,.45);border-radius:12px;padding:22px 24px;transition:border-color .2s}
+.benefit:hover{border-color:rgba(0,194,168,.35)}
+.bico{width:38px;height:38px;border-radius:10px;background:rgba(0,194,168,.12);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.benefit h4{font-size:16px;margin-bottom:7px}
+.benefit p{font-size:13px;color:var(--chumbo);margin-bottom:0;line-height:1.6}
+.bwhy{margin-top:12px;padding-top:12px;border-top:1px solid rgba(61,90,128,.3);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--pulso);text-transform:uppercase}
+
+/* COPY BLOCKS */
+.copy-angle{background:var(--petroleo);border:1px solid rgba(61,90,128,.45);border-radius:12px;padding:24px 26px;margin-top:16px}
+.ca-head{display:flex;align-items:center;gap:12px;margin-bottom:6px;flex-wrap:wrap}
+.ca-num{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--pulso);letter-spacing:.1em}
+.ca-title{font-family:'IBM Plex Sans Condensed',sans-serif;font-size:18px;font-weight:700;color:var(--white)}
+.ca-target{font-size:12.5px;color:var(--chumbo);margin-bottom:16px}
+.hl{background:var(--deeper);border-left:2px solid var(--pulso);border-radius:0 8px 8px 0;padding:13px 18px;margin-top:9px}
+.hl-txt{font-family:'IBM Plex Sans Condensed',sans-serif;font-size:17px;font-weight:600;color:var(--white);line-height:1.28}
+.hl-sub{font-size:12.5px;color:var(--chumbo);margin-top:6px;line-height:1.55}
+.hl-cta{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--pulso);margin-top:9px}
+
+/* VOZ */
+.voz-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+.voz-card{border-radius:12px;padding:22px 24px;border:1px solid}
+.voz-card.yes{background:rgba(0,194,168,.05);border-color:rgba(0,194,168,.28)}
+.voz-card.no{background:rgba(255,107,107,.04);border-color:rgba(255,107,107,.24)}
+.voz-title{font-family:'IBM Plex Sans Condensed',sans-serif;font-size:16px;font-weight:700;margin-bottom:14px}
+.voz-card.yes .voz-title{color:var(--pulso)}
+.voz-card.no .voz-title{color:var(--danger)}
+.voz-item{font-size:13px;line-height:1.6;padding:9px 0;border-bottom:1px solid rgba(61,90,128,.22);color:var(--neblina)}
+.voz-item:last-child{border-bottom:none}
+
+/* FAQ */
+.faq{background:var(--petroleo);border:1px solid rgba(61,90,128,.45);border-radius:12px;padding:22px 24px;margin-top:14px}
+.faq-q{font-family:'IBM Plex Sans Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--white);margin-bottom:9px;display:flex;gap:10px;align-items:flex-start}
+.faq-q::before{content:'?';font-family:'IBM Plex Mono',monospace;color:var(--pulso);font-size:14px;flex-shrink:0;margin-top:2px}
+.faq-a{font-size:13.5px;color:var(--chumbo);line-height:1.7;margin:0;padding-left:24px}
+.faq-a strong{color:var(--neblina)}
+
+/* SCRIPT */
+.script{background:var(--deeper);border:1px solid rgba(61,90,128,.45);border-radius:12px;padding:22px 24px;margin-top:18px;font-family:'Inter',sans-serif}
+.script-lbl{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--chumbo);margin-bottom:12px}
+.msg{background:rgba(0,194,168,.07);border:1px solid rgba(0,194,168,.2);border-radius:10px 10px 10px 3px;padding:14px 17px;font-size:13.5px;line-height:1.65;color:var(--neblina);max-width:560px;margin-bottom:10px}
+
+/* CHECKLIST */
+.check{display:flex;gap:13px;padding:13px 0;border-bottom:1px solid rgba(61,90,128,.22);align-items:flex-start}
+.check:last-child{border-bottom:none}
+.cbox{width:16px;height:16px;border:1.5px solid rgba(0,194,168,.5);border-radius:4px;flex-shrink:0;margin-top:3px}
+.ctxt{font-size:13.5px;color:var(--neblina);line-height:1.6}
+.ctxt span{color:var(--chumbo);font-size:12.5px;display:block;margin-top:3px}
+
+/* KPI ROW */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-top:22px}
+.kpi{background:var(--petroleo);border:1px solid rgba(61,90,128,.45);border-radius:10px;padding:18px 20px}
+.kpi-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--chumbo);margin-bottom:9px}
+.kpi-value{font-family:'IBM Plex Sans Condensed',sans-serif;font-size:29px;font-weight:700;color:var(--white);line-height:1;letter-spacing:-.01em}
+.kpi-value.accent{color:var(--pulso)}
+.kpi-sub{font-family:'IBM Plex Mono',monospace;font-size:10px;margin-top:6px;color:var(--chumbo);line-height:1.5}
+
+/* ANTES DEPOIS */
+.ba{display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:center;margin-top:22px}
+.ba-col{border-radius:12px;padding:22px 24px;border:1px solid}
+.ba-col.old{background:rgba(138,154,181,.05);border-color:rgba(138,154,181,.22)}
+.ba-col.new{background:linear-gradient(150deg,rgba(0,194,168,.08),rgba(43,58,82,.5));border-color:rgba(0,194,168,.32)}
+.ba-lbl{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:14px}
+.ba-col.old .ba-lbl{color:var(--chumbo)}
+.ba-col.new .ba-lbl{color:var(--pulso)}
+.ba-item{font-size:13.5px;padding:8px 0;border-bottom:1px solid rgba(61,90,128,.22);line-height:1.55}
+.ba-item:last-child{border-bottom:none}
+.ba-col.old .ba-item{color:rgba(138,154,181,.85);text-decoration:line-through;text-decoration-color:rgba(255,107,107,.4)}
+.ba-col.new .ba-item{color:var(--neblina)}
+.ba-arrow{color:var(--pulso);font-size:22px;font-family:'IBM Plex Mono',monospace}
+
+/* INTERNO */
+.interno{background:repeating-linear-gradient(45deg,rgba(107,92,231,.05),rgba(107,92,231,.05) 12px,rgba(43,58,82,.4) 12px,rgba(43,58,82,.4) 24px);border:1px dashed rgba(107,92,231,.5);border-radius:12px;padding:24px 26px;margin-top:22px}
+.interno-tag{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#A99EF5;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.interno h4{margin-bottom:10px}
+.interno p{font-size:13.5px;color:var(--chumbo)}
+.interno .rule{font-size:13px;color:var(--neblina);padding:8px 0 8px 20px;position:relative;line-height:1.6;border-bottom:1px solid rgba(107,92,231,.18)}
+.interno .rule:last-child{border-bottom:none}
+.interno .rule::before{content:'→';position:absolute;left:0;color:#A99EF5;font-family:'IBM Plex Mono',monospace;font-size:12px}
+
+@media (max-width:820px){
+  section{padding:56px 22px}
+  .nav-links{display:none}
+  .voz-grid{grid-template-columns:1fr}
+  .ba{grid-template-columns:1fr}
+  .ba-arrow{display:none}
+  .fstep{grid-template-columns:42px 1fr;gap:14px}
+  .fnum{width:42px;height:42px;font-size:13px}
+  .fstep::before{left:21px;top:44px}
+  .name-lbl{width:auto}
+}
+@media print{
+  nav{position:static}
+  body{background:#fff;color:#1A1F2E}
+  section{page-break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Med<span class="t">Pleni</span><span class="d">PLANOS v2.1</span></div>
+  <div class="nav-links">
+    <a href="#mudou">O que mudou</a>
+    <a href="#planos">Planos</a>
+    <a href="#beneficios">Anual</a>
+    <a href="#funil">Funil</a>
+    <a href="#condicoes">Condições</a>
+    <a href="#copy">Copy</a>
+    <a href="#proibido">Proibições</a>
+    <a href="#checklist">Checklist</a>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Documento Interno · Marketing &amp; Copy · Confidencial</div>
+  <h1>Arquitetura de Planos <span>v2.1</span><br/>e Briefing de Copy</h1>
+  <div class="hero-sub">Plano único · Preços aprovados · Funil Diagnóstico → Amostra → Assinatura</div>
+  <div class="hero-meta">
+    <span class="badge green">Substitui a estrutura Residente / Aprovação</span>
+    <span class="badge green">Nomes e preços aprovados</span>
+    <span class="badge neutral nodot">Ago 2026</span>
+  </div>
+</div>
+
+<!-- 01 — O QUE MUDOU -->
+<section id="mudou">
+  <div class="stag">// 01 — Resumo executivo</div>
+  <h2>O que mudou, e por quê</h2>
+  <p class="lead">A estrutura de dois planos pagos foi descontinuada. Passamos a operar com <strong>um único plano pago</strong>, diferenciado apenas pela forma de pagamento — e com o pacote de vantagens concentrado em quem escolhe o anual.</p>
+
+  <div class="ba">
+    <div class="ba-col old">
+      <div class="ba-lbl">Estrutura anterior — descontinuada</div>
+      <div class="ba-item">Plano Residente — R$ 117/mês anual</div>
+      <div class="ba-item">Plano Aprovação — R$ 237/mês anual</div>
+      <div class="ba-item">Cobertura de áreas bloqueada por plano</div>
+      <div class="ba-item">IA adaptativa como feature paga separada</div>
+      <div class="ba-item">Trial de 7 dias carregando a conversão</div>
+    </div>
+    <div class="ba-arrow">→</div>
+    <div class="ba-col new">
+      <div class="ba-lbl">Estrutura v2.1 — vigente</div>
+      <div class="ba-item">Um plano pago: MedPleni Pleno</div>
+      <div class="ba-item">Mensal R$ 247 · Anual R$ 1.497 à vista</div>
+      <div class="ba-item">Nenhuma área bloqueada</div>
+      <div class="ba-item">Cinco condições exclusivas do anual</div>
+      <div class="ba-item">Garantia de 30 dias carregando a conversão</div>
+    </div>
+  </div>
+
+  <div class="callout teal">
+    <div>
+      <div class="callout-title">A razão da mudança</div>
+      <p>Estamos em MVP. A diferença entre Residente e Aprovação dependia de features que ainda não estão construídas — IA adaptativa semanal, comparativo vs. aprovados históricos, comunidade fechada. Vender uma camada premium sustentada por promessas cria expectativa que o produto não entrega hoje e gera cancelamento no primeiro mês.</p>
+      <p>Com plano único, a única decisão do candidato passa a ser <strong>mensal ou anual</strong>. É uma decisão mais simples de comunicar, mais barata de anunciar e muito mais fácil de defender numa conversa de venda.</p>
+    </div>
+  </div>
+
+  <div class="callout teal">
+    <div>
+      <div class="callout-title">A segunda mudança — onde o desconto deixou de morar</div>
+      <p>O parcelamento sem juros saiu da comunicação pública. O anual é <strong>R$ 1.497 à vista</strong>, ou parcelado em 12× de aproximadamente R$ 149 com os juros normais do cartão.</p>
+      <p>Isso não enfraquece a oferta — <strong>realoca</strong> uma carta. O "sem juros" passa a ser a única alavanca de negociação na mão do comercial, usada só quando a objeção de preço aparece de fato. Um benefício que todo mundo recebe automaticamente não é negociação: é desconto embutido. Guardado, ele fecha vendas que a página sozinha perderia. As regras de uso estão na seção 05.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 02 — NOMENCLATURA -->
+<section id="planos">
+  <div class="stag">// 02 — Nomenclatura oficial</div>
+  <h2>Como os planos se chamam</h2>
+  <p class="lead">Três nomes, e só três. Aprovados. Qualquer peça, anúncio ou script comercial usa exatamente esta nomenclatura.</p>
+
+  <div class="name-box">
+    <div class="name-row">
+      <div class="name-lbl">Nível gratuito</div>
+      <div class="name-val">MedPleni <span class="accent">Diagnóstico</span></div>
+      <div class="name-note">Gratuito para sempre, sem cartão. É o topo do funil e o lead magnet — não é trial.</div>
+    </div>
+    <div class="name-row">
+      <div class="name-lbl">Amostra</div>
+      <div class="name-val"><span class="accent">Acesso Pleno</span> · 7 dias</div>
+      <div class="name-note">Não é um plano. É um estado temporário destravado ao concluir o diagnóstico. Nunca listar como opção na tabela de preços.</div>
+    </div>
+    <div class="name-row">
+      <div class="name-lbl">Plano pago</div>
+      <div class="name-val">MedPleni <span class="accent">Pleno</span></div>
+      <div class="name-note">O único plano pago. Vendido em duas formas de pagamento: <strong>Pleno Mensal</strong> e <strong>Pleno Anual</strong>.</div>
+    </div>
+  </div>
+
+  <h3>Tabela de planos — versão pública</h3>
+  <div class="plan-grid">
+
+    <div class="plan">
+      <div class="plan-tag">Gratuito · Sem cartão</div>
+      <div class="plan-name">Diagnóstico</div>
+      <div class="plan-desc">O raio-x da sua prova-alvo. Para quem quer saber onde está antes de decidir qualquer coisa.</div>
+      <div class="plan-price"><span class="cur">R$</span>0</div>
+      <div class="plan-sub mute">para sempre</div>
+      <hr class="plan-divider"/>
+      <ul class="plan-list">
+        <li>Diagnóstico de prontidão completo</li>
+        <li>Plano de ação personalizado</li>
+        <li>Card de resultado compartilhável</li>
+        <li>50 questões comentadas / mês</li>
+        <li>30 flashcards / mês</li>
+        <li>1 simulado cronometrado / mês</li>
+        <li class="off">Sem analytics de desempenho</li>
+        <li class="off">Sem banco completo</li>
+      </ul>
+      <div class="plan-cta ghost">Fazer o diagnóstico</div>
+    </div>
+
+    <div class="plan">
+      <div class="plan-tag">Pago · Mensal</div>
+      <div class="plan-name">Pleno Mensal</div>
+      <div class="plan-desc">Acesso total, sem compromisso de prazo. Para quem quer testar o ritmo antes de fechar o ciclo.</div>
+      <div class="plan-price"><span class="cur">R$</span>247<small> /mês</small></div>
+      <div class="plan-sub mute">cancele quando quiser</div>
+      <hr class="plan-divider"/>
+      <ul class="plan-list">
+        <li>Banco completo de questões, sem limite</li>
+        <li>Flashcards ilimitados com repetição espaçada</li>
+        <li>Simulados ilimitados no formato da prova-alvo</li>
+        <li>Analytics de desempenho por subtópico</li>
+        <li>Todas as áreas disponíveis, sem bloqueio</li>
+        <li>Ranking por prova-alvo</li>
+        <li>Suporte via chat</li>
+        <li class="off">Sem garantia de ciclo</li>
+        <li class="off">Sem preço travado</li>
+      </ul>
+      <div class="plan-cta ghost">Assinar mensal</div>
+    </div>
+
+    <div class="plan feature">
+      <div class="plan-tag">Pago · Anual — recomendado</div>
+      <div class="plan-name">Pleno Anual</div>
+      <div class="plan-desc">O ciclo inteiro de preparação, do diagnóstico ao resultado. Tudo do Mensal, mais cinco condições exclusivas.</div>
+      <div class="plan-price"><span class="cur">R$</span>1.497<small> /ano</small></div>
+      <div class="plan-sub">à vista · equivale a R$ 124,75/mês<br/>ou 12× de R$ 149 no cartão</div>
+      <hr class="plan-divider"/>
+      <ul class="plan-list">
+        <li><strong>Tudo do Pleno Mensal</strong></li>
+        <li>Preço travado em todas as renovações</li>
+        <li>Garantia de Ciclo — renovação gratuita se não aprovar</li>
+        <li>30 dias de reembolso incondicional</li>
+        <li>Direito a pausar por até 2 meses</li>
+        <li>Turma Fundadora (200 primeiros)</li>
+      </ul>
+      <div class="plan-cta primary">Começar o ciclo</div>
+    </div>
+  </div>
+
+  <div class="callout blue">
+    <div>
+      <div class="callout-title">A conta que sustenta o anual</div>
+      <p>Doze meses no Mensal custam <strong>R$ 2.964</strong>. O Anual à vista custa <strong>R$ 1.497</strong> — economia de <strong>R$ 1.467, praticamente metade</strong> (49,5%). Mesmo parcelado em 12× de R$ 149, o ano sai por R$ 1.788: ainda <strong>R$ 1.176 mais barato, 40% de economia</strong>.</p>
+      <p>Esse é o argumento matemático central da página de preço. "Metade do preço" é simples, verdadeiro e não depende de nenhuma promessa de produto.</p>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <div>
+      <div class="callout-title">Pendência operacional — confirmar a parcela</div>
+      <p>O valor de <strong>R$ 149</strong> por parcela é uma estimativa (12× ≈ R$ 1.788, cerca de 19% de juros efetivos no período). Precisa ser confirmado com a operadora e o gateway antes de ir para o ar. O valor à vista de R$ 1.497 e o mensal de R$ 247 estão aprovados e podem ser publicados.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 03 — BENEFÍCIOS DO ANUAL -->
+<section id="beneficios">
+  <div class="stag">// 03 — O pacote anual</div>
+  <h2>Cinco condições exclusivas do anual</h2>
+  <p class="lead">Nenhuma delas é uma feature de produto. São condições comerciais — por isso podemos prometê-las hoje, com o produto que temos hoje. Este é o coração do argumento de venda.</p>
+
+  <div class="grid-3">
+
+    <div class="benefit">
+      <div class="bico"><svg width="19" height="19" viewBox="0 0 20 20" fill="none"><rect x="4" y="9" width="12" height="8" rx="2" stroke="#00C2A8" stroke-width="1.5"/><path d="M7 9V6.5a3 3 0 016 0V9" stroke="#00C2A8" stroke-width="1.5"/></svg></div>
+      <h4>Preço travado para sempre</h4>
+      <p>Quem assina agora mantém R$ 1.497 em todas as renovações, mesmo quando o preço subir.</p>
+      <div class="bwhy">Custo zero hoje · urgência real</div>
+    </div>
+
+    <div class="benefit">
+      <div class="bico"><svg width="19" height="19" viewBox="0 0 20 20" fill="none"><path d="M10 2.5l6 2.5v5c0 3.5-2.4 6.6-6 7.5-3.6-.9-6-4-6-7.5V5l6-2.5z" stroke="#00C2A8" stroke-width="1.5" stroke-linejoin="round"/><path d="M7.5 10l1.8 1.8L13 8" stroke="#00C2A8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h4>Garantia de Ciclo</h4>
+      <p>Se não aprovar no ciclo, a renovação por mais 12 meses é gratuita. Sujeita a regulamento de uso mínimo.</p>
+      <div class="bwhy">Divide o risco · dobra como engajamento</div>
+    </div>
+
+    <div class="benefit">
+      <div class="bico"><svg width="19" height="19" viewBox="0 0 20 20" fill="none"><path d="M3 10a7 7 0 1114 0 7 7 0 01-14 0z" stroke="#00C2A8" stroke-width="1.5"/><path d="M12.5 7.5L7.5 12.5M7.5 7.5l5 5" stroke="#00C2A8" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <h4>30 dias de reembolso</h4>
+      <p>Incondicional, sem perguntas, valor integral. Contrapeso obrigatório de um desembolso anual.</p>
+      <div class="bwhy">Sem ele, R$ 1.497 numa marca nova não converte</div>
+    </div>
+
+    <div class="benefit">
+      <div class="bico"><svg width="19" height="19" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="#00C2A8" stroke-width="1.5"/><path d="M8.5 8v4M11.5 8v4" stroke="#00C2A8" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <h4>Pausa de até 2 meses</h4>
+      <p>Plantão, prova adiada, imprevisto. Congela e retoma depois, sem perder nada.</p>
+      <div class="bwhy">Converte cancelamento em pausa</div>
+    </div>
+
+    <div class="benefit">
+      <div class="bico"><svg width="19" height="19" viewBox="0 0 20 20" fill="none"><path d="M10 2.5l2.3 4.7 5.2.8-3.75 3.6.9 5.2L10 14.3l-4.65 2.5.9-5.2L2.5 8l5.2-.8L10 2.5z" stroke="#00C2A8" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+      <h4>Turma Fundadora</h4>
+      <p>Primeiros 200 assinantes anuais. Selo permanente no perfil e canal direto com o time.</p>
+      <div class="bwhy">Custo marginal zero · gera o feedback do MVP</div>
+    </div>
+  </div>
+
+  <div class="callout teal">
+    <div>
+      <div class="callout-title">Como o copywriter deve usar isso</div>
+      <p>As cinco condições não têm o mesmo peso em anúncio. Para <strong>tráfego frio</strong>, o que funciona é o <strong>preço absoluto</strong> (R$ 1.497 contra os R$ 3.000–15.000 do mercado) somado aos <strong>30 dias de reembolso</strong> — preço e risco, nessa ordem. Para <strong>remarketing e página de preço</strong>, entram <strong>preço travado</strong> e <strong>Turma Fundadora</strong>, que carregam a urgência. <strong>Garantia de Ciclo</strong> e <strong>pausa</strong> são argumentos de fechamento: rendem mais na conversa comercial e no e-mail do que no criativo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 04 — FUNIL -->
+<section id="funil">
+  <div class="stag">// 04 — Jornada</div>
+  <h2>O funil: Diagnóstico → Amostra → Assinatura</h2>
+  <p class="lead">O trial clássico de 7 dias foi eliminado como mecanismo de conversão. Quem carrega a conversão agora é a garantia de 30 dias.</p>
+
+  <div class="callout warn">
+    <div>
+      <div class="callout-title">A lógica por trás — leia antes de escrever qualquer copy</div>
+      <p>Tínhamos três mecanismos de redução de risco empilhados: conta grátis para sempre, trial de 7 dias e garantia. É um a mais do que o necessário e polui a página de preço.</p>
+      <p>Esticar o trial para 30 dias grátis foi considerado e descartado. O produto tem valor <em>composto</em> — repetição espaçada e curva de analytics não conseguem demonstrar nada em 7 dias, o que é verdade. Mas a persona é a mais sufocada de tempo que existe: janela longa e gratuita vira "começo semana que vem" e o miolo do trial morre. <strong>Trial longo não gera mais uso, gera mais procrastinação.</strong></p>
+      <p>Os 30 dias que o candidato quer continuam existindo — mudaram de lugar. Em vez de 30 dias de teste antes de decidir, são <strong>30 dias de garantia depois de decidir</strong>. Mesma promessa emocional, engajamento muito maior (efeito de compromisso: quem pagou usa), e o dinheiro no caixa.</p>
+    </div>
+  </div>
+
+  <div class="funnel">
+
+    <div class="fstep">
+      <div class="fnum">01</div>
+      <div class="fbody">
+        <h4>Diagnóstico de Prontidão — grátis, sem cartão</h4>
+        <p>50 a 80 questões calibradas por eixo temático. Mede acertos, tempo de resposta e nível de confiança por questão. Começa sem cadastro; o cadastro só é pedido para liberar o resultado completo.</p>
+        <div class="fmeta"><span class="badge green">Lead magnet</span><span class="badge neutral">Sem cartão</span><span class="badge neutral">~40 min</span></div>
+      </div>
+    </div>
+
+    <div class="fstep">
+      <div class="fnum">02</div>
+      <div class="fbody">
+        <h4>Momento Aha — resultado + plano de ação + card compartilhável</h4>
+        <p>Score por eixo, lacunas nomeadas, e a frase que converte: "com base no diagnóstico, você precisa de X sessões em Y tópicos". O card de resultado é o motor de viralização orgânica.</p>
+        <div class="fmeta"><span class="badge green">Meta: &gt;20% compartilham</span></div>
+      </div>
+    </div>
+
+    <div class="fstep">
+      <div class="fnum">03</div>
+      <div class="fbody">
+        <h4>Acesso Pleno · 7 dias — destravado na hora, sem cartão</h4>
+        <p>Amostra do produto sem limites, entregue no momento exato do aha. Curta de propósito: cria urgência e não precisa provar tudo sozinha, porque a garantia cobre o resto.</p>
+        <div class="fmeta"><span class="badge blue">Não é trial</span><span class="badge neutral">Sem cartão</span></div>
+      </div>
+    </div>
+
+    <div class="fstep">
+      <div class="fnum">04</div>
+      <div class="fbody">
+        <h4>Duas saídas simultâneas — nunca uma só</h4>
+        <p>Na tela de resultado convivem o <strong>checkout direto</strong> ("Destrave o acesso pleno — R$ 1.497 pelo ano, ou 12× de R$ 149, com 30 dias de garantia") e a <strong>conta gratuita permanente</strong>. Ninguém "perde acesso" quando os 7 dias acabam — cai para o gratuito. É isso que tira a dor do fim do período.</p>
+        <div class="fmeta"><span class="badge green">Checkout sempre visível</span></div>
+      </div>
+    </div>
+
+    <div class="fstep">
+      <div class="fnum">05</div>
+      <div class="fbody">
+        <h4>Camada comercial — por cima, nunca no lugar</h4>
+        <p>Quem completa o diagnóstico e não compra em 24h recebe contato no WhatsApp. Não como venda: como <strong>leitura do diagnóstico</strong>. É aqui que a alavanca do parcelamento sem juros pode entrar, sob as regras da seção 05. Nos primeiros 3 a 6 meses quem faz esse contato é o próprio time fundador.</p>
+        <div class="fmeta"><span class="badge purple">Consultivo</span><span class="badge warn">Temporário — tem data de saída</span></div>
+      </div>
+    </div>
+
+    <div class="fstep">
+      <div class="fnum">06</div>
+      <div class="fbody">
+        <h4>Assinatura → 30 dias de garantia → ciclo</h4>
+        <p>Compra com risco zero. Os 30 dias seguintes são de ativação intensiva — é a janela onde o candidato decide se fica.</p>
+        <div class="fmeta"><span class="badge green">Reembolso incondicional</span></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Sobre passar toda a venda pelo comercial</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h4 style="color:var(--pulso)">O argumento a favor — e é um só</h4>
+      <p style="font-size:13.5px;color:var(--chumbo)">Em MVP nós não sabemos quais são as objeções reais. Cinquenta conversas de venda ensinam mais do que cinco mil visitas na página, e isso não se compra com analytics. Além disso, R$ 1.497 é compra considerada, e uma marca sem aprovados documentados precisa de um humano para fechar a lacuna de credibilidade que a prova social ainda não fecha.</p>
+    </div>
+    <div class="card">
+      <h4 style="color:var(--danger)">Por que não pode ser o único caminho</h4>
+      <p style="font-size:13.5px;color:var(--chumbo)">O CAC orgânico de R$ 31 só existe em modelo self-serve; com time comercial ele vira R$ 300 a R$ 800 e o unit economics do plano de negócio deixa de valer. E o posicionamento contra Medcel, Medway e Estratégia MED — que vendem exatamente assim, com consultor, negociação e campanha de desconto — se dissolve no instante em que adotamos o mesmo motion. A persona estuda às 23h e não quer falar com vendedor.</p>
+    </div>
+  </div>
+
+  <div class="callout teal">
+    <div>
+      <div class="callout-title">A regra que mantém isso honesto</div>
+      <p><strong>O comercial existe para descobrir o que a página precisa dizer.</strong> Cada objeção que aparece na conversa vira copy, vira FAQ, vira seção da landing. É andaime, com data de remoção — quando a conversão self-serve encostar na assistida, desmontamos.</p>
+      <p>Medir as duas separadamente desde o dia 1. Se o assistido converter 4× mais, isso não é motivo para virar operação comercial: é o mapa exato do que falta na página.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 05 — CONDIÇÕES -->
+<section id="condicoes">
+  <div class="stag">// 05 — Letra miúda</div>
+  <h2>Condições comerciais</h2>
+  <p class="lead">Tudo o que aparece em anúncio precisa estar sustentado aqui. Se uma condição não está nesta tabela, ela não pode ser prometida em peça nenhuma.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>Condição</th><th>Mensal</th><th>Anual</th><th>Regra operacional</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="k">Preço</td>
+          <td class="num">R$ 247/mês</td>
+          <td class="num">R$ 1.497/ano</td>
+          <td>Ambos aprovados. O anual à vista equivale a R$ 124,75/mês.</td>
+        </tr>
+        <tr>
+          <td class="k">Parcelamento</td>
+          <td class="cross">—</td>
+          <td>12× de ~R$ 149</td>
+          <td>Com juros normais do cartão. Total ≈ R$ 1.788. Valor da parcela a confirmar com a operadora.</td>
+        </tr>
+        <tr>
+          <td class="k">12× sem juros</td>
+          <td class="cross">—</td>
+          <td class="tick">Alavanca do comercial</td>
+          <td>Fora da comunicação pública. Uso exclusivo em negociação, sob as regras do bloco abaixo.</td>
+        </tr>
+        <tr>
+          <td class="k">Reembolso</td>
+          <td>7 dias</td>
+          <td class="tick">30 dias</td>
+          <td>Incondicional, integral, sem necessidade de justificativa. Processar em até 5 dias úteis.</td>
+        </tr>
+        <tr>
+          <td class="k">Garantia de Ciclo</td>
+          <td class="cross">—</td>
+          <td class="tick">Renovação grátis por 12 meses</td>
+          <td>Exige: plano semanal cumprido em ≥70% por ≥40 semanas + comprovante de inscrição e de resultado + solicitação em até 60 dias da divulgação.</td>
+        </tr>
+        <tr>
+          <td class="k">Preço travado</td>
+          <td class="cross">—</td>
+          <td class="tick">Vitalício</td>
+          <td>Válido enquanto a assinatura permanecer ativa e ininterrupta. Cancelou, perdeu.</td>
+        </tr>
+        <tr>
+          <td class="k">Pausa</td>
+          <td class="cross">—</td>
+          <td class="tick">Até 2 meses</td>
+          <td>Em blocos de 1 mês. Estende a vigência pelo período pausado.</td>
+        </tr>
+        <tr>
+          <td class="k">Turma Fundadora</td>
+          <td class="cross">—</td>
+          <td class="tick">200 primeiros</td>
+          <td>Selo permanente no perfil e canal direto com o time.</td>
+        </tr>
+        <tr>
+          <td class="k">Cancelamento</td>
+          <td>A qualquer momento</td>
+          <td>A qualquer momento</td>
+          <td>Sem multa. No anual, após 30 dias não há devolução proporcional — acesso segue até o fim da vigência.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="interno">
+    <div class="interno-tag">■ Uso interno — não publicar · não colocar em criativo · não mencionar em e-mail de massa</div>
+    <h4>Alavanca de negociação: 12× sem juros</h4>
+    <p>O parcelamento sem juros deixa de ser condição pública e passa a ser a única carta na mão do comercial. Para que ela funcione como carta — e não vire desconto automático concedido a todo mundo — precisa de regra.</p>
+    <div style="margin-top:14px">
+      <div class="rule">Só entra <strong>depois</strong> que o candidato declinou explicitamente por motivo de preço ou de fluxo de caixa. Nunca é oferecida de forma proativa.</div>
+      <div class="rule">Nunca aparece em página, anúncio, e-mail de massa ou post. Se vazar para o público, deixa de ser alavanca e vira preço.</div>
+      <div class="rule">É a alternativa ao desconto — <strong>o preço nunca muda</strong>. R$ 1.497 é R$ 1.497 em qualquer conversa. A consistência do preço é parte do posicionamento contra o mercado, que negocia tudo.</div>
+      <div class="rule">Toda concessão é registrada na planilha de objeções: qual foi a objeção, se a alavanca fechou a venda, e em quanto tempo.</div>
+      <div class="rule">Se mais de 40% das vendas assistidas precisarem da alavanca para fechar, o problema não é o parcelamento — é o preço ou a página. Nesse caso, revisar, não continuar concedendo.</div>
+    </div>
+  </div>
+
+  <h3>Métricas que este modelo passa a perseguir</h3>
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="kpi-label">Mix anual</div>
+      <div class="kpi-value accent">≥50%</div>
+      <div class="kpi-sub">dos pagantes no anual</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Ticket médio</div>
+      <div class="kpi-value">R$ 160–186</div>
+      <div class="kpi-sub">/mês, conforme o mix</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Caixa por anual</div>
+      <div class="kpi-value accent">R$ 1.497</div>
+      <div class="kpi-sub">antecipado no dia 1</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Reembolso</div>
+      <div class="kpi-value">&lt;10%</div>
+      <div class="kpi-sub">acima de 15% = alerta</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Diagnóstico → pago</div>
+      <div class="kpi-value">&gt;12%</div>
+      <div class="kpi-sub">self-serve + assistido</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Uso da alavanca</div>
+      <div class="kpi-value">&lt;40%</div>
+      <div class="kpi-sub">das vendas assistidas</div>
+    </div>
+  </div>
+
+  <div class="callout teal">
+    <div>
+      <div class="callout-title">O que muda no plano de negócio</div>
+      <p>O ticket médio fica entre <strong>R$ 161 e R$ 186/mês</strong> conforme o mix — R$ 186 num mix 50/50, R$ 174 com 60% no anual, R$ 161 com 70%. Ou seja: praticamente em linha com os R$ 177 da estrutura antiga de dois planos, com uma oferta muito mais simples de vender. O mensal a R$ 247 é o que sustenta esse patamar.</p>
+      <p>A vantagem real está no caixa e no churn. Cada anual entrega <strong>R$ 1.497 no dia 1</strong> e trava a receita por doze meses, enquanto a estrutura antiga entregava ARR no papel sendo corroído por 6,3% de churn mensal. Do ponto de vista de receita reconhecida, o parcelamento com juros não muda nada para nós: os juros ficam com a operadora, e recebemos R$ 1.497 de qualquer forma.</p>
+      <p>A hipótese crítica também muda. Deixa de ser <em>"a IA adaptativa retém?"</em> e passa a ser <em>"qual percentual escolhe o anual?"</em>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 06 — COPY -->
+<section id="copy">
+  <div class="stag">// 06 — Briefing de copy</div>
+  <h2>Ângulos de anúncio</h2>
+  <p class="lead">Seis ângulos, cada um atacando uma objeção ou um gatilho diferente. As headlines abaixo são ponto de partida do copywriter, não texto final — mas o tom e a estrutura são mandatórios.</p>
+
+  <div class="callout teal">
+    <div>
+      <div class="callout-title">Personalidade da marca — não negociável</div>
+      <p><em>"O Estrategista Brilhante — aquele colega que virou referência na residência. Fala com precisão, sem arrogância. Direto, mas não frio. Sofisticado, mas acessível."</em></p>
+      <p>Regra prática: <strong>dado concreto antes de promessa emocional</strong>. Percentual, prazo, número. Nunca clichê motivacional.</p>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <div>
+      <div class="callout-title">Como citar preço em qualquer peça</div>
+      <p>Formulação padrão: <strong>"R$ 1.497 pelo ano — ou 12× de R$ 149."</strong> Se o espaço permitir, acrescentar a equivalência: <em>"menos de R$ 125 por mês à vista."</em></p>
+      <p>Nunca escrever "12× sem juros" em peça pública. Nunca escrever "a partir de" — agora há um preço só. Nunca omitir que R$ 1.497 é o valor à vista quando a parcela também aparecer.</p>
+    </div>
+  </div>
+
+  <div class="copy-angle">
+    <div class="ca-head"><span class="ca-num">01</span><span class="ca-title">Contra-mercado — o preço como posicionamento</span><span class="badge green">Tráfego frio</span></div>
+    <div class="ca-target">Objeção: "cursinho para residência é caro demais". Gatilho: indignação legítima com o preço do mercado.</div>
+    <div class="hl">
+      <div class="hl-txt">O mercado cobra de R$ 3.000 a R$ 15.000 por ano. A conta nunca fechou para quem ainda é estudante.</div>
+      <div class="hl-sub">MedPleni: R$ 1.497 o ano inteiro, ou 12× de R$ 149.</div>
+      <div class="hl-cta">CTA · Ver o que está incluso</div>
+    </div>
+    <div class="hl">
+      <div class="hl-txt">Sem consultor. Sem negociação. Sem letra miúda.</div>
+      <div class="hl-sub">Um preço, publicado na página. R$ 1.497 pelo ano, com 30 dias para desistir.</div>
+      <div class="hl-cta">CTA · Fazer o diagnóstico</div>
+    </div>
+  </div>
+
+  <div class="copy-angle">
+    <div class="ca-head"><span class="ca-num">02</span><span class="ca-title">Diagnóstico — o lead magnet</span><span class="badge green">Tráfego frio · principal</span></div>
+    <div class="ca-target">Este é o ângulo de maior volume. Não vende plano: vende o raio-x. A conversão acontece depois, na tela de resultado.</div>
+    <div class="hl">
+      <div class="hl-txt">Antes de estudar mais, descubra o que você não sabe.</div>
+      <div class="hl-sub">80 questões. 40 minutos. O mapa exato das suas lacunas na sua prova-alvo.</div>
+      <div class="hl-cta">CTA · Fazer o diagnóstico grátis</div>
+    </div>
+    <div class="hl">
+      <div class="hl-txt">Seu problema provavelmente não é falta de estudo. É estudo no lugar errado.</div>
+      <div class="hl-sub">O diagnóstico mede acerto, tempo de resposta e confiança por questão — e devolve onde você está perdendo pontos.</div>
+      <div class="hl-cta">CTA · Ver meu raio-x</div>
+    </div>
+  </div>
+
+  <div class="copy-angle">
+    <div class="ca-head"><span class="ca-num">03</span><span class="ca-title">Saúde Coletiva — o diferencial negligenciado</span><span class="badge blue">Nicho · alta afinidade</span></div>
+    <div class="ca-target">Nosso diferencial de conteúdo mais defensável. Cai em ~90% das provas e é a área que os concorrentes tratam como rodapé.</div>
+    <div class="hl">
+      <div class="hl-txt">Saúde Coletiva cai em 90% das provas. Quantas horas você deu a ela este mês?</div>
+      <div class="hl-sub">É a área que todo mundo deixa para depois — e a que mais barato custa recuperar.</div>
+      <div class="hl-cta">CTA · Testar meu nível em SC</div>
+    </div>
+  </div>
+
+  <div class="copy-angle">
+    <div class="ca-head"><span class="ca-num">04</span><span class="ca-title">Tempo — plantão, internato, vida</span><span class="badge purple">Remarketing</span></div>
+    <div class="ca-target">Objeção real: "não tenho tempo para mais um cursinho". Vira argumento a favor.</div>
+    <div class="hl">
+      <div class="hl-txt">Você não vai conseguir mais horas. Precisa de horas melhores.</div>
+      <div class="hl-sub">O algoritmo aponta os três tópicos de maior impacto na sua prova. Trinta minutos por dia, no lugar certo.</div>
+      <div class="hl-cta">CTA · Calcular minha rota</div>
+    </div>
+  </div>
+
+  <div class="copy-angle">
+    <div class="ca-head"><span class="ca-num">05</span><span class="ca-title">Risco zero — a garantia</span><span class="badge purple">Remarketing · fundo de funil</span></div>
+    <div class="ca-target">Para quem já fez o diagnóstico e não comprou. Ataca a hesitação, não o desconhecimento.</div>
+    <div class="hl">
+      <div class="hl-txt">30 dias para desistir. Um ano inteiro para aprovar.</div>
+      <div class="hl-sub">Reembolso integral em 30 dias, sem justificativa. E se não aprovar no ciclo, o próximo ano é por nossa conta.</div>
+      <div class="hl-cta">CTA · Começar o ciclo</div>
+    </div>
+  </div>
+
+  <div class="copy-angle">
+    <div class="ca-head"><span class="ca-num">06</span><span class="ca-title">Turma Fundadora — escassez honesta</span><span class="badge warn">Lançamento · janela curta</span></div>
+    <div class="ca-target">A urgência aqui é verdadeira: somos novos, o preço vai subir, e as 200 vagas são um número real. Nunca inflar nem reabrir depois de fechar.</div>
+    <div class="hl">
+      <div class="hl-txt">200 vagas. Preço travado para sempre.</div>
+      <div class="hl-sub">A Turma Fundadora entra a R$ 1.497 e mantém esse valor em todas as renovações — inclusive quando o preço subir. Porque ele vai subir.</div>
+      <div class="hl-cta">CTA · Garantir minha vaga</div>
+    </div>
+  </div>
+
+  <h3>Matriz de tom — sim e não</h3>
+  <div class="voz-grid">
+    <div class="voz-card yes">
+      <div class="voz-title">Escreva assim</div>
+      <div class="voz-item">"Você errou 67% das questões de HAS — isso representa 8% da sua prova-alvo"</div>
+      <div class="voz-item">"SC é difícil para a maioria dos candidatos. Aqui está o plano."</div>
+      <div class="voz-item">"30 minutos hoje cobrem os 3 tópicos mais críticos"</div>
+      <div class="voz-item">"Residência não é sorte. É cálculo."</div>
+      <div class="voz-item">"Performance de aprovação"</div>
+    </div>
+    <div class="voz-card no">
+      <div class="voz-title">Nunca escreva assim</div>
+      <div class="voz-item">"Você precisa melhorar muito em Clínica Médica"</div>
+      <div class="voz-item">"SC é fácil, você só precisa se esforçar mais"</div>
+      <div class="voz-item">"Não perca tempo!" · "Você pode!" · "Acreditamos no seu potencial"</div>
+      <div class="voz-item">"Com o MedPleni você VAI passar!"</div>
+      <div class="voz-item">"Ótimo custo-benefício" · "Sistema inteligente revolucionário"</div>
+    </div>
+  </div>
+
+  <h3>Script de abertura — camada comercial (WhatsApp)</h3>
+  <div class="script">
+    <div class="script-lbl">Contato até 24h após o diagnóstico concluído sem compra</div>
+    <div class="msg">Oi, [nome] — aqui é o [nome], do MedPleni. Vi que você fez o diagnóstico ontem.<br/><br/>Olhei seu resultado: seu maior gargalo hoje é <strong>[área]</strong>, com [X]% de acerto — e essa área representa cerca de [Y]% da prova da [instituição].<br/><br/>Quer que eu te explique em dois minutos como o plano ataca isso primeiro? Se não fizer sentido, sem problema — sua conta gratuita continua ativa do mesmo jeito.</div>
+    <div style="font-size:12.5px;color:var(--chumbo);margin-top:14px;line-height:1.7">
+      <strong style="color:var(--neblina)">Regras do script:</strong> abrir sempre pelo dado do diagnóstico, nunca pelo preço. Nunca oferecer desconto — o preço é o preço, e essa consistência é parte do posicionamento. A alavanca do parcelamento sem juros só entra depois de uma recusa explícita por preço, conforme a seção 05. Sempre encerrar oferecendo a saída sem custo. Registrar a objeção recebida: <em>é ela que vira copy na semana seguinte</em>.
+    </div>
+  </div>
+</section>
+
+<!-- 07 — PROIBIÇÕES -->
+<section id="proibido">
+  <div class="stag">// 07 — Limites</div>
+  <h2>O que não pode ser dito</h2>
+  <p class="lead">Esta seção protege a empresa. Leia antes de aprovar qualquer criativo.</p>
+
+  <div class="callout danger">
+    <div>
+      <div class="callout-title">Crítico — números de tração não podem ir para anúncio</div>
+      <p>Circulam nos nossos documentos internos números como <strong>"14.800 diagnósticos realizados"</strong>, <strong>"87% aprovam em até 2 ciclos"</strong>, <strong>"NPS 52"</strong>, <strong>"retenção D7 de 68%"</strong> e <strong>"3 aprovações documentadas"</strong>. Esses valores vieram do pitch deck de captação e são projeções ou metas — <strong>não são tração verificada de um produto lançado</strong>. O próprio dossiê registra que o diagnóstico ainda não está funcional.</p>
+      <p>Usar qualquer um deles em publicidade configura propaganda enganosa (CDC, art. 37). Nenhum número de resultado, aprovação, NPS ou volume de usuários pode aparecer em peça pública até existir base real auditável.</p>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <div>
+      <div class="callout-title">Números de mockup também não</div>
+      <p>O design system e as telas do app usam dados fictícios para demonstração: <strong>"94,7% de predição"</strong>, <strong>"1.847 questões respondidas"</strong>, <strong>"+2,1pp esta semana"</strong>, <strong>"87% de aprovação"</strong> nos templates de Instagram. São placeholders de layout. Se um screenshot do produto for para o anúncio, os números precisam ser de uma conta real ou estar explicitamente rotulados como ilustração.</p>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <div>
+      <div class="callout-title">"Garantia de aprovação" — nunca use esta expressão</div>
+      <p>O nome correto é <strong>Garantia de Ciclo</strong>, e o que garantimos é <strong>a renovação gratuita</strong>, não a aprovação. A diferença não é semântica: prometer aprovação é uma obrigação de resultado que não temos como cumprir e que nos expõe juridicamente.</p>
+      <p>Formulação aprovada: <em>"Se você não aprovar no ciclo, o próximo ano é por nossa conta."</em> Toda peça que citar a garantia precisa linkar o regulamento com as condições de uso mínimo.</p>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <div>
+      <div class="callout-title">Não somos um cursinho completo — e a copy não pode sugerir isso</div>
+      <p>O MedPleni não tem videoaulas nem apostila teórica. É banco de questões comentadas, flashcards com repetição espaçada, simulados e analytics. Copy que sugira substituição integral de um cursinho teórico gera expectativa errada e vira reembolso no dia 3.</p>
+      <p>Posicionamento correto: <strong>somos a camada de treino e diagnóstico</strong> — o que transforma teoria estudada em ponto na prova. Isso é uma vantagem, não uma desculpa: é por isso que custamos um quinto do mercado.</p>
+    </div>
+  </div>
+
+  <h3>Vocabulário descontinuado</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Não use mais</th><th>Use</th><th>Motivo</th></tr></thead>
+      <tbody>
+        <tr><td class="k">Plano Residente</td><td class="tick">Pleno Mensal / Pleno Anual</td><td>Estrutura de dois planos descontinuada.</td></tr>
+        <tr><td class="k">Plano Aprovação</td><td class="tick">Pleno Anual</td><td>Idem. O nome também sugeria garantia de resultado.</td></tr>
+        <tr><td class="k">Upgrade / fazer upgrade</td><td class="tick">Mudar para o anual</td><td>Não existe mais upgrade de nível — só troca de forma de pagamento.</td></tr>
+        <tr><td class="k">Trial de 7 dias</td><td class="tick">Acesso Pleno · 7 dias</td><td>Não é trial: é amostra. A conversão é carregada pela garantia.</td></tr>
+        <tr><td class="k">Teste grátis</td><td class="tick">Diagnóstico grátis</td><td>O gratuito é permanente, não um teste que expira.</td></tr>
+        <tr><td class="k">A partir de R$ 117/mês</td><td class="tick">R$ 1.497/ano ou 12× de R$ 149</td><td>Preço antigo. "A partir de" some — agora há um preço só.</td></tr>
+        <tr><td class="k">12× sem juros</td><td class="tick">12× de R$ 149</td><td>O sem juros virou alavanca de negociação do comercial. Fora de qualquer peça pública.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 08 — OBJEÇÕES -->
+<section id="objecoes">
+  <div class="stag">// 08 — Quebra de objeções</div>
+  <h2>FAQ — para a página e para o comercial</h2>
+  <p class="lead">As seis objeções que vamos ouvir mais. As respostas abaixo servem tanto para a seção de FAQ da landing quanto como base do script comercial.</p>
+
+  <div class="faq">
+    <div class="faq-q">Por que é tão mais barato que os outros? Deve ser pior.</div>
+    <p class="faq-a">Nosso custo é software, não estúdio de gravação, elenco de professores e time de vendas com comissão. Não temos videoaula porque não achamos que o gargalo esteja lá — o gargalo está em saber <strong>onde</strong> estudar, e é isso que a gente resolve. O preço reflete a estrutura, não a qualidade. E são 30 dias para você conferir, com devolução integral.</p>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q">Vocês são novos. Não têm aprovados para mostrar.</div>
+    <p class="faq-a">Não temos, e não vamos inventar. É exatamente por isso que existem <strong>30 dias de reembolso incondicional</strong> e o <strong>preço travado</strong>: quem entra agora assume o risco de uma marca nova e, em troca, nunca mais paga o preço cheio. Quando tivermos aprovações documentadas, o preço sobe — e quem é da Turma Fundadora continua no valor de hoje.</p>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q">Já pago outro cursinho. Não posso pagar dois.</div>
+    <p class="faq-a">A gente não substitui o seu cursinho teórico — resolve outra coisa. Ele te dá o conteúdo; o MedPleni mostra quais partes desse conteúdo estão te custando pontos na <strong>sua</strong> prova, e treina exatamente essas. Faça o diagnóstico gratuito antes de decidir: em 40 minutos você vê se a lacuna que a gente aponta é real.</p>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q">Não tenho R$ 1.497 agora.</div>
+    <p class="faq-a">Dá para parcelar em <strong>12× de R$ 149</strong> no cartão — menos do que a maioria gasta em café e transporte para o cursinho no mês. Se ainda assim não couber, o plano mensal existe e a conta gratuita não expira nunca. <em>(Comercial: é aqui, e só depois de uma recusa explícita por preço, que a alavanca do sem juros pode entrar — ver seção 05.)</em></p>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q">E se eu não aprovar?</div>
+    <p class="faq-a">A <strong>Garantia de Ciclo</strong> cobre isso: se você cumprir o plano de estudos e não aprovar, renova de graça por mais 12 meses. Há um regulamento com uso mínimo — não porque desconfiamos de você, mas porque a garantia só faz sentido se o método tiver sido de fato aplicado.</p>
+  </div>
+
+  <div class="faq">
+    <div class="faq-q">Vocês cobrem a minha prova?</div>
+    <p class="faq-a"><em>Responder com a verdade da fase, sempre.</em> Listar exatamente as instituições e áreas cobertas hoje, sem prometer o que está no roadmap. Se a prova do candidato não está coberta, dizer isso e oferecer a conta gratuita até que esteja. Uma venda feita com essa promessa vira reembolso e reclamação em grupo de WhatsApp — custa mais caro do que a venda perdida.</p>
+  </div>
+</section>
+
+<!-- 09 — CHECKLIST -->
+<section id="checklist">
+  <div class="stag">// 09 — Próximos passos</div>
+  <h2>O que o time precisa produzir</h2>
+
+  <div class="grid-2">
+    <div class="card">
+      <h4>Antes de qualquer peça ir ao ar</h4>
+      <div style="margin-top:14px">
+        <div class="check"><div class="cbox"></div><div class="ctxt">Confirmar o valor da parcela com a operadora<span>Estimativa de R$ 149 × 12 · único número ainda aberto</span></div></div>
+        <div class="check"><div class="cbox"></div><div class="ctxt">Publicar o regulamento da Garantia de Ciclo<span>Pré-requisito legal para qualquer peça que cite a garantia</span></div></div>
+        <div class="check"><div class="cbox"></div><div class="ctxt">Definir a lista real de provas e áreas cobertas<span>Alimenta o FAQ e o script comercial</span></div></div>
+        <div class="check"><div class="cbox"></div><div class="ctxt">Alinhar a alavanca do sem juros com o comercial<span>Regras da seção 05 · não vale nada se não for seguida</span></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h4>Entregáveis de marketing</h4>
+      <div style="margin-top:14px">
+        <div class="check"><div class="cbox"></div><div class="ctxt">Página de preço — plano único, toggle mensal/anual<span>Checkout sempre visível, nunca só formulário de contato</span></div></div>
+        <div class="check"><div class="cbox"></div><div class="ctxt">6 conjuntos de criativos, um por ângulo<span>Ângulos 1, 2 e 3 para frio; 4, 5 e 6 para remarketing</span></div></div>
+        <div class="check"><div class="cbox"></div><div class="ctxt">Tela de resultado do diagnóstico com dupla saída<span>Checkout + conta gratuita, lado a lado</span></div></div>
+        <div class="check"><div class="cbox"></div><div class="ctxt">Sequência de e-mail e WhatsApp pós-diagnóstico<span>7 dias, ancorada na lacuna nomeada de cada lead</span></div></div>
+        <div class="check"><div class="cbox"></div><div class="ctxt">Script comercial completo + planilha de objeções<span>A planilha é o insumo do copy da semana seguinte</span></div></div>
+        <div class="check"><div class="cbox"></div><div class="ctxt">Contador de vagas da Turma Fundadora<span>Número real, decrescente, nunca reaberto</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout teal">
+    <div>
+      <div class="callout-title">Instrumentação — não é opcional</div>
+      <p>Separar desde a primeira campanha: <strong>conversão self-serve</strong> versus <strong>conversão assistida pelo comercial</strong>, <strong>mix mensal</strong> versus <strong>anual</strong>, e <strong>à vista</strong> versus <strong>parcelado</strong>. Sem esses cortes, não conseguimos responder as três perguntas que definem o próximo trimestre — se o comercial é andaime ou estrutura, se o preço anual está no lugar certo, e se a alavanca do sem juros está sendo usada como exceção ou como regra.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="border-top:1px solid rgba(61,90,128,.2);padding:44px 40px;text-align:center;max-width:1140px;margin:0 auto">
+  <svg width="150" height="36" viewBox="0 0 160 38" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:10px">
+    <rect x="2" y="9" width="6" height="18" rx="1.5" fill="#00C2A8" opacity=".9"/>
+    <rect x="-3" y="15" width="15" height="6" rx="1.5" fill="#00C2A8" opacity=".9"/>
+    <polyline points="17,20 20,20 22,14 25,26 27,17 30,22 32,20 37,20" stroke="#00C2A8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <circle cx="37" cy="20" r="2" fill="#00C2A8"/>
+    <text x="46" y="27" font-family="'IBM Plex Sans Condensed',sans-serif" font-weight="700" font-size="24" fill="#FFFFFF" letter-spacing="-0.3">Med</text>
+    <text x="89" y="27" font-family="'IBM Plex Sans Condensed',sans-serif" font-weight="700" font-size="24" fill="#00C2A8" letter-spacing="-0.3">Pleni</text>
+  </svg>
+  <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--chumbo);margin-bottom:5px">Uma marca da Plenitude Educação</div>
+  <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(138,154,181,.45);letter-spacing:.08em">Arquitetura de Planos v2.1 · Documento interno · Confidencial · Agosto 2026</div>
+</footer>
+
+</div>
+</body>
+</html>

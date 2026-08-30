@@ -1,12 +1,18 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { ScoreRing, ProgressBar, Badge, Card } from "@/components/ui";
 import { mockQuestions } from "@/lib/mock-data";
+import { useUser } from "@/lib/supabase/use-user";
+import {
+  calculateDiagnosticResult,
+  saveDiagnosticToDb,
+  type DiagnosticCalculation,
+} from "@/lib/supabase/diagnostic";
 
 /* ═══════════════════════════════════════════════════
-   DIAGNÓSTICO — Raio-X Inicial
+   DIAGNÓSTICO — Raio-X Inicial Interativo Real
 ═══════════════════════════════════════════════════ */
 
 const V = {
@@ -19,52 +25,63 @@ const V = {
 
 type Phase = "intro" | "questions" | "reveal" | "result";
 
-const TOTAL_DIAG = 10; // 10 questions for diagnostic
+const TOTAL_DIAG = 10;
 const diagQuestions = mockQuestions.slice(0, TOTAL_DIAG);
 
-const resultData = [
-  { area: "Clínica Médica", pct: 78, status: "bom" },
-  { area: "Cirurgia Geral", pct: 62, status: "atencao" },
-  { area: "Saúde Coletiva", pct: 54, status: "critico" },
-  { area: "Pediatria", pct: 71, status: "bom" },
-  { area: "Ginecologia e Obstetrícia", pct: 45, status: "critico" },
-];
-
 const statusVariant = (s: string) =>
-  s === "bom" ? "green" : s === "atencao" ? "warn" : "danger";
+  s === "bom" || s === "excelente" ? "green" : s === "atencao" ? "warn" : "danger";
 
 const statusLabel = (s: string) =>
-  s === "bom" ? "Forte" : s === "atencao" ? "Atenção" : "Prioridade";
-
-const overallScore = 62;
+  s === "bom" || s === "excelente" ? "Forte" : s === "atencao" ? "Atenção" : "Prioridade";
 
 export default function DiagnosticoPage() {
   const router = useRouter();
+  const { user } = useUser();
   const [phase, setPhase] = useState<Phase>("intro");
   const [qIdx, setQIdx] = useState(0);
   const [selectedOpt, setSelectedOpt] = useState<string | null>(null);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [revealProgress, setRevealProgress] = useState(0);
+  const [diagResult, setDiagResult] = useState<DiagnosticCalculation | null>(null);
 
-  /* ── Reveal animation ── */
+  /* ── Animação do Reveal e Cálculo Real ── */
   useEffect(() => {
     if (phase !== "reveal") return;
+
+    // Calcula os resultados reais com base nas respostas
+    const calc = calculateDiagnosticResult(diagQuestions, answers);
+    setDiagResult(calc);
+
+    // Salva no banco de dados se o usuário estiver logado
+    if (user?.id) {
+      saveDiagnosticToDb({
+        userId: user.id,
+        overallScore: calc.overallScore,
+        areaResults: calc.areaResults,
+        criticalAreas: calc.criticalAreas,
+        answers: answers,
+      });
+    }
+
     const id = setInterval(() => {
       setRevealProgress((p) => {
         if (p >= 100) {
           clearInterval(id);
-          setTimeout(() => setPhase("result"), 600);
+          setTimeout(() => setPhase("result"), 500);
           return 100;
         }
-        return p + 2;
+        return p + 3;
       });
-    }, 50);
+    }, 40);
+
     return () => clearInterval(id);
-  }, [phase]);
+  }, [phase, answers, user]);
 
   const confirmAnswer = () => {
     if (!selectedOpt) return;
-    setAnswers((prev) => ({ ...prev, [qIdx]: selectedOpt }));
+    const newAnswers = { ...answers, [qIdx]: selectedOpt };
+    setAnswers(newAnswers);
+
     if (qIdx + 1 >= TOTAL_DIAG) {
       setPhase("reveal");
     } else {
@@ -107,7 +124,7 @@ export default function DiagnosticoPage() {
       <style>{`
         @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
         @keyframes pulseDot { 0%,100% { box-shadow: 0 0 0 0 rgba(0,194,168,0.4); } 50% { box-shadow: 0 0 0 14px rgba(0,194,168,0); } }
-        @keyframes revealIn { from { opacity:0; transform:scale(0.9); } to { opacity:1; transform:scale(1); } }
+        @keyframes revealIn { from { opacity:0; transform:scale(0.95); } to { opacity:1; transform:scale(1); } }
       `}</style>
 
       {/* ── INTRO ── */}
@@ -145,7 +162,7 @@ export default function DiagnosticoPage() {
       )}
 
       {/* ── QUESTIONS ── */}
-      {phase === "questions" && (
+      {phase === "questions" && q && (
         <div style={{ width: "100%", maxWidth: 700, animation: "fadeUp 0.3s ease" }}>
           {/* Progress */}
           <div style={{ marginBottom: 24 }}>
@@ -154,11 +171,11 @@ export default function DiagnosticoPage() {
                 Questão {qIdx + 1} de {TOTAL_DIAG}
               </span>
               <span style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.08em", color: V.pu }}>
-                {q.area}
+                {q.area} · {q.instituicao}
               </span>
             </div>
             <div style={{ height: 4, background: "rgba(61,90,128,0.2)", borderRadius: 9999, overflow: "hidden" }}>
-              <div style={{ width: `${((qIdx + 1) / TOTAL_DIAG) * 100}%`, height: "100%", background: V.pu, borderRadius: 9999, transition: "width 0.4s" }} />
+              <div style={{ width: `${((qIdx + 1) / TOTAL_DIAG) * 100}%`, height: "100%", background: V.pu, borderRadius: 9999, transition: "width 0.3s" }} />
             </div>
           </div>
 
@@ -204,7 +221,7 @@ export default function DiagnosticoPage() {
               cursor: selectedOpt ? "pointer" : "not-allowed",
               boxShadow: selectedOpt ? "0 4px 16px rgba(0,194,168,0.3)" : "none",
             }}>
-              {qIdx + 1 >= TOTAL_DIAG ? "Finalizar →" : "Próxima →"}
+              {qIdx + 1 >= TOTAL_DIAG ? "Finalizar e Ver Raio-X →" : "Próxima Questão →"}
             </button>
           </div>
         </div>
@@ -222,7 +239,7 @@ export default function DiagnosticoPage() {
             Analisando suas respostas...
           </div>
           <div style={{ fontSize: 14, color: V.ch, marginBottom: 32 }}>
-            Mapeando forças e lacunas em 5 grandes áreas
+            Mapeando forças e lacunas nas 5 grandes áreas médicas
           </div>
           <div style={{ width: 300, height: 6, background: "rgba(61,90,128,0.2)", borderRadius: 9999, overflow: "hidden", margin: "0 auto" }}>
             <div style={{ width: `${revealProgress}%`, height: "100%", background: V.pu, borderRadius: 9999, transition: "width 0.1s" }} />
@@ -234,14 +251,14 @@ export default function DiagnosticoPage() {
       )}
 
       {/* ── RESULT ── */}
-      {phase === "result" && (
-        <div style={{ width: "100%", maxWidth: 640, animation: "revealIn 0.6s ease" }}>
+      {phase === "result" && diagResult && (
+        <div style={{ width: "100%", maxWidth: 640, animation: "revealIn 0.5s ease" }}>
           <div style={{ textAlign: "center", marginBottom: 32 }}>
             <div style={{ fontFamily: V.df, fontSize: 24, fontWeight: 700, color: "#fff", marginBottom: 4 }}>
               Seu Raio-X Inicial
             </div>
             <div style={{ fontSize: 13, color: V.ch }}>
-              Baseado em {TOTAL_DIAG} questões de 5 áreas da medicina
+              Diagnóstico computado a partir de {TOTAL_DIAG} questões calibradas
             </div>
           </div>
 
@@ -250,12 +267,18 @@ export default function DiagnosticoPage() {
             display: "flex", justifyContent: "center", marginBottom: 32,
           }}>
             <div style={{ textAlign: "center" }}>
-              <ScoreRing score={overallScore} size={160} sublabel="diagnóstico" />
-              <div style={{ fontFamily: V.df, fontSize: 20, fontWeight: 700, color: V.wn, marginTop: 12 }}>
-                Moderado
+              <ScoreRing score={diagResult.overallScore} size={160} sublabel="acerto global" />
+              <div style={{
+                fontFamily: V.df, fontSize: 20, fontWeight: 700,
+                color: diagResult.overallScore >= 75 ? V.pu : diagResult.overallScore >= 55 ? V.wn : V.dg,
+                marginTop: 12,
+              }}>
+                {diagResult.overallScore >= 75 ? "Excelente Desempenho" : diagResult.overallScore >= 55 ? "Desempenho Moderado" : "Lacunas Críticas Identificadas"}
               </div>
               <div style={{ fontSize: 12, color: V.ch, marginTop: 4 }}>
-                Você tem base sólida mas lacunas importantes a corrigir
+                {diagResult.overallScore >= 75
+                  ? "Sua base é sólida. O cronograma adaptativo focará na retenção e velocidade."
+                  : "Mapeamos exatamente os pontos onde você mais perde pontos na prova-alvo."}
               </div>
             </div>
           </div>
@@ -263,10 +286,10 @@ export default function DiagnosticoPage() {
           {/* Area bars */}
           <Card hoverable={false} style={{ marginBottom: 16 }}>
             <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 16 }}>
-              Desempenho por área
+              Desempenho Real por Grande Área
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {resultData.map((r) => (
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              {diagResult.areaResults.map((r) => (
                 <div key={r.area}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
                     <span style={{ fontSize: 13, color: V.nb }}>{r.area}</span>
@@ -293,14 +316,10 @@ export default function DiagnosticoPage() {
             borderColor: "rgba(0,194,168,0.2)",
           }}>
             <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: V.pu, marginBottom: 12 }}>
-              📋 Plano de Ação Personalizado
+              📋 Plano de Ação Personalizado (Baseado nos seus erros)
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {[
-                { icon: "🔴", text: "GO e Saúde Coletiva são suas prioridades — recomendamos simulados focados nessas áreas" },
-                { icon: "🟡", text: "Cirurgia Geral precisa de atenção moderada — revise os temas de urgência/emergência" },
-                { icon: "🟢", text: "Continue fortalecendo CM e Pediatria — você está no caminho certo" },
-              ].map((item, i) => (
+              {diagResult.recommendations.map((item, i) => (
                 <div key={i} style={{
                   display: "flex", gap: 10, alignItems: "flex-start",
                   padding: "10px 12px", background: "rgba(26,31,46,0.5)",
@@ -315,20 +334,37 @@ export default function DiagnosticoPage() {
 
           {/* CTAs */}
           <div style={{ display: "flex", gap: 12, marginTop: 20 }}>
-            <button onClick={() => {}} style={{
-              flex: 1, padding: "13px 0", borderRadius: 10,
-              background: "transparent", border: "1.5px solid rgba(61,90,128,0.3)",
-              color: V.ch, fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: "pointer",
-            }}>
+            <button
+              onClick={() => {
+                if (navigator.share) {
+                  navigator.share({
+                    title: "Meu Raio-X MedPleni",
+                    text: `Fiz meu diagnóstico no MedPleni e atingi ${diagResult.overallScore}% de prontidão para residência médica!`,
+                    url: window.location.href,
+                  }).catch(() => {});
+                } else {
+                  navigator.clipboard.writeText(window.location.href);
+                  alert("Link do diagnóstico copiado para a área de transferência!");
+                }
+              }}
+              style={{
+                flex: 1, padding: "13px 0", borderRadius: 10,
+                background: "transparent", border: "1.5px solid rgba(61,90,128,0.3)",
+                color: V.ch, fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: "pointer",
+              }}
+            >
               Compartilhar resultado
             </button>
-            <button onClick={() => router.push("/dashboard")} style={{
-              flex: 1, padding: "13px 0", borderRadius: 10,
-              background: V.pu, border: "none", color: "#0A1A18",
-              fontFamily: V.db, fontSize: 14, fontWeight: 600, cursor: "pointer",
-              boxShadow: "0 4px 20px rgba(0,194,168,0.35)",
-            }}>
-              Começar trial de 7 dias →
+            <button
+              onClick={() => router.push("/onboarding")}
+              style={{
+                flex: 1, padding: "13px 0", borderRadius: 10,
+                background: V.pu, border: "none", color: "#0A1A18",
+                fontFamily: V.db, fontSize: 14, fontWeight: 600, cursor: "pointer",
+                boxShadow: "0 4px 20px rgba(0,194,168,0.35)",
+              }}
+            >
+              Ajustar Cronograma no Onboarding →
             </button>
           </div>
 
@@ -338,7 +374,7 @@ export default function DiagnosticoPage() {
             fontFamily: V.dm, fontSize: 9, letterSpacing: "0.1em",
             textTransform: "uppercase", color: "rgba(138,154,181,0.35)",
           }}>
-            Diagnóstico baseado em IA · resultados aprimoram com uso contínuo
+            Diagnóstico baseado em IA · Os resultados alimentam sua predição de aprovação
           </div>
         </div>
       )}

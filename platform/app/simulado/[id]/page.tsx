@@ -1,99 +1,171 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import { mockQuestions } from "@/lib/mock-data";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { ScoreRing, Card, Badge, ProgressBar } from "@/components/ui";
+import type { Simulado, Questao } from "@/lib/types";
+import { useUser } from "@/lib/supabase/use-user";
+import {
+  fetchSimulationDetails,
+  finishSimulation,
+  type SimulationResultSummary,
+} from "@/lib/supabase/simulations";
 
 /* ══════════════════════════════════════════════
-   SIMULADO PAGE — pixel-perfect from medpleni-part3-dashboard.html
+   SIMULADO & RELATÓRIO PÓS-SIMULADO REAL
 ══════════════════════════════════════════════ */
 
-const TOTAL_Q = 120;
-const INITIAL_Q = 22; // q0…q21 already answered
+const V = {
+  ab: "#1A1F2E", pe: "#2B3A52", si: "#3D5A80",
+  nb: "#E0E6F0", ch: "#8A9AB5", pu: "#00C2A8",
+  re: "#0077B6", rel: "#64B5E8", dg: "#FF6B6B", wn: "#F5A623", su: "#22C55E",
+  df: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif",
+  db: "var(--font-body), 'Inter', sans-serif",
+  dm: "'IBM Plex Mono', monospace",
+};
 
 type QState = "done" | "curr" | "skip" | "todo";
 
-export default function SimuladoPage() {
-  /* ── State ── */
-  const [currentIdx, setCurrentIdx] = useState(INITIAL_Q); // 0-indexed
+export default function SimuladoDetailPage() {
+  const params = useParams();
+  const router = useRouter();
+  const { user } = useUser();
+  const simId = (params?.id as string) || "sim_001";
+
+  const [loading, setLoading] = useState(true);
+  const [simulation, setSimulation] = useState<Simulado | null>(null);
+  const [questions, setQuestions] = useState<Questao[]>([]);
+
+  const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedOpt, setSelectedOpt] = useState<string | null>(null);
   const [confidence, setConfidence] = useState(3);
   const [answers, setAnswers] = useState<Record<number, { letter: string; confidence: number }>>({});
-  const [skipped, setSkipped] = useState<Set<number>>(new Set([23, 24])); // q24,q25 in 1-indexed
-  const [timerSecs, setTimerSecs] = useState(6442); // 01:47:22
+  const [skipped, setSkipped] = useState<Set<number>>(new Set());
+  const [timerSecs, setTimerSecs] = useState(5400); // 90 min padrão
+  const [initialDuration, setInitialDuration] = useState(5400);
 
-  /* ── Timer ── */
+  const [isFinished, setIsFinished] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [resultSummary, setResultSummary] = useState<SimulationResultSummary | null>(null);
+  const [selectedReviewQIdx, setSelectedReviewQIdx] = useState<number | null>(null);
+
+  // Carrega simulado e questões
   useEffect(() => {
-    const id = setInterval(() => setTimerSecs((s) => Math.max(0, s - 1)), 1000);
+    async function load() {
+      setLoading(true);
+      const data = await fetchSimulationDetails(simId, user?.id);
+      setSimulation(data.simulation);
+      setQuestions(data.questions);
+      const totalSecs = (data.simulation.duracaoMinutos || 90) * 60;
+      setTimerSecs(totalSecs);
+      setInitialDuration(totalSecs);
+      setLoading(false);
+    }
+    load();
+  }, [simId, user]);
+
+  // Timer countdown
+  useEffect(() => {
+    if (isFinished || loading) return;
+    const id = setInterval(() => {
+      setTimerSecs((s) => {
+        if (s <= 1) {
+          clearInterval(id);
+          handleFinish();
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [isFinished, loading]);
 
   const fmtTime = (s: number) => {
     const h = Math.floor(s / 3600);
     const m = Math.floor((s % 3600) / 60);
     const ss = s % 60;
-    return { h: String(h).padStart(2, "0"), m: String(m).padStart(2, "0"), s: String(ss).padStart(2, "0") };
+    return {
+      h: String(h).padStart(2, "0"),
+      m: String(m).padStart(2, "0"),
+      s: String(ss).padStart(2, "0"),
+    };
   };
   const t = fmtTime(timerSecs);
 
-  /* ── Question data ── */
-  const q = mockQuestions[currentIdx % mockQuestions.length];
-  const answeredCount = Object.keys(answers).length + INITIAL_Q;
+  const totalQ = questions.length;
+  const q = questions[currentIdx] || questions[0];
+  const answeredCount = Object.keys(answers).length;
   const skippedCount = skipped.size;
 
-  /* ── Q State helpers ── */
   const getQState = (idx: number): QState => {
     if (idx === currentIdx) return "curr";
-    if (idx < INITIAL_Q || answers[idx]) return "done";
+    if (answers[idx]) return "done";
     if (skipped.has(idx)) return "skip";
     return "todo";
   };
 
-  /* ── Actions ── */
   const confirmAnswer = () => {
     if (!selectedOpt) return;
     setAnswers((prev) => ({ ...prev, [currentIdx]: { letter: selectedOpt, confidence } }));
-    setSkipped((prev) => { const n = new Set(prev); n.delete(currentIdx); return n; });
-    goNext();
+    setSkipped((prev) => {
+      const n = new Set(prev);
+      n.delete(currentIdx);
+      return n;
+    });
+
+    if (currentIdx + 1 < totalQ) {
+      goTo(currentIdx + 1);
+    }
   };
 
   const skipQuestion = () => {
     setSkipped((prev) => new Set(prev).add(currentIdx));
-    goNext();
+    if (currentIdx + 1 < totalQ) {
+      goTo(currentIdx + 1);
+    }
   };
 
-  const goNext = () => {
-    setSelectedOpt(null);
-    setConfidence(3);
-    setCurrentIdx((prev) => Math.min(prev + 1, TOTAL_Q - 1));
+  const goTo = (idx: number) => {
+    setCurrentIdx(idx);
+    const existing = answers[idx];
+    if (existing) {
+      setSelectedOpt(existing.letter);
+      setConfidence(existing.confidence);
+    } else {
+      setSelectedOpt(null);
+      setConfidence(3);
+    }
   };
 
-  const goPrev = () => {
-    setSelectedOpt(null);
-    setConfidence(3);
-    setCurrentIdx((prev) => Math.max(0, prev - 1));
+  const handleFinish = async () => {
+    if (!simulation || submitting) return;
+    setSubmitting(true);
+
+    const timeSpent = Math.max(0, initialDuration - timerSecs);
+    const summary = await finishSimulation({
+      userId: user?.id,
+      simulation,
+      questions,
+      answers,
+      timeSpentSeconds: timeSpent,
+    });
+
+    setResultSummary(summary);
+    setIsFinished(true);
+    setSubmitting(false);
   };
 
-  /* ── Styles (all extracted from medpleni-part3-dashboard.html) ── */
-  const V = {
-    ab: "#1A1F2E", pe: "#2B3A52", si: "#3D5A80",
-    nb: "#E0E6F0", ch: "#8A9AB5", pu: "#00C2A8",
-    re: "#0077B6", rel: "#64B5E8", dg: "#FF6B6B", wn: "#F5A623",
-    df: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif",
-    db: "var(--font-body), 'Inter', sans-serif",
-    dm: "'IBM Plex Mono', monospace",
-  };
-
-  /* ── Q-dot colors from sim-q-num classes ── */
   const qDotStyle = (state: QState): React.CSSProperties => {
     const base: React.CSSProperties = {
       width: 28, height: 28, borderRadius: 6,
       display: "flex", alignItems: "center", justifyContent: "center",
-      fontFamily: V.dm, fontSize: 9, letterSpacing: "0.04em", cursor: "pointer",
+      fontFamily: V.dm, fontSize: 10, letterSpacing: "0.04em", cursor: "pointer",
+      transition: "all 0.15s",
     };
     switch (state) {
-      case "done": return { ...base, background: "rgba(0,194,168,0.12)", color: V.pu, border: "1px solid rgba(0,194,168,0.2)" };
+      case "done": return { ...base, background: "rgba(0,194,168,0.15)", color: V.pu, border: "1px solid rgba(0,194,168,0.3)" };
       case "curr": return { ...base, background: V.pu, color: "#0A1A18", fontWeight: 700 };
-      case "skip": return { ...base, background: "rgba(245,166,35,0.1)", color: V.wn, border: "1px solid rgba(245,166,35,0.15)" };
+      case "skip": return { ...base, background: "rgba(245,166,35,0.15)", color: V.wn, border: "1px solid rgba(245,166,35,0.25)" };
       case "todo": return { ...base, background: "rgba(61,90,128,0.1)", color: V.ch, border: "1px solid rgba(61,90,128,0.15)" };
     }
   };
@@ -120,6 +192,202 @@ export default function SimuladoPage() {
     };
   };
 
+  if (loading || !simulation || !q) {
+    return (
+      <div style={{ minHeight: "100vh", background: "#0D111C", display: "flex", alignItems: "center", justifyContent: "center", color: V.ch }}>
+        Carregando simulado...
+      </div>
+    );
+  }
+
+  /* ══════════════════════════════════════════════
+     TELA DE RESULTADO / PÓS-SIMULADO
+  ══════════════════════════════════════════════ */
+  if (isFinished && resultSummary) {
+    return (
+      <div style={{ minHeight: "100vh", background: "#0D111C", padding: "40px 20px" }}>
+        <div style={{ maxWidth: 840, margin: "0 auto" }}>
+          {/* Header */}
+          <div style={{ textAlign: "center", marginBottom: 32 }}>
+            <span style={{
+              fontFamily: V.dm, fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase",
+              padding: "3px 10px", borderRadius: 9999,
+              background: "rgba(0,194,168,0.1)", color: V.pu, border: "1px solid rgba(0,194,168,0.25)",
+            }}>
+              {simulation.instituicao} · Simulado Concluído
+            </span>
+            <div style={{ fontFamily: V.df, fontSize: 28, fontWeight: 700, color: "#fff", marginTop: 10, marginBottom: 4 }}>
+              Relatório de Desempenho Pós-Simulado
+            </div>
+            <div style={{ fontSize: 14, color: V.ch }}>
+              {simulation.titulo} · {resultSummary.totalQuestions} questões
+            </div>
+          </div>
+
+          {/* Cards de Resumo */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1.5fr", gap: 16, marginBottom: 20 }}>
+            {/* Score Ring */}
+            <Card hoverable={false} style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 28 }}>
+              <ScoreRing score={resultSummary.scorePercent} size={150} sublabel="score final" />
+              <div style={{
+                fontFamily: V.df, fontSize: 18, fontWeight: 700,
+                color: resultSummary.passedCutoff ? V.pu : resultSummary.scorePercent >= 60 ? V.wn : V.dg,
+                marginTop: 14,
+              }}>
+                {resultSummary.passedCutoff ? "Acima da Nota de Corte ✓" : "Abaixo da Nota de Corte"}
+              </div>
+              <div style={{ fontSize: 12, color: V.ch, marginTop: 4, textAlign: "center" }}>
+                Nota de corte estimada ({simulation.instituicao}): <strong style={{ color: "#fff" }}>{resultSummary.cutoffScore}%</strong>
+              </div>
+            </Card>
+
+            {/* KPIs Rápidos */}
+            <Card hoverable={false} style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", padding: 24 }}>
+              <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 12 }}>
+                Métricas da Sessão
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+                <div style={{ background: "rgba(43,58,82,0.3)", padding: 12, borderRadius: 8 }}>
+                  <div style={{ fontFamily: V.dm, fontSize: 9, color: V.ch, textTransform: "uppercase" }}>Acertos</div>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: V.pu }}>
+                    {resultSummary.correctAnswers} / {resultSummary.totalQuestions}
+                  </div>
+                </div>
+                <div style={{ background: "rgba(43,58,82,0.3)", padding: 12, borderRadius: 8 }}>
+                  <div style={{ fontFamily: V.dm, fontSize: 9, color: V.ch, textTransform: "uppercase" }}>Tempo Total</div>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: V.nb }}>
+                    {Math.floor(resultSummary.timeSpentSeconds / 60)}min {resultSummary.timeSpentSeconds % 60}s
+                  </div>
+                </div>
+                <div style={{ background: "rgba(43,58,82,0.3)", padding: 12, borderRadius: 8 }}>
+                  <div style={{ fontFamily: V.dm, fontSize: 9, color: V.ch, textTransform: "uppercase" }}>Média / Questão</div>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: V.nb }}>
+                    {resultSummary.answeredQuestions > 0
+                      ? `${Math.round(resultSummary.timeSpentSeconds / resultSummary.answeredQuestions)}s`
+                      : "—"}
+                  </div>
+                </div>
+                <div style={{ background: "rgba(43,58,82,0.3)", padding: 12, borderRadius: 8 }}>
+                  <div style={{ fontFamily: V.dm, fontSize: 9, color: V.ch, textTransform: "uppercase" }}>Calibração Alta</div>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: V.rel }}>
+                    {resultSummary.confidenceAnalysis.highConfidenceAccuracy}% acerto
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ fontSize: 11, color: V.ch, marginTop: 12 }}>
+                * Suas respostas foram salvas no Supabase e já atualizam sua predição de aprovação.
+              </div>
+            </Card>
+          </div>
+
+          {/* Desempenho por Área */}
+          <Card hoverable={false} style={{ marginBottom: 20 }}>
+            <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 14 }}>
+              Desempenho por Área da Prova
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {resultSummary.areaBreakdown.map((ab) => (
+                <div key={ab.area}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                    <span style={{ fontSize: 13, color: V.nb }}>{ab.area}</span>
+                    <span style={{ fontFamily: V.dm, fontSize: 11, color: ab.pct >= 75 ? V.pu : ab.pct >= 60 ? V.wn : V.dg }}>
+                      {ab.correct}/{ab.total} ({ab.pct}%)
+                    </span>
+                  </div>
+                  <ProgressBar value={ab.pct} variant={ab.pct >= 75 ? "green" : ab.pct >= 60 ? "warn" : "danger"} />
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* Revisão de Questões */}
+          <Card hoverable={false} style={{ marginBottom: 24 }}>
+            <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 14 }}>
+              Revisão de Gabarito Questão por Questão
+            </div>
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 16 }}>
+              {questions.map((ques, idx) => {
+                const userAns = answers[idx];
+                const isCorrect = userAns?.letter === ques.gabarito;
+                const isSel = selectedReviewQIdx === idx;
+
+                return (
+                  <button
+                    key={ques.id}
+                    onClick={() => setSelectedReviewQIdx(isSel ? null : idx)}
+                    style={{
+                      width: 32, height: 32, borderRadius: 6,
+                      background: isCorrect ? "rgba(0,194,168,0.15)" : userAns ? "rgba(255,107,107,0.15)" : "rgba(61,90,128,0.15)",
+                      border: `1.5px solid ${isSel ? "#fff" : isCorrect ? V.pu : userAns ? V.dg : "rgba(61,90,128,0.3)"}`,
+                      color: isCorrect ? V.pu : userAns ? V.dg : V.ch,
+                      fontFamily: V.dm, fontSize: 11, fontWeight: 600, cursor: "pointer",
+                    }}
+                  >
+                    {idx + 1}
+                  </button>
+                );
+              })}
+            </div>
+
+            {selectedReviewQIdx !== null && questions[selectedReviewQIdx] && (
+              <div style={{
+                padding: "16px 18px", background: "rgba(43,58,82,0.4)",
+                borderRadius: 10, border: "1px solid rgba(61,90,128,0.25)",
+              }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+                  <span style={{ fontFamily: V.dm, fontSize: 10, color: V.pu, textTransform: "uppercase" }}>
+                    Questão {selectedReviewQIdx + 1} · {questions[selectedReviewQIdx].subarea}
+                  </span>
+                  <span style={{
+                    fontFamily: V.dm, fontSize: 10,
+                    color: answers[selectedReviewQIdx]?.letter === questions[selectedReviewQIdx].gabarito ? V.pu : V.dg,
+                  }}>
+                    Sua resposta: {answers[selectedReviewQIdx]?.letter || "Não respondida"} · Gabarito: {questions[selectedReviewQIdx].gabarito}
+                  </span>
+                </div>
+                <div style={{ fontSize: 13, color: V.nb, lineHeight: 1.6, marginBottom: 10 }}>
+                  {questions[selectedReviewQIdx].enunciado}
+                </div>
+                <div style={{ fontSize: 12, color: V.ch, lineHeight: 1.6, background: "rgba(0,194,168,0.05)", padding: "10px 12px", borderRadius: 8, borderLeft: `3px solid ${V.pu}` }}>
+                  <strong style={{ color: V.pu }}>Explicação:</strong> {questions[selectedReviewQIdx].explicacao}
+                </div>
+              </div>
+            )}
+          </Card>
+
+          {/* Botões de Ação */}
+          <div style={{ display: "flex", gap: 12 }}>
+            <button
+              onClick={() => router.push("/simulados")}
+              style={{
+                flex: 1, padding: "12px 0", borderRadius: 8,
+                background: "transparent", border: "1.5px solid rgba(61,90,128,0.3)",
+                color: V.ch, fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: "pointer",
+              }}
+            >
+              Voltar aos Simulados
+            </button>
+            <button
+              onClick={() => router.push("/dashboard")}
+              style={{
+                flex: 1, padding: "12px 0", borderRadius: 8,
+                background: V.pu, border: "none", color: "#0A1A18",
+                fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: "pointer",
+                boxShadow: "0 4px 16px rgba(0,194,168,0.3)",
+              }}
+            >
+              Ir para o Meu Dashboard →
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ══════════════════════════════════════════════
+     TELA DE EXECUÇÃO DO SIMULADO
+  ══════════════════════════════════════════════ */
   return (
     <div style={{ background: "#0D111C", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       {/* ── SIM TOPBAR ── */}
@@ -129,68 +397,72 @@ export default function SimuladoPage() {
         borderBottom: "1px solid rgba(61,90,128,0.2)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <div style={{ fontFamily: V.df, fontWeight: 700, fontSize: 17, color: "#fff" }}>
+          <div onClick={() => router.push("/dashboard")} style={{ fontFamily: V.df, fontWeight: 700, fontSize: 17, color: "#fff", cursor: "pointer" }}>
             Med<span style={{ color: V.pu }}>Pleni</span>
           </div>
           <div style={{ width: 1, height: 20, background: "rgba(61,90,128,0.3)" }} />
-          <div className="sim-topbar-info" style={{ fontSize: 12, color: V.ch, fontFamily: V.dm }}>
-            RESID · Simulado Intensivo 2026 · Clínica Médica
+          <div style={{ fontSize: 12, color: V.ch, fontFamily: V.dm }}>
+            {simulation.instituicao} · {simulation.titulo}
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <div>
             <div style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.08em", color: V.ch }}>
-              Q {currentIdx + 1} / {TOTAL_Q}
+              Q {currentIdx + 1} / {totalQ}
             </div>
-            <div style={{ width: 160, height: 4, background: "rgba(61,90,128,0.2)", borderRadius: 9999, overflow: "hidden", marginTop: 4 }}>
-              <div style={{ width: `${((currentIdx + 1) / TOTAL_Q) * 100}%`, height: "100%", background: V.pu, borderRadius: 9999, transition: "width 0.3s" }} />
+            <div style={{ width: 140, height: 4, background: "rgba(61,90,128,0.2)", borderRadius: 9999, overflow: "hidden", marginTop: 4 }}>
+              <div style={{ width: `${((currentIdx + 1) / totalQ) * 100}%`, height: "100%", background: V.pu, borderRadius: 9999, transition: "width 0.3s" }} />
             </div>
           </div>
           <div style={{
-            fontFamily: V.dm, fontSize: 15, letterSpacing: "0.04em", color: "#fff",
+            fontFamily: V.dm, fontSize: 14, letterSpacing: "0.04em", color: "#fff",
             background: "rgba(61,90,128,0.2)", padding: "4px 12px", borderRadius: 8,
           }}>
             {t.h}:<span style={{ color: V.wn }}>{t.m}</span>:{t.s}
           </div>
-          <button style={{
-            padding: "6px 14px", background: "transparent",
-            border: "1.5px solid rgba(255,107,107,0.3)", borderRadius: 8,
-            color: V.dg, fontFamily: V.db, fontSize: 12, fontWeight: 600, cursor: "pointer",
-          }}>
-            Encerrar
+          <button
+            onClick={handleFinish}
+            disabled={submitting}
+            style={{
+              padding: "6px 14px", background: "rgba(255,107,107,0.1)",
+              border: "1.5px solid rgba(255,107,107,0.3)", borderRadius: 8,
+              color: V.dg, fontFamily: V.db, fontSize: 12, fontWeight: 600, cursor: "pointer",
+            }}
+          >
+            {submitting ? "Encerrando..." : "Encerrar Simulado"}
           </button>
         </div>
       </div>
 
       {/* ── SIM LAYOUT: 3 columns ── */}
-      <div className="sim-layout">
+      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
 
-        {/* ── LEFT SIDEBAR (200px) ── */}
-        <div className="sim-left-sidebar">
+        {/* ── LEFT SIDEBAR (Grade de Questões) ── */}
+        <div style={{
+          width: 210, borderRight: "1px solid rgba(61,90,128,0.2)",
+          padding: 16, background: "rgba(26,31,46,0.5)", overflowY: "auto",
+        }}>
           <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.15em", textTransform: "uppercase", color: V.ch, marginBottom: 12 }}>
-            Questões
+            Mapa de Questões
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 5 }}>
-            {Array.from({ length: 30 }, (_, i) => (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6 }}>
+            {questions.map((_, i) => (
               <div
                 key={i}
                 style={qDotStyle(getQState(i))}
-                onClick={() => { setCurrentIdx(i); setSelectedOpt(null); }}
+                onClick={() => goTo(i)}
               >
                 {i + 1}
               </div>
             ))}
           </div>
-          <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.08em", color: "rgba(138,154,181,0.4)", textAlign: "center", marginTop: 6 }}>
-            ... {TOTAL_Q - 30} questões
-          </div>
+
           {/* Stats */}
-          <div style={{ marginTop: 16, borderTop: "1px solid rgba(61,90,128,0.15)", paddingTop: 14 }}>
+          <div style={{ marginTop: 20, borderTop: "1px solid rgba(61,90,128,0.15)", paddingTop: 14 }}>
             {[
               { label: "Respondidas", value: answeredCount, color: V.pu },
               { label: "Puladas", value: skippedCount, color: V.wn },
-              { label: "Acerto parcial", value: "~82%", color: "#fff" },
-              { label: "Tempo médio", value: "1m 52s", color: V.ch },
+              { label: "Pendentes", value: totalQ - answeredCount - skippedCount, color: V.ch },
             ].map((s) => (
               <div key={s.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
                 <span style={{ fontSize: 11, color: V.ch }}>{s.label}</span>
@@ -200,38 +472,37 @@ export default function SimuladoPage() {
           </div>
         </div>
 
-        {/* ── MAIN CONTENT ── */}
-        <div className="sim-main">
+        {/* ── MAIN CONTENT (Questão Atual) ── */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", overflowY: "auto" }}>
           {/* Header */}
-          <div style={{ padding: "20px 28px 16px", borderBottom: "1px solid rgba(61,90,128,0.15)" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+          <div style={{ padding: "16px 28px", borderBottom: "1px solid rgba(61,90,128,0.15)", background: "rgba(43,58,82,0.2)" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <span style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: V.pu }}>
                 Questão {currentIdx + 1}
               </span>
               <span style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: V.ch }}>
-                {q.area} · {q.subarea.split(" — ")[0]}
+                {q.area} · {q.subarea}
               </span>
               <span style={{
-                display: "inline-flex", alignItems: "center", gap: 5,
                 fontFamily: V.dm, fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase",
                 padding: "2px 7px", borderRadius: 9999,
                 background: "rgba(245,166,35,0.1)", color: V.wn, border: "1px solid rgba(245,166,35,0.15)",
               }}>
-                {q.dificuldade === "facil" ? "Fácil" : q.dificuldade === "media" ? "Média" : q.dificuldade === "alta" ? "Alta" : "Muito Alta"}
+                {q.dificuldade}
               </span>
               <span style={{ marginLeft: "auto", fontFamily: V.dm, fontSize: 9, letterSpacing: "0.08em", color: "rgba(138,154,181,0.4)" }}>
-                {q.instituicao} {q.ano} · adaptada
+                {q.instituicao} · {q.ano}
               </span>
             </div>
           </div>
 
-          {/* Body: question + panel */}
-          <div className="sim-body">
-            {/* Question */}
+          {/* Body */}
+          <div style={{ flex: 1, padding: "24px 28px", display: "flex", gap: 24 }}>
+            {/* Questão e Alternativas */}
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 14, lineHeight: 1.75, color: V.nb, marginBottom: 6 }}
-                dangerouslySetInnerHTML={{ __html: q.enunciado.replace(/<(\d)/g, '&lt;$1').replace(/(\d)>/g, '$1&gt;') }}
-              />
+              <div style={{ fontSize: 14, lineHeight: 1.75, color: V.nb, marginBottom: 8 }}>
+                {q.enunciado}
+              </div>
 
               {q.contextoClinico && (
                 <div style={{
@@ -243,10 +514,6 @@ export default function SimuladoPage() {
                   {q.contextoClinico}
                 </div>
               )}
-
-              <div style={{ fontSize: 13, color: V.nb, marginBottom: 16 }}>
-                Qual a conduta <strong style={{ color: "#fff" }}>imediata</strong> mais adequada para este paciente?
-              </div>
 
               {/* Options */}
               <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 20 }}>
@@ -268,71 +535,38 @@ export default function SimuladoPage() {
               </div>
             </div>
 
-            {/* Side panel (200px) */}
-            <div className="sim-right-panel">
-              {/* Mini ring */}
-              <div style={{
-                background: V.pe, border: "1px solid rgba(61,90,128,0.25)",
-                borderRadius: 12, padding: 16, marginBottom: 12,
-              }}>
-                <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: V.ch, marginBottom: 12 }}>
-                  Meu desempenho em {q.subarea.split(" — ")[0]}
+            {/* Painel Lateral de Contexto */}
+            <div style={{ width: 220, display: "flex", flexDirection: "column", gap: 12 }}>
+              <div style={{ background: V.pe, border: "1px solid rgba(61,90,128,0.25)", borderRadius: 12, padding: 14 }}>
+                <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: V.ch, marginBottom: 8 }}>
+                  Banca
                 </div>
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                  <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                    <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(61,90,128,0.2)" strokeWidth="8" />
-                    <circle cx="40" cy="40" r="32" fill="none" stroke="#64B5E8" strokeWidth="8"
-                      strokeDasharray="201.1" strokeDashoffset="40.2" strokeLinecap="round"
-                      transform="rotate(-90 40 40)" />
-                    <text x="40" y="36" textAnchor="middle" fontFamily="'IBM Plex Mono'" fontSize="14" fill="white">80%</text>
-                    <text x="40" y="48" textAnchor="middle" fontFamily="'Inter'" fontSize="7" fill="#8A9AB5">acerto</text>
-                  </svg>
-                </div>
-                <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.08em", color: V.ch, textAlign: "center", marginTop: 8 }}>
-                  42 questões respondidas
-                </div>
+                <div style={{ fontSize: 13, color: "#fff", fontWeight: 600 }}>{simulation.instituicao}</div>
+                <div style={{ fontSize: 11, color: V.ch, marginTop: 2 }}>{simulation.area}</div>
               </div>
 
-              {/* Fonte */}
-              <div style={{
-                background: V.pe, border: "1px solid rgba(61,90,128,0.25)",
-                borderRadius: 12, padding: 16, marginBottom: 12,
-              }}>
-                <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: V.ch, marginBottom: 12 }}>
-                  Fonte
+              {q.tags && q.tags.length > 0 && (
+                <div style={{ background: V.pe, border: "1px solid rgba(61,90,128,0.25)", borderRadius: 12, padding: 14 }}>
+                  <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: V.ch, marginBottom: 8 }}>
+                    Tags Clínicas
+                  </div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                    {q.tags.map((tag) => (
+                      <span key={tag} style={{
+                        fontFamily: V.dm, fontSize: 8, textTransform: "uppercase",
+                        padding: "2px 6px", borderRadius: 9999,
+                        background: "rgba(61,90,128,0.2)", color: V.ch,
+                      }}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                <div style={{ fontSize: 11, color: V.ch, lineHeight: 1.5 }}>
-                  <strong style={{ color: V.nb, display: "block", marginBottom: 4 }}>
-                    {q.subarea} — Diretriz
-                  </strong>
-                  SBC/SBH 2023 · Classe I, Nível A
-                </div>
-              </div>
-
-              {/* Tags */}
-              <div style={{
-                background: V.pe, border: "1px solid rgba(61,90,128,0.25)",
-                borderRadius: 12, padding: 16,
-              }}>
-                <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: V.ch, marginBottom: 12 }}>
-                  Tags relacionadas
-                </div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
-                  {(q.tags || []).map((tag) => (
-                    <span key={tag} style={{
-                      fontFamily: V.dm, fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase",
-                      padding: "2px 7px", borderRadius: 9999,
-                      background: "rgba(61,90,128,0.15)", color: V.ch,
-                    }}>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
+              )}
             </div>
           </div>
 
-          {/* ── FOOTER ── */}
+          {/* Footer de Navegação */}
           <div style={{
             padding: "14px 28px",
             borderTop: "1px solid rgba(61,90,128,0.15)",
@@ -340,42 +574,42 @@ export default function SimuladoPage() {
             background: "#0D111C",
           }}>
             <div style={{ display: "flex", gap: 8 }}>
-              <button onClick={goPrev} style={{
-                display: "inline-flex", alignItems: "center", gap: 6,
-                padding: "8px 16px", borderRadius: 8,
-                fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: "pointer",
-                background: "transparent", color: V.ch, border: "1.5px solid rgba(61,90,128,0.3)",
-                transition: "all 0.15s",
-              }}>
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
-                Anterior
+              <button
+                onClick={() => goTo(Math.max(0, currentIdx - 1))}
+                disabled={currentIdx === 0}
+                style={{
+                  padding: "8px 16px", borderRadius: 8,
+                  fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: currentIdx === 0 ? "not-allowed" : "pointer",
+                  background: "transparent", color: V.ch, border: "1.5px solid rgba(61,90,128,0.3)",
+                  opacity: currentIdx === 0 ? 0.4 : 1,
+                }}
+              >
+                ← Anterior
               </button>
-              <button onClick={skipQuestion} style={{
-                display: "inline-flex", alignItems: "center", gap: 6,
-                padding: "8px 16px", borderRadius: 8,
-                fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: "pointer",
-                background: "transparent", color: V.wn, border: "1.5px solid rgba(245,166,35,0.25)",
-                transition: "all 0.15s",
-              }}>
+              <button
+                onClick={skipQuestion}
+                style={{
+                  padding: "8px 16px", borderRadius: 8,
+                  fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: "pointer",
+                  background: "transparent", color: V.wn, border: "1.5px solid rgba(245,166,35,0.25)",
+                }}
+              >
                 Pular questão
               </button>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              {/* Confidence dots */}
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              {/* Confiança */}
               <div>
-                <div style={{ fontSize: 11, color: V.ch }}>Nível de confiança</div>
+                <div style={{ fontSize: 10, color: V.ch, textAlign: "right" }}>Grau de Confiança</div>
                 <div style={{ display: "flex", gap: 4, marginTop: 4 }}>
                   {[1, 2, 3, 4, 5].map((d) => (
                     <div
                       key={d}
                       onClick={() => setConfidence(d)}
                       style={{
-                        width: 20, height: 6, borderRadius: 9999, cursor: "pointer",
-                        background:
-                          d <= confidence
-                            ? d <= 3 ? V.pu : V.wn
-                            : "rgba(61,90,128,0.2)",
+                        width: 18, height: 6, borderRadius: 9999, cursor: "pointer",
+                        background: d <= confidence ? V.pu : "rgba(61,90,128,0.2)",
                         transition: "background 0.15s",
                       }}
                     />
@@ -383,17 +617,17 @@ export default function SimuladoPage() {
                 </div>
               </div>
 
-              <button onClick={confirmAnswer} style={{
-                display: "inline-flex", alignItems: "center", gap: 6,
-                padding: "8px 16px", borderRadius: 8,
-                fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: "pointer",
-                background: V.pu, color: "#0A1A18", border: "none",
-                boxShadow: "0 4px 16px rgba(0,194,168,0.3)",
-                transition: "all 0.15s",
-                opacity: selectedOpt ? 1 : 0.5,
-              }}>
-                Confirmar resposta
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
+              <button
+                onClick={confirmAnswer}
+                disabled={!selectedOpt}
+                style={{
+                  padding: "9px 20px", borderRadius: 8,
+                  fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: selectedOpt ? "pointer" : "not-allowed",
+                  background: selectedOpt ? V.pu : "rgba(0,194,168,0.3)", color: "#0A1A18", border: "none",
+                  boxShadow: selectedOpt ? "0 4px 16px rgba(0,194,168,0.3)" : "none",
+                }}
+              >
+                {currentIdx + 1 === totalQ ? "Salvar e Concluir" : "Confirmar e Avançar →"}
               </button>
             </div>
           </div>

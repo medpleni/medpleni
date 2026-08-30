@@ -1,13 +1,15 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { PageShell } from "@/components/layout";
-import { Badge, Card } from "@/components/ui";
-import { mockSimulados } from "@/lib/mock-data";
+import { Badge } from "@/components/ui";
+import type { Simulado } from "@/lib/types";
+import { useUser } from "@/lib/supabase/use-user";
+import { fetchSimulations } from "@/lib/supabase/simulations";
 
 /* ═══════════════════════════════════════════
-   LISTA DE SIMULADOS — /simulados
+   LISTA DE SIMULADOS INTERATIVA — /simulados
 ═══════════════════════════════════════════ */
 
 const V = {
@@ -47,17 +49,31 @@ const fmtDuration = (m: number) => {
 
 export default function SimuladosPage() {
   const router = useRouter();
+  const { user } = useUser();
   const [activeNav, setActiveNav] = useState("simulados");
   const [instFilter, setInstFilter] = useState("Todos");
   const [statusFilter, setStatusFilter] = useState("Todos");
+  const [simulados, setSimulados] = useState<Simulado[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const loadSims = useCallback(async () => {
+    setLoading(true);
+    const list = await fetchSimulations(user?.id);
+    setSimulados(list);
+    setLoading(false);
+  }, [user]);
+
+  useEffect(() => {
+    loadSims();
+  }, [loadSims]);
 
   const filtered = useMemo(() => {
-    return mockSimulados.filter((s) => {
+    return simulados.filter((s) => {
       if (instFilter !== "Todos" && s.instituicao !== instFilter) return false;
       if (statusFilter !== "Todos" && statusLabel[s.status] !== statusFilter) return false;
       return true;
     });
-  }, [instFilter, statusFilter]);
+  }, [simulados, instFilter, statusFilter]);
 
   const chipStyle = (selected: boolean): React.CSSProperties => ({
     padding: "5px 12px", borderRadius: 9999,
@@ -69,7 +85,7 @@ export default function SimuladosPage() {
   });
 
   return (
-    <PageShell title="Simulados" badgeText={`${mockSimulados.length} disponíveis`} activeNavId={activeNav} onNavigate={setActiveNav}>
+    <PageShell title="Simulados" badgeText={`${simulados.length} disponíveis`} activeNavId={activeNav} onNavigate={setActiveNav}>
       {/* ── FILTER BAR ── */}
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 20, alignItems: "center" }}>
         <span style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em", color: V.ch, textTransform: "uppercase" }}>
@@ -95,91 +111,102 @@ export default function SimuladosPage() {
           @media (max-width:640px) { .simulado-grid { grid-template-columns: 1fr !important; } }
         `}</style>
 
-        {filtered.map((s) => {
-          const ic = instColor[s.instituicao] || V.ch;
-          return (
-            <div key={s.id} style={{
-              background: V.pe, border: "1px solid rgba(61,90,128,0.2)",
-              borderRadius: 14, padding: "20px", transition: "all 0.2s",
-              position: "relative", overflow: "hidden",
-            }}>
-              {/* Top accent bar */}
-              <div style={{
-                position: "absolute", top: 0, left: 0, right: 0, height: 3,
-                background: `linear-gradient(90deg, ${ic} 0%, ${ic}40 100%)`,
-              }} />
+        {loading ? (
+          <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: 40, color: V.ch, fontSize: 14 }}>
+            Carregando simulados...
+          </div>
+        ) : (
+          filtered.map((s) => {
+            const ic = instColor[s.instituicao] || V.ch;
+            return (
+              <div key={s.id} style={{
+                background: V.pe, border: "1px solid rgba(61,90,128,0.2)",
+                borderRadius: 14, padding: "20px", transition: "all 0.2s",
+                position: "relative", overflow: "hidden",
+                display: "flex", flexDirection: "column", justifyContent: "space-between",
+              }}>
+                {/* Top accent bar */}
+                <div style={{
+                  position: "absolute", top: 0, left: 0, right: 0, height: 3,
+                  background: `linear-gradient(90deg, ${ic} 0%, ${ic}40 100%)`,
+                }} />
 
-              {/* Header */}
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
-                <span style={{
-                  fontFamily: V.dm, fontSize: 10, letterSpacing: "0.1em",
-                  padding: "3px 8px", borderRadius: 6,
-                  background: `${ic}15`, color: ic, border: `1px solid ${ic}30`,
-                }}>
-                  {s.instituicao}
-                </span>
-                <Badge variant={statusVariant[s.status] as any}>
-                  {statusLabel[s.status]}
-                </Badge>
-              </div>
-
-              {/* Title */}
-              <div style={{ fontFamily: V.df, fontSize: 15, fontWeight: 600, color: "#fff", marginBottom: 6, lineHeight: 1.4 }}>
-                {s.titulo}
-              </div>
-
-              {/* Description */}
-              {s.descricao && (
-                <div style={{ fontSize: 12, color: V.ch, lineHeight: 1.5, marginBottom: 14, minHeight: 36 }}>
-                  {s.descricao}
-                </div>
-              )}
-
-              {/* Stats */}
-              <div style={{ display: "flex", gap: 16, marginBottom: 14 }}>
                 <div>
-                  <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: V.ch }}>Questões</div>
-                  <div style={{ fontSize: 15, fontWeight: 600, color: V.nb }}>{s.totalQuestoes}</div>
-                </div>
-                <div>
-                  <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: V.ch }}>Tempo</div>
-                  <div style={{ fontSize: 15, fontWeight: 600, color: V.nb }}>{fmtDuration(s.duracaoMinutos)}</div>
-                </div>
-                {s.status === "concluido" && s.percentualAcerto !== undefined && (
-                  <div>
-                    <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: V.ch }}>Score</div>
-                    <div style={{ fontSize: 15, fontWeight: 600, color: s.percentualAcerto >= 75 ? V.pu : s.percentualAcerto >= 60 ? V.wn : V.dg }}>
-                      {s.percentualAcerto}%
-                    </div>
+                  {/* Header */}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+                    <span style={{
+                      fontFamily: V.dm, fontSize: 10, letterSpacing: "0.1em",
+                      padding: "3px 8px", borderRadius: 6,
+                      background: `${ic}15`, color: ic, border: `1px solid ${ic}30`,
+                    }}>
+                      {s.instituicao}
+                    </span>
+                    <Badge variant={statusVariant[s.status] as any}>
+                      {statusLabel[s.status]}
+                    </Badge>
                   </div>
-                )}
-              </div>
 
-              {/* CTA */}
-              {s.status !== "concluido" ? (
-                <button onClick={() => router.push(`/simulado/${s.id}`)} style={{
-                  width: "100%", padding: "9px 0", borderRadius: 8,
-                  background: V.pu, border: "none", color: "#0A1A18",
-                  fontFamily: V.db, fontSize: 12, fontWeight: 600, cursor: "pointer",
-                  boxShadow: "0 2px 12px rgba(0,194,168,0.25)",
-                }}>
-                  {s.status === "em_andamento" ? "Continuar →" : "Iniciar →"}
-                </button>
-              ) : (
-                <button onClick={() => router.push(`/simulado/${s.id}`)} style={{
-                  width: "100%", padding: "9px 0", borderRadius: 8,
-                  background: "transparent", border: "1.5px solid rgba(61,90,128,0.3)",
-                  color: V.ch, fontFamily: V.db, fontSize: 12, fontWeight: 600, cursor: "pointer",
-                }}>
-                  Revisar questões
-                </button>
-              )}
-            </div>
-          );
-        })}
+                  {/* Title */}
+                  <div style={{ fontFamily: V.df, fontSize: 15, fontWeight: 600, color: "#fff", marginBottom: 6, lineHeight: 1.4 }}>
+                    {s.titulo}
+                  </div>
+
+                  {/* Description */}
+                  {s.descricao && (
+                    <div style={{ fontSize: 12, color: V.ch, lineHeight: 1.5, marginBottom: 14, minHeight: 36 }}>
+                      {s.descricao}
+                    </div>
+                  )}
+
+                  {/* Stats */}
+                  <div style={{ display: "flex", gap: 16, marginBottom: 16 }}>
+                    <div>
+                      <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: V.ch }}>Questões</div>
+                      <div style={{ fontSize: 15, fontWeight: 600, color: V.nb }}>{s.totalQuestoes}</div>
+                    </div>
+                    <div>
+                      <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: V.ch }}>Tempo</div>
+                      <div style={{ fontSize: 15, fontWeight: 600, color: V.nb }}>{fmtDuration(s.duracaoMinutos)}</div>
+                    </div>
+                    {s.status === "concluido" && s.percentualAcerto !== undefined && (
+                      <div>
+                        <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.1em", textTransform: "uppercase", color: V.ch }}>Score</div>
+                        <div style={{ fontSize: 15, fontWeight: 600, color: s.percentualAcerto >= 75 ? V.pu : s.percentualAcerto >= 60 ? V.wn : V.dg }}>
+                          {s.percentualAcerto}%
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* CTA */}
+                <div>
+                  {s.status !== "concluido" ? (
+                    <button onClick={() => router.push(`/simulado/${s.id}`)} style={{
+                      width: "100%", padding: "10px 0", borderRadius: 8,
+                      background: V.pu, border: "none", color: "#0A1A18",
+                      fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: "pointer",
+                      boxShadow: "0 2px 12px rgba(0,194,168,0.25)",
+                    }}>
+                      {s.status === "em_andamento" ? "Continuar Simulado →" : "Iniciar Simulado →"}
+                    </button>
+                  ) : (
+                    <button onClick={() => router.push(`/simulado/${s.id}`)} style={{
+                      width: "100%", padding: "10px 0", borderRadius: 8,
+                      background: "transparent", border: "1.5px solid rgba(61,90,128,0.3)",
+                      color: V.ch, fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: "pointer",
+                    }}>
+                      Ver Relatório de Desempenho
+                    </button>
+                  )}
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
 
-      {filtered.length === 0 && (
+      {!loading && filtered.length === 0 && (
         <div style={{ textAlign: "center", padding: 40, color: V.ch, fontSize: 14 }}>
           Nenhum simulado encontrado com esses filtros.
         </div>

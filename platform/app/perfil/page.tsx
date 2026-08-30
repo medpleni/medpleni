@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PageShell } from "@/components/layout";
 import { Card, Badge } from "@/components/ui";
 import { mockUser } from "@/lib/mock-data";
 import { useUser } from "@/lib/supabase/use-user";
+import { updateProfile } from "@/lib/supabase/profile";
 
 const V = {
   pu: "#00C2A8", re: "#0077B6", ind: "#6B5CE7",
@@ -27,19 +28,40 @@ const chipStyle = (selected: boolean): React.CSSProperties => ({
 });
 
 export default function PerfilPage() {
-  const { user, signOut } = useUser();
+  const { user, profile, signOut, refreshProfile } = useUser();
   const [activeNav, setActiveNav] = useState("perfil");
   const [provasSel, setProvasSel] = useState<Set<string>>(new Set(mockUser.provaAlvo));
   const [diasSel, setDiasSel] = useState<Set<string>>(new Set(["Seg", "Ter", "Qua", "Qui", "Sex"]));
   const [horas, setHoras] = useState(20);
+  const [saving, setSaving] = useState(false);
+  const [savedSuccess, setSavedSuccess] = useState(false);
   const [notifs, setNotifs] = useState({ estudos: true, simulados: true, streak: true, ranking: false, promos: false });
   const [loggingOut, setLoggingOut] = useState(false);
 
-  const displayNome = user?.user_metadata?.full_name || mockUser.nome;
-  const displayEmail = user?.email || mockUser.email;
+  useEffect(() => {
+    if (profile) {
+      if (profile.target_exams && profile.target_exams.length > 0) {
+        setProvasSel(new Set(profile.target_exams));
+      }
+      if (profile.study_days && profile.study_days.length > 0) {
+        setDiasSel(new Set(profile.study_days));
+      }
+      if (profile.weekly_study_hours) {
+        setHoras(profile.weekly_study_hours);
+      }
+    }
+  }, [profile]);
+
+  const displayNome = profile?.full_name || user?.user_metadata?.full_name || mockUser.nome;
+  const displayEmail = profile?.email || user?.email || mockUser.email;
+  const displayPlano = (profile?.plan || mockUser.plano) as "diagnostico" | "residente" | "aprovacao";
+  const displaySubBrand = profile?.sub_brand || mockUser.subBrand;
+  const displayStreak = profile?.streak_days ?? mockUser.streakDias;
+
   const displayIniciais = displayNome
     ? displayNome
         .split(" ")
+        .filter(Boolean)
         .map((n: string) => n[0])
         .slice(0, 2)
         .join("")
@@ -66,11 +88,36 @@ export default function PerfilPage() {
   });
 
   const planoLabel: Record<string, string> = {
-    diagnostico: "Diagnóstico", residente: "Residente", aprovacao: "Aprovação",
+    diagnostico: "MedPleni Diagnóstico",
+    pleno_mensal: "MedPleni Pleno (Mensal)",
+    pleno_anual: "MedPleni Pleno (Anual)",
+    residente: "MedPleni Pleno",
+    aprovacao: "MedPleni Pleno (Anual)",
   };
 
   const planoColor: Record<string, string> = {
-    diagnostico: V.ch, residente: V.re, aprovacao: V.pu,
+    diagnostico: V.ch,
+    pleno_mensal: V.re,
+    pleno_anual: V.pu,
+    residente: V.re,
+    aprovacao: V.pu,
+  };
+
+  const handleSavePreferences = async () => {
+    if (!user?.id) return;
+    setSaving(true);
+    setSavedSuccess(false);
+
+    await updateProfile(user.id, {
+      target_exams: Array.from(provasSel),
+      study_days: Array.from(diasSel),
+      weekly_study_hours: horas,
+    });
+
+    await refreshProfile();
+    setSaving(false);
+    setSavedSuccess(true);
+    setTimeout(() => setSavedSuccess(false), 3000);
   };
 
   const handleLogout = async () => {
@@ -98,16 +145,16 @@ export default function PerfilPage() {
             </div>
             <div style={{ fontSize: 13, color: V.ch, marginBottom: 6 }}>{displayEmail}</div>
             <div style={{ display: "flex", gap: 6 }}>
-              <Badge variant={mockUser.plano === "aprovacao" ? "green" : "blue"}>
-                {planoLabel[mockUser.plano]}
+              <Badge variant={displayPlano === "aprovacao" ? "green" : "blue"}>
+                {planoLabel[displayPlano] || "Diagnóstico"}
               </Badge>
-              {mockUser.crm && (
+              {profile?.crm && (
                 <span style={{
                   fontFamily: V.dm, fontSize: 9, letterSpacing: "0.08em",
                   padding: "2px 8px", borderRadius: 9999,
                   background: "rgba(61,90,128,0.15)", color: V.ch,
                 }}>
-                  CRM {mockUser.crm}
+                  CRM {profile.crm}
                 </span>
               )}
             </div>
@@ -125,9 +172,9 @@ export default function PerfilPage() {
             {[
               { label: "Nome", value: displayNome },
               { label: "E-mail", value: displayEmail },
-              { label: "CRM", value: mockUser.crm || "—" },
-              { label: "Sub-brand", value: mockUser.subBrand },
-              { label: "Streak atual", value: `${mockUser.streakDias} dias 🔥` },
+              { label: "CRM", value: profile?.crm || "—" },
+              { label: "Sub-brand", value: displaySubBrand },
+              { label: "Streak atual", value: `${displayStreak} dias 🔥` },
             ].map((f) => (
               <div key={f.label} style={{
                 display: "flex", justifyContent: "space-between", padding: "8px 0",
@@ -151,9 +198,9 @@ export default function PerfilPage() {
                 </span>
               ))}
             </div>
-            {mockUser.dataProva && (
+            {profile?.exam_date && (
               <div style={{ marginTop: 12, fontFamily: V.dm, fontSize: 10, color: V.ch }}>
-                Prova em: {new Date(mockUser.dataProva).toLocaleDateString("pt-BR")}
+                Prova em: {new Date(profile.exam_date).toLocaleDateString("pt-BR")}
               </div>
             )}
           </Card>
@@ -171,13 +218,31 @@ export default function PerfilPage() {
             <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: V.ch, marginBottom: 8 }}>
               Dias disponíveis
             </div>
-            <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 16 }}>
               {dias.map((d) => (
                 <span key={d} style={chipStyle(diasSel.has(d))} onClick={() => setDiasSel(toggle(diasSel, d))}>
                   {d}
                 </span>
               ))}
             </div>
+
+            <button
+              onClick={handleSavePreferences}
+              disabled={saving}
+              style={{
+                width: "100%", padding: "10px 0",
+                background: savedSuccess ? "rgba(34,197,94,0.2)" : V.pu,
+                border: savedSuccess ? "1.5px solid #22C55E" : "none",
+                borderRadius: 8,
+                color: savedSuccess ? "#22C55E" : "#0A1A18",
+                fontWeight: 600,
+                fontSize: 13,
+                cursor: saving ? "wait" : "pointer",
+                transition: "all 0.2s",
+              }}
+            >
+              {saving ? "Salvando..." : savedSuccess ? "Preferências salvas! ✓" : "Salvar Alterações"}
+            </button>
           </Card>
         </div>
 
@@ -214,22 +279,23 @@ export default function PerfilPage() {
 
           {/* ── Plano ── */}
           <Card hoverable={false} style={{
-            background: `linear-gradient(135deg, ${planoColor[mockUser.plano]}10, ${V.pe})`,
-            borderColor: `${planoColor[mockUser.plano]}40`,
+            background: `linear-gradient(135deg, ${planoColor[displayPlano]}10, ${V.pe})`,
+            borderColor: `${planoColor[displayPlano]}40`,
           }}>
-            <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: planoColor[mockUser.plano], marginBottom: 8 }}>
-              Plano {planoLabel[mockUser.plano]}
+            <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: planoColor[displayPlano], marginBottom: 8 }}>
+              Plano {planoLabel[displayPlano] || "Diagnóstico"}
             </div>
             <div style={{ fontSize: 12, color: V.ch, lineHeight: 1.5, marginBottom: 12 }}>
-              Acesso completo a todas as funcionalidades. Renova em 15/05/2026.
+              Acesso a todas as funcionalidades do seu nível.
             </div>
-            <button onClick={() => {}} style={{
+            <a href="/planos" style={{
+              display: "block", textAlign: "center", textDecoration: "none",
               width: "100%", padding: "9px", borderRadius: 8,
-              background: "transparent", border: `1.5px solid ${planoColor[mockUser.plano]}40`,
-              color: planoColor[mockUser.plano], fontFamily: V.db, fontSize: 12, fontWeight: 600, cursor: "pointer",
+              background: "transparent", border: `1.5px solid ${planoColor[displayPlano]}40`,
+              color: planoColor[displayPlano], fontFamily: V.db, fontSize: 12, fontWeight: 600, cursor: "pointer",
             }}>
               Gerenciar assinatura
-            </button>
+            </a>
           </Card>
 
           {/* ── Conta ── */}
@@ -238,13 +304,6 @@ export default function PerfilPage() {
               Conta
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              <button style={{
-                width: "100%", padding: "10px", borderRadius: 8,
-                background: "transparent", border: "1.5px solid rgba(61,90,128,0.3)",
-                color: V.ch, fontFamily: V.db, fontSize: 12, fontWeight: 600, cursor: "pointer",
-              }}>
-                Exportar meus dados
-              </button>
               <button
                 onClick={handleLogout}
                 disabled={loggingOut}

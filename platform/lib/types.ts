@@ -38,7 +38,12 @@ export type Area =
   | "Reumatologia"
   | "Gastroenterologia";
 
-export type Plano = "diagnostico" | "residente" | "aprovacao";
+export type Plano =
+  | "diagnostico"
+  | "pleno_mensal"
+  | "pleno_anual"
+  | "residente"
+  | "aprovacao";
 
 export type PerformanceStatus = "excelente" | "bom" | "atencao" | "critico";
 

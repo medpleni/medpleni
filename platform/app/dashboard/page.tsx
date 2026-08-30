@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { PageShell } from "@/components/layout";
 import { KPICard, ScoreRing, Card, ProgressBar, HeatmapCell, Badge } from "@/components/ui";
+import { useUser } from "@/lib/supabase/use-user";
 import {
-  mockUser,
-  mockKPIs,
-  mockProgress,
+  calculateEnamedPrediction,
+  type EnamedPredictionData,
+} from "@/lib/supabase/prediction";
+import {
   mockHeatmap,
   mockScoreEvolution,
   mockRecommendations,
@@ -28,12 +30,9 @@ const statusColor = (s: string) =>
 const statusVariant = (s: string) =>
   s === "excelente" ? "green" : s === "bom" ? "blue" : s === "atencao" ? "warn" : "danger";
 
-const progressVariant = (pct: number) =>
-  pct >= 80 ? "green" : pct >= 65 ? "blue" : pct >= 50 ? "warn" : "danger";
-
 const hmDays = ["SEG", "TER", "QUA", "QUI", "SEX", "SÁB", "DOM"];
 
-/* ── KPI Icons (from medpleni-part3-dashboard.html) ── */
+/* ── KPI Icons ── */
 function IcPred() {
   return (
     <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
@@ -65,7 +64,6 @@ function IcStreak() {
   );
 }
 
-/* ── Chart tooltip ── */
 function ChartTooltip({ active, payload, label }: any) {
   if (!active || !payload?.[0]) return null;
   return (
@@ -84,16 +82,29 @@ function ChartTooltip({ active, payload, label }: any) {
   );
 }
 
-/* ══════════════════════════════════════════════════════════
-   DASHBOARD PAGE
-══════════════════════════════════════════════════════════ */
 export default function DashboardPage() {
+  const { user, profile } = useUser();
   const [activeNav, setActiveNav] = useState("dashboard");
+  const [data, setData] = useState<EnamedPredictionData | null>(null);
+
+  const loadData = useCallback(async () => {
+    const pred = await calculateEnamedPrediction(user?.id);
+    setData(pred);
+  }, [user]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  const scoreGeral = data?.scoreGeralEnamed || 84.5;
+  const streak = profile?.streak_days ?? (data?.streakDias || 14);
+  const questoesResolvidas = data?.totalQuestoesResolvidas || 142;
+  const taxaAcerto = data?.taxaAcertoGeral || 78;
 
   return (
     <PageShell
       title="Meu Dashboard"
-      badgeText={`RESID · ${mockUser.provaAlvo[1]} 2026`}
+      badgeText="ENAMED · 2027"
       activeNavId={activeNav}
       onNavigate={setActiveNav}
     >
@@ -102,33 +113,33 @@ export default function DashboardPage() {
         <KPICard
           icon={<IcPred />}
           iconBg="rgba(0,194,168,0.1)"
-          label="Predição de aprovação"
-          value={<>{mockKPIs.predicaoAprovacao}<span style={{ fontSize: "16px", color: "#00C2A8" }}>%</span></>}
-          delta="↑ 3.1%"
+          label="Predição ENAMED 2027"
+          value={<>{scoreGeral}<span style={{ fontSize: "16px", color: "#00C2A8" }}>%</span></>}
+          delta="↑ Meta 78%"
           deltaDirection="up"
         />
         <KPICard
           icon={<IcSim />}
           iconBg="rgba(0,119,182,0.1)"
-          label="Simulados realizados"
-          value={mockKPIs.simuladosRealizados}
-          delta="↑ 8"
+          label="Questões resolvidas"
+          value={questoesResolvidas}
+          delta={`${taxaAcerto}% acerto`}
           deltaDirection="up"
         />
         <KPICard
           icon={<IcRank />}
           iconBg="rgba(107,92,231,0.1)"
-          label="Ranking nacional"
-          value={`#${mockKPIs.rankingNacional}`}
-          delta="↑ 12"
+          label="Ranking projetado"
+          value={`#${data?.rankingEstimado || 147}`}
+          delta="Top 8%"
           deltaDirection="up"
         />
         <KPICard
           icon={<IcStreak />}
           iconBg="rgba(245,166,35,0.1)"
-          label="Streak de dias"
-          value={mockKPIs.streakDias}
-          delta="🔥 14d"
+          label="Streak de estudo"
+          value={streak}
+          delta="🔥 dias seguidos"
           deltaDirection="up"
         />
       </div>
@@ -138,237 +149,174 @@ export default function DashboardPage() {
         {/* ── LEFT COLUMN ── */}
         <div className="col-left">
 
-          {/* Score de Predição */}
+          {/* 1. Predição de Aprovação */}
           <Card hoverable={false}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
-              <span style={{ fontFamily: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif", fontSize: "14px", fontWeight: 600, color: "#fff" }}>
-                Score de Predição de Aprovação
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+              <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "14px", color: "#fff" }}>
+                Índice de Prontidão — ENAMED 2027
               </span>
-              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "9px", letterSpacing: "0.1em", color: "var(--chumbo)", textTransform: "uppercase" }}>
-                HSP São Paulo · R1 Clínica Médica
+              <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "9px", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--chumbo)" }}>
+                Matriz de Competências DCN
               </span>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-              <ScoreRing score={mockKPIs.predicaoAprovacao} size={130} sublabel="aprovação" />
+
+            <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
+              <ScoreRing score={scoreGeral} size={130} />
               <div style={{ flex: 1 }}>
-                <div style={{ fontFamily: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif", fontSize: "32px", fontWeight: 700, color: "#fff", letterSpacing: "-0.02em", lineHeight: 1 }}>
-                  Excelente
+                <div style={{ fontFamily: "var(--font-display)", fontSize: "18px", fontWeight: 700, color: "#fff", marginBottom: "4px" }}>
+                  {scoreGeral >= 78 ? "Prontidão Elevada ✓" : "Em Evolução"}
                 </div>
-                <div style={{ fontSize: "12px", color: "var(--chumbo)", marginTop: "4px", lineHeight: 1.5 }}>
-                  Você está no <strong style={{ color: "#fff" }}>top 8%</strong> dos candidatos ao HSP 2026.<br />
-                  Acerto geral: <strong style={{ color: "#fff" }}>81.4%</strong> · Meta: 78%
+                <div style={{ fontSize: "12px", color: "var(--chumbo)", lineHeight: "1.5", marginBottom: "12px" }}>
+                  Sua pontuação ponderada nas 5 grandes áreas atinge a meta histórica de aprovação para o ENAMED.
                 </div>
-                <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginTop: "10px" }}>
-                  <Badge variant="green">Psiquiatria ✓</Badge>
-                  <Badge variant="green">Clínica Méd. ✓</Badge>
-                  <Badge variant="warn">Pediatria ~</Badge>
-                  <Badge variant="danger">GO atenção</Badge>
-                </div>
-                <div style={{ marginTop: "12px", fontSize: "11px", color: "var(--chumbo)" }}>
-                  Atualizado há 2h · baseado em 63 simulados · 3.840 questões respondidas
+                <div style={{ display: "flex", gap: "6px" }}>
+                  <Badge variant="green">Meta 78% ✓</Badge>
+                  <Badge variant="blue">DCNs Alinhadas</Badge>
                 </div>
               </div>
             </div>
           </Card>
 
-          {/* Heatmap de Lacunas */}
+          {/* 2. Desempenho por Grande Área do ENAMED */}
           <Card hoverable={false}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
-              <span style={{ fontFamily: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif", fontSize: "14px", fontWeight: 600, color: "#fff" }}>
-                Heatmap de Lacunas por Área
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+              <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "14px", color: "#fff" }}>
+                Desempenho por Grande Área (ENAMED)
               </span>
-              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "9px", letterSpacing: "0.1em", color: "var(--chumbo)", textTransform: "uppercase" }}>
-                Últimas 4 semanas
+              <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "9px", color: "var(--chumbo)", textTransform: "uppercase" }}>
+                5 Grandes Eixos
               </span>
             </div>
-            {/* Day labels */}
-            <div style={{ display: "grid", gridTemplateColumns: "80px repeat(7, 1fr)", marginBottom: "4px" }}>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              {(data?.competencias || []).map((comp) => (
+                <div key={comp.area}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+                    <span style={{ fontSize: "12px", color: "var(--neblina)", fontWeight: 500 }}>
+                      {comp.area} <span style={{ fontSize: "10px", color: "var(--chumbo)" }}>(Peso {comp.pesoEnamed}%)</span>
+                    </span>
+                    <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "11px", color: statusColor(comp.status) }}>
+                      {comp.score}%
+                    </span>
+                  </div>
+                  <ProgressBar
+                    value={comp.score}
+                    variant={comp.status === "excelente" ? "green" : comp.status === "bom" ? "blue" : comp.status === "atencao" ? "warn" : "danger"}
+                  />
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* 3. Heatmap de Atividade Semanal */}
+          <Card hoverable={false}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+              <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "14px", color: "#fff" }}>
+                Heatmap de Atividade
+              </span>
+              <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "9px", color: "var(--chumbo)", textTransform: "uppercase" }}>
+                Últimos 7 dias
+              </span>
+            </div>
+
+            {/* Cabeçalho dos dias */}
+            <div style={{ display: "grid", gridTemplateColumns: "80px repeat(7, 1fr)", gap: "4px", marginBottom: "6px" }}>
               <div />
-              {hmDays.map(d => (
-                <div key={d} style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "8px", letterSpacing: "0.08em", color: "rgba(138,154,181,0.5)", textAlign: "center", textTransform: "uppercase" }}>
+              {hmDays.map((d) => (
+                <div key={d} style={{ fontFamily: "'IBM Plex Mono'", fontSize: "8px", color: "var(--chumbo)", textAlign: "center", letterSpacing: "0.08em" }}>
                   {d}
                 </div>
               ))}
             </div>
-            {/* Rows */}
-            {mockHeatmap.map((row, ri) => (
-              <div key={ri} style={{ display: "grid", gridTemplateColumns: "80px repeat(7, 1fr)", gap: "3px", marginBottom: "3px", alignItems: "center" }}>
-                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "9px", letterSpacing: "0.04em", color: "var(--chumbo)", paddingRight: "8px", textAlign: "right", whiteSpace: "nowrap" }}>
-                  {row.area}
-                </div>
-                {row.dias.map((h, ci) => (
-                  <HeatmapCell key={ci} intensity={h as 0|1|2|3|4|5} tooltip={`${row.area} — ${hmDays[ci]}`} delay={ri * 7 + ci} />
-                ))}
-              </div>
-            ))}
-            {/* Legend */}
-            <div style={{ display: "flex", gap: "8px", alignItems: "center", marginTop: "14px", paddingTop: "12px", borderTop: "1px solid rgba(61,90,128,0.15)" }}>
-              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "9px", color: "var(--chumbo)" }}>Menos</span>
-              {([0,1,2,3,4,5] as const).map(i => (
-                <HeatmapCell key={i} intensity={i} style={{ width: "16px", height: "10px", aspectRatio: "unset", minWidth: "unset" }} />
-              ))}
-              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "9px", color: "var(--chumbo)" }}>Mais</span>
-              <span style={{ marginLeft: "auto", fontSize: "11px", color: "var(--chumbo)" }}>
-                ⚠ GO e Pediatria precisam de atenção esta semana
-              </span>
-            </div>
-          </Card>
 
-          {/* Evolução do Score — Recharts */}
-          <Card hoverable={false}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
-              <span style={{ fontFamily: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif", fontSize: "14px", fontWeight: 600, color: "#fff" }}>
-                Evolução do Score de Predição
-              </span>
-              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "9px", letterSpacing: "0.1em", color: "var(--chumbo)", textTransform: "uppercase" }}>
-                Últimos 8 simulados
-              </span>
+            {/* Linhas do heatmap */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              {mockHeatmap.map((row) => (
+                <div key={row.area} style={{ display: "grid", gridTemplateColumns: "80px repeat(7, 1fr)", gap: "4px", alignItems: "center" }}>
+                  <span style={{ fontSize: "11px", color: "var(--neblina)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {row.area}
+                  </span>
+                  {row.dias.map((intensity, i) => (
+                    <HeatmapCell key={i} intensity={intensity as any} />
+                  ))}
+                </div>
+              ))}
             </div>
-            <ResponsiveContainer width="100%" height={160}>
-              <AreaChart data={mockScoreEvolution} margin={{ top: 10, right: 10, left: -20, bottom: 5 }}>
-                <defs>
-                  <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#00C2A8" stopOpacity={0.18} />
-                    <stop offset="100%" stopColor="#00C2A8" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <XAxis
-                  dataKey="simulado"
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fontFamily: "'IBM Plex Mono'", fontSize: 8, fill: "#8A9AB5" }}
-                />
-                <YAxis
-                  domain={[60, 100]}
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fontFamily: "'IBM Plex Mono'", fontSize: 8, fill: "#8A9AB5" }}
-                  tickFormatter={(v: number) => `${v}%`}
-                />
-                <RTooltip content={<ChartTooltip />} />
-                <Area
-                  type="monotone"
-                  dataKey="score"
-                  stroke="#00C2A8"
-                  strokeWidth={2}
-                  fill="url(#chartGrad)"
-                  dot={{ r: 3.5, fill: "#00C2A8", stroke: "none" }}
-                  activeDot={{ r: 5, fill: "#00C2A8", stroke: "#0D111C", strokeWidth: 2 }}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
           </Card>
         </div>
 
-        {/* ── RIGHT COLUMN (300px) ── */}
+        {/* ── RIGHT COLUMN ── */}
         <div className="col-right">
 
-          {/* Desempenho por área */}
+          {/* 4. Recomendações da IA */}
           <Card hoverable={false}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
-              <span style={{ fontFamily: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif", fontSize: "14px", fontWeight: 600, color: "#fff" }}>Por área</span>
-              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "9px", letterSpacing: "0.1em", color: "var(--chumbo)", textTransform: "uppercase" }}>Acerto %</span>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+              <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "14px", color: "#fff" }}>
+                Recomendações da IA
+              </span>
+              <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "9px", color: "var(--chumbo)", textTransform: "uppercase" }}>
+                Prioridade ENAMED
+              </span>
             </div>
+
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-              {mockProgress.map((p) => (
-                <div key={p.area}>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", marginBottom: "4px" }}>
-                    <span style={{ color: "var(--neblina)" }}>{p.area}</span>
-                    <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "11px", color: statusColor(p.status) }}>
-                      {p.percentualAcerto}%
+              {(data?.alertasEnamed || []).map((rec, i) => (
+                <div
+                  key={i}
+                  style={{
+                    padding: "10px 12px",
+                    background: "rgba(43,58,82,0.3)",
+                    border: "1px solid rgba(61,90,128,0.2)",
+                    borderRadius: "8px",
+                    borderLeft: `3px solid ${rec.pct < 60 ? "#FF6B6B" : "#00C2A8"}`,
+                  }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+                    <span style={{ fontSize: "12px", fontWeight: 600, color: "#fff" }}>{rec.area}</span>
+                    <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "10px", color: "#00C2A8" }}>
+                      {rec.pct}%
                     </span>
                   </div>
-                  <ProgressBar value={p.percentualAcerto} variant={progressVariant(p.percentualAcerto) as any} />
+                  <div style={{ fontSize: "11px", color: "var(--chumbo)", lineHeight: "1.4", marginBottom: "6px" }}>
+                    {rec.desc}
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#00C2A8", background: "rgba(0,194,168,0.06)", padding: "4px 6px", borderRadius: "4px" }}>
+                    🎯 {rec.rec}
+                  </div>
                 </div>
               ))}
             </div>
           </Card>
 
-          {/* Recomendações IA */}
-          <Card hoverable={false}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
-              <span style={{ fontFamily: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif", fontSize: "14px", fontWeight: 600, color: "#fff" }}>Recomendações IA</span>
-              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "9px", letterSpacing: "0.1em", color: "var(--chumbo)", textTransform: "uppercase" }}>Prioridade alta</span>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-              {mockRecommendations.slice(0, 3).map((r) => (
-                <div key={r.rank} style={{
-                  display: "flex",
-                  gap: "12px",
-                  alignItems: "flex-start",
-                  padding: "12px",
-                  background: "rgba(26,31,46,0.6)",
-                  border: "1px solid rgba(61,90,128,0.2)",
-                  borderRadius: "10px",
-                }}>
-                  <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "10px", letterSpacing: "0.1em", color: "var(--pulso)", minWidth: "20px", paddingTop: "1px" }}>
-                    {String(r.rank).padStart(2, "0")}
-                  </div>
-                  <div>
-                    <div style={{ fontSize: "12px", fontWeight: 600, color: "#fff", marginBottom: "3px" }}>{r.titulo}</div>
-                    <div style={{ fontSize: "11px", color: "var(--chumbo)", lineHeight: 1.5 }}>{r.descricao}</div>
-                    <div style={{ display: "flex", gap: "6px", marginTop: "6px" }}>
-                      <Badge variant={statusVariant(r.status) as any}>
-                        {r.status === "critico" ? "Crítico" : r.status === "atencao" ? "Moderado" : "Preventivo"}
-                      </Badge>
-                      <span style={{
-                        fontFamily: "'IBM Plex Mono', monospace",
-                        fontSize: "9px",
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        padding: "2px 7px",
-                        borderRadius: "9999px",
-                        background: "rgba(61,90,128,0.15)",
-                        color: "var(--chumbo)",
-                      }}>
-                        {r.totalQuestoes} questões
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <button style={{
-              marginTop: "12px",
-              width: "100%",
-              padding: "9px",
-              background: "rgba(0,194,168,0.08)",
-              border: "1.5px solid rgba(0,194,168,0.2)",
-              borderRadius: "8px",
-              fontFamily: "'Inter', sans-serif",
-              fontSize: "12px",
-              fontWeight: 600,
-              color: "#00C2A8",
-              cursor: "pointer",
-            }}>
-              Iniciar simulado focado →
-            </button>
-          </Card>
-
-          {/* Próxima prova */}
+          {/* 5. Próximo Simulado Recomendado */}
           <Card hoverable={false} style={{
-            background: "linear-gradient(135deg, rgba(0,119,182,0.08) 0%, rgba(0,194,168,0.04) 100%)",
-            borderColor: "rgba(0,119,182,0.2)",
+            background: "linear-gradient(135deg, rgba(0,194,168,0.06) 0%, var(--petroleo) 100%)",
+            borderColor: "rgba(0,194,168,0.3)",
           }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
-              <span style={{ fontFamily: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif", fontSize: "14px", fontWeight: 600, color: "#64B5E8" }}>
-                RESID · USP 2026
-              </span>
-              <Badge variant="green">Meta atingida</Badge>
+            <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "14px", color: "#fff", marginBottom: "8px" }}>
+              Próxima Ação Recomendada
             </div>
-            <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-              <div style={{ textAlign: "center" }}>
-                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "32px", color: "#fff", lineHeight: 1 }}>47</div>
-                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: "9px", letterSpacing: "0.1em", color: "var(--chumbo)", textTransform: "uppercase", marginTop: "2px" }}>dias</div>
-              </div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: "12px", color: "var(--chumbo)" }}>Prova em 47 dias · 23 Mar 2026</div>
-                <div style={{ height: "4px", background: "rgba(61,90,128,0.2)", borderRadius: "9999px", margin: "8px 0", overflow: "hidden" }}>
-                  <div style={{ width: "74%", height: "100%", background: "#64B5E8", borderRadius: "9999px" }} />
-                </div>
-                <div style={{ fontSize: "11px", color: "var(--chumbo)" }}>74% do plano de estudos concluído</div>
-              </div>
+            <div style={{ fontSize: "12px", color: "var(--neblina)", lineHeight: "1.5", marginBottom: "14px" }}>
+              Realizar o <strong>Simulado ENAMED — Saúde Coletiva e DCNs</strong> para consolidar seu índice de prontidão.
             </div>
+            <a
+              href="/simulados"
+              style={{
+                display: "block",
+                textAlign: "center",
+                textDecoration: "none",
+                padding: "9px 0",
+                background: "#00C2A8",
+                color: "#0A1A18",
+                borderRadius: "8px",
+                fontFamily: "var(--font-body)",
+                fontSize: "12px",
+                fontWeight: 600,
+                boxShadow: "0 2px 10px rgba(0,194,168,0.25)",
+              }}
+            >
+              Iniciar Simulado do ENAMED →
+            </a>
           </Card>
         </div>
       </div>

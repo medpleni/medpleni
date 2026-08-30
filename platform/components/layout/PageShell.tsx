@@ -64,7 +64,7 @@ const defaultSections = [
 export default function PageShell({
   children,
   title = "Meu Dashboard",
-  badgeText = "RESID · HSP 2026",
+  badgeText = "ENAMED · 2027",
   activeNavId = "dashboard",
   onNavigate,
 }: PageShellProps) {
