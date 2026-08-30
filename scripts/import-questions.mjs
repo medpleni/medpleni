@@ -36,18 +36,17 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, {
 });
 
 // ── Carrega o JSON ──────────────────────────────────────────────────────────
-const BATCH_FILE = path.resolve(
-  "/Users/katiacili/Downloads/MedPleni-Fontes/banco-questoes/questions_batch_enamed2025_2026-08-30.json"
-);
+const defaultPath = "/Users/katiacili/Downloads/MedPleni-Fontes/banco-questoes/questions_batch_revalida_enare_2026-08-30.json";
+const targetFile = process.argv[2] ? path.resolve(process.argv[2]) : defaultPath;
 
-const raw = JSON.parse(readFileSync(BATCH_FILE, "utf-8"));
+const raw = JSON.parse(readFileSync(targetFile, "utf-8"));
 const { batch_metadata, questions } = raw;
 
 console.log("\n══════════════════════════════════════════════════════");
 console.log("  MedPleni · Importador de Questões → Supabase");
 console.log("══════════════════════════════════════════════════════");
-console.log(`📦  Lote: ${batch_metadata.source_name}`);
-console.log(`📅  Coletado em: ${batch_metadata.collection_date}`);
+console.log(`📦  Lote/Arquivo: ${batch_metadata?.source_name ?? batch_metadata?.descricao ?? targetFile}`);
+console.log(`📅  Data: ${batch_metadata?.collection_date ?? "Hoje"}`);
 console.log(`📊  Total no JSON: ${questions.length} questões`);
 console.log();
 
