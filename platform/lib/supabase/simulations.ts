@@ -79,7 +79,7 @@ export async function fetchSimulations(userId?: string): Promise<Simulado[]> {
 }
 
 /**
- * Busca detalhes de um simulado específico e suas questões
+ * Busca detalhes de um simulado específico e suas questões reais do banco
  */
 export async function fetchSimulationDetails(
   simulationId: string,
@@ -89,12 +89,30 @@ export async function fetchSimulationDetails(
     const sims = await fetchSimulations(userId);
     const sim = sims.find((s) => s.id === simulationId) || sims[0] || mockSimulados[0];
 
-    // Busca questões da área / instituição
+    let filterInst: string | undefined = undefined;
+    let filterArea: string | undefined = undefined;
+
+    if (sim.instituicao === "ENAMED") {
+      filterInst = "ENAMED";
+    } else if (sim.instituicao === "REVALIDA") {
+      filterInst = "REVALIDA";
+    } else if (sim.instituicao === "ENARE") {
+      filterInst = "ENARE";
+    } else if (sim.instituicao === "TEMÁTICO") {
+      filterArea = sim.area as string;
+    }
+
+    // Busca as questões reais no Supabase
     let qs = await fetchQuestions({
-      institution: sim.instituicao !== "ENARE" && sim.instituicao !== "USP" ? undefined : sim.instituicao,
-      area: sim.area === "Clínica Médica" || sim.area === "Cirurgia Geral" ? sim.area : undefined,
-      limit: 15,
+      institution: filterInst,
+      area: filterArea,
+      limit: sim.totalQuestoes || 50,
     });
+
+    if (qs.length === 0) {
+      // Fallback para qualquer questão do banco
+      qs = await fetchQuestions({ limit: sim.totalQuestoes || 50 });
+    }
 
     if (qs.length === 0) {
       qs = mockQuestions;
@@ -128,9 +146,12 @@ export async function finishSimulation(params: {
   let lowConfCorrect = 0;
 
   const cutoffScores: Record<string, number> = {
+    ENAMED: 78,
+    REVALIDA: 75,
+    ENARE: 80,
+    TEMÁTICO: 78,
     USP: 82,
     UNIFESP: 80,
-    ENARE: 78,
     UERJ: 76,
     FMABC: 76,
   };

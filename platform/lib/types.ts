@@ -20,7 +20,8 @@ export type ProvAlvo =
   | "HC-UFMG"
   | "ENARE"
   | "REVALIDA"
-  | "ENAMED";
+  | "ENAMED"
+  | "TEMÁTICO";
 
 export type Area =
   | "Clínica Médica"

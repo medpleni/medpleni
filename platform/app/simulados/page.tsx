@@ -22,8 +22,13 @@ const V = {
 };
 
 const instColor: Record<string, string> = {
-  USP: V.re, UNIFESP: V.ind, ENARE: V.pu, UERJ: V.wn,
-  FMABC: V.am, ENAMED: V.re, REVALIDA: V.ind,
+  ENAMED: V.pu,
+  REVALIDA: V.re,
+  ENARE: V.ind,
+  TEMÁTICO: V.wn,
+  USP: V.re,
+  UNIFESP: V.ind,
+  UERJ: V.wn,
 };
 
 const statusLabel: Record<string, string> = {
@@ -38,7 +43,7 @@ const statusVariant: Record<string, string> = {
   concluido: "green",
 };
 
-const filterOpts = ["Todos", "USP", "UNIFESP", "ENARE", "UERJ"];
+const filterOpts = ["Todos", "ENAMED", "REVALIDA", "ENARE", "TEMÁTICO"];
 const statusOpts = ["Todos", "Não iniciado", "Em andamento", "Concluído"];
 
 const fmtDuration = (m: number) => {
