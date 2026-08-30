@@ -25,19 +25,40 @@ const V = {
   db: "var(--font-body), 'Inter', sans-serif",
 };
 
-const instituicoes = ["Todas", "ENAMED", "USP", "UNIFESP", "ENARE", "UERJ", "FMABC"];
-const areas = ["Todas", "Clínica Médica", "Cirurgia Geral", "Saúde Coletiva", "Pediatria", "GO"];
+const instituicoes = ["Todas", "ENAMED", "ENARE", "REVALIDA", "USP", "UNIFESP", "UERJ", "AMRIGS"];
+const areas = [
+  "Todas",
+  "Clínica Médica",
+  "Medicina de Família e Comunidade",
+  "Cirurgia Geral",
+  "Ginecologia e Obstetrícia",
+  "Pediatria",
+  "Saúde Coletiva",
+  "Saúde Mental",
+];
 const dificuldades = ["Todas", "Fácil", "Média", "Alta", "Muito Alta"];
 
 const difMap: Record<string, string> = { facil: "Fácil", media: "Média", alta: "Alta", "muito-alta": "Muito Alta" };
 const difDots = (d: string) => d === "facil" ? 1 : d === "media" ? 2 : d === "alta" ? 3 : 4;
 const areaAbbr: Record<string, string> = {
-  "Clínica Médica": "CM", "Cirurgia Geral": "CG", "Saúde Coletiva": "SC",
-  "Pediatria": "Ped", "Ginecologia e Obstetrícia": "GO", "Psiquiatria": "Psiq",
+  "Clínica Médica": "CM",
+  "Cirurgia Geral": "CG",
+  "Saúde Coletiva": "SC",
+  "Pediatria": "Ped",
+  "Ginecologia e Obstetrícia": "GO",
+  "Medicina de Família e Comunidade": "MFC",
+  "Saúde Mental": "SM",
+  "Psiquiatria": "Psiq",
 };
 const areaColor: Record<string, string> = {
-  "Clínica Médica": V.pu, "Cirurgia Geral": V.re, "Saúde Coletiva": V.ind,
-  "Pediatria": V.wn, "Ginecologia e Obstetrícia": V.dg, "Psiquiatria": "#A99EF5",
+  "Clínica Médica": V.pu,
+  "Cirurgia Geral": V.re,
+  "Saúde Coletiva": V.ind,
+  "Pediatria": V.wn,
+  "Ginecologia e Obstetrícia": V.dg,
+  "Medicina de Família e Comunidade": "#00B4D8",
+  "Saúde Mental": "#A99EF5",
+  "Psiquiatria": "#A99EF5",
 };
 
 export default function QuestoesPage() {

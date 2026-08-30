@@ -28,6 +28,8 @@ export type Area =
   | "Saúde Coletiva"
   | "Pediatria"
   | "Ginecologia e Obstetrícia"
+  | "Medicina de Família e Comunidade"
+  | "Saúde Mental"
   | "Psiquiatria"
   | "Urgência e Emergência"
   | "Cardiologia"

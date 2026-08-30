@@ -41,22 +41,28 @@ export interface EnamedPredictionData {
  * Calcula o Índice de Prontidão e a Predição Oficial para o ENAMED 2027
  */
 export async function calculateEnamedPrediction(userId?: string): Promise<EnamedPredictionData> {
+  // Pesos calibrados pela distribuição real do ENAMED 2025 (Portaria INEP 478/2025)
+  // Fonte: classificação das 90 questões válidas do lote piloto
   const pesos: Record<Area, number> = {
-    "Clínica Médica": 0.25,
-    "Cirurgia Geral": 0.20,
-    "Saúde Coletiva": 0.20, // Forte peso no ENAMED / DCNs
-    "Pediatria": 0.175,
-    "Ginecologia e Obstetrícia": 0.175,
-    "Psiquiatria": 0.05,
-    "Urgência e Emergência": 0.05,
-    "Cardiologia": 0.05,
-    "Neurologia": 0.05,
-    "Pneumologia": 0.05,
-    "Infectologia": 0.05,
-    "Endocrinologia": 0.05,
-    "Reumatologia": 0.05,
-    "Gastroenterologia": 0.05,
+    "Clínica Médica": 0.233,          // 23.3% real (ENAMED 2025)
+    "Ginecologia e Obstetrícia": 0.167, // 16.7%
+    "Pediatria": 0.156,               // 15.6%
+    "Medicina de Família e Comunidade": 0.144, // 14.4% — vale mais que Cirurgia!
+    "Cirurgia Geral": 0.122,          // 12.2% (não 20% como estimado antes)
+    "Saúde Coletiva": 0.100,          // 10.0%
+    "Saúde Mental": 0.078,            // 7.8%
+    // Subareas detalhadas (peso residual para compatibilidade de tipos)
+    "Psiquiatria": 0.01,
+    "Urgência e Emergência": 0.01,
+    "Cardiologia": 0.01,
+    "Neurologia": 0.01,
+    "Pneumologia": 0.01,
+    "Infectologia": 0.01,
+    "Endocrinologia": 0.01,
+    "Reumatologia": 0.01,
+    "Gastroenterologia": 0.01,
   };
+
 
   const metas: Record<string, number> = {
     "Clínica Médica": 80,
