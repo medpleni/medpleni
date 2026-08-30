@@ -2,14 +2,13 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { PageShell } from "@/components/layout";
-import { KPICard, ScoreRing, Card, ProgressBar, HeatmapCell, Badge } from "@/components/ui";
+import { KPICard, ScoreRing, Card, ProgressBar, Badge } from "@/components/ui";
 import { useUser } from "@/lib/supabase/use-user";
 import {
   calculateEnamedPrediction,
   type EnamedPredictionData,
 } from "@/lib/supabase/prediction";
 import {
-  mockHeatmap,
   mockScoreEvolution,
   mockRecommendations,
   mockSimulados,
@@ -30,7 +29,7 @@ const statusColor = (s: string) =>
 const statusVariant = (s: string) =>
   s === "excelente" ? "green" : s === "bom" ? "blue" : s === "atencao" ? "warn" : "danger";
 
-const hmDays = ["SEG", "TER", "QUA", "QUI", "SEX", "SÁB", "DOM"];
+
 
 /* ── KPI Icons ── */
 function IcPred() {
@@ -208,37 +207,72 @@ export default function DashboardPage() {
             </div>
           </Card>
 
-          {/* 3. Heatmap de Atividade Semanal */}
+          {/* 3. Atividade da Semana */}
           <Card hoverable={false}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
               <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "14px", color: "#fff" }}>
-                Heatmap de Atividade
+                Atividade da Semana
               </span>
               <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "9px", color: "var(--chumbo)", textTransform: "uppercase" }}>
                 Últimos 7 dias
               </span>
             </div>
 
-            {/* Cabeçalho dos dias */}
-            <div style={{ display: "grid", gridTemplateColumns: "80px repeat(7, 1fr)", gap: "4px", marginBottom: "6px" }}>
-              <div />
-              {hmDays.map((d) => (
-                <div key={d} style={{ fontFamily: "'IBM Plex Mono'", fontSize: "8px", color: "var(--chumbo)", textAlign: "center", letterSpacing: "0.08em" }}>
-                  {d}
+            {/* Pills de dias da semana */}
+            <div style={{ display: "flex", gap: "6px", marginBottom: "16px" }}>
+              {[
+                { d: "S", active: true, today: false },
+                { d: "T", active: true, today: false },
+                { d: "Q", active: true, today: false },
+                { d: "Q", active: false, today: false },
+                { d: "S", active: true, today: false },
+                { d: "S", active: false, today: false },
+                { d: "D", active: false, today: true },
+              ].map((item, i) => (
+                <div key={i} style={{
+                  flex: 1, aspectRatio: "1 / 1", borderRadius: "8px",
+                  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+                  background: item.today
+                    ? "rgba(0,194,168,0.15)"
+                    : item.active
+                    ? "rgba(0,194,168,0.08)"
+                    : "rgba(43,58,82,0.25)",
+                  border: `1px solid ${item.today ? "rgba(0,194,168,0.5)" : item.active ? "rgba(0,194,168,0.2)" : "rgba(61,90,128,0.2)"}`,
+                }}>
+                  <span style={{
+                    fontFamily: "'IBM Plex Mono'", fontSize: "9px",
+                    color: item.active || item.today ? "#00C2A8" : "var(--chumbo)",
+                    fontWeight: item.today ? 700 : 400,
+                  }}>
+                    {item.d}
+                  </span>
+                  <span style={{ fontSize: "14px", marginTop: "1px" }}>
+                    {item.active || item.today ? "●" : "·"}
+                  </span>
                 </div>
               ))}
             </div>
 
-            {/* Linhas do heatmap */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-              {mockHeatmap.map((row) => (
-                <div key={row.area} style={{ display: "grid", gridTemplateColumns: "80px repeat(7, 1fr)", gap: "4px", alignItems: "center" }}>
-                  <span style={{ fontSize: "11px", color: "var(--neblina)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {row.area}
-                  </span>
-                  {row.dias.map((intensity, i) => (
-                    <HeatmapCell key={i} intensity={intensity as any} />
-                  ))}
+            {/* Métricas rápidas da semana */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px" }}>
+              {[
+                { label: "Questões", value: "48", icon: "❓", color: "#64B5E8" },
+                { label: "Flashcards", value: "120", icon: "🔁", color: "#00C2A8" },
+                { label: "Simulados", value: "2", icon: "⏱️", color: "#A99EF5" },
+              ].map((m) => (
+                <div key={m.label} style={{
+                  background: "rgba(43,58,82,0.3)", borderRadius: "8px",
+                  border: "1px solid rgba(61,90,128,0.2)",
+                  padding: "10px 10px 8px",
+                  textAlign: "center",
+                }}>
+                  <div style={{ fontSize: "16px", marginBottom: "4px" }}>{m.icon}</div>
+                  <div style={{ fontFamily: "'IBM Plex Mono'", fontSize: "15px", fontWeight: 700, color: m.color, lineHeight: 1 }}>
+                    {m.value}
+                  </div>
+                  <div style={{ fontSize: "9px", color: "var(--chumbo)", marginTop: "4px", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+                    {m.label}
+                  </div>
                 </div>
               ))}
             </div>
