@@ -207,17 +207,19 @@ export default function SimuladosHubPage() {
         <div
           onClick={() => setActiveTab("reais")}
           style={{
-            background: activeTab === "reais" ? "var(--pulso-dim)" : "var(--card-bg)",
-            border: `1.5px solid ${activeTab === "reais" ? V.pu : "var(--card-border)"}`,
+            background: activeTab === "reais" ? "linear-gradient(135deg, rgba(0,194,168,0.18) 0%, var(--card-bg) 100%)" : "var(--card-bg)",
+            border: activeTab === "reais" ? `2px solid ${V.pu}` : "1px solid var(--card-border)",
             borderRadius: 14, padding: "20px", cursor: "pointer",
             transition: "all 0.2s ease", display: "flex", flexDirection: "column", justifyContent: "space-between",
-            boxShadow: activeTab === "reais" ? "0 8px 24px rgba(0,194,168,0.2)" : "var(--card-shadow)",
+            boxShadow: activeTab === "reais" ? "0 8px 24px rgba(0,194,168,0.25)" : "var(--card-shadow)",
+            transform: activeTab === "reais" ? "translateY(-2px)" : "none",
           }}
         >
           <div>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
               <div style={{
-                width: 44, height: 44, borderRadius: 10, background: "rgba(0,194,168,0.12)",
+                width: 44, height: 44, borderRadius: 10,
+                background: activeTab === "reais" ? "rgba(0,194,168,0.25)" : "rgba(0,194,168,0.12)",
                 display: "flex", alignItems: "center", justifyContent: "center",
               }}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--pulso)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -228,8 +230,9 @@ export default function SimuladosHubPage() {
                 </svg>
               </div>
               <span style={{
-                fontFamily: V.dm, fontSize: 9, padding: "2px 8px", borderRadius: 4,
+                fontFamily: V.dm, fontSize: 9, padding: "3px 8px", borderRadius: 4,
                 background: "rgba(0,194,168,0.15)", color: V.pu, fontWeight: 700, textTransform: "uppercase",
+                letterSpacing: "0.05em",
               }}>
                 OFICIAIS NA ÍNTEGRA
               </span>
@@ -241,7 +244,7 @@ export default function SimuladosHubPage() {
               Cadernos oficiais do ENAMED, Revalida INEP, ENARE e USP aplicados nos últimos anos com gabarito definitivo.
             </p>
           </div>
-          <div style={{ marginTop: 14, color: V.pu, fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
+          <div style={{ marginTop: 14, color: V.pu, fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
             <span>Acessar Provas Oficiais</span>
             <span>→</span>
           </div>
@@ -251,17 +254,19 @@ export default function SimuladosHubPage() {
         <div
           onClick={() => setActiveTab("predicao")}
           style={{
-            background: activeTab === "predicao" ? "rgba(107,92,231,0.12)" : "var(--card-bg)",
-            border: `1.5px solid ${activeTab === "predicao" ? V.ind : "var(--card-border)"}`,
+            background: activeTab === "predicao" ? "linear-gradient(135deg, rgba(107,92,231,0.22) 0%, var(--card-bg) 100%)" : "var(--card-bg)",
+            border: activeTab === "predicao" ? `2px solid ${V.ind}` : "1px solid var(--card-border)",
             borderRadius: 14, padding: "20px", cursor: "pointer",
             transition: "all 0.2s ease", display: "flex", flexDirection: "column", justifyContent: "space-between",
-            boxShadow: activeTab === "predicao" ? "0 8px 24px rgba(107,92,231,0.2)" : "var(--card-shadow)",
+            boxShadow: activeTab === "predicao" ? "0 8px 24px rgba(107,92,231,0.25)" : "var(--card-shadow)",
+            transform: activeTab === "predicao" ? "translateY(-2px)" : "none",
           }}
         >
           <div>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
               <div style={{
-                width: 44, height: 44, borderRadius: 10, background: "rgba(107,92,231,0.15)",
+                width: 44, height: 44, borderRadius: 10,
+                background: activeTab === "predicao" ? "rgba(107,92,231,0.3)" : "rgba(107,92,231,0.15)",
                 display: "flex", alignItems: "center", justifyContent: "center",
               }}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A29BFE" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -271,8 +276,9 @@ export default function SimuladosHubPage() {
                 </svg>
               </div>
               <span style={{
-                fontFamily: V.dm, fontSize: 9, padding: "2px 8px", borderRadius: 4,
+                fontFamily: V.dm, fontSize: 9, padding: "3px 8px", borderRadius: 4,
                 background: "rgba(107,92,231,0.2)", color: "#A29BFE", fontWeight: 700, textTransform: "uppercase",
+                letterSpacing: "0.05em",
               }}>
                 CALIBRADOS POR IA
               </span>
@@ -284,7 +290,7 @@ export default function SimuladosHubPage() {
               Super Simulados ponderados na matriz exata da Portaria INEP 478/2025 e nos editais FGV/EBSERH 2026/2027.
             </p>
           </div>
-          <div style={{ marginTop: 14, color: "#A29BFE", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
+          <div style={{ marginTop: 14, color: "#A29BFE", fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
             <span>Ver Super Simulados</span>
             <span>→</span>
           </div>
@@ -294,17 +300,19 @@ export default function SimuladosHubPage() {
         <div
           onClick={() => setActiveTab("custom")}
           style={{
-            background: activeTab === "custom" ? "rgba(245,166,35,0.12)" : "var(--card-bg)",
-            border: `1.5px solid ${activeTab === "custom" ? V.wn : "var(--card-border)"}`,
+            background: activeTab === "custom" ? "linear-gradient(135deg, rgba(245,166,35,0.22) 0%, var(--card-bg) 100%)" : "var(--card-bg)",
+            border: activeTab === "custom" ? `2px solid ${V.wn}` : "1px solid var(--card-border)",
             borderRadius: 14, padding: "20px", cursor: "pointer",
             transition: "all 0.2s ease", display: "flex", flexDirection: "column", justifyContent: "space-between",
-            boxShadow: activeTab === "custom" ? "0 8px 24px rgba(245,166,35,0.2)" : "var(--card-shadow)",
+            boxShadow: activeTab === "custom" ? "0 8px 24px rgba(245,166,35,0.25)" : "var(--card-shadow)",
+            transform: activeTab === "custom" ? "translateY(-2px)" : "none",
           }}
         >
           <div>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
               <div style={{
-                width: 44, height: 44, borderRadius: 10, background: "rgba(245,166,35,0.15)",
+                width: 44, height: 44, borderRadius: 10,
+                background: activeTab === "custom" ? "rgba(245,166,35,0.3)" : "rgba(245,166,35,0.15)",
                 display: "flex", alignItems: "center", justifyContent: "center",
               }}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -313,10 +321,11 @@ export default function SimuladosHubPage() {
                 </svg>
               </div>
               <span style={{
-                fontFamily: V.dm, fontSize: 9, padding: "2px 8px", borderRadius: 4,
+                fontFamily: V.dm, fontSize: 9, padding: "3px 8px", borderRadius: 4,
                 background: "rgba(245,166,35,0.15)", color: V.wn, fontWeight: 700, textTransform: "uppercase",
+                letterSpacing: "0.05em",
               }}>
-                CUSTOM BUILDER
+                CRIADOR SOB MEDIDA
               </span>
             </div>
             <h3 style={{ fontFamily: V.df, fontSize: 18, color: "var(--heading-color)", margin: "0 0 6px 0", fontWeight: 700 }}>
@@ -326,7 +335,7 @@ export default function SimuladosHubPage() {
               Escolha grandes áreas, nível de dificuldade, apenas questões erradas e quantidade (20 a 100).
             </p>
           </div>
-          <div style={{ marginTop: 14, color: V.wn, fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
+          <div style={{ marginTop: 14, color: V.wn, fontSize: 12, fontWeight: 700, display: "flex", alignItems: "center", gap: 4 }}>
             <span>Montar Meu Simulado</span>
             <span>→</span>
           </div>
@@ -507,10 +516,11 @@ export default function SimuladosHubPage() {
                       onClick={() => router.push(`/simulado/${s.id}`)}
                       style={{
                         flex: 1, padding: "10px 0", borderRadius: 8,
-                        background: s.status === "concluido" ? "var(--input-bg)" : V.pu,
+                        background: s.status === "concluido" ? "var(--input-bg)" : "linear-gradient(135deg, #00C2A8 0%, #009688 100%)",
                         border: s.status === "concluido" ? "1px solid var(--card-border)" : "none",
-                        color: s.status === "concluido" ? "var(--neblina)" : "#0A1A18",
+                        color: s.status === "concluido" ? "var(--neblina)" : "#FFFFFF",
                         fontWeight: 700, fontSize: 13, cursor: "pointer",
+                        boxShadow: s.status === "concluido" ? "none" : "0 4px 12px rgba(0,194,168,0.25)",
                       }}
                     >
                       {s.status === "concluido" ? "Refazer Prova ➔" : "Iniciar Prova Real ➔"}
@@ -579,9 +589,10 @@ export default function SimuladosHubPage() {
                 onClick={() => router.push(`/simulado/${s.id}`)}
                 style={{
                   width: "100%", padding: "11px 0", borderRadius: 8,
-                  background: `linear-gradient(135deg, ${V.pu}, #009688)`,
-                  border: "none", color: "#0A1A18", fontWeight: 700,
+                  background: `linear-gradient(135deg, #6B5CE7 0%, #009688 100%)`,
+                  border: "none", color: "#FFFFFF", fontWeight: 700,
                   fontSize: 13, cursor: "pointer",
+                  boxShadow: "0 4px 14px rgba(107,92,231,0.3)",
                 }}
               >
                 Iniciar Super Simulado Preditivo ➔
@@ -606,7 +617,7 @@ export default function SimuladosHubPage() {
               </svg>
             </div>
             <h3 style={{ fontFamily: V.df, fontSize: 22, color: "var(--heading-color)", margin: "6px 0 4px 0", fontWeight: 700 }}>
-              Custom Exam Builder
+              Criador de Simulado Personalizado
             </h3>
             <p style={{ color: "var(--chumbo)", fontSize: 13, margin: 0 }}>
               Personalize suas grandes áreas, filtre por questões erradas e treine no seu ritmo.
@@ -763,9 +774,10 @@ export default function SimuladosHubPage() {
               disabled={generatingCustom}
               style={{
                 width: "100%", padding: "12px", borderRadius: 8,
-                background: V.wn, border: "none", color: "#0A1A18",
+                background: "linear-gradient(135deg, #F5A623 0%, #D97706 100%)",
+                border: "none", color: "#FFFFFF",
                 fontWeight: 700, fontSize: 14, cursor: generatingCustom ? "not-allowed" : "pointer",
-                boxShadow: "0 4px 16px rgba(245,166,35,0.3)",
+                boxShadow: "0 4px 16px rgba(245,166,35,0.35)",
               }}
             >
               {generatingCustom ? "Gerando Simulado Sob Medida..." : "Gerar & Iniciar Simulado Agora ➔"}

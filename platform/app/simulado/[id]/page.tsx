@@ -633,9 +633,10 @@ export default function SimuladoDetailPage() {
                 disabled={!selectedOpt}
                 style={{
                   padding: "9px 20px", borderRadius: 8,
-                  fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: selectedOpt ? "pointer" : "not-allowed",
-                  background: selectedOpt ? V.pu : "rgba(0,194,168,0.3)", color: "#0A1A18", border: "none",
-                  boxShadow: selectedOpt ? "0 4px 16px rgba(0,194,168,0.3)" : "none",
+                  fontFamily: V.db, fontSize: 13, fontWeight: 700, cursor: selectedOpt ? "pointer" : "not-allowed",
+                  background: selectedOpt ? "linear-gradient(135deg, #00C2A8 0%, #009688 100%)" : "rgba(0,194,168,0.25)",
+                  color: selectedOpt ? "#FFFFFF" : "var(--chumbo)", border: "none",
+                  boxShadow: selectedOpt ? "0 4px 16px rgba(0,194,168,0.35)" : "none",
                 }}
               >
                 {currentIdx + 1 === totalQ ? "Salvar e Concluir" : "Confirmar e Avançar →"}

@@ -8,28 +8,28 @@
 :root,
 [data-theme="dark"] {
   /* ── Estruturais (Dark Mode Padrão) ── */
-  --abismo:          #0D111C;   /* Background principal */
-  --abismo-surface:  #161D2C;   /* Superfícies intermediárias */
-  --petroleo:        #1A2234;   /* Cards e painéis principais */
-  --deeper:          #080B12;   /* Fundo escuro profundo */
-  --sinal:           rgba(61, 90, 128, 0.25); /* Bordas e divisores */
-  --border-subtle:   rgba(61, 90, 128, 0.15);
+  --abismo:          #0A0E18;   /* Background principal profundo */
+  --abismo-surface:  #101626;   /* Superfícies intermediárias */
+  --petroleo:        #141C2E;   /* Cards e painéis principais */
+  --deeper:          #070A10;   /* Fundo escuro profundo */
+  --sinal:           rgba(78, 110, 155, 0.28); /* Bordas e divisores */
+  --border-subtle:   rgba(78, 110, 155, 0.18);
 
   /* ── Tipografia Dark ── */
-  --neblina:         #E0E6F0;   /* Texto principal */
-  --chumbo:          #8A9AB5;   /* Texto secundário */
-  --text-muted:      rgba(138, 154, 181, 0.6);
+  --neblina:         #E2E8F0;   /* Texto principal */
+  --chumbo:          #94A3B8;   /* Texto secundário */
+  --text-muted:      rgba(148, 163, 184, 0.7);
   --heading-color:   #FFFFFF;
 
   /* ── Superfícies & Sombras Dark ── */
-  --card-bg:         rgba(26, 34, 52, 0.75);
-  --card-border:     rgba(61, 90, 128, 0.3);
-  --card-shadow:     none;
-  --sidebar-bg:      #0D111C;
-  --topbar-bg:       rgba(13, 17, 28, 0.9);
-  --input-bg:        rgba(43, 58, 82, 0.3);
-  --input-border:    rgba(61, 90, 128, 0.35);
-  --pill-bg:         rgba(43, 58, 82, 0.4);
+  --card-bg:         #131B2C;   /* Superfície elevada com alto contraste */
+  --card-border:     rgba(90, 125, 175, 0.25);
+  --card-shadow:     0 4px 20px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.2);
+  --sidebar-bg:      #0A0E18;
+  --topbar-bg:       rgba(10, 14, 24, 0.92);
+  --input-bg:        #0C1220;
+  --input-border:    rgba(90, 125, 175, 0.3);
+  --pill-bg:         rgba(43, 58, 82, 0.5);
 
   /* ── Marca & Sistema ── */
   --pulso:           #00C2A8;   /* Teal marca */
