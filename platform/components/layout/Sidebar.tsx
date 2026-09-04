@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import { useUser } from "@/lib/supabase/use-user";
 
 interface NavItem {
   id: string;
@@ -47,6 +48,20 @@ export default function Sidebar({
   userRole = "ENAMED · 2027",
   userInitials = "CS",
 }: SidebarProps) {
+  const { user, signOut } = useUser();
+  const [loggingOut, setLoggingOut] = useState(false);
+  const [isHoveredLogout, setIsHoveredLogout] = useState(false);
+
+  const handleSignOut = async () => {
+    try {
+      setLoggingOut(true);
+      await signOut();
+    } catch (e) {
+      console.error("Erro ao deslogar:", e);
+      setLoggingOut(false);
+    }
+  };
+
   /* ── Estilos extraídos de .sidebar no medpleni-part3-dashboard.html ── */
   const sidebarStyle: React.CSSProperties = {
     width: "220px",
@@ -177,12 +192,21 @@ export default function Sidebar({
         </div>
       ))}
 
-      {/* Footer / user */}
+      {/* Footer / user & logout */}
       <div style={footerStyle}>
         <div style={userRowStyle}>
           <div style={avatarStyle}>{userInitials}</div>
-          <div>
-            <div style={{ fontSize: "12px", fontWeight: 600, color: "#fff" }}>
+          <div style={{ flex: 1, minWidth: 0, overflow: "hidden" }}>
+            <div
+              style={{
+                fontSize: "12px",
+                fontWeight: 600,
+                color: "#fff",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+              }}
+            >
               {userName}
             </div>
             <div
@@ -191,13 +215,63 @@ export default function Sidebar({
                 fontSize: "9px",
                 letterSpacing: "0.08em",
                 color: "var(--chumbo)",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+                overflow: "hidden",
               }}
             >
               {userRole}
             </div>
           </div>
         </div>
+
+        {/* Botão de Deslogar da Plataforma */}
+        {user && (
+          <button
+            onClick={handleSignOut}
+            disabled={loggingOut}
+            onMouseEnter={() => setIsHoveredLogout(true)}
+            onMouseLeave={() => setIsHoveredLogout(false)}
+            title="Encerrar sessão na plataforma"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+              width: "100%",
+              marginTop: "10px",
+              padding: "8px 12px",
+              borderRadius: "var(--r-md, 8px)",
+              background: isHoveredLogout ? "rgba(255, 107, 107, 0.12)" : "rgba(255, 107, 107, 0.05)",
+              border: `1px solid ${isHoveredLogout ? "rgba(255, 107, 107, 0.35)" : "rgba(255, 107, 107, 0.18)"}`,
+              color: isHoveredLogout ? "#FF8E8E" : "#FF6B6B",
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: "11px",
+              letterSpacing: "0.04em",
+              cursor: loggingOut ? "not-allowed" : "pointer",
+              transition: "all 0.15s ease",
+              opacity: loggingOut ? 0.6 : 1,
+            }}
+          >
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            <span>{loggingOut ? "Saindo..." : "Sair da conta"}</span>
+          </button>
+        )}
       </div>
     </aside>
   );
 }
+
