@@ -5,11 +5,26 @@ import { renderResetPasswordEmail } from "@/lib/email/templates/reset-password-e
 import { renderConfirmEmail } from "@/lib/email/templates/confirm-email";
 import { renderSecurityAlertEmail } from "@/lib/email/templates/security-alert-email";
 
+import { renderInvitationEmail } from "@/lib/email/templates/invitation-email";
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { type, email, name, resetUrl, confirmUrl, loginUrl, actionText } =
-      body;
+    const {
+      type,
+      email,
+      name,
+      resetUrl,
+      confirmUrl,
+      loginUrl,
+      actionText,
+      roleLabel,
+      planLabel,
+      accessPeriodLabel,
+      subBrandLabel,
+      inviteUrl,
+      notes,
+    } = body;
 
     if (!email || !type) {
       return NextResponse.json(
@@ -22,13 +37,26 @@ export async function POST(request: Request) {
     let html = "";
 
     switch (type) {
+      case "invitation":
+        subject = `Convite de Acesso MedPleni: ${roleLabel || "Novo Acesso"} (${planLabel || "Pleno"})`;
+        html = renderInvitationEmail({
+          name: name || "",
+          roleLabel: roleLabel || "Membro",
+          planLabel: planLabel || "MedPleni Pleno",
+          accessPeriodLabel: accessPeriodLabel || "1 Ano",
+          subBrandLabel: subBrandLabel || "Residência Médica",
+          inviteUrl: inviteUrl || `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/login`,
+          notes: notes || undefined,
+        });
+        break;
+
       case "welcome":
         subject = `Bem-vindo(a) ao MedPleni!`;
         html = renderWelcomeEmail({
           name: name || "",
           loginUrl:
             loginUrl ||
-            `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3001"}/login`,
+            `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/login`,
         });
         break;
 
