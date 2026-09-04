@@ -192,7 +192,7 @@ export default function AdminAlunosPage() {
           <div style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: V.pu, marginBottom: 4 }}>
             Customer Success, Docência & Gestão de Acessos
           </div>
-          <h1 style={{ fontFamily: V.df, fontSize: 28, fontWeight: 700, color: "#fff" }}>
+          <h1 style={{ fontFamily: V.df, fontSize: 28, fontWeight: 700, color: "var(--heading-color)" }}>
             Gestão de Membros & Convites
           </h1>
         </div>
@@ -204,7 +204,7 @@ export default function AdminAlunosPage() {
               display: "flex", alignItems: "center", gap: 8,
               padding: "10px 18px", borderRadius: 8,
               background: `linear-gradient(135deg, ${V.pu}, #009688)`,
-              border: "none", color: "#0A1A18", fontWeight: 700,
+              border: "none", color: "#FFFFFF", fontWeight: 700,
               fontSize: 13, cursor: "pointer",
               boxShadow: "0 4px 16px rgba(0,194,168,0.35)",
             }}
@@ -252,7 +252,8 @@ export default function AdminAlunosPage() {
         <>
           {/* FILTERS */}
           <div style={{
-            background: V.pe, border: "1px solid rgba(61,90,128,0.25)",
+            background: "var(--card-bg)", border: "1px solid var(--card-border)",
+            boxShadow: "var(--card-shadow)",
             borderRadius: 12, padding: "16px 20px", marginBottom: 20,
             display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap",
           }}>
@@ -263,9 +264,9 @@ export default function AdminAlunosPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 style={{
-                  width: "100%", padding: "9px 12px", borderRadius: 8,
-                  background: "rgba(13,17,28,0.5)", border: "1px solid rgba(61,90,128,0.3)",
-                  color: "#fff", fontFamily: V.db, fontSize: 13, outline: "none",
+                  width: "100%", padding: "10px 14px", borderRadius: 8,
+                  background: "var(--input-bg)", border: "1px solid var(--card-border)",
+                  color: "var(--heading-color)", fontFamily: V.db, fontSize: 13, outline: "none",
                 }}
               />
             </div>
@@ -291,15 +292,15 @@ export default function AdminAlunosPage() {
           </div>
 
           {/* STUDENTS TABLE */}
-          <div style={{ background: V.pe, border: "1px solid rgba(61,90,128,0.25)", borderRadius: 14, overflow: "hidden" }}>
+          <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", boxShadow: "var(--card-shadow)", borderRadius: 14, overflow: "hidden" }}>
             {loading ? (
-              <div style={{ textAlign: "center", padding: 40, color: V.ch }}>Carregando lista de alunos...</div>
+              <div style={{ textAlign: "center", padding: 40, color: "var(--chumbo)" }}>Carregando lista de alunos...</div>
             ) : students.length === 0 ? (
-              <div style={{ textAlign: "center", padding: 40, color: V.ch }}>Nenhum médico encontrado.</div>
+              <div style={{ textAlign: "center", padding: 40, color: "var(--chumbo)" }}>Nenhum médico encontrado.</div>
             ) : (
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
                 <thead>
-                  <tr style={{ background: "#0D111C", borderBottom: "1px solid rgba(61,90,128,0.3)" }}>
+                  <tr style={{ background: "var(--input-bg)", borderBottom: "1px solid var(--card-border)" }}>
                     {["Médico / E-mail", "Papel / Plano", "Meta / Horas", "Streak", "Cadastro", "Ações CS"].map((h) => (
                       <th key={h} style={{
                         padding: "12px 16px", textAlign: "left",
@@ -313,9 +314,9 @@ export default function AdminAlunosPage() {
                 </thead>
                 <tbody>
                   {students.map((s) => (
-                    <tr key={s.id} style={{ borderBottom: "1px solid rgba(61,90,128,0.15)" }}>
+                    <tr key={s.id} style={{ borderBottom: "1px solid var(--card-border)" }}>
                       <td style={{ padding: "14px 16px" }}>
-                        <div style={{ fontWeight: 600, color: "#fff" }}>{s.fullName}</div>
+                        <div style={{ fontWeight: 600, color: "var(--heading-color)" }}>{s.fullName}</div>
                         <div style={{ fontSize: 11, color: V.ch }}>{s.email} {s.crm ? `· CRM ${s.crm}` : ""}</div>
                       </td>
                       <td style={{ padding: "14px 16px" }}>
@@ -386,15 +387,15 @@ export default function AdminAlunosPage() {
 
       {/* ── ABA 2: CONVITES ENVIADOS ── */}
       {activeTab === "convites" && (
-        <div style={{ background: V.pe, border: "1px solid rgba(61,90,128,0.25)", borderRadius: 14, overflow: "hidden" }}>
+        <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", boxShadow: "var(--card-shadow)", borderRadius: 14, overflow: "hidden" }}>
           {loadingInvites ? (
-            <div style={{ textAlign: "center", padding: 40, color: V.ch }}>Carregando convites...</div>
+            <div style={{ textAlign: "center", padding: 40, color: "var(--chumbo)" }}>Carregando convites...</div>
           ) : invitations.length === 0 ? (
-            <div style={{ textAlign: "center", padding: 40, color: V.ch }}>
+            <div style={{ textAlign: "center", padding: 40, color: "var(--chumbo)" }}>
               <div style={{
-                width: 44, height: 44, borderRadius: "50%", background: "rgba(61,90,128,0.2)",
+                width: 44, height: 44, borderRadius: "50%", background: "var(--input-bg)",
                 display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 8px auto",
-                color: V.ch,
+                color: "var(--chumbo)",
               }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="4" width="20" height="16" rx="2" />
@@ -406,7 +407,7 @@ export default function AdminAlunosPage() {
                 onClick={() => setShowInviteModal(true)}
                 style={{
                   marginTop: 12, padding: "8px 16px", borderRadius: 8,
-                  background: V.pu, border: "none", color: "#0A1A18", fontWeight: 700, cursor: "pointer", fontSize: 12,
+                  background: `linear-gradient(135deg, ${V.pu}, #009688)`, border: "none", color: "#FFFFFF", fontWeight: 700, cursor: "pointer", fontSize: 12,
                 }}
               >
                 Criar Primeiro Convite
@@ -415,7 +416,7 @@ export default function AdminAlunosPage() {
           ) : (
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
               <thead>
-                <tr style={{ background: "#0D111C", borderBottom: "1px solid rgba(61,90,128,0.3)" }}>
+                <tr style={{ background: "var(--input-bg)", borderBottom: "1px solid var(--card-border)" }}>
                   {["Convidado / E-mail", "Papel", "Plano & Foco", "Período / Validade", "Status", "Ações"].map((h) => (
                     <th key={h} style={{
                       padding: "12px 16px", textAlign: "left",
@@ -433,9 +434,9 @@ export default function AdminAlunosPage() {
                   const fullInviteUrl = `${appUrl}/convite?token=${inv.token}`;
 
                   return (
-                    <tr key={inv.id} style={{ borderBottom: "1px solid rgba(61,90,128,0.15)" }}>
+                    <tr key={inv.id} style={{ borderBottom: "1px solid var(--card-border)" }}>
                       <td style={{ padding: "14px 16px" }}>
-                        <div style={{ fontWeight: 600, color: "#fff" }}>{inv.full_name}</div>
+                        <div style={{ fontWeight: 600, color: "var(--heading-color)" }}>{inv.full_name}</div>
                         <div style={{ fontSize: 11, color: V.ch }}>{inv.email}</div>
                         {inv.notes && (
                           <div style={{ fontSize: 10, color: V.am, marginTop: 2 }}>{inv.notes}</div>
@@ -452,8 +453,8 @@ export default function AdminAlunosPage() {
                         </span>
                       </td>
                       <td style={{ padding: "14px 16px" }}>
-                        <div style={{ color: "#fff", fontWeight: 500 }}>{inv.plan}</div>
-                        <div style={{ fontSize: 11, color: V.ch }}>{inv.sub_brand}</div>
+                        <div style={{ color: "var(--heading-color)", fontWeight: 500 }}>{inv.plan}</div>
+                        <div style={{ fontSize: 11, color: "var(--chumbo)" }}>{inv.sub_brand}</div>
                       </td>
                       <td style={{ padding: "14px 16px" }}>
                         <div style={{ color: V.wn, fontSize: 12 }}>
@@ -531,16 +532,16 @@ export default function AdminAlunosPage() {
           zIndex: 1000, padding: 20, overflowY: "auto",
         }}>
           <div style={{
-            background: "#1A1F2E", border: "1px solid rgba(0,194,168,0.4)",
+            background: "var(--card-bg)", border: "1px solid var(--card-border)",
             borderRadius: 16, maxWidth: 540, width: "100%", padding: 28,
-            boxShadow: "0 25px 60px rgba(0,0,0,0.6)",
+            boxShadow: "var(--card-shadow)",
           }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
               <div>
                 <div style={{ fontFamily: V.dm, fontSize: 10, color: V.pu, textTransform: "uppercase", letterSpacing: "0.1em" }}>
                   Novo Acesso & Concessão
                 </div>
-                <h2 style={{ fontFamily: V.df, fontSize: 20, fontWeight: 700, color: "#fff", margin: "2px 0 0 0" }}>
+                <h2 style={{ fontFamily: V.df, fontSize: 20, fontWeight: 700, color: "var(--heading-color)", margin: "2px 0 0 0" }}>
                   Enviar Convite Oficial
                 </h2>
               </div>
@@ -566,7 +567,7 @@ export default function AdminAlunosPage() {
                     onChange={(e) => setInviteForm({ ...inviteForm, fullName: e.target.value })}
                     style={{
                       width: "100%", padding: "9px 12px", borderRadius: 8,
-                      background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff",
+                      background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--heading-color)",
                       fontSize: 13, outline: "none",
                     }}
                   />
@@ -584,7 +585,7 @@ export default function AdminAlunosPage() {
                     onChange={(e) => setInviteForm({ ...inviteForm, email: e.target.value })}
                     style={{
                       width: "100%", padding: "9px 12px", borderRadius: 8,
-                      background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff",
+                      background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--heading-color)",
                       fontSize: 13, outline: "none",
                     }}
                   />
@@ -594,7 +595,7 @@ export default function AdminAlunosPage() {
               {/* Papel / Role & Submarca */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
                 <div>
-                  <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 4, fontWeight: 600 }}>
+                  <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 4, fontWeight: 600 }}>
                     Tipo de Perfil (Role) *
                   </label>
                   <select
@@ -602,7 +603,7 @@ export default function AdminAlunosPage() {
                     onChange={(e) => setInviteForm({ ...inviteForm, role: e.target.value })}
                     style={{
                       width: "100%", padding: "9px 12px", borderRadius: 8,
-                      background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff",
+                      background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--heading-color)",
                       fontSize: 13, outline: "none",
                     }}
                   >
@@ -616,7 +617,7 @@ export default function AdminAlunosPage() {
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 4, fontWeight: 600 }}>
+                  <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 4, fontWeight: 600 }}>
                     Submarca / Foco Prova
                   </label>
                   <select
@@ -624,7 +625,7 @@ export default function AdminAlunosPage() {
                     onChange={(e) => setInviteForm({ ...inviteForm, subBrand: e.target.value })}
                     style={{
                       width: "100%", padding: "9px 12px", borderRadius: 8,
-                      background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff",
+                      background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--heading-color)",
                       fontSize: 13, outline: "none",
                     }}
                   >
@@ -639,7 +640,7 @@ export default function AdminAlunosPage() {
               {/* Plano & Período de Acesso */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
                 <div>
-                  <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 4, fontWeight: 600 }}>
+                  <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 4, fontWeight: 600 }}>
                     Plano de Acesso *
                   </label>
                   <select
@@ -647,7 +648,7 @@ export default function AdminAlunosPage() {
                     onChange={(e) => setInviteForm({ ...inviteForm, plan: e.target.value })}
                     style={{
                       width: "100%", padding: "9px 12px", borderRadius: 8,
-                      background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff",
+                      background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--heading-color)",
                       fontSize: 13, outline: "none",
                     }}
                   >
@@ -660,7 +661,7 @@ export default function AdminAlunosPage() {
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 4, fontWeight: 600 }}>
+                  <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 4, fontWeight: 600 }}>
                     Período de Acesso (Duração) *
                   </label>
                   <select
@@ -668,7 +669,7 @@ export default function AdminAlunosPage() {
                     onChange={(e) => setInviteForm({ ...inviteForm, accessDuration: e.target.value })}
                     style={{
                       width: "100%", padding: "9px 12px", borderRadius: 8,
-                      background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff",
+                      background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--heading-color)",
                       fontSize: 13, outline: "none",
                     }}
                   >
@@ -685,7 +686,7 @@ export default function AdminAlunosPage() {
 
               {inviteForm.accessDuration === "custom" && (
                 <div style={{ marginBottom: 14 }}>
-                  <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 4, fontWeight: 600 }}>
+                  <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 4, fontWeight: 600 }}>
                     Data Limite de Expiração
                   </label>
                   <input
@@ -695,7 +696,7 @@ export default function AdminAlunosPage() {
                     onChange={(e) => setInviteForm({ ...inviteForm, customExpireDate: e.target.value })}
                     style={{
                       width: "100%", padding: "9px 12px", borderRadius: 8,
-                      background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff",
+                      background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--heading-color)",
                       fontSize: 13, outline: "none",
                     }}
                   />
@@ -704,7 +705,7 @@ export default function AdminAlunosPage() {
 
               {/* Observações */}
               <div style={{ marginBottom: 14 }}>
-                <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 4, fontWeight: 600 }}>
+                <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 4, fontWeight: 600 }}>
                   Observações Internas (Opcional)
                 </label>
                 <input
@@ -714,7 +715,7 @@ export default function AdminAlunosPage() {
                   onChange={(e) => setInviteForm({ ...inviteForm, notes: e.target.value })}
                   style={{
                     width: "100%", padding: "9px 12px", borderRadius: 8,
-                    background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff",
+                    background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--heading-color)",
                     fontSize: 13, outline: "none",
                   }}
                 />
@@ -752,7 +753,7 @@ export default function AdminAlunosPage() {
                   disabled={sendingInvite}
                   style={{
                     flex: 2, padding: "10px 0", borderRadius: 8,
-                    background: V.pu, border: "none", color: "#0A1A18",
+                    background: `linear-gradient(135deg, ${V.pu}, #009688)`, border: "none", color: "#FFFFFF",
                     fontWeight: 700, fontSize: 13, cursor: sendingInvite ? "not-allowed" : "pointer",
                     boxShadow: "0 4px 16px rgba(0,194,168,0.3)",
                   }}
@@ -773,9 +774,9 @@ export default function AdminAlunosPage() {
           zIndex: 1100, padding: 20,
         }}>
           <div style={{
-            background: "#1A1F2E", border: "1px solid rgba(0,194,168,0.6)",
+            background: "var(--card-bg)", border: "1px solid var(--card-border)",
             borderRadius: 16, maxWidth: 480, width: "100%", padding: 28, textAlign: "center",
-            boxShadow: "0 25px 60px rgba(0,0,0,0.7)",
+            boxShadow: "var(--card-shadow)",
           }}>
             <div style={{
               width: 52, height: 52, borderRadius: "50%", background: "rgba(0,194,168,0.15)",
@@ -786,15 +787,15 @@ export default function AdminAlunosPage() {
                 <polyline points="20 6 9 17 4 12" />
               </svg>
             </div>
-            <h3 style={{ fontFamily: V.df, fontSize: 22, color: "#fff", margin: "0 0 6px 0" }}>
+            <h3 style={{ fontFamily: V.df, fontSize: 22, color: "var(--heading-color)", margin: "0 0 6px 0" }}>
               Convite Criado com Sucesso!
             </h3>
-            <p style={{ color: V.ch, fontSize: 13, marginBottom: 20 }}>
+            <p style={{ color: "var(--chumbo)", fontSize: 13, marginBottom: 20 }}>
               O acesso de <strong>{createdInviteResult.name}</strong> ({createdInviteResult.email}) foi registrado.
             </p>
 
             <div style={{
-              background: "#0D111C", border: "1px solid rgba(61,90,128,0.4)",
+              background: "var(--input-bg)", border: "1px solid var(--card-border)",
               borderRadius: 8, padding: "10px 12px", marginBottom: 20,
               display: "flex", alignItems: "center", gap: 8,
             }}>
@@ -810,8 +811,8 @@ export default function AdminAlunosPage() {
               <button
                 onClick={() => copyToClipboard(createdInviteResult.inviteUrl)}
                 style={{
-                  padding: "6px 12px", borderRadius: 6, background: V.pu,
-                  border: "none", color: "#0A1A18", fontWeight: 700, fontSize: 11, cursor: "pointer",
+                  padding: "6px 12px", borderRadius: 6, background: `linear-gradient(135deg, ${V.pu}, #009688)`,
+                  border: "none", color: "#FFFFFF", fontWeight: 700, fontSize: 11, cursor: "pointer",
                 }}
               >
                 Copiar
@@ -853,24 +854,25 @@ export default function AdminAlunosPage() {
           zIndex: 1000, padding: 20,
         }}>
           <div style={{
-            background: "#1A1F2E", border: "1px solid rgba(0,194,168,0.4)",
+            background: "var(--card-bg)", border: "1px solid var(--card-border)",
+            boxShadow: "var(--card-shadow)",
             borderRadius: 14, maxWidth: 420, width: "100%", padding: 24,
           }}>
-            <div style={{ fontFamily: V.df, fontSize: 18, fontWeight: 700, color: "#fff", marginBottom: 6 }}>
+            <div style={{ fontFamily: V.df, fontSize: 18, fontWeight: 700, color: "var(--heading-color)", marginBottom: 6 }}>
               Alteração Manual de Acesso
             </div>
-            <div style={{ fontSize: 12, color: V.ch, marginBottom: 16 }}>
+            <div style={{ fontSize: 12, color: "var(--chumbo)", marginBottom: 16 }}>
               Aluno: <strong>{editingStudent.fullName}</strong> ({editingStudent.email})
             </div>
 
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 6 }}>Novo Plano</label>
+              <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 6, fontWeight: 600 }}>Novo Plano</label>
               <select
                 value={newPlan}
                 onChange={(e) => setNewPlan(e.target.value)}
                 style={{
-                  width: "100%", padding: "9px 12px", borderRadius: 6,
-                  background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff",
+                  width: "100%", padding: "10px 12px", borderRadius: 6,
+                  background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--heading-color)",
                 }}
               >
                 <option value="diagnostico">MedPleni Diagnóstico (Gratuito)</option>
@@ -882,13 +884,13 @@ export default function AdminAlunosPage() {
             <div style={{ display: "flex", gap: 8 }}>
               <button
                 onClick={() => setEditingStudent(null)}
-                style={{ flex: 1, padding: "8px 0", borderRadius: 6, background: "transparent", border: "1px solid rgba(61,90,128,0.3)", color: V.ch, cursor: "pointer" }}
+                style={{ flex: 1, padding: "8px 0", borderRadius: 6, background: "transparent", border: "1px solid var(--card-border)", color: "var(--chumbo)", cursor: "pointer", fontWeight: 600 }}
               >
                 Cancelar
               </button>
               <button
                 onClick={handleUpdatePlan}
-                style={{ flex: 1, padding: "8px 0", borderRadius: 6, background: V.pu, border: "none", color: "#0A1A18", fontWeight: 700, cursor: "pointer" }}
+                style={{ flex: 1, padding: "8px 0", borderRadius: 6, background: `linear-gradient(135deg, ${V.pu}, #009688)`, border: "none", color: "#FFFFFF", fontWeight: 700, cursor: "pointer" }}
               >
                 Salvar Alteração
               </button>

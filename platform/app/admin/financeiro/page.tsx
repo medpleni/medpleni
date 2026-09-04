@@ -4,10 +4,21 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 const V = {
-  pu: "var(--pulso)", re: "var(--resgate)", rel: "#64B5E8", ind: "#6B5CE7",
-  ch: "var(--chumbo)", nb: "var(--neblina)", pe: "var(--petroleo)", am: "#C98A0A",
-  wn: "#F5A623", dg: "#FF6B6B", su: "var(--sucesso)",
-  cardBg: "var(--card-bg)", cardBorder: "var(--card-border)", heading: "var(--heading-color)",
+  pu: "var(--pulso)",
+  re: "var(--resgate)",
+  rel: "var(--resid-light)",
+  ind: "var(--indigo)",
+  ch: "var(--chumbo)",
+  nb: "var(--neblina)",
+  pe: "var(--petroleo)",
+  am: "var(--ambar)",
+  wn: "var(--warn)",
+  dg: "var(--danger)",
+  su: "var(--success)",
+  cardBg: "var(--card-bg)",
+  cardBorder: "var(--card-border)",
+  heading: "var(--heading-color)",
+  inputBg: "var(--input-bg)",
   dm: "'IBM Plex Mono', monospace",
   df: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif",
   db: "var(--font-body), 'Inter', sans-serif",
@@ -23,27 +34,32 @@ const mockInvoices = [
 
 export default function AdminFinanceiroPage() {
   const router = useRouter();
-  const [filter, setFilter] = useState("todos");
 
   return (
     <div>
       {/* ── HEADER ── */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, flexWrap: "wrap", gap: 16 }}>
         <div>
-          <div style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: V.pu, marginBottom: 4 }}>
+          <div style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: V.pu, marginBottom: 4, fontWeight: 600 }}>
             Controladoria & Faturamento
           </div>
-          <h1 style={{ fontFamily: V.df, fontSize: 28, fontWeight: 700, color: "var(--heading-color)" }}>
+          <h1 style={{ fontFamily: V.df, fontSize: 28, fontWeight: 700, color: "var(--heading-color)", margin: 0 }}>
             Financeiro & Iugu Gateway
           </h1>
         </div>
 
         <div style={{ display: "flex", gap: 10 }}>
           <button
-            onClick={() => alert("Acesso ao painel oficial da Iugu será habilitado com as chaves de API.")}
+            onClick={() => alert("Acesso ao painel oficial da Iugu será habilitado com as chaves de API em produção.")}
             style={{
-              padding: "9px 18px", borderRadius: 8, background: "rgba(0,194,168,0.1)",
-              border: "1px solid rgba(0,194,168,0.3)", color: V.pu, fontSize: 13, fontWeight: 600, cursor: "pointer",
+              padding: "10px 18px",
+              borderRadius: 8,
+              background: "var(--pulso-dim)",
+              border: `1px solid ${V.pu}`,
+              color: V.pu,
+              fontSize: 13,
+              fontWeight: 700,
+              cursor: "pointer",
             }}
           >
             Abrir Painel Iugu ↗
@@ -53,8 +69,10 @@ export default function AdminFinanceiroPage() {
 
       {/* ── FINANCIAL KPIS ── */}
       <div style={{
-        display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-        gap: 14, marginBottom: 24,
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
+        gap: 14,
+        marginBottom: 24,
       }}>
         {[
           { label: "Faturamento Anualizado (ARR)", value: "R$ 149.400", sub: "MRR: R$ 12.450/mês", color: V.pu },
@@ -63,86 +81,113 @@ export default function AdminFinanceiroPage() {
           { label: "Taxa de Reembolso 30d", value: "2.1%", sub: "Threshold de segurança < 10%", color: V.su },
         ].map((k) => (
           <div key={k.label} style={{
-            background: V.pe, border: "1px solid rgba(61,90,128,0.3)",
-            borderRadius: 12, padding: "18px 20px",
+            background: "var(--card-bg)",
+            border: "1px solid var(--card-border)",
+            boxShadow: "var(--card-shadow)",
+            borderRadius: 12,
+            padding: "18px 20px",
           }}>
-            <div style={{ fontFamily: V.dm, fontSize: 9, color: V.ch, textTransform: "uppercase", marginBottom: 6 }}>{k.label}</div>
-            <div style={{ fontFamily: V.df, fontSize: 24, fontWeight: 700, color: "#fff" }}>{k.value}</div>
-            <div style={{ fontFamily: V.dm, fontSize: 10, color: k.color, marginTop: 6 }}>{k.sub}</div>
+            <div style={{ fontFamily: V.dm, fontSize: 9, color: "var(--chumbo)", textTransform: "uppercase", marginBottom: 6, fontWeight: 600 }}>
+              {k.label}
+            </div>
+            <div style={{ fontFamily: V.df, fontSize: 24, fontWeight: 700, color: "var(--heading-color)" }}>
+              {k.value}
+            </div>
+            <div style={{ fontFamily: V.dm, fontSize: 10, color: k.color, marginTop: 6, fontWeight: 600 }}>
+              {k.sub}
+            </div>
           </div>
         ))}
       </div>
 
       {/* ── INVOICES TABLE ── */}
       <div style={{
-        background: V.pe, border: "1px solid rgba(61,90,128,0.25)",
-        borderRadius: 14, overflow: "hidden",
+        background: "var(--card-bg)",
+        border: "1px solid var(--card-border)",
+        boxShadow: "var(--card-shadow)",
+        borderRadius: 14,
+        overflow: "hidden",
       }}>
-        <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(61,90,128,0.2)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ fontFamily: V.df, fontSize: 16, fontWeight: 700, color: "#fff" }}>
+        <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--card-border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ fontFamily: V.df, fontSize: 16, fontWeight: 700, color: "var(--heading-color)" }}>
             Extrato de Faturas e Assinaturas (Iugu)
           </div>
-          <span style={{ fontFamily: V.dm, fontSize: 10, color: V.pu }}>Sincronização Ativa</span>
+          <span style={{ fontFamily: V.dm, fontSize: 10, color: V.pu, fontWeight: 600 }}>● Sincronização Ativa</span>
         </div>
 
-        <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-          <thead>
-            <tr style={{ background: "#0D111C", borderBottom: "1px solid rgba(61,90,128,0.3)" }}>
-              {["Aluno / E-mail", "Plano", "Valor", "Método", "Status Iugu", "Data / Hora", "Ações"].map((h) => (
-                <th key={h} style={{
-                  padding: "12px 16px", textAlign: "left",
-                  fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em",
-                  textTransform: "uppercase", color: V.ch,
-                }}>
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {mockInvoices.map((inv) => (
-              <tr key={inv.id} style={{ borderBottom: "1px solid rgba(61,90,128,0.15)" }}>
-                <td style={{ padding: "14px 16px" }}>
-                  <div style={{ fontWeight: 600, color: "#fff" }}>{inv.student}</div>
-                  <div style={{ fontSize: 11, color: V.ch }}>{inv.email}</div>
-                </td>
-                <td style={{ padding: "14px 16px", color: V.nb }}>
-                  {inv.plan}
-                </td>
-                <td style={{ padding: "14px 16px", fontFamily: V.dm, fontSize: 14, fontWeight: 700, color: "#fff" }}>
-                  R$ {inv.amount}
-                </td>
-                <td style={{ padding: "14px 16px", color: V.ch, fontSize: 12 }}>
-                  {inv.method}
-                </td>
-                <td style={{ padding: "14px 16px" }}>
-                  <span style={{
-                    fontFamily: V.dm, fontSize: 10, padding: "2px 8px", borderRadius: 9999,
-                    background: inv.status === "pago" ? "rgba(0,194,168,0.15)" : "rgba(245,166,35,0.15)",
-                    color: inv.status === "pago" ? V.pu : V.wn,
-                    border: `1px solid ${inv.status === "pago" ? "rgba(0,194,168,0.3)" : "rgba(245,166,35,0.3)"}`,
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+            <thead>
+              <tr style={{ background: "var(--input-bg)", borderBottom: "1px solid var(--card-border)" }}>
+                {["Aluno / E-mail", "Plano", "Valor", "Método", "Status Iugu", "Data / Hora", "Ações"].map((h) => (
+                  <th key={h} style={{
+                    padding: "12px 16px",
+                    textAlign: "left",
+                    fontFamily: V.dm,
+                    fontSize: 9,
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    color: "var(--chumbo)",
+                    fontWeight: 600,
+                    whiteSpace: "nowrap",
                   }}>
-                    {inv.status === "pago" ? "Liquidado" : "Pendente"}
-                  </span>
-                </td>
-                <td style={{ padding: "14px 16px", fontFamily: V.dm, fontSize: 11, color: V.ch }}>
-                  {inv.date}
-                </td>
-                <td style={{ padding: "14px 16px" }}>
-                  <button
-                    onClick={() => alert(`Fatura ${inv.id} detalhada.`)}
-                    style={{
-                      padding: "4px 8px", borderRadius: 4, background: "rgba(61,90,128,0.2)",
-                      border: "none", color: V.nb, fontSize: 11, cursor: "pointer",
-                    }}
-                  >
-                    Ver Fatura
-                  </button>
-                </td>
+                    {h}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {mockInvoices.map((inv) => (
+                <tr key={inv.id} style={{ borderBottom: "1px solid var(--card-border)" }}>
+                  <td style={{ padding: "14px 16px", whiteSpace: "nowrap" }}>
+                    <div style={{ fontWeight: 600, color: "var(--heading-color)" }}>{inv.student}</div>
+                    <div style={{ fontSize: 11, color: "var(--chumbo)" }}>{inv.email}</div>
+                  </td>
+                  <td style={{ padding: "14px 16px", color: "var(--neblina)", whiteSpace: "nowrap" }}>
+                    {inv.plan}
+                  </td>
+                  <td style={{ padding: "14px 16px", fontFamily: V.dm, fontSize: 14, fontWeight: 700, color: "var(--heading-color)", whiteSpace: "nowrap" }}>
+                    R$ {inv.amount}
+                  </td>
+                  <td style={{ padding: "14px 16px", color: "var(--chumbo)", fontSize: 12, whiteSpace: "nowrap" }}>
+                    {inv.method}
+                  </td>
+                  <td style={{ padding: "14px 16px", whiteSpace: "nowrap" }}>
+                    <span style={{
+                      fontFamily: V.dm, fontSize: 10, padding: "2px 8px", borderRadius: 9999,
+                      background: inv.status === "pago" ? "rgba(34,197,94,0.12)" : "rgba(245,166,35,0.12)",
+                      color: inv.status === "pago" ? V.su : V.wn,
+                      border: `1px solid ${inv.status === "pago" ? "rgba(34,197,94,0.3)" : "rgba(245,166,35,0.3)"}`,
+                      fontWeight: 600,
+                    }}>
+                      {inv.status === "pago" ? "Liquidado" : "Pendente"}
+                    </span>
+                  </td>
+                  <td style={{ padding: "14px 16px", fontFamily: V.dm, fontSize: 11, color: "var(--chumbo)", whiteSpace: "nowrap" }}>
+                    {inv.date}
+                  </td>
+                  <td style={{ padding: "14px 16px", whiteSpace: "nowrap" }}>
+                    <button
+                      onClick={() => alert(`Fatura ${inv.id} detalhada.`)}
+                      style={{
+                        padding: "5px 10px",
+                        borderRadius: 6,
+                        background: "var(--input-bg)",
+                        border: "1px solid var(--card-border)",
+                        color: "var(--chumbo)",
+                        fontSize: 11,
+                        fontWeight: 600,
+                        cursor: "pointer",
+                      }}
+                    >
+                      Ver Fatura
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

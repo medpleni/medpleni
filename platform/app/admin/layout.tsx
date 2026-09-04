@@ -62,7 +62,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (loading) {
     return (
-      <div style={{ minHeight: "100vh", background: "#0D111C", display: "flex", alignItems: "center", justifyContent: "center", color: V.ch }}>
+      <div style={{ minHeight: "100vh", background: "var(--abismo)", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--chumbo)" }}>
         Validando credenciais administrativas...
       </div>
     );
@@ -70,7 +70,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (!user || !isAuthorized) {
     return (
-      <div style={{ minHeight: "100vh", background: "#0D111C", display: "flex", alignItems: "center", justifyContent: "center", color: V.dg }}>
+      <div style={{ minHeight: "100vh", background: "var(--abismo)", display: "flex", alignItems: "center", justifyContent: "center", color: V.dg }}>
         Acesso restrito a administradores. Redirecionando...
       </div>
     );

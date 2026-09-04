@@ -50,15 +50,15 @@ export default function AdminSistemaPage() {
           { name: "Next.js App Engine (Vercel)", status: "Operacional", ping: "12ms", color: V.su },
         ].map((s) => (
           <div key={s.name} style={{
-            background: V.pe, border: "1px solid rgba(61,90,128,0.3)",
-            borderRadius: 12, padding: "18px",
+            background: "var(--card-bg)", border: "1px solid var(--card-border)",
+            borderRadius: 12, padding: "18px", boxShadow: "var(--card-shadow)",
           }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-              <span style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>{s.name}</span>
+              <span style={{ fontSize: 13, fontWeight: 600, color: "var(--heading-color)" }}>{s.name}</span>
               <span style={{ width: 8, height: 8, borderRadius: "50%", background: s.color }} />
             </div>
-            <div style={{ fontFamily: V.dm, fontSize: 11, color: s.color }}>{s.status}</div>
-            <div style={{ fontFamily: V.dm, fontSize: 10, color: V.ch, marginTop: 4 }}>Latência: {s.ping}</div>
+            <div style={{ fontFamily: V.dm, fontSize: 11, color: s.color, fontWeight: 600 }}>{s.status}</div>
+            <div style={{ fontFamily: V.dm, fontSize: 10, color: "var(--chumbo)", marginTop: 4 }}>Latência: {s.ping}</div>
           </div>
         ))}
       </div>
@@ -66,16 +66,16 @@ export default function AdminSistemaPage() {
       {/* ── 2 COLUMNS: TEAM & WEBHOOKS ── */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
         {/* Gestão de Equipe Administrativa */}
-        <div style={{ background: V.pe, border: "1px solid rgba(61,90,128,0.25)", borderRadius: 14, padding: "20px" }}>
+        <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: 14, padding: "20px", boxShadow: "var(--card-shadow)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-            <div style={{ fontFamily: V.df, fontSize: 16, fontWeight: 700, color: "#fff" }}>
+            <div style={{ fontFamily: V.df, fontSize: 16, fontWeight: 700, color: "var(--heading-color)" }}>
               Equipe & Permissões RBAC
             </div>
             <button
               onClick={() => alert("Novo administrador pode ser adicionado pelo banco Supabase definindo role.")}
               style={{
-                padding: "4px 10px", borderRadius: 6, background: "rgba(0,194,168,0.1)",
-                border: "1px solid rgba(0,194,168,0.3)", color: V.pu, fontSize: 11, cursor: "pointer",
+                padding: "6px 12px", borderRadius: 6, background: "rgba(0,194,168,0.12)",
+                border: "1px solid rgba(0,194,168,0.35)", color: "var(--pulso)", fontSize: 11, fontWeight: 600, cursor: "pointer",
               }}
             >
               + Convidar Membro
@@ -85,16 +85,17 @@ export default function AdminSistemaPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {mockTeam.map((m) => (
               <div key={m.email} style={{
-                padding: "12px", background: "rgba(43,58,82,0.4)", borderRadius: 8,
+                padding: "12px", background: "var(--input-bg)", borderRadius: 8,
+                border: "1px solid var(--card-border)",
                 display: "flex", justifyContent: "space-between", alignItems: "center",
               }}>
                 <div>
-                  <div style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>{m.name}</div>
-                  <div style={{ fontSize: 11, color: V.ch }}>{m.email}</div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: "var(--heading-color)" }}>{m.name}</div>
+                  <div style={{ fontSize: 11, color: "var(--chumbo)" }}>{m.email}</div>
                 </div>
                 <span style={{
-                  fontFamily: V.dm, fontSize: 9, padding: "2px 7px", borderRadius: 4,
-                  background: "rgba(0,194,168,0.15)", color: V.pu, fontWeight: 700,
+                  fontFamily: V.dm, fontSize: 9, padding: "3px 8px", borderRadius: 4,
+                  background: "rgba(0,194,168,0.15)", color: "var(--pulso)", fontWeight: 700,
                 }}>
                   {m.role}
                 </span>
@@ -104,29 +105,29 @@ export default function AdminSistemaPage() {
         </div>
 
         {/* Logs de Webhook Iugu */}
-        <div style={{ background: V.pe, border: "1px solid rgba(61,90,128,0.25)", borderRadius: 14, padding: "20px" }}>
+        <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: 14, padding: "20px", boxShadow: "var(--card-shadow)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-            <div style={{ fontFamily: V.df, fontSize: 16, fontWeight: 700, color: "#fff" }}>
+            <div style={{ fontFamily: V.df, fontSize: 16, fontWeight: 700, color: "var(--heading-color)" }}>
               Monitor de Webhooks Iugu
             </div>
-            <span style={{ fontFamily: V.dm, fontSize: 10, color: V.su }}>● Escuta Ativa</span>
+            <span style={{ fontFamily: V.dm, fontSize: 10, color: V.su, fontWeight: 600 }}>● Escuta Ativa</span>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {mockWebhooks.map((w) => (
               <div key={w.id} style={{
-                padding: "12px", background: "rgba(43,58,82,0.4)", borderRadius: 8,
-                border: "1px solid rgba(61,90,128,0.2)",
+                padding: "12px", background: "var(--input-bg)", borderRadius: 8,
+                border: "1px solid var(--card-border)",
               }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                  <span style={{ fontFamily: V.dm, fontSize: 11, color: V.pu, fontWeight: 700 }}>
+                  <span style={{ fontFamily: V.dm, fontSize: 11, color: "var(--pulso)", fontWeight: 700 }}>
                     {w.event}
                   </span>
-                  <span style={{ fontFamily: V.dm, fontSize: 10, color: V.su }}>
+                  <span style={{ fontFamily: V.dm, fontSize: 10, color: V.su, fontWeight: 600 }}>
                     {w.code} OK
                   </span>
                 </div>
-                <div style={{ fontSize: 11, color: V.ch }}>
+                <div style={{ fontSize: 11, color: "var(--chumbo)" }}>
                   Fatura: {w.invoice} · Status: <strong>{w.status}</strong> · {w.time}
                 </div>
               </div>

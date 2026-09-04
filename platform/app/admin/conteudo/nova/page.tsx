@@ -86,18 +86,18 @@ export default function NovaQuestaoPage() {
     <div style={{ maxWidth: 860, margin: "0 auto" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
         <div>
-          <div style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: V.pu }}>
+          <div style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--pulso)" }}>
             Docência & Cadastro
           </div>
-          <h1 style={{ fontFamily: V.df, fontSize: 26, fontWeight: 700, color: "#fff" }}>
+          <h1 style={{ fontFamily: V.df, fontSize: 26, fontWeight: 700, color: "var(--heading-color)" }}>
             Cadastrar Nova Questão Comentada
           </h1>
         </div>
         <button
           onClick={() => router.push("/admin/conteudo")}
           style={{
-            padding: "8px 16px", borderRadius: 6, background: "transparent",
-            border: "1px solid rgba(61,90,128,0.4)", color: V.ch, fontSize: 12, cursor: "pointer",
+            padding: "8px 16px", borderRadius: 6, background: "var(--card-bg)",
+            border: "1px solid var(--card-border)", color: "var(--chumbo)", fontSize: 12, cursor: "pointer",
           }}
         >
           ← Cancelar e Voltar
@@ -105,34 +105,35 @@ export default function NovaQuestaoPage() {
       </div>
 
       {success ? (
-        <div style={{ background: V.pe, border: `1px solid ${V.pu}`, borderRadius: 12, padding: 32, textAlign: "center" }}>
+        <div style={{ background: "var(--card-bg)", border: `1px solid var(--pulso)`, borderRadius: 12, padding: 32, textAlign: "center", boxShadow: "var(--card-shadow)" }}>
           <div style={{
             width: 48, height: 48, borderRadius: "50%", background: "rgba(0,194,168,0.15)",
             display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 10px auto",
-            color: V.pu,
+            color: "var(--pulso)",
           }}>
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="20 6 9 17 4 12" />
             </svg>
           </div>
-          <div style={{ fontFamily: V.df, fontSize: 20, fontWeight: 700, color: "#fff", marginBottom: 4 }}>
+          <div style={{ fontFamily: V.df, fontSize: 20, fontWeight: 700, color: "var(--heading-color)", marginBottom: 4 }}>
             Questão cadastrada com sucesso!
           </div>
-          <div style={{ fontSize: 13, color: V.ch }}>Redirecionando para o catálogo docente...</div>
+          <div style={{ fontSize: 13, color: "var(--chumbo)" }}>Redirecionando para o catálogo docente...</div>
         </div>
       ) : (
         <form onSubmit={handleSubmit} style={{
-          background: V.pe, border: "1px solid rgba(61,90,128,0.25)",
+          background: "var(--card-bg)", border: "1px solid var(--card-border)",
           borderRadius: 14, padding: "28px", display: "flex", flexDirection: "column", gap: 20,
+          boxShadow: "var(--card-shadow)",
         }}>
           {/* Metadados DCN */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
             <div>
-              <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 6 }}>Grande Área DCN *</label>
+              <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 6 }}>Grande Área DCN *</label>
               <select
                 value={area}
                 onChange={(e) => setArea(e.target.value as Area)}
-                style={{ width: "100%", padding: "9px 12px", borderRadius: 6, background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff" }}
+                style={{ width: "100%", padding: "9px 12px", borderRadius: 6, background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--heading-color)" }}
               >
                 <option value="Clínica Médica">Clínica Médica</option>
                 <option value="Cirurgia Geral">Cirurgia Geral</option>
@@ -143,22 +144,22 @@ export default function NovaQuestaoPage() {
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 6 }}>Subárea / Tema Clínico *</label>
+              <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 6 }}>Subárea / Tema Clínico *</label>
               <input
                 type="text"
                 placeholder="Ex: HAS — Tratamento e Metas"
                 value={subarea}
                 onChange={(e) => setSubarea(e.target.value)}
-                style={{ width: "100%", padding: "9px 12px", borderRadius: 6, background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff" }}
+                style={{ width: "100%", padding: "9px 12px", borderRadius: 6, background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--heading-color)" }}
               />
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 6 }}>Banca / Prova *</label>
+              <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 6 }}>Banca / Prova *</label>
               <select
                 value={instituicao}
                 onChange={(e) => setInstituicao(e.target.value as ProvAlvo)}
-                style={{ width: "100%", padding: "9px 12px", borderRadius: 6, background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff" }}
+                style={{ width: "100%", padding: "9px 12px", borderRadius: 6, background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--heading-color)" }}
               >
                 <option value="ENAMED">ENAMED</option>
                 <option value="ENARE">ENARE</option>
@@ -172,21 +173,21 @@ export default function NovaQuestaoPage() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
             <div>
-              <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 6 }}>Ano da Prova</label>
+              <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 6 }}>Ano da Prova</label>
               <input
                 type="number"
                 value={ano}
                 onChange={(e) => setAno(Number(e.target.value))}
-                style={{ width: "100%", padding: "9px 12px", borderRadius: 6, background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff" }}
+                style={{ width: "100%", padding: "9px 12px", borderRadius: 6, background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--heading-color)" }}
               />
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 6 }}>Dificuldade Estimada</label>
+              <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 6 }}>Dificuldade Estimada</label>
               <select
                 value={dificuldade}
                 onChange={(e) => setDificuldade(e.target.value as Dificuldade)}
-                style={{ width: "100%", padding: "9px 12px", borderRadius: 6, background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff" }}
+                style={{ width: "100%", padding: "9px 12px", borderRadius: 6, background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--heading-color)" }}
               >
                 <option value="facil">Fácil</option>
                 <option value="media">Média</option>
@@ -196,11 +197,11 @@ export default function NovaQuestaoPage() {
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 6 }}>Gabarito Oficial *</label>
+              <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 6 }}>Gabarito Oficial *</label>
               <select
                 value={gabarito}
                 onChange={(e) => setGabarito(e.target.value as any)}
-                style={{ width: "100%", padding: "9px 12px", borderRadius: 6, background: "#0D111C", border: `1.5px solid ${V.pu}`, color: V.pu, fontWeight: 700 }}
+                style={{ width: "100%", padding: "9px 12px", borderRadius: 6, background: "var(--input-bg)", border: `1.5px solid var(--pulso)`, color: "var(--pulso)", fontWeight: 700 }}
               >
                 <option value="A">Alternativa A</option>
                 <option value="B">Alternativa B</option>
@@ -213,30 +214,30 @@ export default function NovaQuestaoPage() {
 
           {/* Enunciado e Contexto Clínico */}
           <div>
-            <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 6 }}>Enunciado da Questão *</label>
+            <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 6 }}>Enunciado da Questão *</label>
             <textarea
               rows={4}
               placeholder="Digite o enunciado completo da questão..."
               value={enunciado}
               onChange={(e) => setEnunciado(e.target.value)}
-              style={{ width: "100%", padding: "10px 12px", borderRadius: 6, background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff", fontSize: 13, lineHeight: 1.6 }}
+              style={{ width: "100%", padding: "10px 12px", borderRadius: 6, background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--heading-color)", fontSize: 13, lineHeight: 1.6 }}
             />
           </div>
 
           <div>
-            <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 6 }}>Contexto Clínico / Caso (Opcional)</label>
+            <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 6 }}>Contexto Clínico / Caso (Opcional)</label>
             <textarea
               rows={2}
               placeholder="Ex: Homem de 58 anos, hipertenso e tabagista..."
               value={contextoClinico}
               onChange={(e) => setContextoClinico(e.target.value)}
-              style={{ width: "100%", padding: "10px 12px", borderRadius: 6, background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff", fontSize: 13 }}
+              style={{ width: "100%", padding: "10px 12px", borderRadius: 6, background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--heading-color)", fontSize: 13 }}
             />
           </div>
 
           {/* Alternativas */}
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: "#fff" }}>Alternativas</div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: "var(--heading-color)" }}>Alternativas</div>
             {[
               { l: "A", val: altA, set: setAltA },
               { l: "B", val: altB, set: setAltB },
@@ -246,9 +247,10 @@ export default function NovaQuestaoPage() {
             ].map((alt) => (
               <div key={alt.l} style={{ display: "flex", gap: 10, alignItems: "center" }}>
                 <span style={{
-                  width: 24, height: 24, borderRadius: 4, background: gabarito === alt.l ? V.pu : "rgba(61,90,128,0.3)",
-                  color: gabarito === alt.l ? "#0A1A18" : "#fff", display: "flex", alignItems: "center", justifyContent: "center",
+                  width: 24, height: 24, borderRadius: 4, background: gabarito === alt.l ? "var(--pulso)" : "var(--input-bg)",
+                  color: gabarito === alt.l ? "#FFFFFF" : "var(--heading-color)", display: "flex", alignItems: "center", justifyContent: "center",
                   fontFamily: V.dm, fontSize: 11, fontWeight: 700, flexShrink: 0,
+                  border: gabarito === alt.l ? "none" : "1px solid var(--card-border)",
                 }}>
                   {alt.l}
                 </span>
@@ -257,7 +259,7 @@ export default function NovaQuestaoPage() {
                   placeholder={`Texto da alternativa ${alt.l}${alt.l === "E" ? " (opcional)" : " *"}`}
                   value={alt.val}
                   onChange={(e) => alt.set(e.target.value)}
-                  style={{ flex: 1, padding: "8px 12px", borderRadius: 6, background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff" }}
+                  style={{ flex: 1, padding: "8px 12px", borderRadius: 6, background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--heading-color)" }}
                 />
               </div>
             ))}
@@ -265,7 +267,7 @@ export default function NovaQuestaoPage() {
 
           {/* Explicação Comentada */}
           <div>
-            <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 6 }}>
+            <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 6 }}>
               Justificativa Comentada / Comentário da Banca *
             </label>
             <textarea
@@ -273,7 +275,7 @@ export default function NovaQuestaoPage() {
               placeholder="Explique detalhadamente por que a alternativa correta é o gabarito e justifique o erro dos distratores..."
               value={explicacao}
               onChange={(e) => setExplicacao(e.target.value)}
-              style={{ width: "100%", padding: "10px 12px", borderRadius: 6, background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff", fontSize: 13, lineHeight: 1.6 }}
+              style={{ width: "100%", padding: "10px 12px", borderRadius: 6, background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--heading-color)", fontSize: 13, lineHeight: 1.6 }}
             />
           </div>
 
@@ -281,7 +283,7 @@ export default function NovaQuestaoPage() {
             <button
               type="button"
               onClick={() => router.push("/admin/conteudo")}
-              style={{ padding: "10px 20px", borderRadius: 8, background: "transparent", border: "1px solid rgba(61,90,128,0.3)", color: V.ch, cursor: "pointer" }}
+              style={{ padding: "10px 20px", borderRadius: 8, background: "transparent", border: "1px solid var(--card-border)", color: "var(--chumbo)", cursor: "pointer" }}
             >
               Cancelar
             </button>
@@ -289,7 +291,7 @@ export default function NovaQuestaoPage() {
               type="submit"
               disabled={saving}
               style={{
-                padding: "10px 24px", borderRadius: 8, background: V.pu, border: "none", color: "#0A1A18",
+                padding: "10px 24px", borderRadius: 8, background: "var(--pulso)", border: "none", color: "#FFFFFF",
                 fontWeight: 700, cursor: saving ? "not-allowed" : "pointer", boxShadow: "0 2px 10px rgba(0,194,168,0.3)",
               }}
             >
