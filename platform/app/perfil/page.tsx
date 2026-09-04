@@ -22,10 +22,11 @@ const dias = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 
 const chipStyle = (selected: boolean): React.CSSProperties => ({
   padding: "6px 14px", borderRadius: 9999,
-  background: selected ? "rgba(0,194,168,0.12)" : "rgba(43,58,82,0.5)",
-  border: `1.5px solid ${selected ? "rgba(0,194,168,0.35)" : "rgba(61,90,128,0.25)"}`,
-  color: selected ? V.pu : V.ch,
+  background: selected ? "rgba(0,194,168,0.15)" : "var(--input-bg)",
+  border: `1.5px solid ${selected ? "var(--pulso)" : "var(--card-border)"}`,
+  color: selected ? "var(--pulso)" : "var(--chumbo)",
   fontFamily: V.db, fontSize: 12, cursor: "pointer", transition: "all 0.15s",
+  fontWeight: selected ? 600 : 500,
 });
 
 export default function PerfilPage() {
@@ -77,7 +78,7 @@ export default function PerfilPage() {
 
   const toggleStyle = (on: boolean): React.CSSProperties => ({
     width: 40, height: 22, borderRadius: 11,
-    background: on ? V.pu : "rgba(61,90,128,0.3)",
+    background: on ? V.pu : "var(--card-border)",
     position: "relative", cursor: "pointer", transition: "all 0.2s",
     display: "inline-block", flexShrink: 0,
   });
@@ -86,6 +87,7 @@ export default function PerfilPage() {
     width: 16, height: 16, borderRadius: "50%",
     background: "#fff", position: "absolute", top: 3,
     left: on ? 21 : 3, transition: "left 0.2s",
+    boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
   });
 
   const planoLabel: Record<string, string> = {
@@ -141,7 +143,7 @@ export default function PerfilPage() {
             {displayIniciais}
           </div>
           <div>
-            <div style={{ fontFamily: V.df, fontSize: 22, fontWeight: 700, color: "#fff", marginBottom: 2 }}>
+            <div style={{ fontFamily: V.df, fontSize: 22, fontWeight: 700, color: V.heading, marginBottom: 2 }}>
               {displayNome}
             </div>
             <div style={{ fontSize: 13, color: V.ch, marginBottom: 6 }}>{displayEmail}</div>
@@ -167,7 +169,7 @@ export default function PerfilPage() {
         <div className="col-left">
           {/* ── Dados Pessoais ── */}
           <Card hoverable={false}>
-            <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 14 }}>
+            <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: V.heading, marginBottom: 14 }}>
               Dados Pessoais
             </div>
             {[
@@ -179,7 +181,7 @@ export default function PerfilPage() {
             ].map((f) => (
               <div key={f.label} style={{
                 display: "flex", justifyContent: "space-between", padding: "8px 0",
-                borderBottom: "1px solid rgba(61,90,128,0.1)",
+                borderBottom: "1px solid var(--card-border)",
               }}>
                 <span style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: V.ch }}>{f.label}</span>
                 <span style={{ fontSize: 13, color: V.nb }}>{f.value}</span>
@@ -189,7 +191,7 @@ export default function PerfilPage() {
 
           {/* ── Prova-Alvo (editável) ── */}
           <Card hoverable={false}>
-            <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 14 }}>
+            <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: V.heading, marginBottom: 14 }}>
               Prova-Alvo
             </div>
             <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
@@ -208,7 +210,7 @@ export default function PerfilPage() {
 
           {/* ── Disponibilidade (editável) ── */}
           <Card hoverable={false}>
-            <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 14 }}>
+            <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: V.heading, marginBottom: 14 }}>
               Disponibilidade
             </div>
             <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: V.ch, marginBottom: 8 }}>
@@ -250,7 +252,7 @@ export default function PerfilPage() {
         <div className="col-right">
           {/* ── Notificações ── */}
           <Card hoverable={false}>
-            <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 14 }}>
+            <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: V.heading, marginBottom: 14 }}>
               Notificações
             </div>
             {[
@@ -262,7 +264,7 @@ export default function PerfilPage() {
             ].map((n) => (
               <div key={n.key} style={{
                 display: "flex", justifyContent: "space-between", alignItems: "center",
-                padding: "10px 0", borderBottom: "1px solid rgba(61,90,128,0.1)",
+                padding: "10px 0", borderBottom: "1px solid var(--card-border)",
               }}>
                 <div>
                   <div style={{ fontSize: 13, color: V.nb }}>{n.label}</div>
@@ -280,7 +282,7 @@ export default function PerfilPage() {
 
           {/* ── Plano ── */}
           <Card hoverable={false} style={{
-            background: `linear-gradient(135deg, ${planoColor[displayPlano]}10, ${V.pe})`,
+            background: `linear-gradient(135deg, ${planoColor[displayPlano]}15, var(--card-bg))`,
             borderColor: `${planoColor[displayPlano]}40`,
           }}>
             <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: planoColor[displayPlano], marginBottom: 8 }}>
@@ -301,7 +303,7 @@ export default function PerfilPage() {
 
           {/* ── Conta ── */}
           <Card hoverable={false}>
-            <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 14 }}>
+            <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: V.heading, marginBottom: 14 }}>
               Conta
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>

@@ -100,15 +100,16 @@ export default function CronogramaPage() {
 
             {schedule.map((dia) => (
               <div key={dia.dia} style={{
-                background: V.pe, border: "1px solid rgba(61,90,128,0.2)",
+                background: "var(--card-bg)", border: "1px solid var(--card-border)",
+                boxShadow: "var(--card-shadow)",
                 borderRadius: 12, padding: "12px", minHeight: 200,
               }}>
                 {/* Day header */}
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                  <span style={{ fontFamily: V.df, fontSize: 13, fontWeight: 600, color: "#fff" }}>
+                  <span style={{ fontFamily: V.df, fontSize: 13, fontWeight: 600, color: "var(--heading-color)" }}>
                     {dia.diaSemana.slice(0, 3)}
                   </span>
-                  <span style={{ fontFamily: V.dm, fontSize: 9, color: V.ch }}>
+                  <span style={{ fontFamily: V.dm, fontSize: 9, color: "var(--chumbo)" }}>
                     {dia.dia.slice(8)}
                   </span>
                 </div>
@@ -120,8 +121,8 @@ export default function CronogramaPage() {
                     return (
                       <div key={i} style={{
                         padding: "9px 10px", borderRadius: 8,
-                        background: "rgba(13,17,28,0.4)",
-                        border: "1px solid rgba(61,90,128,0.22)",
+                        background: "var(--input-bg)",
+                        border: "1px solid var(--card-border)",
                         transition: "all 0.15s",
                       }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
@@ -133,10 +134,10 @@ export default function CronogramaPage() {
                           </span>
                           <span style={{ fontSize: 11 }}>{tipoIcon[b.tipo]}</span>
                         </div>
-                        <div style={{ fontSize: 11, fontWeight: 600, color: "#fff", lineHeight: 1.3, marginBottom: 2 }}>
+                        <div style={{ fontSize: 11, fontWeight: 600, color: "var(--heading-color)", lineHeight: 1.3, marginBottom: 2 }}>
                           {b.area}
                         </div>
-                        <div style={{ fontSize: 9.5, color: V.ch, lineHeight: 1.3 }}>
+                        <div style={{ fontSize: 9.5, color: "var(--chumbo)", lineHeight: 1.3 }}>
                           {b.descricao}
                         </div>
                       </div>
@@ -152,10 +153,11 @@ export default function CronogramaPage() {
         <div className="col-right">
           {/* Distribuição */}
           <div style={{
-            background: V.pe, border: "1px solid rgba(61,90,128,0.2)",
+            background: "var(--card-bg)", border: "1px solid var(--card-border)",
+            boxShadow: "var(--card-shadow)",
             borderRadius: 14, padding: "20px", marginBottom: 14,
           }}>
-            <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 14 }}>
+            <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "var(--heading-color)", marginBottom: 14 }}>
               Distribuição da Semana
             </div>
             {/* Donut bar */}
@@ -170,7 +172,7 @@ export default function CronogramaPage() {
               </div>
             </div>
             {/* Legend */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 8, borderTop: "1px solid rgba(61,90,128,0.15)", paddingTop: 12 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, borderTop: "1px solid var(--card-border)", paddingTop: 12 }}>
               {[
                 { tipo: "simulado", label: "Simulados cronometrados", horas: "9h30" },
                 { tipo: "questoes", label: "Blocos de questões", horas: "6h30" },
@@ -180,9 +182,9 @@ export default function CronogramaPage() {
                 <div key={t.tipo} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <span>{tipoIcon[t.tipo]}</span>
-                    <span style={{ fontSize: 12, color: V.nb }}>{t.label}</span>
+                    <span style={{ fontSize: 12, color: "var(--neblina)" }}>{t.label}</span>
                   </div>
-                  <span style={{ fontFamily: V.dm, fontSize: 11, color: V.ch }}>{t.horas}</span>
+                  <span style={{ fontFamily: V.dm, fontSize: 11, color: "var(--chumbo)" }}>{t.horas}</span>
                 </div>
               ))}
             </div>
@@ -197,7 +199,7 @@ export default function CronogramaPage() {
             <div style={{ fontFamily: V.df, fontSize: 13, fontWeight: 600, color: V.pu, marginBottom: 6 }}>
               💡 Recomendação da IA MedPleni
             </div>
-            <div style={{ fontSize: 12, color: V.nb, lineHeight: 1.6 }}>
+            <div style={{ fontSize: 12, color: "var(--neblina)", lineHeight: 1.6 }}>
               Concentre seu estudo de <strong>Saúde Coletiva</strong> nos flashcards matinais e resolva o simulado de <strong>Trauma (Cirurgia)</strong> na quarta-feira para consolidar o índice de corte da sua banca.
             </div>
           </div>

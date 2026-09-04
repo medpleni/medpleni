@@ -146,9 +146,9 @@ export default function QuestoesPage() {
 
   const chipStyle = (selected: boolean): React.CSSProperties => ({
     padding: "5px 12px", borderRadius: 9999,
-    background: selected ? "rgba(0,194,168,0.12)" : "rgba(43,58,82,0.5)",
-    border: `1.5px solid ${selected ? "rgba(0,194,168,0.35)" : "rgba(61,90,128,0.25)"}`,
-    color: selected ? V.pu : V.ch,
+    background: selected ? "var(--pulso-dim)" : "var(--input-bg)",
+    border: `1.5px solid ${selected ? V.pu : "var(--card-border)"}`,
+    color: selected ? V.pu : "var(--chumbo)",
     fontFamily: V.dm, fontSize: 10, letterSpacing: "0.08em",
     cursor: "pointer", transition: "all 0.15s", textTransform: "uppercase" as const,
   });
@@ -164,7 +164,7 @@ export default function QuestoesPage() {
       <div style={{ marginBottom: 20 }}>
         {/* Institution chips */}
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 10 }}>
-          <span style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em", color: V.ch, textTransform: "uppercase", alignSelf: "center", marginRight: 4 }}>
+          <span style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em", color: "var(--chumbo)", textTransform: "uppercase", alignSelf: "center", marginRight: 4 }}>
             Instituição
           </span>
           {instituicoes.map((i) => (
@@ -173,7 +173,7 @@ export default function QuestoesPage() {
         </div>
         {/* Area chips */}
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 10 }}>
-          <span style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em", color: V.ch, textTransform: "uppercase", alignSelf: "center", marginRight: 4 }}>
+          <span style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em", color: "var(--chumbo)", textTransform: "uppercase", alignSelf: "center", marginRight: 4 }}>
             Área
           </span>
           {areas.map((a) => (
@@ -182,7 +182,7 @@ export default function QuestoesPage() {
         </div>
         {/* Difficulty chips */}
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 14 }}>
-          <span style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em", color: V.ch, textTransform: "uppercase", alignSelf: "center", marginRight: 4 }}>
+          <span style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em", color: "var(--chumbo)", textTransform: "uppercase", alignSelf: "center", marginRight: 4 }}>
             Dificuldade
           </span>
           {dificuldades.map((d) => (
@@ -198,8 +198,8 @@ export default function QuestoesPage() {
           onChange={(e) => setSearch(e.target.value)}
           style={{
             width: "100%", padding: "10px 14px", borderRadius: 8,
-            background: "rgba(43,58,82,0.4)", border: "1px solid rgba(61,90,128,0.25)",
-            color: V.nb, fontFamily: V.db, fontSize: 13, outline: "none",
+            background: "var(--input-bg)", border: "1px solid var(--card-border)",
+            color: "var(--neblina)", fontFamily: V.db, fontSize: 13, outline: "none",
           }}
         />
       </div>
@@ -207,7 +207,7 @@ export default function QuestoesPage() {
       {/* ── QUESTION LIST ── */}
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {loading ? (
-          <div style={{ textAlign: "center", padding: 40, color: V.ch, fontSize: 14 }}>
+          <div style={{ textAlign: "center", padding: 40, color: "var(--chumbo)", fontSize: 14 }}>
             Carregando questões do banco...
           </div>
         ) : (
@@ -220,8 +220,9 @@ export default function QuestoesPage() {
 
             return (
               <div key={q.id} style={{
-                background: V.pe,
-                border: `1px solid ${isAnswered ? (userAns.isCorrect ? "rgba(0,194,168,0.3)" : "rgba(255,107,107,0.3)") : "rgba(61,90,128,0.2)"}`,
+                background: "var(--card-bg)",
+                border: `1px solid ${isAnswered ? (userAns.isCorrect ? "rgba(0,194,168,0.4)" : "rgba(255,107,107,0.4)") : "var(--card-border)"}`,
+                boxShadow: "var(--card-shadow)",
                 borderRadius: 12, overflow: "hidden", transition: "all 0.2s",
               }}>
                 {/* Header row (always visible) */}
@@ -239,10 +240,10 @@ export default function QuestoesPage() {
                     }}>
                       {areaAbbr[q.area] || q.area}
                     </span>
-                    <span style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "#fff" }}>
+                    <span style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "var(--heading-color)" }}>
                       {q.subarea}
                     </span>
-                    <span style={{ fontFamily: V.dm, fontSize: 10, color: V.ch }}>
+                    <span style={{ fontFamily: V.dm, fontSize: 10, color: "var(--chumbo)" }}>
                       {q.instituicao} · {q.ano}
                     </span>
                   </div>
@@ -253,7 +254,7 @@ export default function QuestoesPage() {
                         {userAns.isCorrect ? "Acertou" : "Errou"}
                       </Badge>
                     )}
-                    <span style={{ color: V.ch, fontSize: 12 }}>
+                    <span style={{ color: "var(--chumbo)", fontSize: 12 }}>
                       {isExpanded ? "▲" : "▼"}
                     </span>
                   </div>
@@ -261,16 +262,16 @@ export default function QuestoesPage() {
 
                 {/* Expanded content */}
                 {isExpanded && (
-                  <div style={{ padding: "0 18px 18px", borderTop: "1px solid rgba(61,90,128,0.15)" }}>
-                    <div style={{ fontSize: 14, lineHeight: 1.7, color: V.nb, margin: "14px 0" }}>
+                  <div style={{ padding: "0 18px 18px", borderTop: "1px solid var(--card-border)" }}>
+                    <div style={{ fontSize: 14, lineHeight: 1.7, color: "var(--neblina)", margin: "14px 0" }}>
                       {q.enunciado}
                     </div>
 
                     {q.contextoClinico && (
                       <div style={{
                         margin: "12px 0", padding: "12px 16px",
-                        background: "rgba(13,17,28,0.45)", border: "1px solid rgba(61,90,128,0.25)",
-                        borderRadius: 8, fontSize: 13, lineHeight: 1.6, color: V.ch, fontStyle: "italic",
+                        background: "var(--input-bg)", border: "1px solid var(--card-border)",
+                        borderRadius: 8, fontSize: 13, lineHeight: 1.6, color: "var(--chumbo)", fontStyle: "italic",
                       }}>
                         {q.contextoClinico}
                       </div>
@@ -283,8 +284,8 @@ export default function QuestoesPage() {
                         const isRightAnswer = isAnswered && alt.letra === q.gabarito;
                         const isWrongChoice = isAnswered && isChosen && !userAns.isCorrect;
 
-                        let optBg = "rgba(43,58,82,0.3)";
-                        let optBorder = "rgba(61,90,128,0.25)";
+                        let optBg = "var(--input-bg)";
+                        let optBorder = "var(--card-border)";
                         if (isRightAnswer) {
                           optBg = "rgba(0,194,168,0.12)";
                           optBorder = "rgba(0,194,168,0.5)";
@@ -292,7 +293,7 @@ export default function QuestoesPage() {
                           optBg = "rgba(255,107,107,0.12)";
                           optBorder = "rgba(255,107,107,0.5)";
                         } else if (isChosen && !isAnswered) {
-                          optBg = "rgba(0,194,168,0.08)";
+                          optBg = "var(--pulso-dim)";
                           optBorder = "rgba(0,194,168,0.4)";
                         }
 
@@ -311,12 +312,12 @@ export default function QuestoesPage() {
                               fontFamily: V.dm, fontSize: 11, fontWeight: 700,
                               width: 20, height: 20, borderRadius: 4, flexShrink: 0,
                               display: "flex", alignItems: "center", justifyContent: "center",
-                              background: isRightAnswer ? V.pu : isWrongChoice ? V.dg : isChosen ? V.pu : "rgba(61,90,128,0.2)",
-                              color: isRightAnswer || (isChosen && !isWrongChoice) ? "#0A1A18" : "#fff",
+                              background: isRightAnswer ? V.pu : isWrongChoice ? V.dg : isChosen ? V.pu : "var(--card-border)",
+                              color: isRightAnswer || (isChosen && !isWrongChoice) ? "#0A1A18" : "var(--neblina)",
                             }}>
                               {alt.letra}
                             </span>
-                            <span style={{ fontSize: 13, lineHeight: 1.5, color: isRightAnswer ? "#fff" : V.nb }}>
+                            <span style={{ fontSize: 13, lineHeight: 1.5, color: "var(--neblina)" }}>
                               {alt.texto}
                             </span>
                           </div>

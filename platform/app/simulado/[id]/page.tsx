@@ -399,18 +399,18 @@ export default function SimuladoDetailPage() {
      TELA DE EXECUÇÃO DO SIMULADO
   ══════════════════════════════════════════════ */
   return (
-    <div style={{ background: "#0D111C", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <div style={{ background: "var(--abismo)", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       {/* ── SIM TOPBAR ── */}
       <div style={{
         height: 52, display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "0 24px", background: "#0D111C",
-        borderBottom: "1px solid rgba(61,90,128,0.2)",
+        padding: "0 24px", background: "var(--card-bg)",
+        borderBottom: "1px solid var(--card-border)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-          <div onClick={() => router.push("/dashboard")} style={{ fontFamily: V.df, fontWeight: 700, fontSize: 17, color: "#fff", cursor: "pointer" }}>
+          <div onClick={() => router.push("/dashboard")} style={{ fontFamily: V.df, fontWeight: 700, fontSize: 17, color: V.heading, cursor: "pointer" }}>
             Med<span style={{ color: V.pu }}>Pleni</span>
           </div>
-          <div style={{ width: 1, height: 20, background: "rgba(61,90,128,0.3)" }} />
+          <div style={{ width: 1, height: 20, background: "var(--card-border)" }} />
           <div style={{ fontSize: 12, color: V.ch, fontFamily: V.dm }}>
             {simulation.instituicao} · {simulation.titulo}
           </div>
@@ -420,13 +420,14 @@ export default function SimuladoDetailPage() {
             <div style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.08em", color: V.ch }}>
               Q {currentIdx + 1} / {totalQ}
             </div>
-            <div style={{ width: 140, height: 4, background: "rgba(61,90,128,0.2)", borderRadius: 9999, overflow: "hidden", marginTop: 4 }}>
+            <div style={{ width: 140, height: 4, background: "var(--card-border)", borderRadius: 9999, overflow: "hidden", marginTop: 4 }}>
               <div style={{ width: `${((currentIdx + 1) / totalQ) * 100}%`, height: "100%", background: V.pu, borderRadius: 9999, transition: "width 0.3s" }} />
             </div>
           </div>
           <div style={{
-            fontFamily: V.dm, fontSize: 14, letterSpacing: "0.04em", color: "#fff",
-            background: "rgba(61,90,128,0.2)", padding: "4px 12px", borderRadius: 8,
+            fontFamily: V.dm, fontSize: 14, letterSpacing: "0.04em", color: V.heading,
+            background: "var(--input-bg)", padding: "4px 12px", borderRadius: 8,
+            border: "1px solid var(--card-border)",
           }}>
             {t.h}:<span style={{ color: V.wn }}>{t.m}</span>:{t.s}
           </div>
@@ -449,8 +450,8 @@ export default function SimuladoDetailPage() {
 
         {/* ── LEFT SIDEBAR (Grade de Questões) ── */}
         <div style={{
-          width: 210, borderRight: "1px solid rgba(61,90,128,0.2)",
-          padding: 16, background: "rgba(26,31,46,0.5)", overflowY: "auto",
+          width: 210, borderRight: "1px solid var(--card-border)",
+          padding: 16, background: "var(--card-bg)", overflowY: "auto",
         }}>
           <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.15em", textTransform: "uppercase", color: V.ch, marginBottom: 12 }}>
             Mapa de Questões
@@ -468,7 +469,7 @@ export default function SimuladoDetailPage() {
           </div>
 
           {/* Stats */}
-          <div style={{ marginTop: 20, borderTop: "1px solid rgba(61,90,128,0.15)", paddingTop: 14 }}>
+          <div style={{ marginTop: 20, borderTop: "1px solid var(--card-border)", paddingTop: 14 }}>
             {[
               { label: "Respondidas", value: answeredCount, color: V.pu },
               { label: "Puladas", value: skippedCount, color: V.wn },
@@ -485,7 +486,7 @@ export default function SimuladoDetailPage() {
         {/* ── MAIN CONTENT (Questão Atual) ── */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", overflowY: "auto" }}>
           {/* Header */}
-          <div style={{ padding: "16px 28px", borderBottom: "1px solid rgba(61,90,128,0.15)", background: "rgba(43,58,82,0.2)" }}>
+          <div style={{ padding: "16px 28px", borderBottom: "1px solid var(--card-border)", background: "var(--card-bg)" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               <span style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: V.pu }}>
                 Questão {currentIdx + 1}
@@ -517,7 +518,7 @@ export default function SimuladoDetailPage() {
               {q.contextoClinico && (
                 <div style={{
                   margin: "16px 0", padding: "14px 18px",
-                  background: "rgba(13,17,28,0.45)", border: "1px solid rgba(61,90,128,0.25)",
+                  background: "var(--input-bg)", border: "1px solid var(--card-border)",
                   borderRadius: 8,
                   fontSize: 13, lineHeight: 1.7, color: V.ch, fontStyle: "italic",
                 }}>
@@ -536,7 +537,7 @@ export default function SimuladoDetailPage() {
                     <div style={optLetterStyle(alt.letra)}>{alt.letra}</div>
                     <div style={{
                       fontSize: 13, lineHeight: 1.6,
-                      color: selectedOpt === alt.letra ? "#fff" : V.nb,
+                      color: selectedOpt === alt.letra ? "var(--heading-color)" : V.nb,
                     }}>
                       {alt.texto}
                     </div>
@@ -547,16 +548,16 @@ export default function SimuladoDetailPage() {
 
             {/* Painel Lateral de Contexto */}
             <div style={{ width: 220, display: "flex", flexDirection: "column", gap: 12 }}>
-              <div style={{ background: V.pe, border: "1px solid rgba(61,90,128,0.25)", borderRadius: 12, padding: 14 }}>
+              <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: 12, padding: 14 }}>
                 <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: V.ch, marginBottom: 8 }}>
                   Banca
                 </div>
-                <div style={{ fontSize: 13, color: "#fff", fontWeight: 600 }}>{simulation.instituicao}</div>
+                <div style={{ fontSize: 13, color: V.heading, fontWeight: 600 }}>{simulation.instituicao}</div>
                 <div style={{ fontSize: 11, color: V.ch, marginTop: 2 }}>{simulation.area}</div>
               </div>
 
               {q.tags && q.tags.length > 0 && (
-                <div style={{ background: V.pe, border: "1px solid rgba(61,90,128,0.25)", borderRadius: 12, padding: 14 }}>
+                <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: 12, padding: 14 }}>
                   <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: V.ch, marginBottom: 8 }}>
                     Tags Clínicas
                   </div>
@@ -565,7 +566,7 @@ export default function SimuladoDetailPage() {
                       <span key={tag} style={{
                         fontFamily: V.dm, fontSize: 8, textTransform: "uppercase",
                         padding: "2px 6px", borderRadius: 9999,
-                        background: "rgba(61,90,128,0.2)", color: V.ch,
+                        background: "var(--input-bg)", color: V.ch, border: "1px solid var(--card-border)",
                       }}>
                         {tag}
                       </span>
@@ -579,9 +580,9 @@ export default function SimuladoDetailPage() {
           {/* Footer de Navegação */}
           <div style={{
             padding: "14px 28px",
-            borderTop: "1px solid rgba(61,90,128,0.15)",
+            borderTop: "1px solid var(--card-border)",
             display: "flex", justifyContent: "space-between", alignItems: "center",
-            background: "#0D111C",
+            background: "var(--card-bg)",
           }}>
             <div style={{ display: "flex", gap: 8 }}>
               <button
@@ -590,7 +591,7 @@ export default function SimuladoDetailPage() {
                 style={{
                   padding: "8px 16px", borderRadius: 8,
                   fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: currentIdx === 0 ? "not-allowed" : "pointer",
-                  background: "transparent", color: V.ch, border: "1.5px solid rgba(61,90,128,0.3)",
+                  background: "transparent", color: V.ch, border: "1.5px solid var(--card-border)",
                   opacity: currentIdx === 0 ? 0.4 : 1,
                 }}
               >
@@ -619,7 +620,7 @@ export default function SimuladoDetailPage() {
                       onClick={() => setConfidence(d)}
                       style={{
                         width: 18, height: 6, borderRadius: 9999, cursor: "pointer",
-                        background: d <= confidence ? V.pu : "rgba(61,90,128,0.2)",
+                        background: d <= confidence ? V.pu : "var(--card-border)",
                         transition: "background 0.15s",
                       }}
                     />

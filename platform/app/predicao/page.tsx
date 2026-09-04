@@ -87,7 +87,7 @@ export default function PredicaoPage() {
               <ScoreRing score={data.scoreGeralEnamed} size={150} sublabel="Índice ENAMED" />
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                  <span style={{ fontFamily: V.df, fontSize: 24, fontWeight: 700, color: "#fff", letterSpacing: "-0.02em" }}>
+                  <span style={{ fontFamily: V.df, fontSize: 24, fontWeight: 700, color: "var(--heading-color)", letterSpacing: "-0.02em" }}>
                     {data.statusGeral}
                   </span>
                   <Badge variant={data.scoreGeralEnamed >= 78 ? "green" : "warn"}>
@@ -95,7 +95,7 @@ export default function PredicaoPage() {
                   </Badge>
                 </div>
 
-                <div style={{ fontSize: 13, color: V.ch, lineHeight: 1.6, marginTop: 6 }}>
+                <div style={{ fontSize: 13, color: "var(--chumbo)", lineHeight: 1.6, marginTop: 6 }}>
                   Predição calibrada sobre a **Matriz de Competências do INEP / DCNs**.
                   Você está no <strong style={{ color: V.pu }}>Top {100 - data.percentilNacional}%</strong> dos candidatos projetados para o ciclo 2027.
                 </div>
@@ -103,13 +103,13 @@ export default function PredicaoPage() {
                 <div style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap" }}>
                   <span style={{
                     fontFamily: V.dm, fontSize: 10, padding: "3px 8px", borderRadius: 6,
-                    background: "rgba(0,194,168,0.1)", color: V.pu, border: "1px solid rgba(0,194,168,0.25)",
+                    background: "var(--pulso-dim)", color: V.pu, border: "1px solid rgba(0,194,168,0.25)",
                   }}>
                     Nota de Corte Estimada: 78%
                   </span>
                   <span style={{
                     fontFamily: V.dm, fontSize: 10, padding: "3px 8px", borderRadius: 6,
-                    background: "rgba(61,90,128,0.15)", color: V.ch,
+                    background: "var(--input-bg)", color: "var(--chumbo)", border: "1px solid var(--card-border)",
                   }}>
                     Ranking Projetado: #{data.rankingEstimado}
                   </span>
@@ -121,10 +121,10 @@ export default function PredicaoPage() {
           {/* Matriz de Competências do ENAMED */}
           <Card hoverable={false}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-              <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "#fff" }}>
+              <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "var(--heading-color)" }}>
                 Matriz de Competências — ENAMED (5 Grandes Áreas)
               </div>
-              <span style={{ fontFamily: V.dm, fontSize: 9, color: V.ch, textTransform: "uppercase" }}>
+              <span style={{ fontFamily: V.dm, fontSize: 9, color: "var(--chumbo)", textTransform: "uppercase" }}>
                 Pesos Oficiais DCN
               </span>
             </div>
@@ -136,8 +136,8 @@ export default function PredicaoPage() {
                     {["Área Médica", "Peso ENAMED", "Seu Score", "Meta", "Situação"].map((h) => (
                       <th key={h} style={{
                         fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase",
-                        color: V.ch, textAlign: "left", padding: "8px 10px",
-                        borderBottom: "1px solid rgba(61,90,128,0.2)",
+                        color: "var(--chumbo)", textAlign: "left", padding: "8px 10px",
+                        borderBottom: "1px solid var(--card-border)",
                       }}>
                         {h}
                       </th>
@@ -146,15 +146,15 @@ export default function PredicaoPage() {
                 </thead>
                 <tbody>
                   {data.competencias.map((c) => (
-                    <tr key={c.area} style={{ borderBottom: "1px solid rgba(61,90,128,0.1)" }}>
-                      <td style={{ padding: "10px", fontSize: 13, color: V.nb }}>{c.area}</td>
-                      <td style={{ padding: "10px", fontFamily: V.dm, fontSize: 11, color: V.ch }}>
+                    <tr key={c.area} style={{ borderBottom: "1px solid var(--card-border)" }}>
+                      <td style={{ padding: "10px", fontSize: 13, color: "var(--neblina)" }}>{c.area}</td>
+                      <td style={{ padding: "10px", fontFamily: V.dm, fontSize: 11, color: "var(--chumbo)" }}>
                         {c.pesoEnamed}%
                       </td>
-                      <td style={{ padding: "10px", fontFamily: V.dm, fontSize: 14, fontWeight: 600, color: "#fff" }}>
+                      <td style={{ padding: "10px", fontFamily: V.dm, fontSize: 14, fontWeight: 600, color: "var(--heading-color)" }}>
                         {c.score}%
                       </td>
-                      <td style={{ padding: "10px", fontFamily: V.dm, fontSize: 11, color: V.ch }}>
+                      <td style={{ padding: "10px", fontFamily: V.dm, fontSize: 11, color: "var(--chumbo)" }}>
                         {c.meta}%
                       </td>
                       <td style={{ padding: "10px" }}>
@@ -172,7 +172,7 @@ export default function PredicaoPage() {
           {/* Curva de Projeção até 2027 */}
           <Card hoverable={false}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-              <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "#fff" }}>
+              <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "var(--heading-color)" }}>
                 Curva de Evolução Projetada até o ENAMED 2027
               </div>
               <span style={{ fontFamily: V.dm, fontSize: 9, color: V.pu }}>
@@ -183,16 +183,16 @@ export default function PredicaoPage() {
             <div style={{ height: 200 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={data.projecao2027} margin={{ top: 10, right: 20, left: -20, bottom: 0 }}>
-                  <CartesianGrid stroke="rgba(61,90,128,0.15)" strokeDasharray="3 3" />
-                  <XAxis dataKey="periodo" stroke="#8A9AB5" tick={{ fontFamily: "'IBM Plex Mono'", fontSize: 9 }} />
-                  <YAxis domain={[50, 100]} stroke="#8A9AB5" tick={{ fontFamily: "'IBM Plex Mono'", fontSize: 9 }} />
+                  <CartesianGrid stroke="var(--card-border)" strokeDasharray="3 3" />
+                  <XAxis dataKey="periodo" stroke="var(--chumbo)" tick={{ fontFamily: "'IBM Plex Mono'", fontSize: 9 }} />
+                  <YAxis domain={[50, 100]} stroke="var(--chumbo)" tick={{ fontFamily: "'IBM Plex Mono'", fontSize: 9 }} />
                   <RTooltip content={<ChartTooltip />} />
                   <Line type="monotone" dataKey="score" stroke="#00C2A8" strokeWidth={2.5} dot={{ fill: "#00C2A8", r: 4 }} />
                   <Line type="monotone" dataKey="metaEnamed" stroke="rgba(245,166,35,0.7)" strokeWidth={1.5} strokeDasharray="4 4" dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
-            <div style={{ display: "flex", justifyContent: "center", gap: 20, marginTop: 10, fontFamily: V.dm, fontSize: 9, color: V.ch }}>
+            <div style={{ display: "flex", justifyContent: "center", gap: 20, marginTop: 10, fontFamily: V.dm, fontSize: 9, color: "var(--chumbo)" }}>
               <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <span style={{ width: 12, height: 2, background: V.pu, display: "inline-block" }} /> Score Projetado
               </span>
@@ -207,17 +207,17 @@ export default function PredicaoPage() {
         <div className="col-right">
           {/* Alertas Críticos ENAMED */}
           <Card hoverable={false}>
-            <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 14 }}>
+            <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: "var(--heading-color)", marginBottom: 14 }}>
               Alertas da IA para o ENAMED 2027
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {data.alertasEnamed.map((al) => (
                 <div key={al.area} style={{
-                  padding: "14px 16px", background: "rgba(43,58,82,0.35)",
-                  borderRadius: 10, border: "1px solid rgba(61,90,128,0.25)",
+                  padding: "14px 16px", background: "var(--input-bg)",
+                  borderRadius: 10, border: "1px solid var(--card-border)",
                 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>{al.area}</span>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: "var(--heading-color)" }}>{al.area}</span>
                     <span style={{
                       fontFamily: V.dm, fontSize: 9, fontWeight: 600,
                       padding: "2px 6px", borderRadius: 4,
@@ -227,12 +227,12 @@ export default function PredicaoPage() {
                       {al.pct}% acerto
                     </span>
                   </div>
-                  <div style={{ fontSize: 12, color: V.ch, lineHeight: 1.5, marginBottom: 10 }}>
+                  <div style={{ fontSize: 12, color: "var(--chumbo)", lineHeight: 1.5, marginBottom: 10 }}>
                     {al.desc}
                   </div>
                   <div style={{
-                    fontSize: 11, color: V.nb, background: "rgba(13,17,28,0.5)",
-                    border: "1px solid rgba(61,90,128,0.2)",
+                    fontSize: 11, color: "var(--neblina)", background: "var(--card-bg)",
+                    border: "1px solid var(--card-border)",
                     padding: "6px 10px", borderRadius: 6,
                   }}>
                     🎯 <strong style={{ color: V.pu }}>Conduta:</strong> {al.rec}
@@ -250,7 +250,7 @@ export default function PredicaoPage() {
             <div style={{ fontFamily: V.df, fontSize: 13, fontWeight: 600, color: V.pu, marginBottom: 8 }}>
               💡 Estratégia de Preparação ENAMED
             </div>
-            <div style={{ fontSize: 12, color: V.nb, lineHeight: 1.6 }}>
+            <div style={{ fontSize: 12, color: "var(--neblina)", lineHeight: 1.6 }}>
               O ENAMED valoriza fortemente o raciocínio clínico aplicado ao <strong>SUS e à Atenção Primária</strong>. Candidatos com mais de 80% em Saúde Coletiva garantem uma folga decisiva de pontuação sobre a média nacional.
             </div>
           </Card>

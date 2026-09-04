@@ -50,7 +50,6 @@ const defaultSections = [
     label: "Conta",
     items: [
       { id: "perfil", label: "Meu Perfil", icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><circle cx="8" cy="5" r="2.5" stroke="currentColor" strokeWidth="1.3" /><path d="M3 13c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" /></svg> },
-      { id: "planos", label: "Planos", icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><path d="M8 2l1.5 3.5L14 6l-3 3 .7 4L8 11l-3.7 2L5 9 2 6l4.5-.5z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" /></svg> },
     ],
   },
 ];

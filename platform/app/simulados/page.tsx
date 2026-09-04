@@ -147,8 +147,8 @@ export default function SimuladosHubPage() {
           @media (max-width:640px) { .kpi-grid { grid-template-columns: 1fr !important; } }
         `}</style>
 
-        <div style={{ background: "#151B28", border: "1px solid rgba(61,90,128,0.25)", borderRadius: 12, padding: "16px 18px" }}>
-          <div style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: V.ch, marginBottom: 4 }}>
+        <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", boxShadow: "var(--card-shadow)", borderRadius: 12, padding: "16px 18px" }}>
+          <div style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--chumbo)", marginBottom: 4 }}>
             Aproveitamento Geral
           </div>
           <div style={{ fontSize: 24, fontWeight: 700, color: V.pu, fontFamily: V.df }}>
@@ -159,38 +159,38 @@ export default function SimuladosHubPage() {
           </div>
         </div>
 
-        <div style={{ background: "#151B28", border: "1px solid rgba(61,90,128,0.25)", borderRadius: 12, padding: "16px 18px" }}>
-          <div style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: V.ch, marginBottom: 4 }}>
+        <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", boxShadow: "var(--card-shadow)", borderRadius: 12, padding: "16px 18px" }}>
+          <div style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--chumbo)", marginBottom: 4 }}>
             Simulados Realizados
           </div>
-          <div style={{ fontSize: 24, fontWeight: 700, color: "#fff", fontFamily: V.df }}>
-            {metrics?.totalCompleted || 2} <span style={{ fontSize: 13, color: V.ch, fontWeight: 400 }}>provas concluídas</span>
+          <div style={{ fontSize: 24, fontWeight: 700, color: "var(--heading-color)", fontFamily: V.df }}>
+            {metrics?.totalCompleted || 2} <span style={{ fontSize: 13, color: "var(--chumbo)", fontWeight: 400 }}>provas concluídas</span>
           </div>
-          <div style={{ fontSize: 11, color: V.ch, marginTop: 2 }}>
+          <div style={{ fontSize: 11, color: "var(--chumbo)", marginTop: 2 }}>
             {simulados.length - (metrics?.totalCompleted || 2)} disponíveis na fila
           </div>
         </div>
 
-        <div style={{ background: "#151B28", border: "1px solid rgba(61,90,128,0.25)", borderRadius: 12, padding: "16px 18px" }}>
-          <div style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: V.ch, marginBottom: 4 }}>
+        <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", boxShadow: "var(--card-shadow)", borderRadius: 12, padding: "16px 18px" }}>
+          <div style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--chumbo)", marginBottom: 4 }}>
             Horas de Treinamento Real
           </div>
           <div style={{ fontSize: 24, fontWeight: 700, color: V.wn, fontFamily: V.df }}>
             {metrics?.totalHoursSpent || 8.0}h
           </div>
-          <div style={{ fontSize: 11, color: V.ch, marginTop: 2 }}>
+          <div style={{ fontSize: 11, color: "var(--chumbo)", marginTop: 2 }}>
             Ambiente cronometrado com pressão de prova
           </div>
         </div>
 
-        <div style={{ background: "#151B28", border: "1px solid rgba(61,90,128,0.25)", borderRadius: 12, padding: "16px 18px" }}>
-          <div style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: V.ch, marginBottom: 4 }}>
+        <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", boxShadow: "var(--card-shadow)", borderRadius: 12, padding: "16px 18px" }}>
+          <div style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--chumbo)", marginBottom: 4 }}>
             Prognóstico de Aprovação
           </div>
           <div style={{ fontSize: 24, fontWeight: 700, color: V.su, fontFamily: V.df }}>
             87.4%
           </div>
-          <div style={{ fontSize: 11, color: V.ch, marginTop: 2 }}>
+          <div style={{ fontSize: 11, color: "var(--chumbo)", marginTop: 2 }}>
             Acima da nota de corte estimada (72%)
           </div>
         </div>
@@ -207,11 +207,11 @@ export default function SimuladosHubPage() {
         <div
           onClick={() => setActiveTab("reais")}
           style={{
-            background: activeTab === "reais" ? "rgba(0,194,168,0.12)" : "#161D2C",
-            border: `1.5px solid ${activeTab === "reais" ? V.pu : "rgba(61,90,128,0.3)"}`,
+            background: activeTab === "reais" ? "var(--pulso-dim)" : "var(--card-bg)",
+            border: `1.5px solid ${activeTab === "reais" ? V.pu : "var(--card-border)"}`,
             borderRadius: 14, padding: "20px", cursor: "pointer",
             transition: "all 0.2s ease", display: "flex", flexDirection: "column", justifyContent: "space-between",
-            boxShadow: activeTab === "reais" ? "0 8px 24px rgba(0,194,168,0.2)" : "none",
+            boxShadow: activeTab === "reais" ? "0 8px 24px rgba(0,194,168,0.2)" : "var(--card-shadow)",
           }}
         >
           <div>
@@ -224,10 +224,10 @@ export default function SimuladosHubPage() {
                 OFICIAIS NA ÍNTEGRA
               </span>
             </div>
-            <h3 style={{ fontFamily: V.df, fontSize: 18, color: "#fff", margin: "0 0 6px 0", fontWeight: 700 }}>
+            <h3 style={{ fontFamily: V.df, fontSize: 18, color: "var(--heading-color)", margin: "0 0 6px 0", fontWeight: 700 }}>
               Provas Reais Anteriores
             </h3>
-            <p style={{ color: V.ch, fontSize: 12, lineHeight: 1.5, margin: 0 }}>
+            <p style={{ color: "var(--chumbo)", fontSize: 12, lineHeight: 1.5, margin: 0 }}>
               Cadernos oficiais do ENAMED, Revalida INEP, ENARE e USP aplicados nos últimos anos com gabarito definitivo.
             </p>
           </div>
@@ -241,11 +241,11 @@ export default function SimuladosHubPage() {
         <div
           onClick={() => setActiveTab("predicao")}
           style={{
-            background: activeTab === "predicao" ? "rgba(107,92,231,0.15)" : "#161D2C",
-            border: `1.5px solid ${activeTab === "predicao" ? V.ind : "rgba(61,90,128,0.3)"}`,
+            background: activeTab === "predicao" ? "rgba(107,92,231,0.12)" : "var(--card-bg)",
+            border: `1.5px solid ${activeTab === "predicao" ? V.ind : "var(--card-border)"}`,
             borderRadius: 14, padding: "20px", cursor: "pointer",
             transition: "all 0.2s ease", display: "flex", flexDirection: "column", justifyContent: "space-between",
-            boxShadow: activeTab === "predicao" ? "0 8px 24px rgba(107,92,231,0.2)" : "none",
+            boxShadow: activeTab === "predicao" ? "0 8px 24px rgba(107,92,231,0.2)" : "var(--card-shadow)",
           }}
         >
           <div>
@@ -258,10 +258,10 @@ export default function SimuladosHubPage() {
                 CALIBRADOS POR IA
               </span>
             </div>
-            <h3 style={{ fontFamily: V.df, fontSize: 18, color: "#fff", margin: "0 0 6px 0", fontWeight: 700 }}>
+            <h3 style={{ fontFamily: V.df, fontSize: 18, color: "var(--heading-color)", margin: "0 0 6px 0", fontWeight: 700 }}>
               Provas de Predição IA
             </h3>
-            <p style={{ color: V.ch, fontSize: 12, lineHeight: 1.5, margin: 0 }}>
+            <p style={{ color: "var(--chumbo)", fontSize: 12, lineHeight: 1.5, margin: 0 }}>
               Super Simulados ponderados na matriz exata da Portaria INEP 478/2025 e nos editais FGV/EBSERH 2026/2027.
             </p>
           </div>
@@ -275,11 +275,11 @@ export default function SimuladosHubPage() {
         <div
           onClick={() => setActiveTab("custom")}
           style={{
-            background: activeTab === "custom" ? "rgba(245,166,35,0.12)" : "#161D2C",
-            border: `1.5px solid ${activeTab === "custom" ? V.wn : "rgba(61,90,128,0.3)"}`,
+            background: activeTab === "custom" ? "rgba(245,166,35,0.12)" : "var(--card-bg)",
+            border: `1.5px solid ${activeTab === "custom" ? V.wn : "var(--card-border)"}`,
             borderRadius: 14, padding: "20px", cursor: "pointer",
             transition: "all 0.2s ease", display: "flex", flexDirection: "column", justifyContent: "space-between",
-            boxShadow: activeTab === "custom" ? "0 8px 24px rgba(245,166,35,0.2)" : "none",
+            boxShadow: activeTab === "custom" ? "0 8px 24px rgba(245,166,35,0.2)" : "var(--card-shadow)",
           }}
         >
           <div>
@@ -292,10 +292,10 @@ export default function SimuladosHubPage() {
                 CUSTOM BUILDER
               </span>
             </div>
-            <h3 style={{ fontFamily: V.df, fontSize: 18, color: "#fff", margin: "0 0 6px 0", fontWeight: 700 }}>
+            <h3 style={{ fontFamily: V.df, fontSize: 18, color: "var(--heading-color)", margin: "0 0 6px 0", fontWeight: 700 }}>
               Criar Simulado Sob Medida
             </h3>
-            <p style={{ color: V.ch, fontSize: 12, lineHeight: 1.5, margin: 0 }}>
+            <p style={{ color: "var(--chumbo)", fontSize: 12, lineHeight: 1.5, margin: 0 }}>
               Escolha grandes áreas, nível de dificuldade, apenas questões erradas e quantidade (20 a 100).
             </p>
           </div>
@@ -307,7 +307,7 @@ export default function SimuladosHubPage() {
       </div>
 
       {/* ── 3. NAVEGAÇÃO EM ABAS ── */}
-      <div style={{ display: "flex", gap: 12, borderBottom: "1px solid rgba(61,90,128,0.25)", paddingBottom: 12, marginBottom: 20 }}>
+      <div style={{ display: "flex", gap: 12, borderBottom: "1px solid var(--card-border)", paddingBottom: 12, marginBottom: 20 }}>
         <button
           onClick={() => setActiveTab("reais")}
           style={{
@@ -366,20 +366,21 @@ export default function SimuladosHubPage() {
         <div>
           {/* Filtros de Bancas */}
           <div style={{
-            background: "#161D2C", border: "1px solid rgba(61,90,128,0.25)",
+            background: "var(--card-bg)", border: "1px solid var(--card-border)",
             borderRadius: 12, padding: "12px 18px", marginBottom: 20,
             display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap",
+            boxShadow: "var(--card-shadow)",
           }}>
-            <span style={{ fontFamily: V.dm, fontSize: 10, color: V.ch, textTransform: "uppercase" }}>Banca:</span>
+            <span style={{ fontFamily: V.dm, fontSize: 10, color: "var(--chumbo)", textTransform: "uppercase" }}>Banca:</span>
             {["Todas", "ENAMED", "REVALIDA", "ENARE", "USP"].map((b) => (
               <button
                 key={b}
                 onClick={() => setBancaFilter(b)}
                 style={{
                   padding: "5px 12px", borderRadius: 6,
-                  background: bancaFilter === b ? "rgba(0,194,168,0.15)" : "transparent",
-                  border: `1px solid ${bancaFilter === b ? V.pu : "rgba(61,90,128,0.3)"}`,
-                  color: bancaFilter === b ? V.pu : V.ch,
+                  background: bancaFilter === b ? "var(--pulso-dim)" : "transparent",
+                  border: `1px solid ${bancaFilter === b ? V.pu : "var(--card-border)"}`,
+                  color: bancaFilter === b ? V.pu : "var(--chumbo)",
                   fontFamily: V.db, fontSize: 12, cursor: "pointer",
                 }}
               >
@@ -387,18 +388,18 @@ export default function SimuladosHubPage() {
               </button>
             ))}
 
-            <span style={{ width: 1, height: 16, background: "rgba(61,90,128,0.3)" }} />
+            <span style={{ width: 1, height: 16, background: "var(--card-border)" }} />
 
-            <span style={{ fontFamily: V.dm, fontSize: 10, color: V.ch, textTransform: "uppercase" }}>Status:</span>
+            <span style={{ fontFamily: V.dm, fontSize: 10, color: "var(--chumbo)", textTransform: "uppercase" }}>Status:</span>
             {["Todos", "Concluídos", "Não Iniciados"].map((st) => (
               <button
                 key={st}
                 onClick={() => setStatusFilter(st)}
                 style={{
                   padding: "5px 12px", borderRadius: 6,
-                  background: statusFilter === st ? "rgba(0,194,168,0.15)" : "transparent",
-                  border: `1px solid ${statusFilter === st ? V.pu : "rgba(61,90,128,0.3)"}`,
-                  color: statusFilter === st ? V.pu : V.ch,
+                  background: statusFilter === st ? "var(--pulso-dim)" : "transparent",
+                  border: `1px solid ${statusFilter === st ? V.pu : "var(--card-border)"}`,
+                  color: statusFilter === st ? V.pu : "var(--chumbo)",
                   fontFamily: V.db, fontSize: 12, cursor: "pointer",
                 }}
               >
@@ -415,8 +416,8 @@ export default function SimuladosHubPage() {
                 <div
                   key={s.id}
                   style={{
-                    background: "#161D2C",
-                    border: "1px solid rgba(61,90,128,0.25)",
+                    background: "var(--card-bg)",
+                    border: "1px solid var(--card-border)",
                     borderRadius: 14,
                     padding: "20px",
                     display: "flex",
@@ -424,6 +425,7 @@ export default function SimuladosHubPage() {
                     justifyContent: "space-between",
                     position: "relative",
                     overflow: "hidden",
+                    boxShadow: "var(--card-shadow)",
                   }}
                 >
                   <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, ${ic}, transparent)` }} />
@@ -438,33 +440,33 @@ export default function SimuladosHubPage() {
                       </span>
                       <span style={{
                         fontFamily: V.dm, fontSize: 10, padding: "2px 6px", borderRadius: 4,
-                        background: s.status === "concluido" ? "rgba(34,197,94,0.15)" : "rgba(61,90,128,0.2)",
-                        color: s.status === "concluido" ? V.su : V.ch, fontWeight: 600,
+                        background: s.status === "concluido" ? "rgba(34,197,94,0.15)" : "var(--input-bg)",
+                        color: s.status === "concluido" ? V.su : "var(--chumbo)", fontWeight: 600,
                       }}>
                         {s.status === "concluido" ? `✓ Concluído (${s.percentualAcerto}%)` : "Não iniciado"}
                       </span>
                     </div>
 
-                    <h4 style={{ fontFamily: V.df, fontSize: 16, fontWeight: 600, color: "#fff", margin: "0 0 8px 0", lineHeight: 1.4 }}>
+                    <h4 style={{ fontFamily: V.df, fontSize: 16, fontWeight: 600, color: "var(--heading-color)", margin: "0 0 8px 0", lineHeight: 1.4 }}>
                       {s.titulo}
                     </h4>
 
-                    <p style={{ color: V.ch, fontSize: 12, lineHeight: 1.5, marginBottom: 16, minHeight: 36 }}>
+                    <p style={{ color: "var(--chumbo)", fontSize: 12, lineHeight: 1.5, marginBottom: 16, minHeight: 36 }}>
                       {s.descricao}
                     </p>
 
-                    <div style={{ display: "flex", gap: 16, marginBottom: 18, borderTop: "1px solid rgba(61,90,128,0.15)", paddingTop: 12 }}>
+                    <div style={{ display: "flex", gap: 16, marginBottom: 18, borderTop: "1px solid var(--card-border)", paddingTop: 12 }}>
                       <div>
-                        <div style={{ fontFamily: V.dm, fontSize: 9, color: V.ch, textTransform: "uppercase" }}>Questões</div>
-                        <div style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>{s.totalQuestoes}</div>
+                        <div style={{ fontFamily: V.dm, fontSize: 9, color: "var(--chumbo)", textTransform: "uppercase" }}>Questões</div>
+                        <div style={{ fontSize: 14, fontWeight: 600, color: "var(--heading-color)" }}>{s.totalQuestoes}</div>
                       </div>
                       <div>
-                        <div style={{ fontFamily: V.dm, fontSize: 9, color: V.ch, textTransform: "uppercase" }}>Tempo Oficial</div>
-                        <div style={{ fontSize: 14, fontWeight: 600, color: "#fff" }}>{fmtDuration(s.duracaoMinutos)}</div>
+                        <div style={{ fontFamily: V.dm, fontSize: 9, color: "var(--chumbo)", textTransform: "uppercase" }}>Tempo Oficial</div>
+                        <div style={{ fontSize: 14, fontWeight: 600, color: "var(--heading-color)" }}>{fmtDuration(s.duracaoMinutos)}</div>
                       </div>
                       {s.percentualAcerto !== undefined && (
                         <div>
-                          <div style={{ fontFamily: V.dm, fontSize: 9, color: V.ch, textTransform: "uppercase" }}>Seu Score</div>
+                          <div style={{ fontFamily: V.dm, fontSize: 9, color: "var(--chumbo)", textTransform: "uppercase" }}>Seu Score</div>
                           <div style={{ fontSize: 14, fontWeight: 700, color: s.percentualAcerto >= 75 ? V.pu : V.wn }}>
                             {s.percentualAcerto}%
                           </div>
@@ -478,9 +480,9 @@ export default function SimuladosHubPage() {
                       onClick={() => router.push(`/simulado/${s.id}`)}
                       style={{
                         flex: 1, padding: "10px 0", borderRadius: 8,
-                        background: s.status === "concluido" ? "transparent" : V.pu,
-                        border: s.status === "concluido" ? "1px solid rgba(61,90,128,0.4)" : "none",
-                        color: s.status === "concluido" ? V.nb : "#0A1A18",
+                        background: s.status === "concluido" ? "var(--input-bg)" : V.pu,
+                        border: s.status === "concluido" ? "1px solid var(--card-border)" : "none",
+                        color: s.status === "concluido" ? "var(--neblina)" : "#0A1A18",
                         fontWeight: 700, fontSize: 13, cursor: "pointer",
                       }}
                     >
@@ -501,7 +503,7 @@ export default function SimuladosHubPage() {
             <div
               key={s.id}
               style={{
-                background: "#161D2C",
+                background: "var(--card-bg)",
                 border: "1px solid rgba(107,92,231,0.35)",
                 borderRadius: 14,
                 padding: "22px",
@@ -510,7 +512,7 @@ export default function SimuladosHubPage() {
                 justifyContent: "space-between",
                 position: "relative",
                 overflow: "hidden",
-                boxShadow: "0 6px 20px rgba(0,0,0,0.3)",
+                boxShadow: "var(--card-shadow)",
               }}
             >
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #6B5CE7, #00C2A8)" }} />
@@ -528,17 +530,17 @@ export default function SimuladosHubPage() {
                   </span>
                 </div>
 
-                <h4 style={{ fontFamily: V.df, fontSize: 17, fontWeight: 700, color: "#fff", margin: "0 0 8px 0", lineHeight: 1.4 }}>
+                <h4 style={{ fontFamily: V.df, fontSize: 17, fontWeight: 700, color: "var(--heading-color)", margin: "0 0 8px 0", lineHeight: 1.4 }}>
                   {s.titulo}
                 </h4>
 
-                <p style={{ color: V.ch, fontSize: 12, lineHeight: 1.5, marginBottom: 16 }}>
+                <p style={{ color: "var(--chumbo)", fontSize: 12, lineHeight: 1.5, marginBottom: 16 }}>
                   {s.descricao}
                 </p>
 
                 <div style={{
-                  background: "rgba(13,17,28,0.5)", border: "1px solid rgba(61,90,128,0.2)",
-                  borderRadius: 8, padding: "10px 12px", marginBottom: 16, fontSize: 11, color: V.nb,
+                  background: "var(--input-bg)", border: "1px solid var(--card-border)",
+                  borderRadius: 8, padding: "10px 12px", marginBottom: 16, fontSize: 11, color: "var(--neblina)",
                 }}>
                   <div style={{ fontWeight: 600, color: V.pu, marginBottom: 4 }}>📊 Distribuição de Questões:</div>
                   23% Clínica · 17% GO · 16% Pediatria · 14% MFC · 12% Cirurgia · 18% Outras
@@ -563,13 +565,13 @@ export default function SimuladosHubPage() {
 
       {/* ── ABA 3: CRIADOR DE SIMULADO PERSONALIZADO ── */}
       {activeTab === "custom" && (
-        <div style={{ maxWidth: 680, margin: "0 auto", background: "#161D2C", border: "1px solid rgba(245,166,35,0.35)", borderRadius: 16, padding: "28px 32px" }}>
+        <div style={{ maxWidth: 680, margin: "0 auto", background: "var(--card-bg)", border: "1px solid rgba(245,166,35,0.35)", borderRadius: 16, padding: "28px 32px", boxShadow: "var(--card-shadow)" }}>
           <div style={{ textAlign: "center", marginBottom: 24 }}>
             <span style={{ fontSize: 32 }}>⚙️</span>
-            <h3 style={{ fontFamily: V.df, fontSize: 22, color: "#fff", margin: "6px 0 4px 0", fontWeight: 700 }}>
+            <h3 style={{ fontFamily: V.df, fontSize: 22, color: "var(--heading-color)", margin: "6px 0 4px 0", fontWeight: 700 }}>
               Custom Exam Builder
             </h3>
-            <p style={{ color: V.ch, fontSize: 13, margin: 0 }}>
+            <p style={{ color: "var(--chumbo)", fontSize: 13, margin: 0 }}>
               Personalize suas grandes áreas, filtre por questões erradas e treine no seu ritmo.
             </p>
           </div>
@@ -577,7 +579,7 @@ export default function SimuladosHubPage() {
           <form onSubmit={handleGenerateCustomExam}>
             {/* Título do Simulado */}
             <div style={{ marginBottom: 18 }}>
-              <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 6, fontWeight: 600 }}>
+              <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 6, fontWeight: 600 }}>
                 Nome do Simulado (Opcional)
               </label>
               <input
@@ -587,7 +589,7 @@ export default function SimuladosHubPage() {
                 onChange={(e) => setCustomForm({ ...customForm, title: e.target.value })}
                 style={{
                   width: "100%", padding: "10px 14px", borderRadius: 8,
-                  background: "#0D111C", border: "1px solid rgba(61,90,128,0.35)", color: "#fff",
+                  background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--neblina)",
                   fontSize: 13, outline: "none",
                 }}
               />
@@ -595,7 +597,7 @@ export default function SimuladosHubPage() {
 
             {/* Seleção de Grandes Áreas */}
             <div style={{ marginBottom: 18 }}>
-              <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 8, fontWeight: 600 }}>
+              <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 8, fontWeight: 600 }}>
                 Selecione as Grandes Áreas *
               </label>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
@@ -614,9 +616,9 @@ export default function SimuladosHubPage() {
                       onClick={() => handleToggleArea(area)}
                       style={{
                         padding: "10px 14px", borderRadius: 8,
-                        background: isSelected ? "rgba(0,194,168,0.15)" : "#0D111C",
-                        border: `1px solid ${isSelected ? V.pu : "rgba(61,90,128,0.3)"}`,
-                        color: isSelected ? V.pu : V.ch,
+                        background: isSelected ? "var(--pulso-dim)" : "var(--input-bg)",
+                        border: `1px solid ${isSelected ? V.pu : "var(--card-border)"}`,
+                        color: isSelected ? V.pu : "var(--chumbo)",
                         fontSize: 12, fontWeight: isSelected ? 600 : 400,
                         cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
                       }}
@@ -632,7 +634,7 @@ export default function SimuladosHubPage() {
             {/* Filtro de Dificuldade & Quantidade */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 18 }}>
               <div>
-                <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 6, fontWeight: 600 }}>
+                <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 6, fontWeight: 600 }}>
                   Nível de Dificuldade
                 </label>
                 <select
@@ -640,7 +642,7 @@ export default function SimuladosHubPage() {
                   onChange={(e) => setCustomForm({ ...customForm, difficulty: e.target.value })}
                   style={{
                     width: "100%", padding: "10px 12px", borderRadius: 8,
-                    background: "#0D111C", border: "1px solid rgba(61,90,128,0.35)", color: "#fff",
+                    background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--neblina)",
                     fontSize: 12, outline: "none",
                   }}
                 >
@@ -652,7 +654,7 @@ export default function SimuladosHubPage() {
               </div>
 
               <div>
-                <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 6, fontWeight: 600 }}>
+                <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 6, fontWeight: 600 }}>
                   Quantidade de Questões
                 </label>
                 <select
@@ -660,7 +662,7 @@ export default function SimuladosHubPage() {
                   onChange={(e) => setCustomForm({ ...customForm, totalQuestions: Number(e.target.value) })}
                   style={{
                     width: "100%", padding: "10px 12px", borderRadius: 8,
-                    background: "#0D111C", border: "1px solid rgba(61,90,128,0.35)", color: "#fff",
+                    background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--neblina)",
                     fontSize: 12, outline: "none",
                   }}
                 >
@@ -674,7 +676,7 @@ export default function SimuladosHubPage() {
 
             {/* Modo de Realização */}
             <div style={{ marginBottom: 24 }}>
-              <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 8, fontWeight: 600 }}>
+              <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 8, fontWeight: 600 }}>
                 Modo de Realização
               </label>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
@@ -682,9 +684,9 @@ export default function SimuladosHubPage() {
                   onClick={() => setCustomForm({ ...customForm, mode: "prova_real" })}
                   style={{
                     padding: "12px 14px", borderRadius: 8,
-                    background: customForm.mode === "prova_real" ? "rgba(245,166,35,0.15)" : "#0D111C",
-                    border: `1px solid ${customForm.mode === "prova_real" ? V.wn : "rgba(61,90,128,0.3)"}`,
-                    color: customForm.mode === "prova_real" ? V.wn : V.ch,
+                    background: customForm.mode === "prova_real" ? "rgba(245,166,35,0.15)" : "var(--input-bg)",
+                    border: `1px solid ${customForm.mode === "prova_real" ? V.wn : "var(--card-border)"}`,
+                    color: customForm.mode === "prova_real" ? V.wn : "var(--chumbo)",
                     cursor: "pointer",
                   }}
                 >
@@ -696,9 +698,9 @@ export default function SimuladosHubPage() {
                   onClick={() => setCustomForm({ ...customForm, mode: "estudo_guiado" })}
                   style={{
                     padding: "12px 14px", borderRadius: 8,
-                    background: customForm.mode === "estudo_guiado" ? "rgba(0,194,168,0.15)" : "#0D111C",
-                    border: `1px solid ${customForm.mode === "estudo_guiado" ? V.pu : "rgba(61,90,128,0.3)"}`,
-                    color: customForm.mode === "estudo_guiado" ? V.pu : V.ch,
+                    background: customForm.mode === "estudo_guiado" ? "var(--pulso-dim)" : "var(--input-bg)",
+                    border: `1px solid ${customForm.mode === "estudo_guiado" ? V.pu : "var(--card-border)"}`,
+                    color: customForm.mode === "estudo_guiado" ? V.pu : "var(--chumbo)",
                     cursor: "pointer",
                   }}
                 >
@@ -729,24 +731,25 @@ export default function SimuladosHubPage() {
         <div>
           {/* Radar e Barras por Grande Área */}
           <div style={{
-            background: "#161D2C", border: "1px solid rgba(61,90,128,0.25)",
+            background: "var(--card-bg)", border: "1px solid var(--card-border)",
             borderRadius: 14, padding: "20px 24px", marginBottom: 24,
+            boxShadow: "var(--card-shadow)",
           }}>
-            <h4 style={{ fontFamily: V.df, fontSize: 18, color: "#fff", margin: "0 0 16px 0" }}>
+            <h4 style={{ fontFamily: V.df, fontSize: 18, color: "var(--heading-color)", margin: "0 0 16px 0" }}>
               Aproveitamento por Grande Área Médica
             </h4>
 
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14 }}>
               {metrics?.areaBreakdown.map((ab) => (
-                <div key={ab.area} style={{ background: "#0D111C", padding: "14px", borderRadius: 10, border: "1px solid rgba(61,90,128,0.2)" }}>
-                  <div style={{ fontSize: 12, color: V.ch, marginBottom: 6 }}>{ab.area}</div>
+                <div key={ab.area} style={{ background: "var(--input-bg)", padding: "14px", borderRadius: 10, border: "1px solid var(--card-border)" }}>
+                  <div style={{ fontSize: 12, color: "var(--chumbo)", marginBottom: 6 }}>{ab.area}</div>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 6 }}>
                     <span style={{ fontSize: 20, fontWeight: 700, color: ab.pct >= 80 ? V.pu : ab.pct >= 70 ? V.wn : V.dg }}>
                       {ab.pct}%
                     </span>
-                    <span style={{ fontSize: 11, color: V.ch }}>{ab.correct}/{ab.total} acertos</span>
+                    <span style={{ fontSize: 11, color: "var(--chumbo)" }}>{ab.correct}/{ab.total} acertos</span>
                   </div>
-                  <div style={{ height: 4, background: "rgba(61,90,128,0.3)", borderRadius: 2, overflow: "hidden" }}>
+                  <div style={{ height: 4, background: "var(--card-border)", borderRadius: 2, overflow: "hidden" }}>
                     <div style={{ width: `${ab.pct}%`, height: "100%", background: ab.pct >= 80 ? V.pu : ab.pct >= 70 ? V.wn : V.dg }} />
                   </div>
                 </div>
@@ -755,24 +758,24 @@ export default function SimuladosHubPage() {
           </div>
 
           {/* Tabela de Provas Concluídas */}
-          <div style={{ background: "#161D2C", border: "1px solid rgba(61,90,128,0.25)", borderRadius: 14, overflow: "hidden" }}>
-            <div style={{ padding: "16px 20px", borderBottom: "1px solid rgba(61,90,128,0.2)", fontWeight: 600, color: "#fff" }}>
+          <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: 14, overflow: "hidden", boxShadow: "var(--card-shadow)" }}>
+            <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--card-border)", fontWeight: 600, color: "var(--heading-color)" }}>
               Histórico de Provas Concluídas
             </div>
 
             {completedExams.length === 0 ? (
-              <div style={{ textAlign: "center", padding: 40, color: V.ch }}>
+              <div style={{ textAlign: "center", padding: 40, color: "var(--chumbo)" }}>
                 Nenhum simulado concluído ainda. Complete sua primeira prova oficial para gerar o analytics!
               </div>
             ) : (
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
                 <thead>
-                  <tr style={{ background: "#0D111C", borderBottom: "1px solid rgba(61,90,128,0.3)" }}>
+                  <tr style={{ background: "var(--input-bg)", borderBottom: "1px solid var(--card-border)" }}>
                     {["Simulado / Edição", "Banca", "Data", "Tempo", "Aproveitamento", "Ações"].map((h) => (
                       <th key={h} style={{
                         padding: "12px 16px", textAlign: "left",
                         fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em",
-                        textTransform: "uppercase", color: V.ch,
+                        textTransform: "uppercase", color: "var(--chumbo)",
                       }}>
                         {h}
                       </th>
@@ -781,22 +784,22 @@ export default function SimuladosHubPage() {
                 </thead>
                 <tbody>
                   {completedExams.map((s) => (
-                    <tr key={s.id} style={{ borderBottom: "1px solid rgba(61,90,128,0.15)" }}>
-                      <td style={{ padding: "14px 16px", fontWeight: 600, color: "#fff" }}>
+                    <tr key={s.id} style={{ borderBottom: "1px solid var(--card-border)" }}>
+                      <td style={{ padding: "14px 16px", fontWeight: 600, color: "var(--heading-color)" }}>
                         {s.titulo}
                       </td>
                       <td style={{ padding: "14px 16px" }}>
                         <span style={{
                           fontFamily: V.dm, fontSize: 10, padding: "2px 6px", borderRadius: 4,
-                          background: "rgba(0,194,168,0.15)", color: V.pu, fontWeight: 700,
+                          background: "var(--pulso-dim)", color: V.pu, fontWeight: 700,
                         }}>
                           {s.instituicao}
                         </span>
                       </td>
-                      <td style={{ padding: "14px 16px", color: V.ch, fontSize: 12 }}>
+                      <td style={{ padding: "14px 16px", color: "var(--chumbo)", fontSize: 12 }}>
                         {s.dataConclusao || "28/08/2026"}
                       </td>
-                      <td style={{ padding: "14px 16px", color: V.nb, fontSize: 12 }}>
+                      <td style={{ padding: "14px 16px", color: "var(--neblina)", fontSize: 12 }}>
                         {fmtDuration(s.duracaoMinutos)}
                       </td>
                       <td style={{ padding: "14px 16px" }}>
@@ -813,7 +816,7 @@ export default function SimuladosHubPage() {
                             onClick={() => router.push(`/simulado/${s.id}`)}
                             style={{
                               padding: "6px 12px", borderRadius: 6,
-                              background: "rgba(0,194,168,0.15)", border: "1px solid rgba(0,194,168,0.3)",
+                              background: "var(--pulso-dim)", border: "1px solid rgba(0,194,168,0.3)",
                               color: V.pu, fontSize: 11, fontWeight: 600, cursor: "pointer",
                             }}
                           >
@@ -823,8 +826,8 @@ export default function SimuladosHubPage() {
                             onClick={() => router.push(`/simulado/${s.id}`)}
                             style={{
                               padding: "6px 12px", borderRadius: 6,
-                              background: "rgba(61,90,128,0.2)", border: "none",
-                              color: V.ch, fontSize: 11, cursor: "pointer",
+                              background: "var(--input-bg)", border: "1px solid var(--card-border)",
+                              color: "var(--chumbo)", fontSize: 11, cursor: "pointer",
                             }}
                           >
                             Refazer

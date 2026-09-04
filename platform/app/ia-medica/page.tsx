@@ -420,23 +420,24 @@ export default function IAMedicaPage() {
       <div style={{
         display: "flex",
         height: "calc(100vh - 120px)",
-        background: "#0D111C",
+        background: "var(--card-bg)",
         borderRadius: 16,
-        border: "1px solid rgba(61,90,128,0.25)",
+        border: "1px solid var(--card-border)",
+        boxShadow: "var(--card-shadow)",
         overflow: "hidden",
       }}>
         {/* ── SIDEBAR DE HISTÓRICO DE CASOS ── */}
         {sidebarOpen && (
           <div style={{
             width: 280,
-            background: "#121724",
-            borderRight: "1px solid rgba(61,90,128,0.25)",
+            background: "var(--input-bg)",
+            borderRight: "1px solid var(--card-border)",
             display: "flex",
             flexDirection: "column",
             flexShrink: 0,
           }}>
             {/* Header Sidebar */}
-            <div style={{ padding: "16px", borderBottom: "1px solid rgba(61,90,128,0.2)" }}>
+            <div style={{ padding: "16px", borderBottom: "1px solid var(--card-border)" }}>
               <button
                 onClick={handleNewChat}
                 style={{
@@ -455,12 +456,12 @@ export default function IAMedicaPage() {
 
             {/* Lista de Sessões */}
             <div style={{ flex: 1, overflowY: "auto", padding: "12px 8px" }}>
-              <div style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: V.ch, padding: "0 8px 8px" }}>
+              <div style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--chumbo)", padding: "0 8px 8px" }}>
                 Histórico de Discussões
               </div>
 
               {conversations.length === 0 ? (
-                <div style={{ textAlign: "center", color: V.ch, fontSize: 12, padding: "20px 8px" }}>
+                <div style={{ textAlign: "center", color: "var(--chumbo)", fontSize: 12, padding: "20px 8px" }}>
                   Nenhuma discussão salva ainda.
                 </div>
               ) : (
@@ -472,7 +473,7 @@ export default function IAMedicaPage() {
                       padding: "10px 12px",
                       borderRadius: 8,
                       marginBottom: 4,
-                      background: currentConvId === c.id ? "rgba(0,194,168,0.12)" : "transparent",
+                      background: currentConvId === c.id ? "var(--pulso-dim)" : "transparent",
                       border: `1px solid ${currentConvId === c.id ? "rgba(0,194,168,0.4)" : "transparent"}`,
                       cursor: "pointer",
                       display: "flex",
@@ -482,17 +483,17 @@ export default function IAMedicaPage() {
                     }}
                   >
                     <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                      <div style={{ fontSize: 12, color: currentConvId === c.id ? V.pu : "#fff", fontWeight: 500 }}>
+                      <div style={{ fontSize: 12, color: currentConvId === c.id ? V.pu : "var(--heading-color)", fontWeight: 500 }}>
                         {c.title}
                       </div>
-                      <div style={{ fontSize: 10, color: V.ch, marginTop: 2 }}>
+                      <div style={{ fontSize: 10, color: "var(--chumbo)", marginTop: 2 }}>
                         {c.area || "Geral"} · {new Date(c.created_at).toLocaleDateString("pt-BR")}
                       </div>
                     </div>
                     <button
                       onClick={(e) => handleDeleteConversation(e, c.id)}
                       title="Excluir"
-                      style={{ background: "transparent", border: "none", color: V.ch, cursor: "pointer", fontSize: 12 }}
+                      style={{ background: "transparent", border: "none", color: "var(--chumbo)", cursor: "pointer", fontSize: 12 }}
                     >
                       ✕
                     </button>
@@ -504,12 +505,12 @@ export default function IAMedicaPage() {
         )}
 
         {/* ── ÁREA PRINCIPAL DO CHAT ── */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", background: "#0D111C" }}>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", background: "var(--abismo)" }}>
           {/* Topbar do Chat */}
           <div style={{
             padding: "12px 20px",
-            borderBottom: "1px solid rgba(61,90,128,0.25)",
-            background: "#151B2B",
+            borderBottom: "1px solid var(--card-border)",
+            background: "var(--card-bg)",
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -527,12 +528,12 @@ export default function IAMedicaPage() {
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <span style={{ fontSize: 18 }}>🩺</span>
-                  <strong style={{ fontFamily: V.df, fontSize: 16, color: "#fff" }}>
+                  <strong style={{ fontFamily: V.df, fontSize: 16, color: "var(--heading-color)" }}>
                     Dr. Pleni — Preceptor Clínico
                   </strong>
                   <span style={{
                     fontFamily: V.dm, fontSize: 9, padding: "2px 6px", borderRadius: 4,
-                    background: "rgba(0,194,168,0.15)", border: `1px solid ${V.pu}`, color: V.pu, fontWeight: 700,
+                    background: "var(--pulso-dim)", border: `1px solid ${V.pu}`, color: V.pu, fontWeight: 700,
                   }}>
                     DIRETRIZES 2026
                   </span>
@@ -548,7 +549,7 @@ export default function IAMedicaPage() {
                 onChange={(e) => setSelectedModel(e.target.value)}
                 style={{
                   padding: "6px 10px", borderRadius: 6,
-                  background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)",
+                  background: "var(--input-bg)", border: "1px solid var(--card-border)",
                   color: V.pu, fontFamily: V.dm, fontSize: 11, outline: "none", cursor: "pointer",
                 }}
               >
@@ -563,8 +564,8 @@ export default function IAMedicaPage() {
                 onChange={(e) => setSelectedMode(e.target.value)}
                 style={{
                   padding: "6px 10px", borderRadius: 6,
-                  background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)",
-                  color: V.nb, fontFamily: V.db, fontSize: 11, outline: "none", cursor: "pointer",
+                  background: "var(--input-bg)", border: "1px solid var(--card-border)",
+                  color: "var(--neblina)", fontFamily: V.db, fontSize: 11, outline: "none", cursor: "pointer",
                 }}
               >
                 <option value="tira_duvidas">💬 Tira-Dúvidas Geral</option>
@@ -580,8 +581,8 @@ export default function IAMedicaPage() {
                   title="Limpar e Iniciar Nova Dúvida"
                   style={{
                     padding: "6px 10px", borderRadius: 6,
-                    background: "rgba(61,90,128,0.25)", border: "1px solid rgba(61,90,128,0.4)",
-                    color: V.ch, fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", gap: 4,
+                    background: "var(--input-bg)", border: "1px solid var(--card-border)",
+                    color: "var(--chumbo)", fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", gap: 4,
                   }}
                 >
                   <span>🗑️</span>
@@ -597,16 +598,16 @@ export default function IAMedicaPage() {
               <div style={{ maxWidth: 680, margin: "20px auto 0", textAlign: "center" }}>
                 <div style={{
                   width: 56, height: 56, borderRadius: 16,
-                  background: "rgba(0,194,168,0.15)", border: "1px solid rgba(0,194,168,0.4)",
+                  background: "var(--pulso-dim)", border: "1px solid rgba(0,194,168,0.4)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   fontSize: 28, margin: "0 auto 16px",
                 }}>
                   🩺
                 </div>
-                <h2 style={{ fontFamily: V.df, fontSize: 24, fontWeight: 700, color: "#fff", margin: "0 0 8px 0" }}>
+                <h2 style={{ fontFamily: V.df, fontSize: 24, fontWeight: 700, color: "var(--heading-color)", margin: "0 0 8px 0" }}>
                   {currentModeData.modeTitle}
                 </h2>
-                <p style={{ color: V.ch, fontSize: 13, lineHeight: 1.6, marginBottom: 28 }}>
+                <p style={{ color: "var(--chumbo)", fontSize: 13, lineHeight: 1.6, marginBottom: 28 }}>
                   {currentModeData.modeSubtitle}
                 </p>
 
@@ -620,21 +621,22 @@ export default function IAMedicaPage() {
                         handleSendMessage(qp.prompt);
                       }}
                       style={{
-                        background: "#161D2C",
-                        border: "1px solid rgba(61,90,128,0.3)",
+                        background: "var(--card-bg)",
+                        border: "1px solid var(--card-border)",
+                        boxShadow: "var(--card-shadow)",
                         borderRadius: 12,
                         padding: "14px 16px",
                         cursor: "pointer",
                         transition: "all 0.2s ease",
                       }}
                       onMouseEnter={(e) => (e.currentTarget.style.borderColor = V.pu)}
-                      onMouseLeave={(e) => (e.currentTarget.style.borderColor = "rgba(61,90,128,0.3)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--card-border)")}
                     >
                       <div style={{ fontSize: 20, marginBottom: 6 }}>{qp.icon}</div>
-                      <div style={{ color: "#fff", fontWeight: 600, fontSize: 13, marginBottom: 4 }}>
+                      <div style={{ color: "var(--heading-color)", fontWeight: 600, fontSize: 13, marginBottom: 4 }}>
                         {qp.title}
                       </div>
-                      <div style={{ color: V.ch, fontSize: 11, lineHeight: 1.4 }}>
+                      <div style={{ color: "var(--chumbo)", fontSize: 11, lineHeight: 1.4 }}>
                         {qp.prompt.slice(0, 80)}...
                       </div>
                     </div>
@@ -656,7 +658,7 @@ export default function IAMedicaPage() {
                     {msg.role === "assistant" && (
                       <div style={{
                         width: 34, height: 34, borderRadius: 10,
-                        background: "rgba(0,194,168,0.15)", border: "1px solid rgba(0,194,168,0.4)",
+                        background: "var(--pulso-dim)", border: "1px solid rgba(0,194,168,0.4)",
                         display: "flex", alignItems: "center", justifyContent: "center",
                         fontSize: 16, flexShrink: 0,
                       }}>
@@ -668,17 +670,17 @@ export default function IAMedicaPage() {
                       maxWidth: "85%",
                       padding: "16px 20px",
                       borderRadius: 14,
-                      background: msg.role === "user" ? "rgba(0,119,182,0.25)" : "#161D2C",
-                      border: `1px solid ${msg.role === "user" ? "rgba(0,119,182,0.5)" : "rgba(61,90,128,0.3)"}`,
-                      color: "#E0E6F0",
+                      background: msg.role === "user" ? "var(--pulso-dim)" : "var(--card-bg)",
+                      border: `1px solid ${msg.role === "user" ? "rgba(0,194,168,0.35)" : "var(--card-border)"}`,
+                      color: "var(--neblina)",
                       fontSize: 14,
                       lineHeight: 1.65,
-                      boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
+                      boxShadow: "var(--card-shadow)",
                     }}>
                       {/* Conteúdo formatado */}
                       <div style={{ whiteSpace: "pre-wrap" }}>
                         {msg.content || (
-                          <span style={{ color: V.ch, fontStyle: "italic" }}>
+                          <span style={{ color: "var(--chumbo)", fontStyle: "italic" }}>
                             Dr. Pleni está analisando o caso e as diretrizes clínicas...
                           </span>
                         )}
@@ -687,14 +689,14 @@ export default function IAMedicaPage() {
                       {/* Ações da resposta do Dr. Pleni */}
                       {msg.role === "assistant" && msg.content && (
                         <div style={{
-                          marginTop: 14, paddingTop: 10, borderTop: "1px solid rgba(61,90,128,0.2)",
+                          marginTop: 14, paddingTop: 10, borderTop: "1px solid var(--card-border)",
                           display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap",
                         }}>
                           <button
                             onClick={() => openFlashcardModal(msg.content)}
                             style={{
                               padding: "4px 10px", borderRadius: 6,
-                              background: "rgba(0,194,168,0.15)", border: "1px solid rgba(0,194,168,0.3)",
+                              background: "var(--pulso-dim)", border: "1px solid rgba(0,194,168,0.3)",
                               color: V.pu, fontSize: 11, fontWeight: 600, cursor: "pointer",
                               display: "flex", alignItems: "center", gap: 6,
                             }}
@@ -707,8 +709,8 @@ export default function IAMedicaPage() {
                             onClick={() => copyResponse(msg.content)}
                             style={{
                               padding: "4px 10px", borderRadius: 6,
-                              background: "rgba(61,90,128,0.2)", border: "none",
-                              color: V.ch, fontSize: 11, cursor: "pointer",
+                              background: "var(--input-bg)", border: "1px solid var(--card-border)",
+                              color: "var(--chumbo)", fontSize: 11, cursor: "pointer",
                             }}
                           >
                             📋 Copiar Resumo
@@ -724,13 +726,13 @@ export default function IAMedicaPage() {
           </div>
 
           {/* ── BARRA DE ENTRADA / PROMPT ── */}
-          <div style={{ padding: "16px 20px", background: "#121724", borderTop: "1px solid rgba(61,90,128,0.25)" }}>
+          <div style={{ padding: "16px 20px", background: "var(--card-bg)", borderTop: "1px solid var(--card-border)" }}>
             <div style={{
               maxWidth: 840, margin: "0 auto",
               display: "flex", gap: 10, alignItems: "center",
-              background: "#0D111C", border: "1px solid rgba(0,194,168,0.4)",
+              background: "var(--input-bg)", border: "1px solid var(--card-border)",
               borderRadius: 12, padding: "8px 12px",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+              boxShadow: "var(--card-shadow)",
             }}>
               <textarea
                 rows={1}
@@ -744,7 +746,7 @@ export default function IAMedicaPage() {
                   }
                 }}
                 style={{
-                  flex: 1, background: "transparent", border: "none", color: "#fff",
+                  flex: 1, background: "transparent", border: "none", color: "var(--neblina)",
                   fontFamily: V.db, fontSize: 13, outline: "none", resize: "none", maxHeight: 120,
                 }}
               />
@@ -778,22 +780,22 @@ export default function IAMedicaPage() {
           zIndex: 1000, padding: 20,
         }}>
           <div style={{
-            background: "#1A1F2E", border: "1px solid rgba(0,194,168,0.4)",
+            background: "var(--card-bg)", border: "1px solid var(--card-border)",
             borderRadius: 16, maxWidth: 520, width: "100%", padding: 24,
-            boxShadow: "0 20px 50px rgba(0,0,0,0.6)",
+            boxShadow: "var(--card-shadow)",
           }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
               <div>
                 <div style={{ fontFamily: V.dm, fontSize: 10, color: V.pu, textTransform: "uppercase", letterSpacing: "0.1em" }}>
                   Repetição Espaçada SRS
                 </div>
-                <h3 style={{ fontFamily: V.df, fontSize: 18, color: "#fff", margin: "2px 0 0 0" }}>
+                <h3 style={{ fontFamily: V.df, fontSize: 18, color: "var(--heading-color)", margin: "2px 0 0 0" }}>
                   Salvar Resposta como Flashcard
                 </h3>
               </div>
               <button
                 onClick={() => setFlashcardModalOpen(false)}
-                style={{ background: "transparent", border: "none", color: V.ch, fontSize: 18, cursor: "pointer" }}
+                style={{ background: "transparent", border: "none", color: "var(--chumbo)", fontSize: 18, cursor: "pointer" }}
               >
                 ✕
               </button>
@@ -801,7 +803,7 @@ export default function IAMedicaPage() {
 
             <form onSubmit={handleSaveFlashcardSubmit}>
               <div style={{ marginBottom: 12 }}>
-                <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 4, fontWeight: 600 }}>
+                <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 4, fontWeight: 600 }}>
                   Nome / Título do Flashcard
                 </label>
                 <input
@@ -812,7 +814,7 @@ export default function IAMedicaPage() {
                   onChange={(e) => setFlashcardForm({ ...flashcardForm, title: e.target.value })}
                   style={{
                     width: "100%", padding: "9px 12px", borderRadius: 8,
-                    background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff",
+                    background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--neblina)",
                     fontSize: 13, outline: "none",
                   }}
                 />
@@ -820,7 +822,7 @@ export default function IAMedicaPage() {
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 12 }}>
                 <div>
-                  <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 4, fontWeight: 600 }}>
+                  <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 4, fontWeight: 600 }}>
                     Grande Área
                   </label>
                   <select
@@ -828,7 +830,7 @@ export default function IAMedicaPage() {
                     onChange={(e) => setFlashcardForm({ ...flashcardForm, area: e.target.value })}
                     style={{
                       width: "100%", padding: "9px 12px", borderRadius: 8,
-                      background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff",
+                      background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--neblina)",
                       fontSize: 12, outline: "none",
                     }}
                   >
@@ -841,7 +843,7 @@ export default function IAMedicaPage() {
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 4, fontWeight: 600 }}>
+                  <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 4, fontWeight: 600 }}>
                     Subárea / Tópico
                   </label>
                   <input
@@ -850,7 +852,7 @@ export default function IAMedicaPage() {
                     onChange={(e) => setFlashcardForm({ ...flashcardForm, subarea: e.target.value })}
                     style={{
                       width: "100%", padding: "9px 12px", borderRadius: 8,
-                      background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff",
+                      background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--neblina)",
                       fontSize: 12, outline: "none",
                     }}
                   />
@@ -858,7 +860,7 @@ export default function IAMedicaPage() {
               </div>
 
               <div style={{ marginBottom: 12 }}>
-                <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 4, fontWeight: 600 }}>
+                <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 4, fontWeight: 600 }}>
                   Pergunta / Frente do Card *
                 </label>
                 <textarea
@@ -868,14 +870,14 @@ export default function IAMedicaPage() {
                   onChange={(e) => setFlashcardForm({ ...flashcardForm, front: e.target.value })}
                   style={{
                     width: "100%", padding: "9px 12px", borderRadius: 8,
-                    background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff",
+                    background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--neblina)",
                     fontSize: 13, outline: "none", resize: "none",
                   }}
                 />
               </div>
 
               <div style={{ marginBottom: 16 }}>
-                <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 4, fontWeight: 600 }}>
+                <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 4, fontWeight: 600 }}>
                   Resposta / Verso do Card *
                 </label>
                 <textarea
@@ -885,7 +887,7 @@ export default function IAMedicaPage() {
                   onChange={(e) => setFlashcardForm({ ...flashcardForm, back: e.target.value })}
                   style={{
                     width: "100%", padding: "9px 12px", borderRadius: 8,
-                    background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff",
+                    background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--neblina)",
                     fontSize: 13, outline: "none", resize: "none",
                   }}
                 />
@@ -897,7 +899,7 @@ export default function IAMedicaPage() {
                   onClick={() => setFlashcardModalOpen(false)}
                   style={{
                     flex: 1, padding: "10px 0", borderRadius: 8,
-                    background: "transparent", border: "1px solid rgba(61,90,128,0.3)", color: V.ch,
+                    background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--chumbo)",
                     fontWeight: 600, fontSize: 13, cursor: "pointer",
                   }}
                 >
