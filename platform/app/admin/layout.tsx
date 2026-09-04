@@ -32,6 +32,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const { user, profile, loading, signOut } = useUser();
   const { theme, toggleTheme } = useTheme();
   const [loggingOut, setLoggingOut] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Fecha o drawer em navegação
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   const userEmail = user?.email || "";
   const rawRole = (profile?.role || "").toLowerCase();
@@ -75,13 +81,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </div>
     );
   }
-
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  // Fecha o drawer em navegação
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [pathname]);
 
   const displayRole = (isSuperAdminEmail ? "SUPERADMIN" : (profile?.role || "ADMIN")).toUpperCase();
 
