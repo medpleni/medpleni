@@ -351,43 +351,55 @@ export default function IAMedicaPage() {
     }
   };
 
-  const handleSaveAsFlashcard = async (content: string) => {
+  // Estado do Modal de Criar Flashcard a partir da resposta da IA
+  const [flashcardModalOpen, setFlashcardModalOpen] = useState(false);
+  const [flashcardForm, setFlashcardForm] = useState({
+    title: "",
+    front: "",
+    back: "",
+    area: "Clínica Médica",
+    subarea: "Preceptor IA",
+  });
+  const [savingFlashcard, setSavingFlashcard] = useState(false);
+
+  const openFlashcardModal = (content: string) => {
+    const lines = content.split("\n").filter(Boolean);
+    const firstLine = lines[0]?.replace(/[#*]/g, "").trim() || "Dúvida Clínica";
+    const bodyContent = lines.slice(1).join("\n").replace(/[#*]/g, "").trim();
+
+    setFlashcardForm({
+      title: firstLine.slice(0, 50),
+      front: firstLine,
+      back: bodyContent.slice(0, 600),
+      area: selectedArea === "Geral" ? "Clínica Médica" : selectedArea,
+      subarea: "Preceptor IA",
+    });
+    setFlashcardModalOpen(true);
+  };
+
+  const handleSaveFlashcardSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSavingFlashcard(true);
     try {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        alert("Faça login para salvar flashcards.");
-        return;
-      }
-
-      const lines = content.split("\n").filter(Boolean);
-      const front = lines[0]?.replace(/[#*]/g, "").trim() || "Conceito Clínico MedPleni";
-      const back = lines.slice(1, 6).join("\n").replace(/[#*]/g, "").trim();
-
-      const { data: flashcard, error: fErr } = await supabase
-        .from("flashcards")
-        .insert({
-          front,
-          back: back.slice(0, 600),
-          area: selectedArea === "Geral" ? "Clínica Médica" : selectedArea,
-          subarea: "Preceptor IA",
-        })
-        .select("id")
-        .single();
-
-      if (fErr || !flashcard) throw fErr;
-
-      await supabase.from("user_flashcard_reviews").insert({
-        user_id: user.id,
-        flashcard_id: flashcard.id,
-        ease_factor: 2.5,
-        interval_days: 1,
-        repetitions: 0,
+      const res = await fetch("/api/flashcards", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          front: flashcardForm.title ? `[${flashcardForm.title}] ${flashcardForm.front}` : flashcardForm.front,
+          back: flashcardForm.back,
+          area: flashcardForm.area,
+          subarea: flashcardForm.subarea,
+        }),
       });
 
-      alert("✨ Flashcard criado e salvo no seu deck de repetição espaçada!");
+      if (!res.ok) throw new Error("Erro ao salvar flashcard.");
+
+      alert("✨ Flashcard salvo com sucesso no seu deck de repetição espaçada!");
+      setFlashcardModalOpen(false);
     } catch (err: any) {
-      alert("Flashcard salvo com sucesso nos seus cards de estudo!");
+      alert(err.message || "Erro ao salvar flashcard.");
+    } finally {
+      setSavingFlashcard(false);
     }
   };
 
@@ -674,7 +686,7 @@ export default function IAMedicaPage() {
                           display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap",
                         }}>
                           <button
-                            onClick={() => handleSaveAsFlashcard(msg.content)}
+                            onClick={() => openFlashcardModal(msg.content)}
                             style={{
                               padding: "4px 10px", borderRadius: 6,
                               background: "rgba(0,194,168,0.15)", border: "1px solid rgba(0,194,168,0.3)",
@@ -752,6 +764,156 @@ export default function IAMedicaPage() {
           </div>
         </div>
       </div>
+
+      {/* ── MODAL: NOMEAR E SALVAR FLASHCARD DA RESPOSTA DA IA ── */}
+      {flashcardModalOpen && (
+        <div style={{
+          position: "fixed", inset: 0, background: "rgba(13,17,28,0.85)",
+          backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center",
+          zIndex: 1000, padding: 20,
+        }}>
+          <div style={{
+            background: "#1A1F2E", border: "1px solid rgba(0,194,168,0.4)",
+            borderRadius: 16, maxWidth: 520, width: "100%", padding: 24,
+            boxShadow: "0 20px 50px rgba(0,0,0,0.6)",
+          }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+              <div>
+                <div style={{ fontFamily: V.dm, fontSize: 10, color: V.pu, textTransform: "uppercase", letterSpacing: "0.1em" }}>
+                  Repetição Espaçada SRS
+                </div>
+                <h3 style={{ fontFamily: V.df, fontSize: 18, color: "#fff", margin: "2px 0 0 0" }}>
+                  Salvar Resposta como Flashcard
+                </h3>
+              </div>
+              <button
+                onClick={() => setFlashcardModalOpen(false)}
+                style={{ background: "transparent", border: "none", color: V.ch, fontSize: 18, cursor: "pointer" }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveFlashcardSubmit}>
+              <div style={{ marginBottom: 12 }}>
+                <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 4, fontWeight: 600 }}>
+                  Nome / Título do Flashcard
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Ex: Manejo de Choque Anafilático no PS"
+                  value={flashcardForm.title}
+                  onChange={(e) => setFlashcardForm({ ...flashcardForm, title: e.target.value })}
+                  style={{
+                    width: "100%", padding: "9px 12px", borderRadius: 8,
+                    background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff",
+                    fontSize: 13, outline: "none",
+                  }}
+                />
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 12 }}>
+                <div>
+                  <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 4, fontWeight: 600 }}>
+                    Grande Área
+                  </label>
+                  <select
+                    value={flashcardForm.area}
+                    onChange={(e) => setFlashcardForm({ ...flashcardForm, area: e.target.value })}
+                    style={{
+                      width: "100%", padding: "9px 12px", borderRadius: 8,
+                      background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff",
+                      fontSize: 12, outline: "none",
+                    }}
+                  >
+                    <option value="Clínica Médica">Clínica Médica</option>
+                    <option value="Cirurgia Geral">Cirurgia Geral</option>
+                    <option value="Ginecologia e Obstetrícia">Ginecologia e Obstetrícia</option>
+                    <option value="Pediatria">Pediatria</option>
+                    <option value="Saúde Coletiva">Saúde Coletiva / Preventiva</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 4, fontWeight: 600 }}>
+                    Subárea / Tópico
+                  </label>
+                  <input
+                    type="text"
+                    value={flashcardForm.subarea}
+                    onChange={(e) => setFlashcardForm({ ...flashcardForm, subarea: e.target.value })}
+                    style={{
+                      width: "100%", padding: "9px 12px", borderRadius: 8,
+                      background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff",
+                      fontSize: 12, outline: "none",
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ marginBottom: 12 }}>
+                <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 4, fontWeight: 600 }}>
+                  Pergunta / Frente do Card *
+                </label>
+                <textarea
+                  rows={2}
+                  required
+                  value={flashcardForm.front}
+                  onChange={(e) => setFlashcardForm({ ...flashcardForm, front: e.target.value })}
+                  style={{
+                    width: "100%", padding: "9px 12px", borderRadius: 8,
+                    background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff",
+                    fontSize: 13, outline: "none", resize: "none",
+                  }}
+                />
+              </div>
+
+              <div style={{ marginBottom: 16 }}>
+                <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 4, fontWeight: 600 }}>
+                  Resposta / Verso do Card *
+                </label>
+                <textarea
+                  rows={4}
+                  required
+                  value={flashcardForm.back}
+                  onChange={(e) => setFlashcardForm({ ...flashcardForm, back: e.target.value })}
+                  style={{
+                    width: "100%", padding: "9px 12px", borderRadius: 8,
+                    background: "#0D111C", border: "1px solid rgba(61,90,128,0.3)", color: "#fff",
+                    fontSize: 13, outline: "none", resize: "none",
+                  }}
+                />
+              </div>
+
+              <div style={{ display: "flex", gap: 10 }}>
+                <button
+                  type="button"
+                  onClick={() => setFlashcardModalOpen(false)}
+                  style={{
+                    flex: 1, padding: "10px 0", borderRadius: 8,
+                    background: "transparent", border: "1px solid rgba(61,90,128,0.3)", color: V.ch,
+                    fontWeight: 600, fontSize: 13, cursor: "pointer",
+                  }}
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingFlashcard}
+                  style={{
+                    flex: 2, padding: "10px 0", borderRadius: 8,
+                    background: V.pu, border: "none", color: "#0A1A18",
+                    fontWeight: 700, fontSize: 13, cursor: savingFlashcard ? "not-allowed" : "pointer",
+                  }}
+                >
+                  {savingFlashcard ? "Salvando..." : "Salvar no Meu Deck"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </PageShell>
   );
 }
