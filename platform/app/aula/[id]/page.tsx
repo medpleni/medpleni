@@ -130,7 +130,7 @@ export default function AulaPlayerPage() {
               gap: "8px",
               padding: "10px 20px",
               background: "var(--pulso)",
-              color: "#0D111C",
+              color: "#FFFFFF",
               borderRadius: "8px",
               fontWeight: 700,
               textDecoration: "none",
@@ -416,7 +416,7 @@ export default function AulaPlayerPage() {
                 cursor: "pointer",
                 background: progress.completed ? "#10B981" : "var(--card-bg)",
                 border: progress.completed ? "1px solid #10B981" : "1px solid var(--sinal)",
-                color: progress.completed ? "#0D111C" : "var(--heading-color)",
+                color: progress.completed ? "#FFFFFF" : "var(--heading-color)",
                 transition: "all 0.2s ease",
               }}
             >
@@ -440,14 +440,15 @@ export default function AulaPlayerPage() {
                 borderRadius: "10px",
                 fontSize: "13px",
                 fontWeight: 700,
-                background: "rgba(0, 194, 168, 0.12)",
-                border: "1px solid var(--pulso)",
-                color: "var(--pulso)",
+                background: "var(--pulso)",
+                border: "none",
+                color: "#FFFFFF",
                 textDecoration: "none",
+                boxShadow: "0 2px 10px rgba(0, 194, 168, 0.25)",
                 transition: "all 0.2s ease",
               }}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <circle cx="12" cy="12" r="10" />
                 <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
                 <line x1="12" y1="17" x2="12.01" y2="17" />
@@ -1109,7 +1110,7 @@ export default function AulaPlayerPage() {
                           padding: "12px",
                           borderRadius: "10px",
                           background: Object.keys(selectedAnswers).length < mockQuizQuestions.length ? "var(--sinal)" : "var(--pulso)",
-                          color: "#0D111C",
+                          color: "#FFFFFF",
                           fontWeight: 700,
                           fontSize: "14px",
                           border: "none",
@@ -1141,7 +1142,7 @@ export default function AulaPlayerPage() {
                           padding: "8px 14px",
                           borderRadius: "8px",
                           background: "var(--pulso)",
-                          color: "#0D111C",
+                          color: "#FFFFFF",
                           fontSize: "12px",
                           fontWeight: 700,
                           textDecoration: "none",

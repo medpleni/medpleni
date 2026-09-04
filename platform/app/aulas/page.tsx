@@ -119,7 +119,7 @@ export default function AulasHubPage() {
         {/* Top Header Banner */}
         <div
           style={{
-            background: "linear-gradient(135deg, rgba(0, 194, 168, 0.08) 0%, rgba(20, 24, 38, 0.6) 100%)",
+            background: "var(--card-bg)",
             border: "1px solid var(--card-border)",
             borderRadius: "16px",
             padding: "24px 28px",
@@ -128,6 +128,7 @@ export default function AulasHubPage() {
             alignItems: "center",
             flexWrap: "wrap",
             gap: "20px",
+            boxShadow: "var(--card-shadow, 0 2px 8px rgba(0,0,0,0.04))",
           }}
         >
           <div>
@@ -178,18 +179,19 @@ export default function AulasHubPage() {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "8px",
-                background: "rgba(0, 194, 168, 0.1)",
-                color: "var(--pulso)",
-                border: "1px solid var(--pulso)",
+                background: "var(--pulso)",
+                color: "#FFFFFF",
+                border: "none",
                 padding: "10px 18px",
                 borderRadius: "10px",
                 fontSize: "13px",
-                fontWeight: 600,
+                fontWeight: 700,
                 textDecoration: "none",
+                boxShadow: "0 2px 10px rgba(0, 194, 168, 0.25)",
                 transition: "all 0.2s ease",
               }}
             >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                 <circle cx="12" cy="12" r="10" />
                 <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
                 <line x1="12" y1="17" x2="12.01" y2="17" />
@@ -858,7 +860,7 @@ export default function AulasHubPage() {
                           justifyContent: "center",
                           gap: "6px",
                           background: isCompleted ? "rgba(16, 185, 129, 0.15)" : "var(--pulso)",
-                          color: isCompleted ? "#10B981" : "#0D111C",
+                          color: isCompleted ? "#10B981" : "#FFFFFF",
                           padding: "9px 14px",
                           borderRadius: "8px",
                           fontSize: "13px",
@@ -989,9 +991,9 @@ export default function AulasHubPage() {
                         padding: "6px 12px",
                         borderRadius: "6px",
                         fontSize: "12px",
-                        fontWeight: 600,
+                        fontWeight: 700,
                         background: isCompleted ? "rgba(16, 185, 129, 0.15)" : "var(--pulso)",
-                        color: isCompleted ? "#10B981" : "#0D111C",
+                        color: isCompleted ? "#10B981" : "#FFFFFF",
                         textDecoration: "none",
                         display: "inline-flex",
                         alignItems: "center",
