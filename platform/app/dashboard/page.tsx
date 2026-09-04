@@ -107,6 +107,22 @@ export default function DashboardPage() {
 
   const quickActions = [
     {
+      id: "aulas",
+      title: "Sala de Aula",
+      desc: "378 temas, vídeos & mapas",
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00C2A8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+        </svg>
+      ),
+      badge: "378 Temas",
+      path: "/aulas",
+      accent: "#00C2A8",
+      bgGradient: "linear-gradient(135deg, var(--pulso-dim) 0%, var(--card-bg) 100%)",
+      borderColor: "var(--card-border)",
+    },
+    {
       id: "ia-medica",
       title: "Preceptor IA",
       desc: "Tirar dúvidas clínicas & casos",

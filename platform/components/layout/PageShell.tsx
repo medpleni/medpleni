@@ -19,6 +19,7 @@ interface PageShellProps {
 /* ── Route map for nav IDs ── */
 const routeMap: Record<string, string> = {
   dashboard: "/dashboard",
+  aulas: "/aulas",
   "ia-medica": "/ia-medica",
   simulados: "/simulados",
   questoes: "/questoes",
@@ -38,6 +39,7 @@ const defaultSections = [
     label: "Principal",
     items: [
       { id: "dashboard", label: "Dashboard", icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3" /><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3" /><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3" /><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.3" /></svg> },
+      { id: "aulas", label: "Sala de Aula", icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><path d="M2 4l6-2 6 2v6l-6 3-6-3V4z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" /><path d="M8 2v11M2 4l6 3 6-3" stroke="currentColor" strokeWidth="1.2" /></svg> },
       { id: "ia-medica", label: "Preceptor IA", icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.3" /><path d="M5 8h6M8 5v6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" /></svg> },
       { id: "simulados", label: "Simulados", icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" strokeWidth="1.3" /><path d="M5 7h6M5 10h4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" /></svg> },
       { id: "questoes", label: "Questões", icon: <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><path d="M3 4h10M3 8h10M3 12h6" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" /></svg> },
