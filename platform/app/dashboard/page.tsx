@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { PageShell } from "@/components/layout";
 import { KPICard, ScoreRing, Card, ProgressBar, Badge } from "@/components/ui";
 import { useUser } from "@/lib/supabase/use-user";
@@ -28,8 +29,6 @@ const statusColor = (s: string) =>
 
 const statusVariant = (s: string) =>
   s === "excelente" ? "green" : s === "bom" ? "blue" : s === "atencao" ? "warn" : "danger";
-
-
 
 /* ── KPI Icons ── */
 function IcPred() {
@@ -82,6 +81,7 @@ function ChartTooltip({ active, payload, label }: any) {
 }
 
 export default function DashboardPage() {
+  const router = useRouter();
   const { user, profile } = useUser();
   const [activeNav, setActiveNav] = useState("dashboard");
   const [data, setData] = useState<EnamedPredictionData | null>(null);
@@ -100,6 +100,79 @@ export default function DashboardPage() {
   const questoesResolvidas = data?.totalQuestoesResolvidas || 142;
   const taxaAcerto = data?.taxaAcertoGeral || 78;
 
+  const userRole = (profile?.role || "").toLowerCase();
+  const isSuperAdminEmail = ["mario.nascimentolopes@gmail.com"].includes(user?.email || "");
+  const isAdminUser = isSuperAdminEmail || ["superadmin", "docente", "financeiro", "suporte", "desenvolvedor"].includes(userRole);
+
+  const quickActions = [
+    {
+      id: "ia-medica",
+      title: "Preceptor IA",
+      desc: "Tirar dúvidas clínicas & casos",
+      icon: "🩺",
+      badge: "Dr. Pleni",
+      path: "/ia-medica",
+      accent: "#00C2A8",
+      bgGradient: "linear-gradient(135deg, rgba(0,194,168,0.12) 0%, rgba(26,31,46,0.85) 100%)",
+      borderColor: "rgba(0,194,168,0.3)",
+    },
+    {
+      id: "simulados",
+      title: "Simulados",
+      desc: "Provas reais & predição IA",
+      icon: "📋",
+      badge: "Oficiais INEP",
+      path: "/simulados",
+      accent: "#0077B6",
+      bgGradient: "linear-gradient(135deg, rgba(0,119,182,0.12) 0%, rgba(26,31,46,0.85) 100%)",
+      borderColor: "rgba(0,119,182,0.3)",
+    },
+    {
+      id: "questoes",
+      title: "Questões",
+      desc: "Treino no banco comentado",
+      icon: "📝",
+      badge: "10k+ Questões",
+      path: "/questoes",
+      accent: "#6B5CE7",
+      bgGradient: "linear-gradient(135deg, rgba(107,92,231,0.12) 0%, rgba(26,31,46,0.85) 100%)",
+      borderColor: "rgba(107,92,231,0.3)",
+    },
+    {
+      id: "flashcards",
+      title: "Flashcards",
+      desc: "Revisão espaçada ativa",
+      icon: "⚡",
+      badge: "SRS Diário",
+      path: "/flashcards",
+      accent: "#F5A623",
+      bgGradient: "linear-gradient(135deg, rgba(245,166,35,0.12) 0%, rgba(26,31,46,0.85) 100%)",
+      borderColor: "rgba(245,166,35,0.3)",
+    },
+    {
+      id: "predicao",
+      title: "Predição",
+      desc: "Raio-X e nota de corte",
+      icon: "📊",
+      badge: "ENAMED 2027",
+      path: "/predicao",
+      accent: "#22C55E",
+      bgGradient: "linear-gradient(135deg, rgba(34,197,94,0.12) 0%, rgba(26,31,46,0.85) 100%)",
+      borderColor: "rgba(34,197,94,0.3)",
+    },
+    {
+      id: "cronograma",
+      title: "Cronograma",
+      desc: "Metas e rotina semanal",
+      icon: "📅",
+      badge: "Semanal",
+      path: "/cronograma",
+      accent: "#64B5E8",
+      bgGradient: "linear-gradient(135deg, rgba(100,181,232,0.12) 0%, rgba(26,31,46,0.85) 100%)",
+      borderColor: "rgba(100,181,232,0.3)",
+    },
+  ];
+
   return (
     <PageShell
       title="Meu Dashboard"
@@ -108,7 +181,7 @@ export default function DashboardPage() {
       onNavigate={setActiveNav}
     >
       {/* ── KPI Row ── */}
-      <div className="kpi-grid">
+      <div className="kpi-grid" style={{ marginBottom: "20px" }}>
         <KPICard
           icon={<IcPred />}
           iconBg="rgba(0,194,168,0.1)"
@@ -141,6 +214,148 @@ export default function DashboardPage() {
           delta="🔥 dias seguidos"
           deltaDirection="up"
         />
+      </div>
+
+      {/* ── BARRA HORIZONTAL DE INÍCIO RÁPIDO (AÇÕES PRINCIPAIS) ── */}
+      <div style={{ marginBottom: "22px" }}>
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "12px",
+          padding: "0 2px"
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <span style={{ fontSize: "14px" }}>⚡</span>
+            <span style={{
+              fontFamily: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif",
+              fontSize: "14px",
+              fontWeight: 700,
+              letterSpacing: "0.02em",
+              color: "#fff",
+            }}>
+              Início Rápido de Estudo
+            </span>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            {isAdminUser && (
+              <button
+                onClick={() => router.push("/admin")}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: "4px 10px",
+                  borderRadius: "6px",
+                  background: "rgba(107,92,231,0.12)",
+                  border: "1px solid rgba(107,92,231,0.3)",
+                  color: "#A99EF5",
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: "10px",
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+              >
+                <span>⚙️</span>
+                <span>Painel Backoffice</span>
+                <span>→</span>
+              </button>
+            )}
+            <span style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: "10px",
+              color: "var(--chumbo)",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+            }}>
+              Módulos Ativos
+            </span>
+          </div>
+        </div>
+
+        {/* Grade de Ações Rápidas */}
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+          gap: "12px",
+        }}>
+          {quickActions.map((action) => (
+            <button
+              key={action.id}
+              onClick={() => router.push(action.path)}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                justifyContent: "space-between",
+                padding: "14px 14px",
+                borderRadius: "10px",
+                background: action.bgGradient,
+                border: `1px solid ${action.borderColor}`,
+                cursor: "pointer",
+                textAlign: "left",
+                minHeight: "105px",
+                transition: "all 0.18s ease",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.borderColor = action.accent;
+                e.currentTarget.style.boxShadow = `0 6px 16px rgba(0,0,0,0.4), 0 0 12px ${action.borderColor}`;
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.borderColor = action.borderColor;
+                e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginBottom: "8px" }}>
+                <span style={{ fontSize: "20px" }}>{action.icon}</span>
+                <span style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: "9px",
+                  padding: "2px 6px",
+                  borderRadius: "4px",
+                  background: "rgba(13,17,28,0.6)",
+                  border: `1px solid ${action.borderColor}`,
+                  color: action.accent,
+                  fontWeight: 600,
+                  letterSpacing: "0.04em",
+                }}>
+                  {action.badge}
+                </span>
+              </div>
+
+              <div>
+                <div style={{
+                  fontFamily: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif",
+                  fontSize: "14px",
+                  fontWeight: 700,
+                  color: "#fff",
+                  marginBottom: "2px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px"
+                }}>
+                  {action.title}
+                  <span style={{ fontSize: "11px", color: action.accent, opacity: 0.8 }}>→</span>
+                </div>
+                <div style={{
+                  fontSize: "11px",
+                  color: "var(--chumbo)",
+                  lineHeight: "1.3",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: "vertical",
+                  overflow: "hidden",
+                }}>
+                  {action.desc}
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* ── Main Grid: left + right ── */}
