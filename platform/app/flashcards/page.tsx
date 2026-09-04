@@ -11,11 +11,16 @@ import {
 } from "@/lib/supabase/flashcards";
 
 const V = {
-  pu: "#00C2A8", ch: "#8A9AB5", nb: "#E0E6F0", pe: "#2B3A52",
-  wn: "#F5A623", dg: "#FF6B6B", su: "#22C55E",
+  pu: "var(--pulso)", ch: "var(--chumbo)", nb: "var(--neblina)", pe: "var(--petroleo)",
+  wn: "var(--warn)", dg: "var(--danger)", su: "var(--success)",
   dm: "'IBM Plex Mono', monospace",
   df: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif",
   db: "var(--font-body), 'Inter', sans-serif",
+  heading: "var(--heading-color)",
+  cardBg: "var(--card-bg)",
+  cardBorder: "var(--card-border)",
+  inputBg: "var(--input-bg)",
+  sinal: "var(--sinal)",
 };
 
 interface AllFlashcardItem {

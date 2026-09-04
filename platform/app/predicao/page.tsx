@@ -14,12 +14,17 @@ import {
 } from "recharts";
 
 const V = {
-  pu: "#00C2A8", re: "#0077B6", rel: "#64B5E8", ind: "#6B5CE7",
-  ch: "#8A9AB5", nb: "#E0E6F0", pe: "#2B3A52",
-  wn: "#F5A623", dg: "#FF6B6B", su: "#22C55E",
+  pu: "var(--pulso)", re: "var(--resid)", rel: "var(--resid-light)", ind: "var(--indigo)",
+  ch: "var(--chumbo)", nb: "var(--neblina)", pe: "var(--petroleo)",
+  wn: "var(--warn)", dg: "var(--danger)", su: "var(--success)",
   dm: "'IBM Plex Mono', monospace",
   df: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif",
   db: "var(--font-body), 'Inter', sans-serif",
+  heading: "var(--heading-color)",
+  cardBg: "var(--card-bg)",
+  cardBorder: "var(--card-border)",
+  inputBg: "var(--input-bg)",
+  sinal: "var(--sinal)",
 };
 
 const statusVariant = (s: string) =>
@@ -29,8 +34,9 @@ function ChartTooltip({ active, payload, label }: any) {
   if (!active || !payload?.[0]) return null;
   return (
     <div style={{
-      background: "#0D111C", border: "1px solid rgba(61,90,128,0.4)",
-      borderRadius: 6, padding: "6px 10px", fontFamily: V.dm, fontSize: 10, color: V.nb,
+      background: "var(--card-bg)", border: "1px solid var(--sinal)",
+      boxShadow: "var(--card-shadow)",
+      borderRadius: 6, padding: "6px 10px", fontFamily: V.dm, fontSize: 10, color: "var(--neblina)",
     }}>
       <span style={{ color: V.pu }}>{payload[0].value}%</span>
       <span style={{ color: V.ch, marginLeft: 6 }}>{label}</span>

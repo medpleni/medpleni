@@ -66,16 +66,17 @@ function ChartTooltip({ active, payload, label }: any) {
   if (!active || !payload?.[0]) return null;
   return (
     <div style={{
-      background: "#0D111C",
-      border: "1px solid rgba(61,90,128,0.4)",
+      background: "var(--card-bg)",
+      border: "1px solid var(--sinal)",
+      boxShadow: "var(--card-shadow)",
       borderRadius: "6px",
       padding: "6px 10px",
       fontFamily: "'IBM Plex Mono', monospace",
       fontSize: "10px",
-      color: "#E0E6F0",
+      color: "var(--neblina)",
     }}>
-      <span style={{ color: "#00C2A8" }}>{payload[0].value}%</span>
-      <span style={{ color: "#8A9AB5", marginLeft: "6px" }}>{label}</span>
+      <span style={{ color: "var(--pulso)" }}>{payload[0].value}%</span>
+      <span style={{ color: "var(--chumbo)", marginLeft: "6px" }}>{label}</span>
     </div>
   );
 }
@@ -113,8 +114,8 @@ export default function DashboardPage() {
       badge: "Dr. Pleni",
       path: "/ia-medica",
       accent: "#00C2A8",
-      bgGradient: "linear-gradient(135deg, rgba(0,194,168,0.12) 0%, rgba(26,31,46,0.85) 100%)",
-      borderColor: "rgba(0,194,168,0.3)",
+      bgGradient: "linear-gradient(135deg, var(--pulso-dim) 0%, var(--card-bg) 100%)",
+      borderColor: "var(--card-border)",
     },
     {
       id: "simulados",
@@ -124,8 +125,8 @@ export default function DashboardPage() {
       badge: "Oficiais INEP",
       path: "/simulados",
       accent: "#0077B6",
-      bgGradient: "linear-gradient(135deg, rgba(0,119,182,0.12) 0%, rgba(26,31,46,0.85) 100%)",
-      borderColor: "rgba(0,119,182,0.3)",
+      bgGradient: "linear-gradient(135deg, rgba(0,119,182,0.08) 0%, var(--card-bg) 100%)",
+      borderColor: "var(--card-border)",
     },
     {
       id: "questoes",
@@ -135,8 +136,8 @@ export default function DashboardPage() {
       badge: "10k+ Questões",
       path: "/questoes",
       accent: "#6B5CE7",
-      bgGradient: "linear-gradient(135deg, rgba(107,92,231,0.12) 0%, rgba(26,31,46,0.85) 100%)",
-      borderColor: "rgba(107,92,231,0.3)",
+      bgGradient: "linear-gradient(135deg, rgba(107,92,231,0.08) 0%, var(--card-bg) 100%)",
+      borderColor: "var(--card-border)",
     },
     {
       id: "flashcards",
@@ -146,8 +147,8 @@ export default function DashboardPage() {
       badge: "SRS Diário",
       path: "/flashcards",
       accent: "#F5A623",
-      bgGradient: "linear-gradient(135deg, rgba(245,166,35,0.12) 0%, rgba(26,31,46,0.85) 100%)",
-      borderColor: "rgba(245,166,35,0.3)",
+      bgGradient: "linear-gradient(135deg, rgba(245,166,35,0.08) 0%, var(--card-bg) 100%)",
+      borderColor: "var(--card-border)",
     },
     {
       id: "predicao",
@@ -157,8 +158,8 @@ export default function DashboardPage() {
       badge: "ENAMED 2027",
       path: "/predicao",
       accent: "#22C55E",
-      bgGradient: "linear-gradient(135deg, rgba(34,197,94,0.12) 0%, rgba(26,31,46,0.85) 100%)",
-      borderColor: "rgba(34,197,94,0.3)",
+      bgGradient: "linear-gradient(135deg, rgba(34,197,94,0.08) 0%, var(--card-bg) 100%)",
+      borderColor: "var(--card-border)",
     },
     {
       id: "cronograma",
@@ -168,8 +169,8 @@ export default function DashboardPage() {
       badge: "Semanal",
       path: "/cronograma",
       accent: "#64B5E8",
-      bgGradient: "linear-gradient(135deg, rgba(100,181,232,0.12) 0%, rgba(26,31,46,0.85) 100%)",
-      borderColor: "rgba(100,181,232,0.3)",
+      bgGradient: "linear-gradient(135deg, rgba(100,181,232,0.08) 0%, var(--card-bg) 100%)",
+      borderColor: "var(--card-border)",
     },
   ];
 
@@ -184,9 +185,9 @@ export default function DashboardPage() {
       <div className="kpi-grid" style={{ marginBottom: "20px" }}>
         <KPICard
           icon={<IcPred />}
-          iconBg="rgba(0,194,168,0.1)"
+          iconBg="var(--pulso-dim)"
           label="Predição ENAMED 2027"
-          value={<>{scoreGeral}<span style={{ fontSize: "16px", color: "#00C2A8" }}>%</span></>}
+          value={<>{scoreGeral}<span style={{ fontSize: "16px", color: "var(--pulso)" }}>%</span></>}
           delta="↑ Meta 78%"
           deltaDirection="up"
         />
@@ -232,7 +233,7 @@ export default function DashboardPage() {
               fontSize: "14px",
               fontWeight: 700,
               letterSpacing: "0.02em",
-              color: "#fff",
+              color: "var(--heading-color)",
             }}>
               Início Rápido de Estudo
             </span>
@@ -248,9 +249,9 @@ export default function DashboardPage() {
                   gap: "6px",
                   padding: "4px 10px",
                   borderRadius: "6px",
-                  background: "rgba(107,92,231,0.12)",
-                  border: "1px solid rgba(107,92,231,0.3)",
-                  color: "#A99EF5",
+                  background: "var(--input-bg)",
+                  border: "1px solid var(--sinal)",
+                  color: "var(--pulso)",
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontSize: "10px",
                   cursor: "pointer",
@@ -293,21 +294,21 @@ export default function DashboardPage() {
                 borderRadius: "10px",
                 background: action.bgGradient,
                 border: `1px solid ${action.borderColor}`,
+                boxShadow: "var(--card-shadow)",
                 cursor: "pointer",
                 textAlign: "left",
                 minHeight: "105px",
                 transition: "all 0.18s ease",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "translateY(-2px)";
                 e.currentTarget.style.borderColor = action.accent;
-                e.currentTarget.style.boxShadow = `0 6px 16px rgba(0,0,0,0.4), 0 0 12px ${action.borderColor}`;
+                e.currentTarget.style.boxShadow = `0 6px 16px rgba(0,0,0,0.1), 0 0 10px ${action.accent}33`;
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = "translateY(0)";
                 e.currentTarget.style.borderColor = action.borderColor;
-                e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.2)";
+                e.currentTarget.style.boxShadow = "var(--card-shadow)";
               }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", marginBottom: "8px" }}>
@@ -317,8 +318,8 @@ export default function DashboardPage() {
                   fontSize: "9px",
                   padding: "2px 6px",
                   borderRadius: "4px",
-                  background: "rgba(13,17,28,0.6)",
-                  border: `1px solid ${action.borderColor}`,
+                  background: "var(--input-bg)",
+                  border: "1px solid var(--sinal)",
                   color: action.accent,
                   fontWeight: 600,
                   letterSpacing: "0.04em",
@@ -332,7 +333,7 @@ export default function DashboardPage() {
                   fontFamily: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif",
                   fontSize: "14px",
                   fontWeight: 700,
-                  color: "#fff",
+                  color: "var(--heading-color)",
                   marginBottom: "2px",
                   display: "flex",
                   alignItems: "center",
@@ -366,7 +367,7 @@ export default function DashboardPage() {
           {/* 1. Predição de Aprovação */}
           <Card hoverable={false}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-              <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "14px", color: "#fff" }}>
+              <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "14px", color: "var(--heading-color)" }}>
                 Índice de Prontidão — ENAMED 2027
               </span>
               <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "9px", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--chumbo)" }}>
@@ -377,7 +378,7 @@ export default function DashboardPage() {
             <div style={{ display: "flex", alignItems: "center", gap: "24px" }}>
               <ScoreRing score={scoreGeral} size={130} />
               <div style={{ flex: 1 }}>
-                <div style={{ fontFamily: "var(--font-display)", fontSize: "18px", fontWeight: 700, color: "#fff", marginBottom: "4px" }}>
+                <div style={{ fontFamily: "var(--font-display)", fontSize: "18px", fontWeight: 700, color: "var(--heading-color)", marginBottom: "4px" }}>
                   {scoreGeral >= 78 ? "Prontidão Elevada ✓" : "Em Evolução"}
                 </div>
                 <div style={{ fontSize: "12px", color: "var(--chumbo)", lineHeight: "1.5", marginBottom: "12px" }}>
@@ -394,7 +395,7 @@ export default function DashboardPage() {
           {/* 2. Desempenho por Grande Área do ENAMED */}
           <Card hoverable={false}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-              <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "14px", color: "#fff" }}>
+              <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "14px", color: "var(--heading-color)" }}>
                 Desempenho por Grande Área (ENAMED)
               </span>
               <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "9px", color: "var(--chumbo)", textTransform: "uppercase" }}>
@@ -427,7 +428,7 @@ export default function DashboardPage() {
             {/* Cabeçalho */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "12px" }}>
               <div>
-                <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "14px", color: "#fff", display: "block" }}>
+                <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "14px", color: "var(--heading-color)", display: "block" }}>
                   Evolução do Índice
                 </span>
                 <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "9px", color: "var(--chumbo)" }}>
@@ -437,13 +438,13 @@ export default function DashboardPage() {
               {/* Delta */}
               <div style={{
                 display: "flex", alignItems: "center", gap: "4px",
-                background: "rgba(0,194,168,0.1)", border: "1px solid rgba(0,194,168,0.25)",
+                background: "var(--pulso-dim)", border: "1px solid var(--pulso)",
                 borderRadius: "6px", padding: "3px 8px",
               }}>
                 <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                  <path d="M5 8V2M2 5l3-3 3 3" stroke="#00C2A8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M5 8V2M2 5l3-3 3 3" stroke="var(--pulso)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "10px", fontWeight: 700, color: "#00C2A8" }}>
+                <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "10px", fontWeight: 700, color: "var(--pulso)" }}>
                   +22.7pts
                 </span>
               </div>
@@ -470,8 +471,8 @@ export default function DashboardPage() {
                 />
                 <RTooltip
                   contentStyle={{
-                    background: "var(--petroleo)", border: "1px solid rgba(61,90,128,0.4)",
-                    borderRadius: "8px", fontSize: "11px", color: "#fff",
+                    background: "var(--card-bg)", border: "1px solid var(--sinal)",
+                    borderRadius: "8px", fontSize: "11px", color: "var(--neblina)",
                   }}
                   formatter={(v) => [`${v ?? ""}%`, "Score"]}
                 />
@@ -488,18 +489,18 @@ export default function DashboardPage() {
             </ResponsiveContainer>
 
             {/* Rodapé: score atual vs meta */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "8px", paddingTop: "10px", borderTop: "1px solid rgba(61,90,128,0.2)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "8px", paddingTop: "10px", borderTop: "1px solid var(--sinal)" }}>
               <div style={{ display: "flex", gap: "14px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-                  <span style={{ display: "inline-block", width: 8, height: 2, background: "#00C2A8", borderRadius: 2 }} />
+                  <span style={{ display: "inline-block", width: 8, height: 2, background: "var(--pulso)", borderRadius: 2 }} />
                   <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "9px", color: "var(--chumbo)" }}>Seu índice</span>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-                  <span style={{ display: "inline-block", width: 8, height: 1, background: "#F5A623", borderRadius: 2, borderTop: "1px dashed #F5A623" }} />
+                  <span style={{ display: "inline-block", width: 8, height: 1, background: "var(--warn)", borderRadius: 2, borderTop: "1px dashed var(--warn)" }} />
                   <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "9px", color: "var(--chumbo)" }}>Meta aprovação</span>
                 </div>
               </div>
-              <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "11px", fontWeight: 700, color: "#00C2A8" }}>
+              <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "11px", fontWeight: 700, color: "var(--pulso)" }}>
                 94.7% atual
               </span>
             </div>
@@ -512,7 +513,7 @@ export default function DashboardPage() {
           {/* 4. Recomendações da IA */}
           <Card hoverable={false}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-              <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "14px", color: "#fff" }}>
+              <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "14px", color: "var(--heading-color)" }}>
                 Recomendações da IA
               </span>
               <span style={{ fontFamily: "'IBM Plex Mono'", fontSize: "9px", color: "var(--chumbo)", textTransform: "uppercase" }}>
@@ -526,22 +527,22 @@ export default function DashboardPage() {
                   key={i}
                   style={{
                     padding: "12px 14px",
-                    background: "rgba(43,58,82,0.35)",
-                    border: "1px solid rgba(61,90,128,0.25)",
+                    background: "var(--input-bg)",
+                    border: "1px solid var(--sinal)",
                     borderRadius: "10px",
                   }}
                 >
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
                     <span style={{
-                      fontFamily: "var(--font-display)", fontSize: "12px", fontWeight: 700, color: "#fff",
+                      fontFamily: "var(--font-display)", fontSize: "12px", fontWeight: 700, color: "var(--heading-color)",
                     }}>
                       {rec.area}
                     </span>
                     <span style={{
                       fontFamily: "'IBM Plex Mono'", fontSize: "9px", fontWeight: 600,
                       padding: "2px 6px", borderRadius: 4,
-                      background: rec.pct < 60 ? "rgba(255,107,107,0.12)" : "rgba(0,194,168,0.12)",
-                      color: rec.pct < 60 ? "#FF6B6B" : "#00C2A8",
+                      background: rec.pct < 60 ? "var(--danger-bg)" : "var(--pulso-dim)",
+                      color: rec.pct < 60 ? "var(--danger)" : "var(--pulso)",
                     }}>
                       {rec.pct}% de domínio
                     </span>
@@ -550,10 +551,10 @@ export default function DashboardPage() {
                     {rec.desc}
                   </div>
                   <div style={{
-                    fontSize: "10.5px", color: "#E0E6F0", background: "rgba(13,17,28,0.5)",
-                    border: "1px solid rgba(61,90,128,0.2)", padding: "5px 8px", borderRadius: "6px",
+                    fontSize: "10.5px", color: "var(--neblina)", background: "var(--card-bg)",
+                    border: "1px solid var(--sinal)", padding: "5px 8px", borderRadius: "6px",
                   }}>
-                    🎯 <strong style={{ color: "#00C2A8" }}>Conduta:</strong> {rec.rec}
+                    🎯 <strong style={{ color: "var(--pulso)" }}>Conduta:</strong> {rec.rec}
                   </div>
                 </div>
               ))}
@@ -562,10 +563,10 @@ export default function DashboardPage() {
 
           {/* 5. Próximo Simulado Recomendado */}
           <Card hoverable={false} style={{
-            background: "linear-gradient(135deg, rgba(0,194,168,0.06) 0%, var(--petroleo) 100%)",
-            borderColor: "rgba(0,194,168,0.3)",
+            background: "linear-gradient(135deg, var(--pulso-dim) 0%, var(--card-bg) 100%)",
+            borderColor: "var(--pulso)",
           }}>
-            <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "14px", color: "#fff", marginBottom: "8px" }}>
+            <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "14px", color: "var(--heading-color)", marginBottom: "8px" }}>
               Próxima Ação Recomendada
             </div>
             <div style={{ fontSize: "12px", color: "var(--neblina)", lineHeight: "1.5", marginBottom: "14px" }}>
@@ -578,8 +579,8 @@ export default function DashboardPage() {
                 textAlign: "center",
                 textDecoration: "none",
                 padding: "9px 0",
-                background: "#00C2A8",
-                color: "#0A1A18",
+                background: "var(--pulso)",
+                color: "#FFFFFF",
                 borderRadius: "8px",
                 fontFamily: "var(--font-body)",
                 fontSize: "12px",

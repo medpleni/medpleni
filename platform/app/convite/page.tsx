@@ -6,17 +6,20 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
 const V = {
-  pu: "#00C2A8",
-  re: "#0077B6",
+  pu: "var(--pulso)",
+  re: "var(--resgate)",
   rel: "#64B5E8",
   ind: "#6B5CE7",
-  ch: "#8A9AB5",
-  nb: "#E0E6F0",
-  pe: "#2B3A52",
+  ch: "var(--chumbo)",
+  nb: "var(--neblina)",
+  pe: "var(--petroleo)",
   am: "#C98A0A",
   wn: "#F5A623",
   dg: "#FF6B6B",
-  su: "#22C55E",
+  su: "var(--sucesso)",
+  cardBg: "var(--card-bg)",
+  cardBorder: "var(--card-border)",
+  heading: "var(--heading-color)",
   dm: "'IBM Plex Mono', monospace",
   df: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif",
   db: "var(--font-body), 'Inter', sans-serif",
@@ -170,7 +173,7 @@ function ConviteContent() {
 
   if (loading) {
     return (
-      <div style={{ minHeight: "100vh", background: "#0D111C", display: "flex", alignItems: "center", justifyContent: "center", color: V.ch }}>
+      <div style={{ minHeight: "100vh", background: "var(--abismo)", display: "flex", alignItems: "center", justifyContent: "center", color: V.ch }}>
         Validando credenciais do convite...
       </div>
     );
@@ -178,10 +181,10 @@ function ConviteContent() {
 
   if (error || !invite) {
     return (
-      <div style={{ minHeight: "100vh", background: "#0D111C", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
-        <div style={{ background: "#1A1F2E", border: "1px solid rgba(255,107,107,0.4)", borderRadius: 16, padding: 32, maxWidth: 440, width: "100%", textAlign: "center" }}>
+      <div style={{ minHeight: "100vh", background: "var(--abismo)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+        <div style={{ background: "var(--card-bg)", border: "1px solid rgba(255,107,107,0.4)", borderRadius: 16, padding: 32, maxWidth: 440, width: "100%", textAlign: "center", boxShadow: "var(--card-shadow)" }}>
           <div style={{ fontSize: 40, marginBottom: 12 }}>⚠️</div>
-          <h2 style={{ fontFamily: V.df, fontSize: 22, color: "#fff", marginBottom: 8 }}>Convite Indisponível</h2>
+          <h2 style={{ fontFamily: V.df, fontSize: 22, color: "var(--heading-color)", marginBottom: 8 }}>Convite Indisponível</h2>
           <p style={{ color: V.ch, fontSize: 13, lineHeight: 1.6, marginBottom: 24 }}>
             {error || "Este link de convite expirou, foi cancelado ou já foi utilizado."}
           </p>
@@ -198,20 +201,20 @@ function ConviteContent() {
     currentUser && currentUser.email?.toLowerCase() === invite.email?.toLowerCase();
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0D111C", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
+    <div style={{ minHeight: "100vh", background: "var(--abismo)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
       <div style={{
-        background: "#1A1F2E",
-        border: "1px solid rgba(0,194,168,0.35)",
+        background: "var(--card-bg)",
+        border: "1px solid var(--card-border)",
         borderRadius: 20,
         padding: "36px 32px",
         maxWidth: 480,
         width: "100%",
-        boxShadow: "0 20px 50px rgba(0,0,0,0.5)",
+        boxShadow: "var(--card-shadow)",
       }}>
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: 24 }}>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-            <span style={{ fontFamily: V.df, fontSize: 24, fontWeight: 800, color: "#fff" }}>
+            <span style={{ fontFamily: V.df, fontSize: 24, fontWeight: 800, color: "var(--heading-color)" }}>
               Med<span style={{ color: V.pu }}>Pleni</span>
             </span>
             <span style={{
@@ -228,20 +231,20 @@ function ConviteContent() {
 
         {/* Resumo do Convite */}
         <div style={{
-          background: "rgba(13,17,28,0.6)",
-          border: "1px solid rgba(61,90,128,0.25)",
+          background: "var(--input-bg)",
+          border: "1px solid var(--card-border)",
           borderRadius: 12,
           padding: "16px 18px",
           marginBottom: 24,
         }}>
-          <div style={{ fontSize: 13, color: "#fff", fontWeight: 600, marginBottom: 4 }}>
+          <div style={{ fontSize: 13, color: "var(--heading-color)", fontWeight: 600, marginBottom: 4 }}>
             {invite.full_name}
           </div>
           <div style={{ fontSize: 12, color: V.ch, marginBottom: 10 }}>
             {invite.email}
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, paddingTop: 10, borderTop: "1px solid rgba(61,90,128,0.2)", fontSize: 11 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, paddingTop: 10, borderTop: "1px solid var(--card-border)", fontSize: 11 }}>
             <div>
               <span style={{ color: V.ch, display: "block" }}>Plano de Acesso:</span>
               <strong style={{ color: V.pu }}>{invite.plan === "pleno_anual" ? "Pleno Anual" : invite.plan}</strong>
@@ -258,7 +261,7 @@ function ConviteContent() {
         {success ? (
           <div style={{ textAlign: "center", padding: "20px 0" }}>
             <div style={{ fontSize: 36, marginBottom: 12 }}>🎉</div>
-            <h3 style={{ color: "#fff", fontSize: 18, marginBottom: 6 }}>Acesso Ativado com Sucesso!</h3>
+            <h3 style={{ color: "var(--heading-color)", fontSize: 18, marginBottom: 6 }}>Acesso Ativado com Sucesso!</h3>
             <p style={{ color: V.ch, fontSize: 12 }}>Redirecionando para seu painel em instantes...</p>
           </div>
         ) : isAlreadyLoggedInWithMatchingEmail ? (
@@ -308,7 +311,7 @@ function ConviteContent() {
                 required
                 style={{
                   width: "100%", padding: "11px 14px", borderRadius: 8,
-                  background: "#0D111C", border: "1px solid rgba(61,90,128,0.35)", color: "#fff",
+                  background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--neblina)",
                   fontSize: 13, outline: "none",
                 }}
               />
@@ -326,7 +329,7 @@ function ConviteContent() {
                 required
                 style={{
                   width: "100%", padding: "11px 14px", borderRadius: 8,
-                  background: "#0D111C", border: "1px solid rgba(61,90,128,0.35)", color: "#fff",
+                  background: "var(--input-bg)", border: "1px solid var(--card-border)", color: "var(--neblina)",
                   fontSize: 13, outline: "none",
                 }}
               />
@@ -359,7 +362,7 @@ function ConviteContent() {
 
 export default function ConvitePage() {
   return (
-    <Suspense fallback={<div style={{ minHeight: "100vh", background: "#0D111C" }} />}>
+    <Suspense fallback={<div style={{ minHeight: "100vh", background: "var(--abismo)" }} />}>
       <ConviteContent />
     </Suspense>
   );

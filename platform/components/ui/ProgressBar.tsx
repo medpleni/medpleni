@@ -26,7 +26,7 @@ export default function ProgressBar({
 
   const trackStyle: React.CSSProperties = {
     height: `${height}px`,
-    background: "rgba(61,90,128,0.2)",
+    background: "var(--sinal)",
     borderRadius: "9999px",
     overflow: "hidden",
     ...style,

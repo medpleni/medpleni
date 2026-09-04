@@ -8,9 +8,10 @@ import { useUser } from "@/lib/supabase/use-user";
 import { updateProfile } from "@/lib/supabase/profile";
 
 const V = {
-  pu: "#00C2A8", re: "#0077B6", ind: "#6B5CE7",
-  ch: "#8A9AB5", nb: "#E0E6F0", pe: "#2B3A52",
-  wn: "#F5A623", dg: "#FF6B6B", su: "#22C55E",
+  pu: "var(--pulso)", re: "var(--resgate)", ind: "#6B5CE7",
+  ch: "var(--chumbo)", nb: "var(--neblina)", pe: "var(--petroleo)",
+  wn: "#F5A623", dg: "#FF6B6B", su: "var(--sucesso)",
+  ab: "var(--abismo)", cardBg: "var(--card-bg)", cardBorder: "var(--card-border)", heading: "var(--heading-color)",
   dm: "'IBM Plex Mono', monospace",
   df: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif",
   db: "var(--font-body), 'Inter', sans-serif",

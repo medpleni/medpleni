@@ -104,12 +104,12 @@ function LoginForm() {
           fontFamily: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif",
           fontWeight: 700,
           fontSize: 34,
-          color: "#fff",
+          color: "var(--heading-color)",
           letterSpacing: "-0.02em",
           marginBottom: 6,
         }}
       >
-        Med<span style={{ color: "#00C2A8" }}>Pleni</span>
+        Med<span style={{ color: "var(--pulso)" }}>Pleni</span>
       </div>
 
       <div
@@ -131,11 +131,11 @@ function LoginForm() {
         style={{
           width: "100%",
           maxWidth: 400,
-          background: "var(--petroleo)",
-          border: "1px solid rgba(61,90,128,0.3)",
+          background: "var(--card-bg)",
+          border: "1px solid var(--card-border)",
           borderRadius: 16,
           padding: "32px 28px",
-          boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)",
+          boxShadow: "var(--card-shadow)",
         }}
       >
         <div style={{ marginBottom: 24, textAlign: "center" }}>
@@ -143,7 +143,7 @@ function LoginForm() {
             style={{
               fontSize: 18,
               fontWeight: 600,
-              color: "#FFFFFF",
+              color: "var(--heading-color)",
               marginBottom: 4,
             }}
           >
@@ -183,7 +183,7 @@ function LoginForm() {
               borderRadius: 8,
               padding: "10px 14px",
               marginBottom: 18,
-              color: "#00C2A8",
+              color: "var(--pulso)",
               fontSize: 13,
               display: "flex",
               alignItems: "center",
@@ -223,8 +223,8 @@ function LoginForm() {
               style={{
                 width: "100%",
                 padding: "12px 14px",
-                background: "rgba(43,58,82,0.6)",
-                border: "1.5px solid rgba(61,90,128,0.5)",
+                background: "var(--input-bg)",
+                border: "1.5px solid var(--card-border)",
                 borderRadius: 8,
                 color: "var(--neblina)",
                 fontFamily: "var(--font-body), 'Inter', sans-serif",
@@ -232,9 +232,9 @@ function LoginForm() {
                 outline: "none",
                 transition: "border-color 0.18s",
               }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = "#00C2A8")}
+              onFocus={(e) => (e.currentTarget.style.borderColor = "var(--pulso)")}
               onBlur={(e) =>
-                (e.currentTarget.style.borderColor = "rgba(61,90,128,0.5)")
+                (e.currentTarget.style.borderColor = "var(--card-border)")
               }
             />
           </div>
@@ -287,8 +287,8 @@ function LoginForm() {
               style={{
                 width: "100%",
                 padding: "12px 14px",
-                background: "rgba(43,58,82,0.6)",
-                border: "1.5px solid rgba(61,90,128,0.5)",
+                background: "var(--input-bg)",
+                border: "1.5px solid var(--card-border)",
                 borderRadius: 8,
                 color: "var(--neblina)",
                 fontFamily: "var(--font-body), 'Inter', sans-serif",
@@ -296,9 +296,9 @@ function LoginForm() {
                 outline: "none",
                 transition: "border-color 0.18s",
               }}
-              onFocus={(e) => (e.currentTarget.style.borderColor = "#00C2A8")}
+              onFocus={(e) => (e.currentTarget.style.borderColor = "var(--pulso)")}
               onBlur={(e) =>
-                (e.currentTarget.style.borderColor = "rgba(61,90,128,0.5)")
+                (e.currentTarget.style.borderColor = "var(--card-border)")
               }
             />
           </div>
@@ -310,7 +310,7 @@ function LoginForm() {
             style={{
               width: "100%",
               padding: "13px 0",
-              background: loading ? "rgba(0,194,168,0.5)" : "#00C2A8",
+              background: loading ? "rgba(0,194,168,0.5)" : "var(--pulso)",
               border: "none",
               borderRadius: 10,
               fontFamily: "var(--font-body), 'Inter', sans-serif",
@@ -363,20 +363,18 @@ function LoginForm() {
             marginTop: 22,
             fontSize: 13,
             paddingTop: 16,
-            borderTop: "1px solid rgba(61,90,128,0.25)",
+            borderTop: "1px solid var(--card-border)",
           }}
         >
           <Link
             href="/cadastro"
             style={{
-              color: "var(--chumbo)",
+              color: "var(--pulso)",
               textDecoration: "none",
-              transition: "color 0.15s",
+              fontWeight: 500,
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "#00C2A8")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--chumbo)")}
           >
-            Primeiro acesso
+            Criar conta
           </Link>
           <span style={{ color: "rgba(61,90,128,0.4)" }}>·</span>
           <Link
@@ -386,7 +384,7 @@ function LoginForm() {
               textDecoration: "none",
               transition: "color 0.15s",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "#00C2A8")}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--pulso)")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "var(--chumbo)")}
           >
             Esqueci a senha

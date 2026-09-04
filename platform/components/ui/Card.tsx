@@ -18,14 +18,16 @@ export default function Card({
   const [hovered, setHovered] = React.useState(false);
 
   const base: React.CSSProperties = {
-    background: "var(--petroleo)",
-    border: "1px solid rgba(61,90,128,0.25)",
+    background: "var(--card-bg)",
+    border: "1px solid var(--card-border)",
+    boxShadow: "var(--card-shadow)",
     borderRadius: "12px",
     padding: "18px",
-    transition: "border-color 0.2s, transform 0.2s",
+    color: "var(--neblina)",
+    transition: "border-color 0.2s, transform 0.2s, box-shadow 0.2s, background 0.2s",
     ...(hoverable && hovered
       ? {
-          borderColor: "rgba(0,194,168,0.3)",
+          borderColor: "var(--pulso)",
           transform: "translateY(-2px)",
         }
       : {}),

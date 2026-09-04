@@ -93,7 +93,7 @@ export default function PageShell({
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: "#0D111C" }}>
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: "var(--abismo)", color: "var(--neblina)" }}>
       <style>{`@keyframes pageFadeIn { from { opacity:0; } to { opacity:1; } }`}</style>
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
         {!isMobile && (

@@ -1,40 +1,108 @@
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────
-   MedPleni — Design Tokens
-   Extraídos dos arquivos: brand-book-medpleni.html,
-   design-system-medpleni.html, medpleni-part3-dashboard.html
+   MedPleni — Design Tokens & Dynamic Theme System
+   Suporte completo a Dark Mode e Light Mode
 ───────────────────────────────────────────── */
 
-:root {
-  /* ── Estruturais (backgrounds e superfícies) ── */
-  --abismo:       #1A1F2E;   /* Background primário - dark mode nativo */
-  --petroleo:     #2B3A52;   /* Superfícies: cards, painéis */
-  --sinal:        #3D5A80;   /* Bordas, divisores */
-  --neblina:      #E0E6F0;   /* Texto de corpo */
-  --chumbo:       #8A9AB5;   /* Texto secundário, labels */
-  --lab:          #F0F4FA;   /* Background alternativo (light) */
+:root,
+[data-theme="dark"] {
+  /* ── Estruturais (Dark Mode Padrão) ── */
+  --abismo:          #0D111C;   /* Background principal */
+  --abismo-surface:  #161D2C;   /* Superfícies intermediárias */
+  --petroleo:        #1A2234;   /* Cards e painéis principais */
+  --deeper:          #080B12;   /* Fundo escuro profundo */
+  --sinal:           rgba(61, 90, 128, 0.25); /* Bordas e divisores */
+  --border-subtle:   rgba(61, 90, 128, 0.15);
 
-  /* ── Marca (acento e identidade) ── */
-  --pulso:        #00C2A8;   /* Cor principal, CTA, destaques, ações positivas */
-  --resid:        #0077B6;   /* Sub-brand RESID, progresso */
-  --resid-light:  #64B5E8;   /* Variação clara para textos sobre escuro */
-  --indigo:       #6B5CE7;   /* Sub-brand REVALIDA, elementos especiais */
-  --indigo-light: #A99EF5;   /* Variação clara do índigo */
-  --ambar:        #C98A0A;   /* Sub-brand ESPECIALISTA */
-  --white:        #FFFFFF;
+  /* ── Tipografia Dark ── */
+  --neblina:         #E0E6F0;   /* Texto principal */
+  --chumbo:          #8A9AB5;   /* Texto secundário */
+  --text-muted:      rgba(138, 154, 181, 0.6);
+  --heading-color:   #FFFFFF;
 
-  /* ── Sistema (feedback) ── */
-  --danger:       #FF6B6B;   /* Erros, alertas críticos, questões incorretas */
-  --warn:         #F5A623;   /* Atenção, questões puladas, pendentes */
-  --success:      #22C55E;   /* Sucesso, questões corretas */
+  /* ── Superfícies & Sombras Dark ── */
+  --card-bg:         rgba(26, 34, 52, 0.75);
+  --card-border:     rgba(61, 90, 128, 0.3);
+  --card-shadow:     none;
+  --sidebar-bg:      #0D111C;
+  --topbar-bg:       rgba(13, 17, 28, 0.9);
+  --input-bg:        rgba(43, 58, 82, 0.3);
+  --input-border:    rgba(61, 90, 128, 0.35);
+  --pill-bg:         rgba(43, 58, 82, 0.4);
+
+  /* ── Marca & Sistema ── */
+  --pulso:           #00C2A8;   /* Teal marca */
+  --pulso-light:     #33DEC7;
+  --pulso-dim:       rgba(0, 194, 168, 0.12);
+  --resid:           #0077B6;   /* Azul médico */
+  --resid-light:     #64B5E8;
+  --indigo:          #6B5CE7;
+  --indigo-light:    #A99EF5;
+  --ambar:           #C98A0A;
+  --white:           #FFFFFF;
+
+  --danger:          #FF6B6B;
+  --danger-bg:       rgba(255, 107, 107, 0.12);
+  --warn:            #F5A623;
+  --warn-bg:         rgba(245, 166, 35, 0.12);
+  --success:         #22C55E;
+  --success-bg:      rgba(34, 197, 94, 0.12);
 
   /* ── Border Radius Tokens ── */
-  --r-sm:         3px;       /* Tags pequenas */
-  --r-md:         8px;       /* Botões, inputs */
-  --r-lg:         10px;      /* Cards intermediários */
-  --r-xl:         12px;      /* Cards principais */
-  --r-full:       9999px;    /* Pills, badges redondos */
+  --r-sm:            4px;
+  --r-md:            8px;
+  --r-lg:            10px;
+  --r-xl:            14px;
+  --r-full:          9999px;
+
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  /* ── Estruturais (Light Mode Médico) ── */
+  --abismo:          #F4F7FB;   /* Fundo geral limpo e descansado */
+  --abismo-surface:  #EAEEF5;
+  --petroleo:        #FFFFFF;   /* Cards e painéis brancos */
+  --deeper:          #E2E8F0;
+  --sinal:           #E2E8F0;   /* Bordas claras nítidas */
+  --border-subtle:   #CBD5E1;
+
+  /* ── Tipografia Light (Alto Contraste) ── */
+  --neblina:         #0F172A;   /* Texto principal escuro (Slate 900) */
+  --chumbo:          #475569;   /* Texto secundário (Slate 600) */
+  --text-muted:      #64748B;
+  --heading-color:   #090D16;
+
+  /* ── Superfícies & Sombras Light ── */
+  --card-bg:         #FFFFFF;
+  --card-border:     #E2E8F0;
+  --card-shadow:     0 2px 8px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03);
+  --sidebar-bg:      #FFFFFF;
+  --topbar-bg:       rgba(255, 255, 255, 0.95);
+  --input-bg:        #F8FAFC;
+  --input-border:    #CBD5E1;
+  --pill-bg:         #EDF2F7;
+
+  /* ── Marca & Sistema Light (Ajustados para Contraste) ── */
+  --pulso:           #008F7C;   /* Teal aprofundado para legibilidade em fundo claro */
+  --pulso-light:     #00A893;
+  --pulso-dim:       rgba(0, 143, 124, 0.1);
+  --resid:           #0284C7;
+  --resid-light:     #0369A1;
+  --indigo:          #5B4DF0;
+  --indigo-light:    #4338CA;
+  --ambar:           #B45309;
+  --white:           #FFFFFF;
+
+  --danger:          #DC2626;
+  --danger-bg:       rgba(220, 38, 38, 0.08);
+  --warn:            #D97706;
+  --warn-bg:         rgba(217, 119, 6, 0.08);
+  --success:         #16A34A;
+  --success-bg:      rgba(22, 163, 74, 0.08);
+
+  color-scheme: light;
 }
 
 /* ─────────────────────────────────────────────
@@ -48,7 +116,7 @@
 
 html {
   scroll-behavior: smooth;
-  color-scheme: dark;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 body {
@@ -59,10 +127,11 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 /* ─────────────────────────────────────────────
-   Scrollbar - Custom Dark
+   Scrollbar Dinâmica
 ───────────────────────────────────────────── */
 ::-webkit-scrollbar {
   width: 6px;
@@ -83,8 +152,8 @@ body {
    Selection
 ───────────────────────────────────────────── */
 ::selection {
-  background: rgba(0, 194, 168, 0.2);
-  color: var(--white);
+  background: var(--pulso-dim);
+  color: var(--pulso);
 }
 
 /* ─────────────────────────────────────────────
@@ -126,64 +195,5 @@ body {
 @media (max-width: 480px) {
   .kpi-grid {
     grid-template-columns: 1fr;
-  }
-}
-
-/* ─────────────────────────────────────────────
-   Simulado — Responsive Layout
-───────────────────────────────────────────── */
-.sim-layout {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-}
-
-.sim-left-sidebar {
-  width: 200px;
-  flex-shrink: 0;
-  background: #0D111C;
-  border-right: 1px solid rgba(61,90,128,0.15);
-  padding: 16px;
-  overflow-y: auto;
-}
-
-.sim-main {
-  flex: 1;
-  background: var(--abismo);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.sim-body {
-  flex: 1;
-  padding: 24px 28px;
-  display: flex;
-  gap: 28px;
-  overflow-y: auto;
-}
-
-.sim-right-panel {
-  width: 200px;
-  flex-shrink: 0;
-}
-
-@media (max-width: 1024px) {
-  .sim-right-panel {
-    display: none;
-  }
-}
-
-@media (max-width: 768px) {
-  .sim-left-sidebar {
-    display: none;
-  }
-
-  .sim-body {
-    padding: 16px;
-  }
-
-  .sim-topbar-info {
-    display: none;
   }
 }

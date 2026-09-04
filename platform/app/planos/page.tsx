@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@/lib/supabase/use-user";
 
 const V = {
-  pu: "#00C2A8", re: "#0077B6", rel: "#64B5E8", ind: "#6B5CE7",
-  ch: "#8A9AB5", nb: "#E0E6F0", pe: "#2B3A52", am: "#C98A0A",
-  wn: "#F5A623", dg: "#FF6B6B", su: "#22C55E",
+  pu: "var(--pulso)", re: "var(--resgate)", rel: "#64B5E8", ind: "#6B5CE7",
+  ch: "var(--chumbo)", nb: "var(--neblina)", pe: "var(--petroleo)", am: "#C98A0A",
+  wn: "#F5A623", dg: "#FF6B6B", su: "var(--sucesso)",
   dm: "'IBM Plex Mono', monospace",
   df: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif",
   db: "var(--font-body), 'Inter', sans-serif",
   ds: "var(--font-serif), 'Source Serif 4', serif",
-  ab: "#1A1F2E", deeper: "#0D111C",
+  ab: "var(--abismo)", deeper: "var(--abismo)", cardBg: "var(--card-bg)", cardBorder: "var(--card-border)", heading: "var(--heading-color)",
 };
 
 export default function PlanosPage() {

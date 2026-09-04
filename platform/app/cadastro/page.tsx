@@ -129,12 +129,12 @@ export default function CadastroPage() {
           fontFamily: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif",
           fontWeight: 700,
           fontSize: 32,
-          color: "#fff",
+          color: "var(--heading-color)",
           letterSpacing: "-0.02em",
           marginBottom: 4,
         }}
       >
-        Med<span style={{ color: "#00C2A8" }}>Pleni</span>
+        Med<span style={{ color: "var(--pulso)" }}>Pleni</span>
       </div>
 
       <div
@@ -155,11 +155,11 @@ export default function CadastroPage() {
         style={{
           width: "100%",
           maxWidth: 420,
-          background: "var(--petroleo)",
-          border: "1px solid rgba(61,90,128,0.3)",
+          background: "var(--card-bg)",
+          border: "1px solid var(--card-border)",
           borderRadius: 16,
           padding: "32px 28px",
-          boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)",
+          boxShadow: "var(--card-shadow)",
         }}
       >
         {sucesso ? (
@@ -170,7 +170,7 @@ export default function CadastroPage() {
                 height: 56,
                 borderRadius: "50%",
                 background: "rgba(0,194,168,0.15)",
-                color: "#00C2A8",
+                color: "var(--pulso)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -184,7 +184,7 @@ export default function CadastroPage() {
               style={{
                 fontSize: 20,
                 fontWeight: 700,
-                color: "#FFFFFF",
+                color: "var(--heading-color)",
                 marginBottom: 10,
               }}
             >
@@ -207,7 +207,7 @@ export default function CadastroPage() {
                 display: "inline-block",
                 width: "100%",
                 padding: "13px 0",
-                background: "#00C2A8",
+                background: "var(--pulso)",
                 color: "#0A1A18",
                 borderRadius: 10,
                 fontWeight: 600,
@@ -226,7 +226,7 @@ export default function CadastroPage() {
                 style={{
                   fontSize: 18,
                   fontWeight: 600,
-                  color: "#FFFFFF",
+                  color: "var(--heading-color)",
                   marginBottom: 4,
                 }}
               >
@@ -285,8 +285,8 @@ export default function CadastroPage() {
                   style={{
                     width: "100%",
                     padding: "11px 14px",
-                    background: "rgba(43,58,82,0.6)",
-                    border: "1.5px solid rgba(61,90,128,0.5)",
+                    background: "var(--input-bg)",
+                    border: "1.5px solid var(--card-border)",
                     borderRadius: 8,
                     color: "var(--neblina)",
                     fontFamily: "var(--font-body), 'Inter', sans-serif",
@@ -295,10 +295,10 @@ export default function CadastroPage() {
                     transition: "border-color 0.18s",
                   }}
                   onFocus={(e) =>
-                    (e.currentTarget.style.borderColor = "#00C2A8")
+                    (e.currentTarget.style.borderColor = "var(--pulso)")
                   }
                   onBlur={(e) =>
-                    (e.currentTarget.style.borderColor = "rgba(61,90,128,0.5)")
+                    (e.currentTarget.style.borderColor = "var(--card-border)")
                   }
                 />
               </div>
@@ -330,8 +330,8 @@ export default function CadastroPage() {
                   style={{
                     width: "100%",
                     padding: "11px 14px",
-                    background: "rgba(43,58,82,0.6)",
-                    border: "1.5px solid rgba(61,90,128,0.5)",
+                    background: "var(--input-bg)",
+                    border: "1.5px solid var(--card-border)",
                     borderRadius: 8,
                     color: "var(--neblina)",
                     fontFamily: "var(--font-body), 'Inter', sans-serif",
@@ -340,10 +340,10 @@ export default function CadastroPage() {
                     transition: "border-color 0.18s",
                   }}
                   onFocus={(e) =>
-                    (e.currentTarget.style.borderColor = "#00C2A8")
+                    (e.currentTarget.style.borderColor = "var(--pulso)")
                   }
                   onBlur={(e) =>
-                    (e.currentTarget.style.borderColor = "rgba(61,90,128,0.5)")
+                    (e.currentTarget.style.borderColor = "var(--card-border)")
                   }
                 />
               </div>
@@ -396,8 +396,8 @@ export default function CadastroPage() {
                   style={{
                     width: "100%",
                     padding: "11px 14px",
-                    background: "rgba(43,58,82,0.6)",
-                    border: "1.5px solid rgba(61,90,128,0.5)",
+                    background: "var(--input-bg)",
+                    border: "1.5px solid var(--card-border)",
                     borderRadius: 8,
                     color: "var(--neblina)",
                     fontFamily: "var(--font-body), 'Inter', sans-serif",
@@ -406,10 +406,10 @@ export default function CadastroPage() {
                     transition: "border-color 0.18s",
                   }}
                   onFocus={(e) =>
-                    (e.currentTarget.style.borderColor = "#00C2A8")
+                    (e.currentTarget.style.borderColor = "var(--pulso)")
                   }
                   onBlur={(e) =>
-                    (e.currentTarget.style.borderColor = "rgba(61,90,128,0.5)")
+                    (e.currentTarget.style.borderColor = "var(--card-border)")
                   }
                 />
               </div>
@@ -441,8 +441,8 @@ export default function CadastroPage() {
                   style={{
                     width: "100%",
                     padding: "11px 14px",
-                    background: "rgba(43,58,82,0.6)",
-                    border: "1.5px solid rgba(61,90,128,0.5)",
+                    background: "var(--input-bg)",
+                    border: "1.5px solid var(--card-border)",
                     borderRadius: 8,
                     color: "var(--neblina)",
                     fontFamily: "var(--font-body), 'Inter', sans-serif",
@@ -451,10 +451,10 @@ export default function CadastroPage() {
                     transition: "border-color 0.18s",
                   }}
                   onFocus={(e) =>
-                    (e.currentTarget.style.borderColor = "#00C2A8")
+                    (e.currentTarget.style.borderColor = "var(--pulso)")
                   }
                   onBlur={(e) =>
-                    (e.currentTarget.style.borderColor = "rgba(61,90,128,0.5)")
+                    (e.currentTarget.style.borderColor = "var(--card-border)")
                   }
                 />
               </div>
@@ -466,7 +466,7 @@ export default function CadastroPage() {
                 style={{
                   width: "100%",
                   padding: "13px 0",
-                  background: loading ? "rgba(0,194,168,0.5)" : "#00C2A8",
+                  background: loading ? "rgba(0,194,168,0.5)" : "var(--pulso)",
                   border: "none",
                   borderRadius: 10,
                   fontFamily: "var(--font-body), 'Inter', sans-serif",
@@ -495,14 +495,14 @@ export default function CadastroPage() {
                 fontSize: 13,
                 color: "var(--chumbo)",
                 paddingTop: 16,
-                borderTop: "1px solid rgba(61,90,128,0.25)",
+                borderTop: "1px solid var(--card-border)",
               }}
             >
               Já possui uma conta?{" "}
               <Link
                 href="/login"
                 style={{
-                  color: "#00C2A8",
+                  color: "var(--pulso)",
                   textDecoration: "none",
                   fontWeight: 500,
                 }}

@@ -4,9 +4,10 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 const V = {
-  pu: "#00C2A8", re: "#0077B6", rel: "#64B5E8", ind: "#6B5CE7",
-  ch: "#8A9AB5", nb: "#E0E6F0", pe: "#2B3A52", am: "#C98A0A",
-  wn: "#F5A623", dg: "#FF6B6B", su: "#22C55E",
+  pu: "var(--pulso)", re: "var(--resgate)", rel: "#64B5E8", ind: "#6B5CE7",
+  ch: "var(--chumbo)", nb: "var(--neblina)", pe: "var(--petroleo)", am: "#C98A0A",
+  wn: "#F5A623", dg: "#FF6B6B", su: "var(--sucesso)",
+  cardBg: "var(--card-bg)", cardBorder: "var(--card-border)", heading: "var(--heading-color)",
   dm: "'IBM Plex Mono', monospace",
   df: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif",
   db: "var(--font-body), 'Inter', sans-serif",
@@ -32,7 +33,7 @@ export default function AdminFinanceiroPage() {
           <div style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: V.pu, marginBottom: 4 }}>
             Controladoria & Faturamento
           </div>
-          <h1 style={{ fontFamily: V.df, fontSize: 28, fontWeight: 700, color: "#fff" }}>
+          <h1 style={{ fontFamily: V.df, fontSize: 28, fontWeight: 700, color: "var(--heading-color)" }}>
             Financeiro & Iugu Gateway
           </h1>
         </div>

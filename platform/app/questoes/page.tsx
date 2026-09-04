@@ -18,11 +18,16 @@ import { checkUserUsageLimit } from "@/lib/supabase/limits";
 ═══════════════════════════════════════════ */
 
 const V = {
-  pu: "#00C2A8", ch: "#8A9AB5", nb: "#E0E6F0", pe: "#2B3A52",
-  re: "#0077B6", ind: "#6B5CE7", wn: "#F5A623", dg: "#FF6B6B",
+  pu: "var(--pulso)", ch: "var(--chumbo)", nb: "var(--neblina)", pe: "var(--petroleo)",
+  re: "var(--resid)", ind: "var(--indigo)", wn: "var(--warn)", dg: "var(--danger)",
   dm: "'IBM Plex Mono', monospace",
   df: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif",
   db: "var(--font-body), 'Inter', sans-serif",
+  heading: "var(--heading-color)",
+  cardBg: "var(--card-bg)",
+  cardBorder: "var(--card-border)",
+  inputBg: "var(--input-bg)",
+  sinal: "var(--sinal)",
 };
 
 const instituicoes = ["Todas", "ENAMED", "ENARE", "REVALIDA", "USP", "UNIFESP", "UERJ", "AMRIGS"];

@@ -89,6 +89,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { ThemeProvider } from "@/lib/theme-context";
+
 export default function RootLayout({
   children,
 }: {
@@ -97,9 +99,26 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
+      suppressHydrationWarning
       className={`${ibmPlexSansCondensed.variable} ${inter.variable} ${ibmPlexMono.variable} ${sourceSerif4.variable}`}
     >
-      <body>{children}</body>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                var stored = localStorage.getItem('medpleni_theme');
+                var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                var theme = stored || (prefersDark ? 'dark' : 'light');
+                document.documentElement.setAttribute('data-theme', theme);
+              } catch (e) {}
+            `,
+          }}
+        />
+      </head>
+      <body>
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }

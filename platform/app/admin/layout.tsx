@@ -3,15 +3,16 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useUser } from "@/lib/supabase/use-user";
+import { useTheme } from "@/lib/theme-context";
 
 const V = {
-  pu: "#00C2A8", re: "#0077B6", rel: "#64B5E8", ind: "#6B5CE7",
-  ch: "#8A9AB5", nb: "#E0E6F0", pe: "#2B3A52", am: "#C98A0A",
-  wn: "#F5A623", dg: "#FF6B6B", su: "#22C55E",
+  pu: "var(--pulso)", re: "#0077B6", rel: "#64B5E8", ind: "#6B5CE7",
+  ch: "var(--chumbo)", nb: "var(--neblina)", pe: "var(--petroleo)", am: "#C98A0A",
+  wn: "var(--warn)", dg: "var(--danger)", su: "var(--success)",
   dm: "'IBM Plex Mono', monospace",
   df: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif",
   db: "var(--font-body), 'Inter', sans-serif",
-  ab: "#1A1F2E", deeper: "#0D111C",
+  ab: "var(--abismo)", deeper: "var(--deeper)",
 };
 
 const navItems = [
@@ -29,6 +30,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const router = useRouter();
   const pathname = usePathname();
   const { user, profile, loading, signOut } = useUser();
+  const { theme, toggleTheme } = useTheme();
   const [loggingOut, setLoggingOut] = useState(false);
 
   const userEmail = user?.email || "";
@@ -80,39 +82,40 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div style={{
       display: "flex",
       minHeight: "100vh",
-      background: "#0D111C",
-      color: V.nb,
+      background: "var(--abismo)",
+      color: "var(--neblina)",
       fontFamily: V.db,
     }}>
       {/* ── SIDEBAR ── */}
       <aside style={{
         width: 250,
-        background: "#1A1F2E",
-        borderRight: "1px solid rgba(61,90,128,0.25)",
+        background: "var(--sidebar-bg)",
+        borderRight: "1px solid var(--sinal)",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
         flexShrink: 0,
+        transition: "background 0.2s ease, border-color 0.2s ease",
       }}>
         <div>
           {/* Logo & Badge */}
           <div style={{
             padding: "20px 20px 16px",
-            borderBottom: "1px solid rgba(61,90,128,0.2)",
+            borderBottom: "1px solid var(--sinal)",
             display: "flex", alignItems: "center", justifyContent: "space-between",
           }}>
             <div>
-              <div style={{ fontFamily: V.df, fontSize: 19, fontWeight: 700, color: "#fff" }}>
+              <div style={{ fontFamily: V.df, fontSize: 19, fontWeight: 700, color: "var(--heading-color)" }}>
                 Med<span style={{ color: V.pu }}>Pleni</span>
               </div>
-              <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.15em", color: V.ch, textTransform: "uppercase" }}>
+              <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.15em", color: "var(--chumbo)", textTransform: "uppercase" }}>
                 Backoffice Admin
               </div>
             </div>
             <span style={{
               fontFamily: V.dm, fontSize: 8, letterSpacing: "0.1em", textTransform: "uppercase",
               padding: "2px 6px", borderRadius: 4,
-              background: "rgba(0,194,168,0.15)", color: V.pu, border: "1px solid rgba(0,194,168,0.3)",
+              background: "var(--pulso-dim)", color: V.pu, border: "1px solid var(--pulso)",
               fontWeight: 700,
             }}>
               {displayRole}
@@ -130,27 +133,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 justifyContent: "space-between",
                 padding: "10px 12px",
                 borderRadius: 8,
-                background: "linear-gradient(135deg, rgba(0,194,168,0.18) 0%, rgba(0,119,182,0.15) 100%)",
-                border: "1px solid rgba(0,194,168,0.4)",
-                color: "#fff",
+                background: "linear-gradient(135deg, var(--pulso-dim) 0%, rgba(0,119,182,0.1) 100%)",
+                border: "1px solid var(--pulso)",
+                color: "var(--heading-color)",
                 cursor: "pointer",
                 transition: "all 0.15s ease",
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = "linear-gradient(135deg, rgba(0,194,168,0.28) 0%, rgba(0,119,182,0.22) 100%)";
-                e.currentTarget.style.borderColor = "rgba(0,194,168,0.7)";
                 e.currentTarget.style.transform = "translateY(-1px)";
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = "linear-gradient(135deg, rgba(0,194,168,0.18) 0%, rgba(0,119,182,0.15) 100%)";
-                e.currentTarget.style.borderColor = "rgba(0,194,168,0.4)";
                 e.currentTarget.style.transform = "translateY(0)";
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
                 <span style={{ fontSize: 16 }}>🎓</span>
                 <div style={{ textAlign: "left" }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: "#fff", lineHeight: 1.2 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "var(--heading-color)", lineHeight: 1.2 }}>
                     Área do Aluno
                   </div>
                   <div style={{ fontFamily: V.dm, fontSize: 9, color: V.pu, letterSpacing: "0.02em" }}>
@@ -177,9 +176,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   style={{
                     display: "flex", alignItems: "center", gap: 12,
                     padding: "10px 14px", borderRadius: 8,
-                    background: isActive ? "rgba(0,194,168,0.12)" : "transparent",
-                    border: `1px solid ${isActive ? "rgba(0,194,168,0.3)" : "transparent"}`,
-                    color: isActive ? "#fff" : V.ch,
+                    background: isActive ? "var(--pulso-dim)" : "transparent",
+                    border: `1px solid ${isActive ? "var(--pulso)" : "transparent"}`,
+                    color: isActive ? "var(--pulso)" : "var(--neblina)",
                     fontFamily: V.db, fontSize: 13, fontWeight: isActive ? 600 : 500,
                     cursor: "pointer", textAlign: "left", transition: "all 0.15s",
                   }}
@@ -195,13 +194,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Bottom profile / return to app & logout */}
         <div style={{
           padding: "16px",
-          borderTop: "1px solid rgba(61,90,128,0.2)",
-          background: "rgba(13,17,28,0.4)",
+          borderTop: "1px solid var(--sinal)",
+          background: "var(--input-bg)",
         }}>
-          <div style={{ fontSize: 10, color: V.ch, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textTransform: "uppercase", fontFamily: V.dm, letterSpacing: "0.08em" }}>
+          <div style={{ fontSize: 10, color: "var(--chumbo)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textTransform: "uppercase", fontFamily: V.dm, letterSpacing: "0.08em" }}>
             Administrador
           </div>
-          <div style={{ fontSize: 12, fontWeight: 600, color: "#fff", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginTop: 2, marginBottom: 10 }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: "var(--heading-color)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginTop: 2, marginBottom: 10 }}>
             {userEmail}
           </div>
 
@@ -232,53 +231,82 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Top bar de navegação rápida */}
         <header style={{
           height: 54,
-          background: "rgba(26,31,46,0.8)",
-          backdropFilter: "blur(8px)",
-          borderBottom: "1px solid rgba(61,90,128,0.2)",
+          background: "var(--topbar-bg)",
+          backdropFilter: "blur(10px)",
+          borderBottom: "1px solid var(--sinal)",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           padding: "0 32px",
           flexShrink: 0,
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: V.ch }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "var(--chumbo)" }}>
             <span style={{ color: V.pu, fontWeight: 600 }}>Backoffice</span>
             <span>/</span>
-            <span style={{ color: "#fff" }}>
+            <span style={{ color: "var(--heading-color)" }}>
               {navItems.find((n) => pathname === n.path || (n.path !== "/admin" && pathname.startsWith(n.path)))?.label || "Painel"}
             </span>
           </div>
 
-          <button
-            onClick={() => router.push("/dashboard")}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              padding: "6px 12px",
-              borderRadius: 6,
-              background: "rgba(0,194,168,0.08)",
-              border: "1px solid rgba(0,194,168,0.3)",
-              color: V.pu,
-              fontFamily: V.db,
-              fontSize: 12,
-              fontWeight: 600,
-              cursor: "pointer",
-              transition: "all 0.15s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(0,194,168,0.16)";
-              e.currentTarget.style.borderColor = "rgba(0,194,168,0.5)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "rgba(0,194,168,0.08)";
-              e.currentTarget.style.borderColor = "rgba(0,194,168,0.3)";
-            }}
-          >
-            <span>🎓</span>
-            <span>Ir para o Dashboard do Aluno</span>
-            <span>→</span>
-          </button>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            {/* Theme Toggle Button in Admin */}
+            <button
+              onClick={toggleTheme}
+              style={{
+                width: "32px",
+                height: "32px",
+                borderRadius: "6px",
+                background: "var(--input-bg)",
+                border: "1px solid var(--sinal)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                color: theme === "dark" ? "#F5A623" : "#6B5CE7",
+                transition: "all 0.15s ease",
+              }}
+              title={theme === "dark" ? "Mudar para Modo Claro" : "Mudar para Modo Escuro"}
+            >
+              {theme === "dark" ? (
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="5" />
+                  <line x1="12" y1="1" x2="12" y2="3" />
+                  <line x1="12" y1="21" x2="12" y2="23" />
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                  <line x1="1" y1="12" x2="3" y2="12" />
+                  <line x1="21" y1="12" x2="23" y2="12" />
+                </svg>
+              ) : (
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+              )}
+            </button>
+
+            <button
+              onClick={() => router.push("/dashboard")}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                padding: "6px 12px",
+                borderRadius: 6,
+                background: "var(--pulso-dim)",
+                border: "1px solid var(--pulso)",
+                color: V.pu,
+                fontFamily: V.db,
+                fontSize: 12,
+                fontWeight: 600,
+                cursor: "pointer",
+                transition: "all 0.15s ease",
+              }}
+            >
+              <span>🎓</span>
+              <span>Ir para o Dashboard do Aluno</span>
+              <span>→</span>
+            </button>
+          </div>
         </header>
 
         <main style={{ flex: 1, overflowY: "auto", padding: "32px 36px" }}>

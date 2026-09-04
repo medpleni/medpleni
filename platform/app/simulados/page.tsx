@@ -12,12 +12,17 @@ import {
 } from "@/lib/supabase/simulations";
 
 const V = {
-  pu: "#00C2A8", re: "#0077B6", rel: "#64B5E8", ind: "#6B5CE7",
-  ch: "#8A9AB5", nb: "#E0E6F0", pe: "#2B3A52", am: "#C98A0A",
-  wn: "#F5A623", dg: "#FF6B6B", su: "#22C55E",
+  pu: "var(--pulso)", re: "var(--resid)", rel: "var(--resid-light)", ind: "var(--indigo)",
+  ch: "var(--chumbo)", nb: "var(--neblina)", pe: "var(--petroleo)", am: "var(--ambar)",
+  wn: "var(--warn)", dg: "var(--danger)", su: "var(--success)",
   dm: "'IBM Plex Mono', monospace",
   df: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif",
   db: "var(--font-body), 'Inter', sans-serif",
+  heading: "var(--heading-color)",
+  cardBg: "var(--card-bg)",
+  cardBorder: "var(--card-border)",
+  inputBg: "var(--input-bg)",
+  sinal: "var(--sinal)",
 };
 
 const instColor: Record<string, string> = {

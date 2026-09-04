@@ -17,15 +17,17 @@ export default function KPICard({
   value,
   delta,
   deltaDirection = "up",
-  iconBg = "rgba(0,194,168,0.1)",
-  valueColor = "#fff",
+  iconBg = "var(--pulso-dim)",
+  valueColor = "var(--heading-color)",
   style,
 }: KPICardProps) {
   const cardStyle: React.CSSProperties = {
-    background: "var(--petroleo)",
-    border: "1px solid rgba(61,90,128,0.25)",
+    background: "var(--card-bg)",
+    border: "1px solid var(--card-border)",
+    boxShadow: "var(--card-shadow)",
     borderRadius: "var(--r-xl)",
     padding: "16px",
+    transition: "background 0.2s, border-color 0.2s, box-shadow 0.2s",
     ...style,
   };
 

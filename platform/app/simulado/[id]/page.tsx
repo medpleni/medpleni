@@ -12,17 +12,23 @@ import {
   type ExtendedSimulado,
 } from "@/lib/supabase/simulations";
 
+import { useTheme } from "@/lib/theme-context";
+
 /* ══════════════════════════════════════════════
    SIMULADO & RELATÓRIO PÓS-SIMULADO REAL
 ══════════════════════════════════════════════ */
 
 const V = {
-  ab: "#1A1F2E", pe: "#2B3A52", si: "#3D5A80",
-  nb: "#E0E6F0", ch: "#8A9AB5", pu: "#00C2A8",
-  re: "#0077B6", rel: "#64B5E8", dg: "#FF6B6B", wn: "#F5A623", su: "#22C55E",
+  ab: "var(--abismo)", pe: "var(--petroleo)", si: "var(--sinal)",
+  nb: "var(--neblina)", ch: "var(--chumbo)", pu: "var(--pulso)",
+  re: "var(--resid)", rel: "var(--resid-light)", dg: "var(--danger)", wn: "var(--warn)", su: "var(--success)",
   df: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif",
   db: "var(--font-body), 'Inter', sans-serif",
   dm: "'IBM Plex Mono', monospace",
+  heading: "var(--heading-color)",
+  cardBg: "var(--card-bg)",
+  cardBorder: "var(--card-border)",
+  inputBg: "var(--input-bg)",
 };
 
 type QState = "done" | "curr" | "skip" | "todo";
@@ -31,6 +37,7 @@ export default function SimuladoDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { user } = useUser();
+  const { theme, toggleTheme } = useTheme();
   const simId = (params?.id as string) || "sim_001";
 
   const [loading, setLoading] = useState(true);
@@ -164,10 +171,10 @@ export default function SimuladoDetailPage() {
       transition: "all 0.15s",
     };
     switch (state) {
-      case "done": return { ...base, background: "rgba(0,194,168,0.15)", color: V.pu, border: "1px solid rgba(0,194,168,0.3)" };
-      case "curr": return { ...base, background: V.pu, color: "#0A1A18", fontWeight: 700 };
-      case "skip": return { ...base, background: "rgba(245,166,35,0.15)", color: V.wn, border: "1px solid rgba(245,166,35,0.25)" };
-      case "todo": return { ...base, background: "rgba(61,90,128,0.1)", color: V.ch, border: "1px solid rgba(61,90,128,0.15)" };
+      case "done": return { ...base, background: "var(--pulso-dim)", color: V.pu, border: "1px solid var(--pulso)" };
+      case "curr": return { ...base, background: V.pu, color: "#FFFFFF", fontWeight: 700 };
+      case "skip": return { ...base, background: "var(--warn-bg)", color: V.wn, border: "1px solid var(--warn)" };
+      case "todo": return { ...base, background: "var(--input-bg)", color: V.ch, border: "1px solid var(--sinal)" };
     }
   };
 
@@ -176,9 +183,10 @@ export default function SimuladoDetailPage() {
     return {
       display: "flex", gap: 14, alignItems: "flex-start",
       padding: "12px 16px",
-      background: isSel ? "rgba(0,194,168,0.06)" : "rgba(43,58,82,0.3)",
-      border: `1.5px solid ${isSel ? "rgba(0,194,168,0.4)" : "rgba(61,90,128,0.25)"}`,
+      background: isSel ? "var(--pulso-dim)" : "var(--card-bg)",
+      border: `1.5px solid ${isSel ? "var(--pulso)" : "var(--card-border)"}`,
       borderRadius: 10, cursor: "pointer", transition: "all 0.15s",
+      color: "var(--neblina)",
     };
   };
 
@@ -188,14 +196,15 @@ export default function SimuladoDetailPage() {
       fontFamily: V.dm, fontSize: 11, letterSpacing: "0.08em",
       width: 22, height: 22, borderRadius: 6, flexShrink: 0,
       display: "flex", alignItems: "center", justifyContent: "center",
-      background: isSel ? V.pu : "rgba(61,90,128,0.2)",
-      color: isSel ? "#0A1A18" : V.ch, marginTop: 1,
+      background: isSel ? V.pu : "var(--input-bg)",
+      color: isSel ? "#FFFFFF" : "var(--neblina)", marginTop: 1,
+      border: `1px solid ${isSel ? V.pu : "var(--sinal)"}`,
     };
   };
 
   if (loading || !simulation || !q) {
     return (
-      <div style={{ minHeight: "100vh", background: "#0D111C", display: "flex", alignItems: "center", justifyContent: "center", color: V.ch }}>
+      <div style={{ minHeight: "100vh", background: "var(--abismo)", display: "flex", alignItems: "center", justifyContent: "center", color: V.ch }}>
         Carregando simulado...
       </div>
     );
@@ -206,18 +215,18 @@ export default function SimuladoDetailPage() {
   ══════════════════════════════════════════════ */
   if (isFinished && resultSummary) {
     return (
-      <div style={{ minHeight: "100vh", background: "#0D111C", padding: "40px 20px" }}>
+      <div style={{ minHeight: "100vh", background: "var(--abismo)", color: "var(--neblina)", padding: "40px 20px" }}>
         <div style={{ maxWidth: 840, margin: "0 auto" }}>
           {/* Header */}
           <div style={{ textAlign: "center", marginBottom: 32 }}>
             <span style={{
               fontFamily: V.dm, fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase",
               padding: "3px 10px", borderRadius: 9999,
-              background: "rgba(0,194,168,0.1)", color: V.pu, border: "1px solid rgba(0,194,168,0.25)",
+              background: "var(--pulso-dim)", color: V.pu, border: "1px solid var(--pulso)",
             }}>
               {simulation.instituicao} · Simulado Concluído
             </span>
-            <div style={{ fontFamily: V.df, fontSize: 28, fontWeight: 700, color: "#fff", marginTop: 10, marginBottom: 4 }}>
+            <div style={{ fontFamily: V.df, fontSize: 28, fontWeight: 700, color: "var(--heading-color)", marginTop: 10, marginBottom: 4 }}>
               Relatório de Desempenho Pós-Simulado
             </div>
             <div style={{ fontSize: 14, color: V.ch }}>

@@ -56,8 +56,8 @@ export default function ScoreRing({
   const numStyle: React.CSSProperties = {
     fontFamily: "'IBM Plex Mono', monospace",
     fontSize: `${Math.round(size * 0.2)}px`,
-    fontWeight: 400,
-    color: "#ffffff",
+    fontWeight: 700,
+    color: "var(--heading-color)",
     lineHeight: 1,
   };
 
@@ -70,7 +70,7 @@ export default function ScoreRing({
   const sublabelStyle: React.CSSProperties = {
     fontFamily: "'Inter', sans-serif",
     fontSize: `${Math.round(size * 0.065)}px`,
-    color: "#8A9AB5",
+    color: "var(--chumbo)",
     marginTop: "2px",
   };
 
@@ -88,7 +88,7 @@ export default function ScoreRing({
           cy={center}
           r={radius}
           fill="none"
-          stroke="rgba(61,90,128,0.2)"
+          stroke="var(--sinal)"
           strokeWidth={strokeWidth}
         />
         {/* Score fill */}

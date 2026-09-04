@@ -62,17 +62,18 @@ export default function Sidebar({
     }
   };
 
-  /* ── Estilos extraídos de .sidebar no medpleni-part3-dashboard.html ── */
+  /* ── Estilos com variáveis dinâmicas de tema ── */
   const sidebarStyle: React.CSSProperties = {
     width: "220px",
     flexShrink: 0,
-    background: "#0D111C",
-    borderRight: "1px solid rgba(61,90,128,0.2)",
+    background: "var(--sidebar-bg)",
+    borderRight: "1px solid var(--sinal)",
     display: "flex",
     flexDirection: "column",
     padding: "20px 0",
     height: "100%",
     overflowY: "auto",
+    transition: "background 0.2s ease, border-color 0.2s ease",
   };
 
   const logoWrapStyle: React.CSSProperties = {
@@ -80,7 +81,7 @@ export default function Sidebar({
     alignItems: "center",
     gap: "8px",
     padding: "0 20px 20px",
-    borderBottom: "1px solid rgba(61,90,128,0.15)",
+    borderBottom: "1px solid var(--sinal)",
     marginBottom: "16px",
   };
 
@@ -88,7 +89,7 @@ export default function Sidebar({
     fontFamily: "var(--font-display), 'IBM Plex Sans Condensed', sans-serif",
     fontWeight: 700,
     fontSize: "18px",
-    color: "#fff",
+    color: "var(--heading-color)",
     letterSpacing: "-0.01em",
   };
 
@@ -102,7 +103,7 @@ export default function Sidebar({
     fontSize: "9px",
     letterSpacing: "0.15em",
     textTransform: "uppercase",
-    color: "rgba(138,154,181,0.5)",
+    color: "var(--chumbo)",
     padding: "0 8px",
     marginBottom: "6px",
   };
@@ -116,8 +117,9 @@ export default function Sidebar({
     cursor: "pointer",
     transition: "all 0.15s",
     fontSize: "13px",
-    color: isActive ? "#fff" : "var(--chumbo)",
-    background: isActive ? "rgba(0,194,168,0.07)" : "transparent",
+    fontWeight: isActive ? 600 : 500,
+    color: isActive ? "var(--pulso)" : "var(--neblina)",
+    background: isActive ? "var(--pulso-dim)" : "transparent",
     marginBottom: "2px",
     border: "none",
     width: "100%",
@@ -129,14 +131,14 @@ export default function Sidebar({
     width: "16px",
     height: "16px",
     flexShrink: 0,
-    opacity: isActive ? 1 : 0.7,
+    opacity: isActive ? 1 : 0.75,
     color: isActive ? "var(--pulso)" : "currentColor",
   });
 
   const footerStyle: React.CSSProperties = {
     marginTop: "auto",
     padding: "16px 12px 0",
-    borderTop: "1px solid rgba(61,90,128,0.15)",
+    borderTop: "1px solid var(--sinal)",
   };
 
   const userRowStyle: React.CSSProperties = {
@@ -145,6 +147,7 @@ export default function Sidebar({
     gap: "10px",
     padding: "8px 10px",
     borderRadius: "var(--r-md)",
+    background: "var(--input-bg)",
   };
 
   const avatarStyle: React.CSSProperties = {
