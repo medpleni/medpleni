@@ -413,7 +413,7 @@ export default function FlashcardsPage() {
 
       {/* ── HEADER & ABAS ── */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
-        <div style={{ display: "flex", gap: 8 }}>
+        <div className="mobile-scroll-x" style={{ display: "flex", gap: 8, flexWrap: "nowrap" }}>
           <button
             onClick={() => setActiveTab("revisao")}
             style={{
@@ -425,6 +425,7 @@ export default function FlashcardsPage() {
               fontSize: 13,
               fontWeight: 600,
               cursor: "pointer",
+              whiteSpace: "nowrap",
             }}
           >
             Sessão de Revisão ({total} pendentes)
@@ -444,6 +445,7 @@ export default function FlashcardsPage() {
               fontSize: 13,
               fontWeight: 600,
               cursor: "pointer",
+              whiteSpace: "nowrap",
             }}
           >
             Meus Decks & Histórico ({allCards.length})
@@ -588,7 +590,7 @@ export default function FlashcardsPage() {
           ) : (
             <div style={{ display: "flex", gap: 24, justifyContent: "center", alignItems: "flex-start", flexWrap: "wrap" }}>
               {/* COLUNA CENTRAL: CARD 3D + SM-2 */}
-              <div style={{ flex: 1, maxWidth: 580, minWidth: 320, display: "flex", flexDirection: "column", gap: 16 }}>
+              <div style={{ flex: 1, maxWidth: 580, minWidth: 280, width: "100%", display: "flex", flexDirection: "column", gap: 16 }}>
                 <div>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
                     <span style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase", color: V.ch }}>

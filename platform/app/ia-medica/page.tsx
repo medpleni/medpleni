@@ -198,10 +198,20 @@ export default function IAMedicaPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isStreaming]);
 
+  // No mobile, fecha o histórico inicialmente para não espremer o chat
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      setSidebarOpen(false);
+    }
+  }, []);
+
   // Carrega mensagens ao trocar de conversa
   const handleSelectConversation = async (convId: string) => {
     if (isStreaming) return;
     setCurrentConvId(convId);
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      setSidebarOpen(false);
+    }
 
     // Tenta carregar do cache local para renderização instantânea
     if (typeof window !== "undefined") {
@@ -477,45 +487,130 @@ export default function IAMedicaPage() {
 
   return (
     <PageShell title="Preceptor Dr. Pleni" badgeText="IA MÉDICA 24/7" activeNavId="ia-medica">
-      <div style={{
-        display: "flex",
-        height: "calc(100vh - 120px)",
-        background: "var(--card-bg)",
-        borderRadius: 16,
-        border: "1px solid var(--card-border)",
-        boxShadow: "var(--card-shadow)",
-        overflow: "hidden",
-      }}>
+      <style>{`
+        @media (max-width: 768px) {
+          .ia-shell-container {
+            height: calc(100vh - 138px - env(safe-area-inset-bottom, 0px)) !important;
+            border-radius: 12px !important;
+          }
+          .ia-history-sidebar {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            bottom: 0 !important;
+            width: 300px !important;
+            max-width: 86vw !important;
+            z-index: 10001 !important;
+            box-shadow: 4px 0 24px rgba(0,0,0,0.6) !important;
+            background: var(--card-bg) !important;
+          }
+          .ia-history-backdrop {
+            display: block !important;
+          }
+          .ia-sidebar-close-btn {
+            display: flex !important;
+          }
+          .ia-modes-wrapper {
+            width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            padding-bottom: 2px !important;
+          }
+          .ia-welcome-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .ia-input-footer {
+            padding: 8px 10px !important;
+          }
+        }
+        @media (min-width: 769px) {
+          .ia-history-backdrop {
+            display: none !important;
+          }
+          .ia-sidebar-close-btn {
+            display: none !important;
+          }
+        }
+      `}</style>
+      <div
+        className="ia-shell-container"
+        style={{
+          display: "flex",
+          height: "calc(100vh - 120px)",
+          background: "var(--card-bg)",
+          borderRadius: 16,
+          border: "1px solid var(--card-border)",
+          boxShadow: "var(--card-shadow)",
+          overflow: "hidden",
+          position: "relative",
+        }}
+      >
         {/* ── SIDEBAR DE HISTÓRICO DE CASOS ── */}
         {sidebarOpen && (
-          <div style={{
-            width: 280,
-            background: "var(--input-bg)",
-            borderRight: "1px solid var(--card-border)",
-            display: "flex",
-            flexDirection: "column",
-            flexShrink: 0,
-          }}>
-            {/* Header Sidebar */}
-            <div style={{ padding: "16px", borderBottom: "1px solid var(--card-border)" }}>
-              <button
-                onClick={handleNewChat}
-                style={{
-                  width: "100%", padding: "10px 14px", borderRadius: 8,
-                  background: `linear-gradient(135deg, ${V.pu}, #009688)`,
-                  border: "none", color: "#FFFFFF", fontWeight: 700,
-                  fontSize: 13, cursor: "pointer", display: "flex",
-                  alignItems: "center", justifyContent: "center", gap: 8,
-                  boxShadow: "0 4px 12px rgba(0,194,168,0.25)",
-                }}
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="12" y1="5" x2="12" y2="19" />
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                </svg>
-                <span>Nova Dúvida Clínica</span>
-              </button>
-            </div>
+          <>
+            <div
+              className="ia-history-backdrop"
+              onClick={() => setSidebarOpen(false)}
+              style={{
+                position: "fixed",
+                inset: 0,
+                background: "rgba(0,0,0,0.65)",
+                backdropFilter: "blur(4px)",
+                zIndex: 10000,
+                display: "none",
+              }}
+            />
+            <div
+              className="ia-history-sidebar"
+              style={{
+                width: 280,
+                background: "var(--input-bg)",
+                borderRight: "1px solid var(--card-border)",
+                display: "flex",
+                flexDirection: "column",
+                flexShrink: 0,
+              }}
+            >
+              {/* Header Sidebar */}
+              <div style={{ padding: "14px 16px", borderBottom: "1px solid var(--card-border)", display: "flex", alignItems: "center", gap: 8 }}>
+                <button
+                  onClick={() => {
+                    handleNewChat();
+                    if (typeof window !== "undefined" && window.innerWidth < 768) setSidebarOpen(false);
+                  }}
+                  style={{
+                    flex: 1, padding: "10px 14px", borderRadius: 8,
+                    background: `linear-gradient(135deg, ${V.pu}, #009688)`,
+                    border: "none", color: "#FFFFFF", fontWeight: 700,
+                    fontSize: 13, cursor: "pointer", display: "flex",
+                    alignItems: "center", justifyContent: "center", gap: 8,
+                    boxShadow: "0 4px 12px rgba(0,194,168,0.25)",
+                  }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                  <span>Nova Dúvida Clínica</span>
+                </button>
+
+                <button
+                  onClick={() => setSidebarOpen(false)}
+                  className="ia-sidebar-close-btn"
+                  aria-label="Fechar histórico"
+                  style={{
+                    width: 36, height: 36, borderRadius: 8,
+                    background: "var(--card-bg)", border: "1px solid var(--card-border)",
+                    color: "var(--chumbo)", alignItems: "center", justifyContent: "center",
+                    cursor: "pointer",
+                  }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+              </div>
 
             {/* Lista de Sessões */}
             <div style={{ flex: 1, overflowY: "auto", padding: "12px 8px" }}>
@@ -565,7 +660,8 @@ export default function IAMedicaPage() {
               )}
             </div>
           </div>
-        )}
+        </>
+      )}
 
         {/* ── ÁREA PRINCIPAL DO CHAT ── */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", background: "var(--abismo)" }}>
@@ -613,12 +709,15 @@ export default function IAMedicaPage() {
             </div>
 
             {/* Seletores de Modo (Segmented Buttons) e Modelo + Botão Limpar */}
-            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-              {/* Botões Segmentados de Modo */}
-              <div style={{
-                display: "flex", gap: 3, background: "var(--input-bg)", padding: 3,
-                borderRadius: 8, border: "1px solid var(--card-border)",
-              }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", width: "100%" }}>
+              {/* Botões Segmentados de Modo com Rolagem Touch */}
+              <div
+                className="ia-modes-wrapper mobile-scroll-x"
+                style={{
+                  display: "flex", gap: 4, background: "var(--input-bg)", padding: 3,
+                  borderRadius: 8, border: "1px solid var(--card-border)", flexShrink: 0,
+                }}
+              >
                 {[
                   { id: "tira_duvidas", label: "Tira-Dúvidas" },
                   { id: "caso_clinico", label: "Caso Clínico" },
@@ -629,7 +728,7 @@ export default function IAMedicaPage() {
                     key={m.id}
                     onClick={() => setSelectedMode(m.id)}
                     style={{
-                      padding: "5px 11px",
+                      padding: "6px 12px",
                       borderRadius: 6,
                       border: "none",
                       fontSize: 11,
@@ -639,6 +738,8 @@ export default function IAMedicaPage() {
                       color: selectedMode === m.id ? "#FFFFFF" : "var(--chumbo)",
                       cursor: "pointer",
                       transition: "all 0.15s ease",
+                      whiteSpace: "nowrap",
+                      flexShrink: 0,
                     }}
                   >
                     {m.label}
@@ -706,7 +807,7 @@ export default function IAMedicaPage() {
                 </p>
 
                 {/* Cards de Início Rápido Dinâmicos por Modo */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, textAlign: "left" }}>
+                <div className="ia-welcome-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, textAlign: "left" }}>
                   {currentModeData.cards.map((qp, idx) => (
                     <div
                       key={`${selectedMode}-${idx}`}
@@ -895,7 +996,7 @@ export default function IAMedicaPage() {
           </div>
 
           {/* ── BARRA DE ENTRADA / PROMPT ── */}
-          <div style={{ padding: "16px 20px", background: "var(--card-bg)", borderTop: "1px solid var(--card-border)" }}>
+          <div className="ia-input-footer" style={{ padding: "14px 20px", background: "var(--card-bg)", borderTop: "1px solid var(--card-border)" }}>
             <div style={{
               maxWidth: 840, margin: "0 auto",
               display: "flex", gap: 10, alignItems: "center",

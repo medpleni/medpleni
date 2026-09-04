@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import BottomNav from "./BottomNav";
+import MobileDrawer from "./MobileDrawer";
 import { useUser } from "@/lib/supabase/use-user";
 import { mockUser } from "@/lib/mock-data";
 
@@ -66,7 +67,7 @@ export default function PageShell({
   const router = useRouter();
   const pathname = usePathname();
   const { user } = useUser();
-  const [isMobile, setIsMobile] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const displayNome = user?.user_metadata?.full_name || mockUser.nome;
   const displayIniciais = displayNome
@@ -78,14 +79,11 @@ export default function PageShell({
         .toUpperCase()
     : "MP";
 
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-
   const handleNavigate = (id: string) => {
+    if (id === "menu") {
+      setDrawerOpen(true);
+      return;
+    }
     onNavigate?.(id);
     const route = routeMap[id];
     if (route && route !== pathname) {
@@ -95,35 +93,74 @@ export default function PageShell({
 
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", background: "var(--abismo)", color: "var(--neblina)" }}>
-      <style>{`@keyframes pageFadeIn { from { opacity:0; } to { opacity:1; } }`}</style>
+      <style>{`
+        @keyframes pageFadeIn { from { opacity:0; } to { opacity:1; } }
+        @media (max-width: 768px) {
+          .desktop-sidebar {
+            display: none !important;
+          }
+          .mobile-content-area {
+            padding: 12px !important;
+            padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important;
+          }
+        }
+        @media (min-width: 769px) {
+          .mobile-bottom-nav {
+            display: none !important;
+          }
+        }
+      `}</style>
+
+      {/* Drawer Móvel de Navegação Completa */}
+      <MobileDrawer
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        activeId={activeNavId}
+        userName={displayNome}
+        userRole="ENAMED · 2027"
+        userInitials={displayIniciais}
+      />
+
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
-        {!isMobile && (
-          <Sidebar
-            sections={defaultSections}
-            activeId={activeNavId}
-            onNavigate={handleNavigate}
-            userName={displayNome}
-            userRole="ENAMED · 2027"
-            userInitials={displayIniciais}
+        {/* Sidebar Desktop (Oculta via CSS no mobile) */}
+        <Sidebar
+          sections={defaultSections}
+          activeId={activeNavId}
+          onNavigate={handleNavigate}
+          userName={displayNome}
+          userRole="ENAMED · 2027"
+          userInitials={displayIniciais}
+        />
+
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", minWidth: 0 }}>
+          <Topbar
+            title={title}
+            badgeText={badgeText}
+            onOpenMenu={() => setDrawerOpen(true)}
           />
-        )}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-          <Topbar title={title} badgeText={badgeText} />
-          <div style={{
-            flex: 1,
-            padding: isMobile ? "16px" : "20px 24px",
-            paddingBottom: isMobile ? "76px" : "20px",
-            overflowY: "auto",
-            background: "var(--abismo)",
-            animation: "pageFadeIn 0.3s ease",
-          }}>
+
+          <main
+            className="mobile-content-area"
+            style={{
+              flex: 1,
+              padding: "20px 24px",
+              overflowY: "auto",
+              background: "var(--abismo)",
+              animation: "pageFadeIn 0.3s ease",
+              WebkitOverflowScrolling: "touch",
+            }}
+          >
             {children}
-          </div>
+          </main>
         </div>
       </div>
-      {isMobile && (
-        <BottomNav activeId={activeNavId} onNavigate={handleNavigate} />
-      )}
+
+      {/* Bottom Nav Fixa (Oculta via CSS no desktop) */}
+      <BottomNav
+        activeId={activeNavId}
+        onNavigate={handleNavigate}
+        onOpenMenu={() => setDrawerOpen(true)}
+      />
     </div>
   );
 }

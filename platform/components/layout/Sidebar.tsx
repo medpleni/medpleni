@@ -166,7 +166,7 @@ export default function Sidebar({
   };
 
   return (
-    <aside style={sidebarStyle}>
+    <aside style={sidebarStyle} className="desktop-sidebar">
       {/* Logo */}
       <div style={logoWrapStyle}>
         <LogoSvg />

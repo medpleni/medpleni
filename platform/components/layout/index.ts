@@ -2,3 +2,4 @@ export { default as Sidebar } from "./Sidebar";
 export { default as Topbar } from "./Topbar";
 export { default as BottomNav } from "./BottomNav";
 export { default as PageShell } from "./PageShell";
+export { default as MobileDrawer } from "./MobileDrawer";

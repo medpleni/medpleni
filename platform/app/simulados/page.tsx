@@ -136,16 +136,7 @@ export default function SimuladosHubPage() {
   return (
     <PageShell title="Hub de Simulados" badgeText="PREPARAÇÃO MÉDICA DE ALTA PERFORMANCE" activeNavId="simulados">
       {/* ── 1. HEADER EXECUTIVO & KPIs ── */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(4, 1fr)",
-        gap: 14,
-        marginBottom: 24,
-      }}>
-        <style>{`
-          @media (max-width:1024px) { .kpi-grid { grid-template-columns: repeat(2,1fr) !important; } }
-          @media (max-width:640px) { .kpi-grid { grid-template-columns: 1fr !important; } }
-        `}</style>
+      <div className="kpi-grid-4" style={{ marginBottom: 24 }}>
 
         <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", boxShadow: "var(--card-shadow)", borderRadius: 12, padding: "16px 18px" }}>
           <div style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--chumbo)", marginBottom: 4 }}>
@@ -197,12 +188,7 @@ export default function SimuladosHubPage() {
       </div>
 
       {/* ── 2. OS 3 HERO CARDS DE ACESSO IMEDIATO ── */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(3, 1fr)",
-        gap: 16,
-        marginBottom: 28,
-      }}>
+      <div className="hero-grid-3" style={{ marginBottom: 28 }}>
         {/* Card 1: Provas Reais Anteriores */}
         <div
           onClick={() => setActiveTab("reais")}
@@ -342,8 +328,8 @@ export default function SimuladosHubPage() {
         </div>
       </div>
 
-      {/* ── 3. NAVEGAÇÃO EM ABAS ── */}
-      <div style={{ display: "flex", gap: 12, borderBottom: "1px solid var(--card-border)", paddingBottom: 12, marginBottom: 20, flexWrap: "wrap" }}>
+      {/* ── 3. NAVEGAÇÃO EM ABAS COM ROLAGEM TOUCH ── */}
+      <div className="mobile-scroll-x" style={{ display: "flex", gap: 10, borderBottom: "1px solid var(--card-border)", paddingBottom: 12, marginBottom: 20, flexWrap: "nowrap" }}>
         <button
           onClick={() => setActiveTab("reais")}
           style={{
@@ -445,7 +431,7 @@ export default function SimuladosHubPage() {
           </div>
 
           {/* Grid de Provas Reais */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 16 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }}>
             {officialExams.map((s) => {
               const ic = instColor[s.instituicao] || V.ch;
               return (

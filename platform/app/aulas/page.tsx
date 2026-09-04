@@ -491,7 +491,7 @@ export default function AulasHubPage() {
                 onClick={() => setViewMode("grid")}
                 style={{
                   background: viewMode === "grid" ? "var(--pulso)" : "transparent",
-                  color: viewMode === "grid" ? "#0D111C" : "var(--neblina)",
+                  color: viewMode === "grid" ? "#FFFFFF" : "var(--neblina)",
                   border: "none",
                   padding: "8px 12px",
                   cursor: "pointer",
@@ -511,7 +511,7 @@ export default function AulasHubPage() {
                 onClick={() => setViewMode("list")}
                 style={{
                   background: viewMode === "list" ? "var(--pulso)" : "transparent",
-                  color: viewMode === "list" ? "#0D111C" : "var(--neblina)",
+                  color: viewMode === "list" ? "#FFFFFF" : "var(--neblina)",
                   border: "none",
                   padding: "8px 12px",
                   cursor: "pointer",
@@ -532,8 +532,8 @@ export default function AulasHubPage() {
             </div>
           </div>
 
-          {/* Core Areas Pills */}
-          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
+          {/* Core Areas Pills com rolagem horizontal touch */}
+          <div className="mobile-scroll-x" style={{ display: "flex", gap: "8px", flexWrap: "nowrap", alignItems: "center", paddingBottom: "4px" }}>
             <button
               onClick={() => {
                 setSelectedArea("TODAS");
@@ -617,7 +617,7 @@ export default function AulasHubPage() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
               gap: "18px",
             }}
           >

@@ -53,6 +53,13 @@ export default function CronogramaPage() {
   const [viewMode, setViewMode] = useState<"semana" | "hoje" | "lista">("semana");
   const [weekOffset, setWeekOffset] = useState(0); // 0 = esta semana, 1 = próxima
 
+  // No mobile, inicia com visão focada no dia de hoje para máxima legibilidade
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.innerWidth < 768) {
+      setViewMode("hoje");
+    }
+  }, []);
+
   // Modais
   const [showAddModal, setShowAddModal] = useState(false);
   const [showAiModal, setShowAiModal] = useState(false);
