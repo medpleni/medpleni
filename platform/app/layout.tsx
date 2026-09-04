@@ -54,17 +54,38 @@ export const metadata: Metadata = {
   authors: [{ name: "Plenitude Educação" }],
   metadataBase: new URL("https://medpleni.com"),
   icons: {
-    icon: "/logo.svg",
-    shortcut: "/logo.svg",
-    apple: "/logo.svg",
+    icon: [
+      { url: "/icon.png", sizes: "512x512", type: "image/png" },
+      { url: "/logo.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/icon.png",
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "512x512", type: "image/png" },
+    ],
   },
   openGraph: {
-    title: "MedPleni — Prepare-se para o ENAMED 2027",
+    title: "MedPleni — Prepare-se para o ENAMED 2027 & Revalida",
     description:
       "Diagnóstico de lacunas, questões comentadas por área DCN, simulados cronometrados e predição de aprovação. Medicina com propósito. Tecnologia com precisão.",
+    url: "https://medpleni.com",
     siteName: "MedPleni",
     locale: "pt_BR",
     type: "website",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "MedPleni — Plataforma Médica de Inteligência Adaptativa",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MedPleni — Prepare-se para o ENAMED 2027",
+    description:
+      "Diagnóstico de lacunas, simulados cronometrados e predição de aprovação.",
+    images: ["/og-image.png"],
   },
 };
 
