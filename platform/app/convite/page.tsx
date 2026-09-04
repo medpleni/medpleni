@@ -31,10 +31,12 @@ function ConviteContent() {
   const [invite, setInvite] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [isExistingAccount, setIsExistingAccount] = useState(false);
 
   useEffect(() => {
     if (!token) {
@@ -43,8 +45,12 @@ function ConviteContent() {
       return;
     }
 
-    async function loadInvite() {
+    async function loadInviteAndUser() {
       try {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) setCurrentUser(user);
+
         const res = await fetch(`/api/invites/${token}`);
         const data = await res.json();
 
@@ -60,10 +66,10 @@ function ConviteContent() {
       }
     }
 
-    loadInvite();
+    loadInviteAndUser();
   }, [token]);
 
-  const handleActivate = async (e: React.FormEvent) => {
+  const handleActivateNewUser = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password.length < 6) {
       alert("A senha deve ter no mínimo 6 caracteres.");
@@ -78,7 +84,7 @@ function ConviteContent() {
     try {
       const supabase = createClient();
 
-      // Tenta criar a conta do usuário
+      // 1. Tenta criar conta para novo usuário
       const { data: authData, error: authErr } = await supabase.auth.signUp({
         email: invite.email,
         password: password,
@@ -92,20 +98,25 @@ function ConviteContent() {
         },
       });
 
-      // Se o e-mail já existe, faz login
-      if (authErr && authErr.message.includes("already registered")) {
+      // Se já existe no Auth
+      if (authErr && (authErr.message.includes("already registered") || authErr.message.includes("unique"))) {
+        setIsExistingAccount(true);
+        // Tenta fazer login com a senha que acabou de digitar
         const { error: signInErr } = await supabase.auth.signInWithPassword({
           email: invite.email,
           password: password,
         });
+
         if (signInErr) {
-          throw new Error("Este e-mail já possui cadastro. Insira a senha existente ou solicite recuperação de senha.");
+          throw new Error(
+            "Este e-mail já possui uma conta ativa no MedPleni. Por favor, digite a senha da sua conta existente para ativar o novo acesso, ou recupere sua senha."
+          );
         }
       } else if (authErr) {
         throw authErr;
       }
 
-      // Ativa convite na API
+      // 2. Confirma ativação do convite na API
       await fetch(`/api/invites/${token}`, { method: "POST" });
 
       setSuccess(true);
@@ -115,9 +126,28 @@ function ConviteContent() {
         } else {
           router.push("/dashboard");
         }
-      }, 2000);
+      }, 1500);
     } catch (err: any) {
       alert(err.message || "Erro ao ativar acesso.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleActivateExistingLoggedIn = async () => {
+    setSubmitting(true);
+    try {
+      await fetch(`/api/invites/${token}`, { method: "POST" });
+      setSuccess(true);
+      setTimeout(() => {
+        if (["superadmin", "docente", "financeiro", "suporte", "desenvolvedor"].includes(invite.role)) {
+          router.push("/admin");
+        } else {
+          router.push("/dashboard");
+        }
+      }, 1500);
+    } catch (err: any) {
+      alert("Erro ao aplicar convite.");
     } finally {
       setSubmitting(false);
     }
@@ -164,6 +194,8 @@ function ConviteContent() {
   }
 
   const roleStyle = getRoleBadge(invite.role);
+  const isAlreadyLoggedInWithMatchingEmail =
+    currentUser && currentUser.email?.toLowerCase() === invite.email?.toLowerCase();
 
   return (
     <div style={{ minHeight: "100vh", background: "#0D111C", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
@@ -211,11 +243,11 @@ function ConviteContent() {
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, paddingTop: 10, borderTop: "1px solid rgba(61,90,128,0.2)", fontSize: 11 }}>
             <div>
-              <span style={{ color: V.ch, display: "block" }}>Plano:</span>
+              <span style={{ color: V.ch, display: "block" }}>Plano de Acesso:</span>
               <strong style={{ color: V.pu }}>{invite.plan === "pleno_anual" ? "Pleno Anual" : invite.plan}</strong>
             </div>
             <div>
-              <span style={{ color: V.ch, display: "block" }}>Duração:</span>
+              <span style={{ color: V.ch, display: "block" }}>Validade:</span>
               <strong style={{ color: V.wn }}>
                 {invite.access_expires_at ? `Até ${new Date(invite.access_expires_at).toLocaleDateString("pt-BR")}` : "Vitalício"}
               </strong>
@@ -226,18 +258,51 @@ function ConviteContent() {
         {success ? (
           <div style={{ textAlign: "center", padding: "20px 0" }}>
             <div style={{ fontSize: 36, marginBottom: 12 }}>🎉</div>
-            <h3 style={{ color: "#fff", fontSize: 18, marginBottom: 6 }}>Conta Ativada com Sucesso!</h3>
+            <h3 style={{ color: "#fff", fontSize: 18, marginBottom: 6 }}>Acesso Ativado com Sucesso!</h3>
             <p style={{ color: V.ch, fontSize: 12 }}>Redirecionando para seu painel em instantes...</p>
           </div>
+        ) : isAlreadyLoggedInWithMatchingEmail ? (
+          /* Usuário já está logado com este e-mail */
+          <div>
+            <p style={{ color: V.nb, fontSize: 13, textAlign: "center", marginBottom: 20 }}>
+              Você já está autenticado como <strong>{currentUser.email}</strong>. Clique no botão abaixo para aplicar este convite imediatamente ao seu perfil.
+            </p>
+            <button
+              onClick={handleActivateExistingLoggedIn}
+              disabled={submitting}
+              style={{
+                width: "100%",
+                padding: "12px",
+                borderRadius: 8,
+                background: V.pu,
+                border: "none",
+                color: "#0A1A18",
+                fontWeight: 700,
+                fontSize: 14,
+                cursor: submitting ? "not-allowed" : "pointer",
+                boxShadow: "0 4px 20px rgba(0,194,168,0.3)",
+              }}
+            >
+              {submitting ? "Aplicando..." : "Aceitar Convite & Acessar"}
+            </button>
+          </div>
         ) : (
-          <form onSubmit={handleActivate}>
-            <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 6, fontWeight: 600 }}>
-                Crie sua Senha de Acesso
+          /* Formulário de Criação de Senha para Novo Usuário */
+          <form onSubmit={handleActivateNewUser}>
+            <div style={{ marginBottom: 6, fontSize: 12, color: V.pu, fontWeight: 600 }}>
+              Crie sua senha de primeiro acesso:
+            </div>
+            <div style={{ fontSize: 11, color: V.ch, marginBottom: 16 }}>
+              Defina a senha que você usará para fazer login na plataforma.
+            </div>
+
+            <div style={{ marginBottom: 14 }}>
+              <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 4, fontWeight: 600 }}>
+                Nova Senha (Mínimo 6 dígitos)
               </label>
               <input
                 type="password"
-                placeholder="Mínimo 6 caracteres"
+                placeholder="Digite sua senha segura"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -250,12 +315,12 @@ function ConviteContent() {
             </div>
 
             <div style={{ marginBottom: 20 }}>
-              <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 6, fontWeight: 600 }}>
+              <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 4, fontWeight: 600 }}>
                 Confirme sua Senha
               </label>
               <input
                 type="password"
-                placeholder="Repita sua senha"
+                placeholder="Repita a senha criada"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
@@ -283,7 +348,7 @@ function ConviteContent() {
                 boxShadow: "0 4px 20px rgba(0,194,168,0.3)",
               }}
             >
-              {submitting ? "Ativando acesso..." : "Ativar Meu Acesso & Entrar"}
+              {submitting ? "Criando conta e ativando..." : "Concluir Cadastro & Entrar"}
             </button>
           </form>
         )}

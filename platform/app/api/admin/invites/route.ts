@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import crypto from "crypto";
+import { sendEmail as dispatchResendEmail } from "@/lib/email/resend";
+import { renderInvitationEmail } from "@/lib/email/templates/invitation-email";
 
 function calculateExpirationDate(duration: string, customDate?: string): string | null {
   if (duration === "vitalicio") return null;
@@ -92,7 +94,6 @@ export async function GET(request: Request) {
       .order("created_at", { ascending: false });
 
     if (error) {
-      // Se a tabela ainda não existir no ambiente, retorna lista vazia
       console.warn("Aviso ao buscar convites:", error.message);
       return NextResponse.json({ invitations: [] });
     }
@@ -190,31 +191,38 @@ export async function POST(request: Request) {
         .eq("id", existingProfile.id);
     }
 
-    // 3. Monta o link do convite
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    const inviteUrl = `${appUrl}/convite?token=${token}`;
+    // 3. Monta o link do convite com a URL real do ambiente
+    const origin = request.headers.get("origin") || process.env.NEXT_PUBLIC_APP_URL || "https://medpleni.com";
+    const inviteUrl = `${origin}/convite?token=${token}`;
 
-    // 4. Dispara e-mail via Resend se solicitado
+    // 4. Dispara e-mail via Resend diretamente (sem loopback fetch)
     let emailSent = false;
+    let emailErrorMessage = null;
     if (sendEmail) {
       try {
-        const emailRes = await fetch(`${appUrl}/api/auth/send-email`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            type: "invitation",
-            email: cleanEmail,
-            name: fullName.trim(),
-            roleLabel: getRoleLabel(role),
-            planLabel: getPlanLabel(plan),
-            accessPeriodLabel: getDurationLabel(accessDuration, expiresAt),
-            subBrandLabel: subBrand === "RESID" ? "Residência Médica" : subBrand,
-            inviteUrl,
-            notes,
-          }),
+        const emailHtml = renderInvitationEmail({
+          name: fullName.trim(),
+          roleLabel: getRoleLabel(role),
+          planLabel: getPlanLabel(plan),
+          accessPeriodLabel: getDurationLabel(accessDuration, expiresAt),
+          subBrandLabel: subBrand === "RESID" ? "Residência Médica" : subBrand,
+          inviteUrl,
+          notes,
         });
-        emailSent = emailRes.ok;
-      } catch (emailErr) {
+
+        const emailResult = await dispatchResendEmail({
+          to: cleanEmail,
+          subject: `Convite de Acesso MedPleni: ${getRoleLabel(role)} (${getPlanLabel(plan)})`,
+          html: emailHtml,
+        });
+
+        emailSent = emailResult.success;
+        if (!emailResult.success) {
+          emailErrorMessage = emailResult.error;
+          console.warn("[Aviso Resend ao enviar convite]:", emailResult.error);
+        }
+      } catch (emailErr: any) {
+        emailErrorMessage = emailErr?.message;
         console.warn("Aviso ao disparar e-mail de convite:", emailErr);
       }
     }
@@ -234,6 +242,7 @@ export async function POST(request: Request) {
           accessDuration,
           expiresAt,
           emailSent,
+          emailErrorMessage,
         },
       });
     } catch (auditErr) {
@@ -245,6 +254,7 @@ export async function POST(request: Request) {
       invitation,
       inviteUrl,
       emailSent,
+      emailErrorMessage,
     });
   } catch (err: any) {
     console.error("Erro interno no POST de convite:", err);
