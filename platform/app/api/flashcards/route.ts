@@ -118,3 +118,40 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: err?.message }, { status: 500 });
   }
 }
+
+export async function PUT(request: Request) {
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: "Faça login para editar flashcards." }, { status: 401 });
+    }
+
+    const body = await request.json();
+    const { id, front, back, area, subarea } = body;
+
+    if (!id || !front?.trim() || !back?.trim()) {
+      return NextResponse.json({ error: "ID, frente e verso são obrigatórios." }, { status: 400 });
+    }
+
+    const { data, error } = await supabase
+      .from("flashcards")
+      .update({
+        front: front.trim(),
+        back: back.trim(),
+        ...(area ? { area } : {}),
+        ...(subarea ? { subarea: subarea.trim() } : {}),
+      })
+      .eq("id", id)
+      .select("*")
+      .single();
+
+    if (error) throw error;
+
+    return NextResponse.json({ success: true, flashcard: data });
+  } catch (err: any) {
+    return NextResponse.json({ error: err?.message || "Erro ao atualizar flashcard." }, { status: 500 });
+  }
+}
+
