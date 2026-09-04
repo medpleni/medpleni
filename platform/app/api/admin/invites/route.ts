@@ -136,7 +136,14 @@ export async function POST(request: Request) {
     const expiresAt = calculateExpirationDate(accessDuration, customExpireDate);
     const token = crypto.randomBytes(24).toString("hex");
 
-    // 1. Cria ou atualiza o registro na tabela admin_invitations
+    // Verifica se o admin logado possui registro na tabela profiles para evitar quebra de FK
+    const { data: adminProfile } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("id", user.id)
+      .single();
+
+    // 1. Cria o registro na tabela admin_invitations
     const { data: invitation, error: insertError } = await supabase
       .from("admin_invitations")
       .insert({
@@ -150,7 +157,7 @@ export async function POST(request: Request) {
         token,
         status: "pending",
         notes: notes || null,
-        created_by: user.id,
+        created_by: adminProfile ? user.id : null,
       })
       .select("*")
       .single();
@@ -213,21 +220,25 @@ export async function POST(request: Request) {
     }
 
     // 5. Log de Auditoria
-    await supabase.from("admin_audit_logs").insert({
-      admin_id: user.id,
-      admin_email: user.email,
-      action: "create_invitation",
-      target_entity: "invitation",
-      target_id: invitation.id,
-      details: {
-        email: cleanEmail,
-        role,
-        plan,
-        accessDuration,
-        expiresAt,
-        emailSent,
-      },
-    });
+    try {
+      await supabase.from("admin_audit_logs").insert({
+        admin_id: adminProfile ? user.id : null,
+        admin_email: user.email,
+        action: "create_invitation",
+        target_entity: "invitation",
+        target_id: invitation.id,
+        details: {
+          email: cleanEmail,
+          role,
+          plan,
+          accessDuration,
+          expiresAt,
+          emailSent,
+        },
+      });
+    } catch (auditErr) {
+      console.warn("Aviso ao salvar audit log:", auditErr);
+    }
 
     return NextResponse.json({
       success: true,
