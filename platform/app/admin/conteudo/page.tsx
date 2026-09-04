@@ -92,11 +92,11 @@ export default function AdminConteudoPage() {
         padding: "16px 20px",
         marginBottom: 20,
         display: "flex",
-        gap: 16,
+        gap: 14,
         alignItems: "center",
         flexWrap: "wrap",
       }}>
-        <div style={{ flex: 1, minWidth: 260 }}>
+        <div style={{ flex: 1, minWidth: "min(100%, 260px)" }}>
           <input
             type="text"
             placeholder="Buscar por enunciado, subtópico ou tag..."
@@ -116,7 +116,7 @@ export default function AdminConteudoPage() {
           />
         </div>
 
-        <div className="mobile-scroll-x" style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "nowrap" }}>
+        <div className="mobile-scroll-x" style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "nowrap", width: "100%", paddingBottom: 4 }}>
           <span style={{ fontSize: 12, color: "var(--chumbo)", fontWeight: 500, whiteSpace: "nowrap" }}>Área:</span>
           {["Todas", "Clínica Médica", "Cirurgia Geral", "Saúde Coletiva", "Pediatria", "GO"].map((a) => (
             <button
@@ -155,8 +155,8 @@ export default function AdminConteudoPage() {
             Carregando questões...
           </div>
         ) : (
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+          <div className="admin-table-scroll">
+            <table style={{ width: "100%", minWidth: 680, borderCollapse: "collapse", fontSize: 13 }}>
               <thead>
                 <tr style={{ background: "var(--input-bg)", borderBottom: "1px solid var(--card-border)" }}>
                   {["Área DCN", "Subárea & Tema", "Banca / Ano", "Dificuldade", "Gabarito", "Ações"].map((h) => (

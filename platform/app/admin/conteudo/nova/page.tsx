@@ -123,11 +123,11 @@ export default function NovaQuestaoPage() {
       ) : (
         <form onSubmit={handleSubmit} style={{
           background: "var(--card-bg)", border: "1px solid var(--card-border)",
-          borderRadius: 14, padding: "28px", display: "flex", flexDirection: "column", gap: 20,
+          borderRadius: 14, padding: "clamp(16px, 3vw, 28px)", display: "flex", flexDirection: "column", gap: 20,
           boxShadow: "var(--card-shadow)",
         }}>
           {/* Metadados DCN */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14 }}>
             <div>
               <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 6 }}>Grande Área DCN *</label>
               <select
@@ -171,7 +171,7 @@ export default function NovaQuestaoPage() {
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14 }}>
             <div>
               <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 6 }}>Ano da Prova</label>
               <input

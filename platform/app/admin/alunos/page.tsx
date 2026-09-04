@@ -255,9 +255,9 @@ export default function AdminAlunosPage() {
             background: "var(--card-bg)", border: "1px solid var(--card-border)",
             boxShadow: "var(--card-shadow)",
             borderRadius: 12, padding: "16px 20px", marginBottom: 20,
-            display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap",
+            display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap",
           }}>
-            <div style={{ flex: 1, minWidth: 240 }}>
+            <div style={{ flex: 1, minWidth: "min(100%, 240px)" }}>
               <input
                 type="text"
                 placeholder="Buscar por nome, e-mail ou CRM..."
@@ -271,8 +271,8 @@ export default function AdminAlunosPage() {
               />
             </div>
 
-            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-              <span style={{ fontSize: 12, color: V.ch }}>Plano:</span>
+            <div className="mobile-scroll-x" style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "nowrap", width: "100%", paddingBottom: 4 }}>
+              <span style={{ fontSize: 12, color: V.ch, whiteSpace: "nowrap" }}>Plano:</span>
               {["Todos", "diagnostico", "pleno_mensal", "pleno_anual"].map((p) => (
                 <button
                   key={p}
@@ -283,6 +283,7 @@ export default function AdminAlunosPage() {
                     border: `1px solid ${planFilter === p ? V.pu : "rgba(61,90,128,0.3)"}`,
                     color: planFilter === p ? V.pu : V.ch,
                     fontFamily: V.db, fontSize: 12, cursor: "pointer",
+                    whiteSpace: "nowrap",
                   }}
                 >
                   {p === "Todos" ? "Todos" : p === "diagnostico" ? "Gratuito" : p === "pleno_mensal" ? "Pleno Mensal" : "Pleno Anual"}
@@ -298,88 +299,91 @@ export default function AdminAlunosPage() {
             ) : students.length === 0 ? (
               <div style={{ textAlign: "center", padding: 40, color: "var(--chumbo)" }}>Nenhum médico encontrado.</div>
             ) : (
-              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-                <thead>
-                  <tr style={{ background: "var(--input-bg)", borderBottom: "1px solid var(--card-border)" }}>
-                    {["Médico / E-mail", "Papel / Plano", "Meta / Horas", "Streak", "Cadastro", "Ações CS"].map((h) => (
-                      <th key={h} style={{
-                        padding: "12px 16px", textAlign: "left",
-                        fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em",
-                        textTransform: "uppercase", color: V.ch,
-                      }}>
-                        {h}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {students.map((s) => (
-                    <tr key={s.id} style={{ borderBottom: "1px solid var(--card-border)" }}>
-                      <td style={{ padding: "14px 16px" }}>
-                        <div style={{ fontWeight: 600, color: "var(--heading-color)" }}>{s.fullName}</div>
-                        <div style={{ fontSize: 11, color: V.ch }}>{s.email} {s.crm ? `· CRM ${s.crm}` : ""}</div>
-                      </td>
-                      <td style={{ padding: "14px 16px" }}>
-                        <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-                          {s.role && s.role !== "student" && (
-                            <span style={{
-                              fontFamily: V.dm, fontSize: 9, padding: "2px 6px", borderRadius: 4,
-                              background: "rgba(107,92,231,0.2)", color: "#A29BFE", textTransform: "uppercase", fontWeight: 700,
-                            }}>
-                              {s.role}
-                            </span>
-                          )}
-                          <span style={{
-                            fontFamily: V.dm, fontSize: 10, padding: "2px 8px", borderRadius: 4,
-                            background: s.plan === "pleno_anual" ? "rgba(0,194,168,0.15)" : s.plan === "pleno_mensal" ? "rgba(0,119,182,0.15)" : "rgba(61,90,128,0.2)",
-                            color: s.plan === "pleno_anual" ? V.pu : s.plan === "pleno_mensal" ? V.rel : V.ch,
-                            fontWeight: 600,
-                          }}>
-                            {s.plan === "pleno_anual" ? "Pleno Anual" : s.plan === "pleno_mensal" ? "Pleno Mensal" : "Diagnóstico"}
-                          </span>
-                        </div>
-                      </td>
-                      <td style={{ padding: "14px 16px", color: V.nb }}>
-                        {s.targetExams[0] || "ENAMED"} · {s.weeklyHours}h/sem
-                      </td>
-                      <td style={{ padding: "14px 16px", fontFamily: V.dm, fontSize: 12, color: V.wn }}>
-                        {s.streakDays} dias
-                      </td>
-                      <td style={{ padding: "14px 16px", fontFamily: V.dm, fontSize: 11, color: V.ch }}>
-                        {s.createdAt}
-                      </td>
-                      <td style={{ padding: "14px 16px" }}>
-                        <div style={{ display: "flex", gap: 6 }}>
-                          <button
-                            onClick={() => openWhatsApp(s)}
-                            title="Contato Comercial WhatsApp"
-                            style={{
-                              padding: "5px 8px", borderRadius: 6,
-                              background: "rgba(34,197,94,0.15)", border: "1px solid rgba(34,197,94,0.3)",
-                              color: V.su, fontSize: 11, fontWeight: 600, cursor: "pointer",
-                            }}
-                          >
-                            WhatsApp
-                          </button>
-                          <button
-                            onClick={() => {
-                              setEditingStudent(s);
-                              setNewPlan(s.plan || "pleno_anual");
-                            }}
-                            style={{
-                              padding: "5px 8px", borderRadius: 6,
-                              background: "rgba(61,90,128,0.2)", border: "none",
-                              color: V.nb, fontSize: 11, cursor: "pointer",
-                            }}
-                          >
-                            Alterar Plano
-                          </button>
-                        </div>
-                      </td>
+              <div className="admin-table-scroll">
+                <table style={{ width: "100%", minWidth: 700, borderCollapse: "collapse", fontSize: 13 }}>
+                  <thead>
+                    <tr style={{ background: "var(--input-bg)", borderBottom: "1px solid var(--card-border)" }}>
+                      {["Médico / E-mail", "Papel / Plano", "Meta / Horas", "Streak", "Cadastro", "Ações CS"].map((h) => (
+                        <th key={h} style={{
+                          padding: "12px 16px", textAlign: "left",
+                          fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em",
+                          textTransform: "uppercase", color: V.ch,
+                          whiteSpace: "nowrap",
+                        }}>
+                          {h}
+                        </th>
+                      ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {students.map((s) => (
+                      <tr key={s.id} style={{ borderBottom: "1px solid var(--card-border)" }}>
+                        <td style={{ padding: "14px 16px" }}>
+                          <div style={{ fontWeight: 600, color: "var(--heading-color)" }}>{s.fullName}</div>
+                          <div style={{ fontSize: 11, color: V.ch }}>{s.email} {s.crm ? `· CRM ${s.crm}` : ""}</div>
+                        </td>
+                        <td style={{ padding: "14px 16px" }}>
+                          <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+                            {s.role && s.role !== "student" && (
+                              <span style={{
+                                fontFamily: V.dm, fontSize: 9, padding: "2px 6px", borderRadius: 4,
+                                background: "rgba(107,92,231,0.2)", color: "#A29BFE", textTransform: "uppercase", fontWeight: 700,
+                              }}>
+                                {s.role}
+                              </span>
+                            )}
+                            <span style={{
+                              fontFamily: V.dm, fontSize: 10, padding: "2px 8px", borderRadius: 4,
+                              background: s.plan === "pleno_anual" ? "rgba(0,194,168,0.15)" : s.plan === "pleno_mensal" ? "rgba(0,119,182,0.15)" : "rgba(61,90,128,0.2)",
+                              color: s.plan === "pleno_anual" ? V.pu : s.plan === "pleno_mensal" ? V.rel : V.ch,
+                              fontWeight: 600,
+                            }}>
+                              {s.plan === "pleno_anual" ? "Pleno Anual" : s.plan === "pleno_mensal" ? "Pleno Mensal" : "Diagnóstico"}
+                            </span>
+                          </div>
+                        </td>
+                        <td style={{ padding: "14px 16px", color: V.nb }}>
+                          {s.targetExams[0] || "ENAMED"} · {s.weeklyHours}h/sem
+                        </td>
+                        <td style={{ padding: "14px 16px", fontFamily: V.dm, fontSize: 12, color: V.wn }}>
+                          {s.streakDays} dias
+                        </td>
+                        <td style={{ padding: "14px 16px", fontFamily: V.dm, fontSize: 11, color: V.ch }}>
+                          {s.createdAt}
+                        </td>
+                        <td style={{ padding: "14px 16px" }}>
+                          <div style={{ display: "flex", gap: 6 }}>
+                            <button
+                              onClick={() => openWhatsApp(s)}
+                              title="Contato Comercial WhatsApp"
+                              style={{
+                                padding: "5px 8px", borderRadius: 6,
+                                background: "rgba(34,197,94,0.15)", border: "1px solid rgba(34,197,94,0.3)",
+                                color: V.su, fontSize: 11, fontWeight: 600, cursor: "pointer",
+                              }}
+                            >
+                              WhatsApp
+                            </button>
+                            <button
+                              onClick={() => {
+                                setEditingStudent(s);
+                                setNewPlan(s.plan || "pleno_anual");
+                              }}
+                              style={{
+                                padding: "5px 8px", borderRadius: 6,
+                                background: "rgba(61,90,128,0.2)", border: "none",
+                                color: V.nb, fontSize: 11, cursor: "pointer",
+                              }}
+                            >
+                              Alterar Plano
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         </>
@@ -414,112 +418,115 @@ export default function AdminAlunosPage() {
               </button>
             </div>
           ) : (
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-              <thead>
-                <tr style={{ background: "var(--input-bg)", borderBottom: "1px solid var(--card-border)" }}>
-                  {["Convidado / E-mail", "Papel", "Plano & Foco", "Período / Validade", "Status", "Ações"].map((h) => (
-                    <th key={h} style={{
-                      padding: "12px 16px", textAlign: "left",
-                      fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em",
-                      textTransform: "uppercase", color: V.ch,
-                    }}>
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {invitations.map((inv) => {
-                  const appUrl = typeof window !== "undefined" ? window.location.origin : "";
-                  const fullInviteUrl = `${appUrl}/convite?token=${inv.token}`;
+            <div className="admin-table-scroll">
+              <table style={{ width: "100%", minWidth: 720, borderCollapse: "collapse", fontSize: 13 }}>
+                <thead>
+                  <tr style={{ background: "var(--input-bg)", borderBottom: "1px solid var(--card-border)" }}>
+                    {["Convidado / E-mail", "Papel", "Plano & Foco", "Período / Validade", "Status", "Ações"].map((h) => (
+                      <th key={h} style={{
+                        padding: "12px 16px", textAlign: "left",
+                        fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em",
+                        textTransform: "uppercase", color: V.ch,
+                        whiteSpace: "nowrap",
+                      }}>
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {invitations.map((inv) => {
+                    const appUrl = typeof window !== "undefined" ? window.location.origin : "";
+                    const fullInviteUrl = `${appUrl}/convite?token=${inv.token}`;
 
-                  return (
-                    <tr key={inv.id} style={{ borderBottom: "1px solid var(--card-border)" }}>
-                      <td style={{ padding: "14px 16px" }}>
-                        <div style={{ fontWeight: 600, color: "var(--heading-color)" }}>{inv.full_name}</div>
-                        <div style={{ fontSize: 11, color: V.ch }}>{inv.email}</div>
-                        {inv.notes && (
-                          <div style={{ fontSize: 10, color: V.am, marginTop: 2 }}>{inv.notes}</div>
-                        )}
-                      </td>
-                      <td style={{ padding: "14px 16px" }}>
-                        <span style={{
-                          fontFamily: V.dm, fontSize: 10, padding: "2px 8px", borderRadius: 4,
-                          background: inv.role === "docente" ? "rgba(107,92,231,0.2)" : inv.role === "superadmin" ? "rgba(0,194,168,0.2)" : "rgba(61,90,128,0.2)",
-                          color: inv.role === "docente" ? "#A29BFE" : inv.role === "superadmin" ? V.pu : V.nb,
-                          fontWeight: 700, textTransform: "uppercase",
-                        }}>
-                          {inv.role}
-                        </span>
-                      </td>
-                      <td style={{ padding: "14px 16px" }}>
-                        <div style={{ color: "var(--heading-color)", fontWeight: 500 }}>{inv.plan}</div>
-                        <div style={{ fontSize: 11, color: "var(--chumbo)" }}>{inv.sub_brand}</div>
-                      </td>
-                      <td style={{ padding: "14px 16px" }}>
-                        <div style={{ color: V.wn, fontSize: 12 }}>
-                          {inv.access_expires_at ? `Até ${new Date(inv.access_expires_at).toLocaleDateString("pt-BR")}` : "Vitalício"}
-                        </div>
-                        <div style={{ fontSize: 10, color: V.ch }}>
-                          Enviado em {new Date(inv.created_at).toLocaleDateString("pt-BR")}
-                        </div>
-                      </td>
-                      <td style={{ padding: "14px 16px" }}>
-                        <span style={{
-                          fontFamily: V.dm, fontSize: 10, padding: "3px 8px", borderRadius: 4,
-                          background: inv.status === "accepted" ? "rgba(34,197,94,0.15)" : inv.status === "revoked" ? "rgba(255,107,107,0.15)" : "rgba(245,166,35,0.15)",
-                          color: inv.status === "accepted" ? V.su : inv.status === "revoked" ? V.dg : V.wn,
-                          fontWeight: 700, textTransform: "uppercase",
-                        }}>
-                          {inv.status === "accepted" ? "Ativado" : inv.status === "revoked" ? "Revogado" : "Pendente"}
-                        </span>
-                      </td>
-                      <td style={{ padding: "14px 16px" }}>
-                        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-                          {inv.status === "pending" && (
-                            <>
-                              <button
-                                onClick={() => copyToClipboard(fullInviteUrl)}
-                                title="Copiar Link de Ativação"
-                                style={{
-                                  padding: "5px 8px", borderRadius: 6,
-                                  background: "rgba(0,194,168,0.15)", border: "1px solid rgba(0,194,168,0.3)",
-                                  color: V.pu, fontSize: 11, cursor: "pointer", fontWeight: 600,
-                                }}
-                              >
-                                Copiar Link
-                              </button>
-                              <button
-                                onClick={() => shareInviteWhatsApp(inv.full_name, fullInviteUrl)}
-                                title="Enviar via WhatsApp"
-                                style={{
-                                  padding: "5px 8px", borderRadius: 6,
-                                  background: "rgba(34,197,94,0.15)", border: "1px solid rgba(34,197,94,0.3)",
-                                  color: V.su, fontSize: 11, cursor: "pointer", fontWeight: 600,
-                                }}
-                              >
-                                WhatsApp
-                              </button>
-                              <button
-                                onClick={() => handleRevokeInvite(inv.id)}
-                                title="Cancelar Convite"
-                                style={{
-                                  padding: "5px 8px", borderRadius: 6,
-                                  background: "rgba(255,107,107,0.15)", border: "none",
-                                  color: V.dg, fontSize: 11, cursor: "pointer",
-                                }}
-                              >
-                                Revogar
-                              </button>
-                            </>
+                    return (
+                      <tr key={inv.id} style={{ borderBottom: "1px solid var(--card-border)" }}>
+                        <td style={{ padding: "14px 16px" }}>
+                          <div style={{ fontWeight: 600, color: "var(--heading-color)" }}>{inv.full_name}</div>
+                          <div style={{ fontSize: 11, color: V.ch }}>{inv.email}</div>
+                          {inv.notes && (
+                            <div style={{ fontSize: 10, color: V.am, marginTop: 2 }}>{inv.notes}</div>
                           )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                        </td>
+                        <td style={{ padding: "14px 16px" }}>
+                          <span style={{
+                            fontFamily: V.dm, fontSize: 10, padding: "2px 8px", borderRadius: 4,
+                            background: inv.role === "docente" ? "rgba(107,92,231,0.2)" : inv.role === "superadmin" ? "rgba(0,194,168,0.2)" : "rgba(61,90,128,0.2)",
+                            color: inv.role === "docente" ? "#A29BFE" : inv.role === "superadmin" ? V.pu : V.nb,
+                            fontWeight: 700, textTransform: "uppercase",
+                          }}>
+                            {inv.role}
+                          </span>
+                        </td>
+                        <td style={{ padding: "14px 16px" }}>
+                          <div style={{ color: "var(--heading-color)", fontWeight: 500 }}>{inv.plan}</div>
+                          <div style={{ fontSize: 11, color: "var(--chumbo)" }}>{inv.sub_brand}</div>
+                        </td>
+                        <td style={{ padding: "14px 16px" }}>
+                          <div style={{ color: V.wn, fontSize: 12 }}>
+                            {inv.access_expires_at ? `Até ${new Date(inv.access_expires_at).toLocaleDateString("pt-BR")}` : "Vitalício"}
+                          </div>
+                          <div style={{ fontSize: 10, color: V.ch }}>
+                            Enviado em {new Date(inv.created_at).toLocaleDateString("pt-BR")}
+                          </div>
+                        </td>
+                        <td style={{ padding: "14px 16px" }}>
+                          <span style={{
+                            fontFamily: V.dm, fontSize: 10, padding: "3px 8px", borderRadius: 4,
+                            background: inv.status === "accepted" ? "rgba(34,197,94,0.15)" : inv.status === "revoked" ? "rgba(255,107,107,0.15)" : "rgba(245,166,35,0.15)",
+                            color: inv.status === "accepted" ? V.su : inv.status === "revoked" ? V.dg : V.wn,
+                            fontWeight: 700, textTransform: "uppercase",
+                          }}>
+                            {inv.status === "accepted" ? "Ativado" : inv.status === "revoked" ? "Revogado" : "Pendente"}
+                          </span>
+                        </td>
+                        <td style={{ padding: "14px 16px" }}>
+                          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                            {inv.status === "pending" && (
+                              <>
+                                <button
+                                  onClick={() => copyToClipboard(fullInviteUrl)}
+                                  title="Copiar Link de Ativação"
+                                  style={{
+                                    padding: "5px 8px", borderRadius: 6,
+                                    background: "rgba(0,194,168,0.15)", border: "1px solid rgba(0,194,168,0.3)",
+                                    color: V.pu, fontSize: 11, cursor: "pointer", fontWeight: 600,
+                                  }}
+                                >
+                                  Copiar Link
+                                </button>
+                                <button
+                                  onClick={() => shareInviteWhatsApp(inv.full_name, fullInviteUrl)}
+                                  title="Enviar via WhatsApp"
+                                  style={{
+                                    padding: "5px 8px", borderRadius: 6,
+                                    background: "rgba(34,197,94,0.15)", border: "1px solid rgba(34,197,94,0.3)",
+                                    color: V.su, fontSize: 11, cursor: "pointer", fontWeight: 600,
+                                  }}
+                                >
+                                  WhatsApp
+                                </button>
+                                <button
+                                  onClick={() => handleRevokeInvite(inv.id)}
+                                  title="Cancelar Convite"
+                                  style={{
+                                    padding: "5px 8px", borderRadius: 6,
+                                    background: "rgba(255,107,107,0.15)", border: "none",
+                                    color: V.dg, fontSize: 11, cursor: "pointer",
+                                  }}
+                                >
+                                  Revogar
+                                </button>
+                              </>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       )}
@@ -529,12 +536,12 @@ export default function AdminAlunosPage() {
         <div style={{
           position: "fixed", inset: 0, background: "rgba(13,17,28,0.88)",
           backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center",
-          zIndex: 1000, padding: 20, overflowY: "auto",
+          zIndex: 1000, padding: "16px", overflowY: "auto",
         }}>
           <div style={{
             background: "var(--card-bg)", border: "1px solid var(--card-border)",
-            borderRadius: 16, maxWidth: 540, width: "100%", padding: 28,
-            boxShadow: "var(--card-shadow)",
+            borderRadius: 16, maxWidth: 540, width: "100%", padding: "clamp(16px, 4vw, 28px)",
+            boxShadow: "var(--card-shadow)", maxHeight: "90vh", overflowY: "auto",
           }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
               <div>
@@ -554,7 +561,7 @@ export default function AdminAlunosPage() {
             </div>
 
             <form onSubmit={handleCreateInvite}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 12, marginBottom: 14 }}>
                 <div>
                   <label style={{ display: "block", fontSize: 11, color: V.ch, marginBottom: 4, fontWeight: 600 }}>
                     Nome Completo *
@@ -593,7 +600,7 @@ export default function AdminAlunosPage() {
               </div>
 
               {/* Papel / Role & Submarca */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 12, marginBottom: 14 }}>
                 <div>
                   <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 4, fontWeight: 600 }}>
                     Tipo de Perfil (Role) *
@@ -638,7 +645,7 @@ export default function AdminAlunosPage() {
               </div>
 
               {/* Plano & Período de Acesso */}
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 14 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 12, marginBottom: 14 }}>
                 <div>
                   <label style={{ display: "block", fontSize: 11, color: "var(--chumbo)", marginBottom: 4, fontWeight: 600 }}>
                     Plano de Acesso *
@@ -771,11 +778,11 @@ export default function AdminAlunosPage() {
         <div style={{
           position: "fixed", inset: 0, background: "rgba(13,17,28,0.9)",
           backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center",
-          zIndex: 1100, padding: 20,
+          zIndex: 1100, padding: "16px",
         }}>
           <div style={{
             background: "var(--card-bg)", border: "1px solid var(--card-border)",
-            borderRadius: 16, maxWidth: 480, width: "100%", padding: 28, textAlign: "center",
+            borderRadius: 16, maxWidth: 480, width: "100%", padding: "clamp(16px, 4vw, 28px)", textAlign: "center",
             boxShadow: "var(--card-shadow)",
           }}>
             <div style={{
@@ -819,11 +826,11 @@ export default function AdminAlunosPage() {
               </button>
             </div>
 
-            <div style={{ display: "flex", gap: 10 }}>
+            <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
               <button
                 onClick={() => shareInviteWhatsApp(createdInviteResult.name, createdInviteResult.inviteUrl)}
                 style={{
-                  flex: 1, padding: "10px 0", borderRadius: 8,
+                  flex: 1, minWidth: 180, padding: "10px 0", borderRadius: 8,
                   background: "rgba(34,197,94,0.15)", border: "1px solid rgba(34,197,94,0.4)",
                   color: V.su, fontWeight: 700, fontSize: 13, cursor: "pointer",
                   display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
@@ -834,7 +841,7 @@ export default function AdminAlunosPage() {
               <button
                 onClick={() => setCreatedInviteResult(null)}
                 style={{
-                  flex: 1, padding: "10px 0", borderRadius: 8,
+                  flex: 1, minWidth: 100, padding: "10px 0", borderRadius: 8,
                   background: "rgba(61,90,128,0.2)", border: "none",
                   color: V.nb, fontWeight: 600, fontSize: 13, cursor: "pointer",
                 }}
@@ -851,12 +858,12 @@ export default function AdminAlunosPage() {
         <div style={{
           position: "fixed", inset: 0, background: "rgba(13,17,28,0.85)",
           backdropFilter: "blur(8px)", display: "flex", alignItems: "center", justifyContent: "center",
-          zIndex: 1000, padding: 20,
+          zIndex: 1000, padding: "16px",
         }}>
           <div style={{
             background: "var(--card-bg)", border: "1px solid var(--card-border)",
             boxShadow: "var(--card-shadow)",
-            borderRadius: 14, maxWidth: 420, width: "100%", padding: 24,
+            borderRadius: 14, maxWidth: 420, width: "100%", padding: "clamp(16px, 4vw, 24px)",
           }}>
             <div style={{ fontFamily: V.df, fontSize: 18, fontWeight: 700, color: "var(--heading-color)", marginBottom: 6 }}>
               Alteração Manual de Acesso
@@ -881,16 +888,16 @@ export default function AdminAlunosPage() {
               </select>
             </div>
 
-            <div style={{ display: "flex", gap: 8 }}>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               <button
                 onClick={() => setEditingStudent(null)}
-                style={{ flex: 1, padding: "8px 0", borderRadius: 6, background: "transparent", border: "1px solid var(--card-border)", color: "var(--chumbo)", cursor: "pointer", fontWeight: 600 }}
+                style={{ flex: 1, minWidth: 100, padding: "8px 0", borderRadius: 6, background: "transparent", border: "1px solid var(--card-border)", color: "var(--chumbo)", cursor: "pointer", fontWeight: 600 }}
               >
                 Cancelar
               </button>
               <button
                 onClick={handleUpdatePlan}
-                style={{ flex: 1, padding: "8px 0", borderRadius: 6, background: `linear-gradient(135deg, ${V.pu}, #009688)`, border: "none", color: "#FFFFFF", fontWeight: 700, cursor: "pointer" }}
+                style={{ flex: 1, minWidth: 120, padding: "8px 0", borderRadius: 6, background: `linear-gradient(135deg, ${V.pu}, #009688)`, border: "none", color: "#FFFFFF", fontWeight: 700, cursor: "pointer" }}
               >
                 Salvar Alteração
               </button>

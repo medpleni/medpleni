@@ -109,9 +109,9 @@ export default function AdminDashboardPage() {
       {/* ── KPI GRID ── */}
       <div style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
-        gap: 16,
-        marginBottom: 28,
+        gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+        gap: 12,
+        marginBottom: 24,
       }}>
         {[
           { label: "MRR Estimado", value: `R$ ${metrics.mrr.toLocaleString("pt-BR")}`, sub: `ARR: R$ ${metrics.arr.toLocaleString("pt-BR")}`, color: V.pu },
@@ -125,23 +125,23 @@ export default function AdminDashboardPage() {
             border: "1px solid var(--card-border)",
             boxShadow: "var(--card-shadow)",
             borderRadius: 12,
-            padding: "20px",
+            padding: "16px",
           }}>
-            <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--chumbo)", marginBottom: 8, fontWeight: 600 }}>
+            <div style={{ fontFamily: V.dm, fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--chumbo)", marginBottom: 6, fontWeight: 600 }}>
               {kpi.label}
             </div>
-            <div style={{ fontFamily: V.df, fontSize: 26, fontWeight: 700, color: "var(--heading-color)", lineHeight: 1.1 }}>
+            <div style={{ fontFamily: V.df, fontSize: 24, fontWeight: 700, color: "var(--heading-color)", lineHeight: 1.1 }}>
               {kpi.value}
             </div>
-            <div style={{ fontFamily: V.dm, fontSize: 10, color: kpi.color, marginTop: 8, fontWeight: 600 }}>
+            <div style={{ fontFamily: V.dm, fontSize: 10, color: kpi.color, marginTop: 6, fontWeight: 600 }}>
               {kpi.sub}
             </div>
           </div>
         ))}
       </div>
 
-      {/* ── MAIN CONTENT: 2 COLUMNS ── */}
-      <div className="main-grid" style={{ display: "grid", gridTemplateColumns: "1.6fr 1fr", gap: 20 }}>
+      {/* ── MAIN CONTENT: 2 COLUMNS (STACKS ON MOBILE) ── */}
+      <div className="admin-grid-2-1">
         {/* Left: Funil & Desempenho */}
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           {/* Funil de Conversão */}

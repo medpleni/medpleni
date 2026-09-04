@@ -266,3 +266,57 @@ body {
   }
 }
 
+/* ─────────────────────────────────────────────
+   Backoffice Admin — Responsividade Mobile
+───────────────────────────────────────────── */
+.admin-desktop-sidebar {
+  display: flex !important;
+}
+.admin-topbar-hamburger {
+  display: none !important;
+}
+.admin-main-content {
+  padding: 32px 36px;
+}
+.admin-grid-2-1 {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+.admin-grid-1-1 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.admin-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.admin-table-scroll > table {
+  min-width: 680px;
+}
+
+@media (max-width: 960px) {
+  .admin-desktop-sidebar {
+    display: none !important;
+  }
+  .admin-topbar-hamburger {
+    display: flex !important;
+  }
+  .admin-main-content {
+    padding: 16px 14px !important;
+  }
+  .admin-grid-2-1 {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+  }
+  .admin-grid-1-1 {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+  }
+  .admin-topbar-desktop-label {
+    display: none !important;
+  }
+}
+

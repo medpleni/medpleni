@@ -40,8 +40,8 @@ export default function AdminSistemaPage() {
 
       {/* ── SERVICE HEALTH STATUS ── */}
       <div style={{
-        display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-        gap: 14, marginBottom: 24,
+        display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+        gap: 12, marginBottom: 24,
       }}>
         {[
           { name: "Banco Supabase (PostgreSQL)", status: "Operacional", ping: "24ms", color: V.su },
@@ -51,7 +51,7 @@ export default function AdminSistemaPage() {
         ].map((s) => (
           <div key={s.name} style={{
             background: "var(--card-bg)", border: "1px solid var(--card-border)",
-            borderRadius: 12, padding: "18px", boxShadow: "var(--card-shadow)",
+            borderRadius: 12, padding: "16px", boxShadow: "var(--card-shadow)",
           }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
               <span style={{ fontSize: 13, fontWeight: 600, color: "var(--heading-color)" }}>{s.name}</span>
@@ -63,8 +63,8 @@ export default function AdminSistemaPage() {
         ))}
       </div>
 
-      {/* ── 2 COLUMNS: TEAM & WEBHOOKS ── */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
+      {/* ── 2 COLUMNS: TEAM & WEBHOOKS (STACKS ON MOBILE) ── */}
+      <div className="admin-grid-1-1">
         {/* Gestão de Equipe Administrativa */}
         <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: 14, padding: "20px", boxShadow: "var(--card-shadow)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>

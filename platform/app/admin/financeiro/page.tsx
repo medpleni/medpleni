@@ -37,10 +37,10 @@ export default function AdminFinanceiroPage() {
 
   return (
     <div>
-      {/* ── HEADER ── */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, flexWrap: "wrap", gap: 16 }}>
+      {/* ── TOPBAR / HEADER ── */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24, flexWrap: "wrap", gap: 14 }}>
         <div>
-          <div style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: V.pu, marginBottom: 4, fontWeight: 600 }}>
+          <div style={{ fontFamily: V.dm, fontSize: 10, letterSpacing: "0.15em", textTransform: "uppercase", color: V.pu, marginBottom: 4 }}>
             Controladoria & Faturamento
           </div>
           <h1 style={{ fontFamily: V.df, fontSize: 28, fontWeight: 700, color: "var(--heading-color)", margin: 0 }}>
@@ -48,7 +48,7 @@ export default function AdminFinanceiroPage() {
           </h1>
         </div>
 
-        <div style={{ display: "flex", gap: 10 }}>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
           <button
             onClick={() => alert("Acesso ao painel oficial da Iugu será habilitado com as chaves de API em produção.")}
             style={{
@@ -70,8 +70,8 @@ export default function AdminFinanceiroPage() {
       {/* ── FINANCIAL KPIS ── */}
       <div style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
-        gap: 14,
+        gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+        gap: 12,
         marginBottom: 24,
       }}>
         {[
@@ -85,7 +85,7 @@ export default function AdminFinanceiroPage() {
             border: "1px solid var(--card-border)",
             boxShadow: "var(--card-shadow)",
             borderRadius: 12,
-            padding: "18px 20px",
+            padding: "16px",
           }}>
             <div style={{ fontFamily: V.dm, fontSize: 9, color: "var(--chumbo)", textTransform: "uppercase", marginBottom: 6, fontWeight: 600 }}>
               {k.label}
@@ -108,15 +108,15 @@ export default function AdminFinanceiroPage() {
         borderRadius: 14,
         overflow: "hidden",
       }}>
-        <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--card-border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--card-border)", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
           <div style={{ fontFamily: V.df, fontSize: 16, fontWeight: 700, color: "var(--heading-color)" }}>
             Extrato de Faturas e Assinaturas (Iugu)
           </div>
           <span style={{ fontFamily: V.dm, fontSize: 10, color: V.pu, fontWeight: 600 }}>● Sincronização Ativa</span>
         </div>
 
-        <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
+        <div className="admin-table-scroll" style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", minWidth: 680, borderCollapse: "collapse", fontSize: 13 }}>
             <thead>
               <tr style={{ background: "var(--input-bg)", borderBottom: "1px solid var(--card-border)" }}>
                 {["Aluno / E-mail", "Plano", "Valor", "Método", "Status Iugu", "Data / Hora", "Ações"].map((h) => (
