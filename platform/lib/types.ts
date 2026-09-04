@@ -178,16 +178,25 @@ export interface ScorePoint {
 
 /** Bloco de cronograma */
 export interface BlocoEstudo {
+  id?: string;
   horario: string;
   area: Area;
   tipo: "simulado" | "questoes" | "revisao" | "flashcards" | "descanso";
   duracao: string;
+  duracaoMinutos?: number;
   descricao: string;
+  concluido?: boolean;
+  concluidoEm?: string;
+  acaoUrl?: string;
+  observacao?: string;
+  isPlantao?: boolean;
 }
 
 /** Dia do cronograma */
 export interface DiaEstudo {
   dia: string;
   diaSemana: string;
+  isPlantao?: boolean;
+  isFolga?: boolean;
   blocos: BlocoEstudo[];
 }
