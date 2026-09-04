@@ -36,22 +36,12 @@ Sua missão é atuar como o mentor clínico e pedagógico de maior nível para m
    - Linguagem: Terminologia médica técnica correta, sem prolixidade inútil.
    - Estrutura: Use Markdown rico, negrito para termos-chave, listas e tabelas para comparações.
 
-### ESTRUTURA PADRÃO DE RESPOSTA EM TIRA-DÚVIDAS:
-Sempre que o usuário fizer uma pergunta clínica ou trouxer uma dúvida de prova, organize a resposta assim:
-- **🎯 Resposta Direta / Conduta-Chave**: Conclusão imediata em 1-2 frases.
-- **🧠 Fisiopatologia & Mecanismo**: Explicação clara do "porquê" daquilo acontecer.
-- **📋 Conduta & Propedêutica Passo a Passo**: O que fazer no plantão / prova (1ª linha, 2ª linha, exames mandatórios).
-- **⚠️ Pegadinha de Prova & Distratores**: Como as bancas tentam confundir e qual a casca de banana clássica.
-- **💡 Mnemônico / Regra de Ouro MedPleni**: Frase de fixação ou mnemônico prático para nunca mais esquecer.
-
-### MODO CASO CLÍNICO (QUANDO SOLICITADO):
-- Não entregue a resposta de uma vez. Conduza o aluno em etapas:
-  1. Apresente a História Clínica e Sinais Vitais do paciente.
-  2. Peça que o aluno liste suas hipóteses diagnósticas e exames que deseja solicitar.
-  3. Ao receber as respostas do aluno, forneça os resultados dos exames e peça a conduta imediata/definitiva.
-  4. Ao final, avalie o raciocínio com nota de 0 a 10 e feedback construtivo.
-
-Nunca recomende tratamentos sem evidência científica. Seja sempre o preceptor que todo médico sonhou ter ao seu lado no internato e na residência.
+### REGRA INEGOCIÁVEL DE SAUDAÇÕES & MENSAGENS CURTAS:
+Se a mensagem do usuário for apenas uma saudação, cumprimento ou mensagem de introdução (como "oi", "olá", "opa", "bom dia", "boa tarde", "boa noite", "ajuda", "tudo bem?", "como funciona?"):
+- **NUNCA** invente uma conduta médica ou diagnóstico clínico para a palavra da saudação.
+- Cumprimente o aluno cordialmente como colega/futuro residente.
+- Apresente brevemente o objetivo do modo atual.
+- Convide o aluno a digitar a dúvida, caso, tema ou banca que deseja trabalhar agora, sugerindo 2 ou 3 exemplos práticos para início imediato.
 `.trim();
 
 export interface ChatMessage {
@@ -59,22 +49,139 @@ export interface ChatMessage {
   content: string;
 }
 
+/**
+ * Constrói o System Prompt rigorosamente adaptado ao Modo e à Área Médica selecionada
+ */
+export function buildSystemPrompt(mode: string = "tira_duvidas", area: string = "Geral"): string {
+  const baseDirectives = `
+Você é o **Dr. Pleni**, o Preceptor Chefe de Inteligência Artificial do ecossistema **MedPleni**.
+Sua missão é atuar como o mentor clínico e pedagógico de maior nível para médicos e formandos preparando-se para **Provas de Residência Médica (R1/R3)**, **ENAMED**, **REVALIDA INEP** e **Título de Especialista**.
+
+### DIRETRIZES DE PADRÃO-OURO:
+1. **Base Baseada em Evidências**: Baseie-se rigorosamente nas diretrizes médicas brasileiras vigentes (SBC, FEBRASGO, SBP, AMB, CFM, PCDT/MS, Cadernos de Atenção Básica) e referências internacionais de padrão-ouro (UpToDate, Harrison 21ª ed., Nelson 21ª ed., Sabiston 21ª ed., Williams Obstetrícia 26ª ed., ATLS 10ª ed., ACLS 2025/2026, PALS).
+2. **Domínio das Bancas Examinadoras**: Você conhece profundamente o estilo de cobrança de: ENARE, USP (SP e RP), UNIFESP, UNICAMP, SUS-SP, SURCE, AMRIGS, PSU-MG, REVALIDA INEP e ENAMED.
+3. **Área Médica em Foco no Momento**: ${area.toUpperCase()}.
+
+### REGRA INEGOCIÁVEL DE SAUDAÇÕES & MENSAGENS CURTAS:
+Se a mensagem do usuário for apenas uma saudação, cumprimento ou mensagem de introdução (como "oi", "olá", "opa", "bom dia", "boa tarde", "boa noite", "ajuda", "tudo bem?", "como funciona?"):
+- **NUNCA** invente uma conduta médica ou diagnóstico clínico para a palavra da saudação.
+- Cumprimente o aluno cordialmente como colega/futuro residente.
+- Apresente brevemente o objetivo do modo atual (${getModeLabel(mode)}).
+- Convide o aluno a digitar a dúvida, caso, tema ou banca que deseja trabalhar agora, sugerindo 2 ou 3 exemplos práticos para início imediato.
+`.trim();
+
+  switch (mode) {
+    case "caso_clinico":
+      return `
+${baseDirectives}
+
+### 🩺 MODO ATIVO: SIMULAÇÃO DE CASO CLÍNICO INTERATIVO
+Você atuará como o preceptor conduzindo uma simulação clínica realista e imersiva.
+**REGRAS DO MODO CASO CLÍNICO:**
+1. **NÃO entregue o caso resolvido ou o diagnóstico de início.** Conduza o aluno em etapas sucessivas:
+   - **ETAPA 1 (Admissão & Anamnese)**: Apresente Identificação do paciente, Queixa Principal, HMA relevante, Sinais Vitais e Exame Físico direcionado. Ao final, faça 3 perguntas ao aluno:
+     1. Quais são suas 2 principais hipóteses diagnósticas?
+     2. Quais exames laboratoriais e de imagem você solicita agora?
+     3. Qual a conduta imediata enquanto aguarda os exames?
+   - **ETAPA 2 (Resultados & Propedêutica)**: Quando o aluno responder, analise as escolhas dele, forneça os laudos dos exames pertinentes solicitados e pergunte: "Qual é a sua conduta terapêutica definitiva e prescrição?".
+   - **ETAPA 3 (Desfecho & Feedback)**: Avalie a conduta final, dê o desfecho do paciente, aponte a regra de ouro da prova e atribua uma nota pedagógica de 0 a 10 com feedback construtivo.
+2. Mantenha o caso desafiador e focado no perfil das bancas de R1 e ENAMED.
+`.trim();
+
+    case "dissecar_questao":
+      return `
+${baseDirectives}
+
+### 🎯 MODO ATIVO: DESCONSTRUÇÃO DE PEGADINHAS DE PROVA & DISTRATORES
+Seu foco é **100% blindado na análise de armadilhas de bancas examinadoras** (ENARE, USP, UNIFESP, UNICAMP, ENAMED, REVALIDA).
+Para cada tema ou questão enviada pelo aluno, estruture a resposta obrigatoriamente nesta ordem:
+1. **🎯 Como as Bancas Cobram Este Tema**: O padrão clássico de enunciado (ex: caso clínico longo com distrator no exame físico).
+2. **⚠️ A Casca de Banana Principal (Onde >60% dos Candidatos Erram)**: O detalhe sutil que induz ao erro comum.
+3. **🧠 Anatomia dos Distratores**: Análise das alternativas incorretas e por que elas parecem certas para quem não domina a diretriz.
+4. **💡 Regra de Ouro MedPleni Anti-Pegadinha**: O "gatilho mental" ou frase-chave para matar a questão em menos de 45 segundos sem hesitar.
+`.trim();
+
+    case "mnemonicos":
+      return `
+${baseDirectives}
+
+### 💡 MODO ATIVO: GERADOR DE MNEMÔNICOS & REGRAS DE OURO
+Seu foco é **100% blindado na memorização acelerada e fixação de critérios diagnósticos, escores de risco, doses e classificações médicas**.
+Para qualquer tema solicitado, estruture a resposta assim:
+1. **🧠 O Mnemônico Principal**: Acrônimo ou frase mnemônica inteligente, foneticamente marcante e fácil de lembrar na hora da prova.
+2. **📋 Detalhamento Letra por Letra**: Significado clínico exato de cada letra com os valores de corte laboratoriais ou clínicos oficiais.
+3. **⚡ Aplicação Rápida em Prova**: Exemplo de questão ou situação de plantão onde esse mnemônico economiza 3 minutos de raciocínio.
+4. **⚠️ Onde Não Confundir**: Ponto de alerta para não trocar letras ou critérios semelhantes.
+`.trim();
+
+    case "tira_duvidas":
+    default:
+      return `
+${baseDirectives}
+
+### 💬 MODO ATIVO: TIRA-DÚVIDAS CLÍNICO & RACIOCÍNIO DIAGNÓSTICO
+Para qualquer dúvida clínica enviada pelo aluno, forneça uma explicação de alto nível pedagógico, estruturada assim:
+- **🎯 Resposta Direta & Conduta-Chave**: Conclusão imediata em 1-2 frases.
+- **🧠 Fisiopatologia & Mecanismo**: Explicação clara do mecanismo celular/fisiológico subjacente.
+- **📋 Conduta & Propedêutica Passo a Passo**: 1ª linha, 2ª linha, exames mandatórios e armadilhas no plantão.
+- **⚠️ Pegadinha de Prova**: Como as bancas tentam confundir esse tema específico.
+- **💡 Mnemônico / Regra de Ouro MedPleni**: Dica prática de memorização.
+`.trim();
+  }
+}
+
+function getModeLabel(mode: string): string {
+  switch (mode) {
+    case "caso_clinico": return "Simulação de Casos Clínicos";
+    case "dissecar_questao": return "Pegadinhas de Prova & Distratores";
+    case "mnemonicos": return "Mnemônicos & Regras de Ouro";
+    default: return "Tira-Dúvidas Clínico Geral";
+  }
+}
+
+/**
+ * Detecta se a mensagem é estritamente uma saudação inicial
+ */
+function isGreetingMessage(text: string): boolean {
+  const clean = text
+    .trim()
+    .toLowerCase()
+    .replace(/[!?,.;:\-_]/g, "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+  const greetings = [
+    "oi", "ola", "opa", "bom dia", "boa tarde", "boa noite",
+    "fala", "salve", "e ai", "hello", "hi", "ajuda", "tudo bem",
+    "como vai", "quem e voce", "como funciona", "iniciar", "comecar",
+    "testando", "teste"
+  ];
+
+  return greetings.includes(clean) || (clean.length <= 4 && (clean.startsWith("oi") || clean.startsWith("ola") || clean.startsWith("opa")));
+}
+
 export async function callOpenRouterStream({
   messages,
   model = "anthropic/claude-3.7-sonnet",
+  mode = "tira_duvidas",
+  area = "Geral",
   temperature = 0.3,
 }: {
   messages: ChatMessage[];
   model?: string;
+  mode?: string;
+  area?: string;
   temperature?: number;
 }) {
   const apiKey = process.env.OPENROUTER_API_KEY;
 
   if (!apiKey) {
-    return createDemoStream(messages);
+    return createDemoStream(messages, mode, area);
   }
 
   try {
+    const systemPrompt = buildSystemPrompt(mode, area);
+
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -86,7 +193,7 @@ export async function callOpenRouterStream({
       body: JSON.stringify({
         model,
         messages: [
-          { role: "system", content: DR_PLENI_SYSTEM_PROMPT },
+          { role: "system", content: systemPrompt },
           ...messages,
         ],
         temperature,
@@ -97,122 +204,161 @@ export async function callOpenRouterStream({
     if (!response.ok) {
       const errText = await response.text();
       console.error("[OpenRouter Error]:", response.status, errText);
-      // Se houver erro de cota ou modelo no OpenRouter, usa o demo stream estruturado
-      return createDemoStream(messages);
+      return createDemoStream(messages, mode, area);
     }
 
     return response.body;
   } catch (fetchErr: any) {
     console.error("[OpenRouter Fetch Exception]:", fetchErr);
-    return createDemoStream(messages);
+    return createDemoStream(messages, mode, area);
   }
 }
 
 /**
- * Gerador de stream para simulação médica caso haja qualquer instabilidade de rede externa
+ * Gerador de stream inteligente de alta fidelidade para quando não houver chave de API externa
  */
-function createDemoStream(messages: ChatMessage[]) {
-  const lastUserMsg = messages[messages.length - 1]?.content || "Dúvida médica";
-  
-  const isCase = lastUserMsg.toLowerCase().includes("caso") || lastUserMsg.toLowerCase().includes("simul");
-  const isTrap = lastUserMsg.toLowerCase().includes("pegadinha") || lastUserMsg.toLowerCase().includes("banca");
-  const isMnemonic = lastUserMsg.toLowerCase().includes("mnem") || lastUserMsg.toLowerCase().includes("decorar");
+function createDemoStream(messages: ChatMessage[], mode: string = "tira_duvidas", area: string = "Geral") {
+  const lastUserMsg = messages[messages.length - 1]?.content || "";
+  const isGreeting = isGreetingMessage(lastUserMsg);
 
   let demoText = "";
 
-  if (isCase) {
-    demoText = `### 🩺 CASO CLÍNICO INTERATIVO — ETAPA 1: ADMISSÃO & ANAMNESE
+  if (isGreeting) {
+    if (mode === "caso_clinico") {
+      demoText = `Olá, doutor(a)! Sou o **Dr. Pleni**, seu Preceptor Chefe.
 
-**Paciente:** J.S.M., 34 anos, previamente hígido, admitido no Pronto-Socorro com queixa de dor abdominal de início súbito há 8 horas.
+Estamos no modo **🩺 Simulação de Casos Clínicos Interativos**.
+
+Aqui você assume o papel de médico assistente no pronto-socorro ou enfermaria, e eu conduzirei o caso passo a passo (Anamnese ➔ Exame Físico ➔ Solicitação de Exames ➔ Conduta Terapêutica ➔ Feedback com Nota).
+
+### 🎯 Como podemos começar?
+1. **Digite o tema que deseja treinar** (ex: *"Dor torácica aguda"*, *"Abdome agudo febril"*, *"Criança sibilante"* ou *"Cefaleia com sinais de alarme"*); OU
+2. Se preferir, digite **"Iniciar caso aleatório de ${area}"** para eu sortear um desafio de alto nível para você.`;
+    } else if (mode === "dissecar_questao") {
+      demoText = `Olá, futuro(a) residente! Sou o **Dr. Pleni**.
+
+Estamos no modo **🎯 Desconstrução de Pegadinhas de Prova & Distratores**.
+
+Meu objetivo aqui é dissecar exatamente **onde as bancas armam armadilhas** (ENAMED, ENARE, USP, UNIFESP, REVALIDA) e como identificar distratores em menos de 45 segundos.
+
+### 💡 Qual tema ou banca vamos analisar hoje?
+- Exemplo: *"Pegadinha clássica de ITU em gestante na banca ENARE"*
+- Exemplo: *"Distratores em Choque Séptico na USP-SP"*
+- Exemplo: *"Pegadinhas do ENAMED sobre Atenção Básica e SUS"*
+
+Envie sua dúvida ou o enunciado de uma questão para destrincharmos!`;
+    } else if (mode === "mnemonicos") {
+      demoText = `Olá, doutor(a)! Sou o **Dr. Pleni**.
+
+Estamos no modo **💡 Gerador de Mnemônicos & Regras de Ouro MedPleni**.
+
+Aqui transformamos critérios diagnósticos complexos, escores de estratificação e classificações em **acrônimos e regras de fixação imediata** para você nunca mais hesitar na prova.
+
+### 🧠 O que você gostaria de memorizar agora?
+- Exemplo: *"Mnemônico para critérios de Light no Derrame Pleural"*
+- Exemplo: *"Mnemônico para os critérios de Jones na Febre Reumática"*
+- Exemplo: *"Mnemônico das indicações de diálise de urgência (AEIOU)"*
+
+Qual classificação ou tema deseja que eu formate em mnemônico?`;
+    } else {
+      demoText = `Olá, colega médico(a)! Sou o **Dr. Pleni**, seu Preceptor de Inteligência Artificial no **MedPleni**.
+
+Estou à disposição para tirar qualquer dúvida clínica, dissecar diretrizes (SBC, FEBRASGO, SBP, PCDT-MS) ou aprofundar diagnósticos diferenciais e condutas de prova.
+
+### 🩺 Como posso te orientar hoje na área de **${area}**?
+- Envie uma **dúvida de conduta** (ex: *"Manejo da Cetoacidose Diabética segundo a SBD"*);
+- Peça um **diagnóstico diferencial** (ex: *"Diferenciar TV de TPSV com aberrância"*);
+- Ou traga qualquer tema desafiador do seu estudo diário!`;
+    }
+  } else if (mode === "caso_clinico") {
+    demoText = `### 🩺 CASO CLÍNICO INTERATIVO — ETAPA 1: ADMISSÃO NO PRONTO-SOCORRO
+
+**Paciente:** J.S.M., 34 anos, masculino, previamente hígido, admitido no Pronto-Socorro com queixa de dor abdominal aguda iniciada há cerca de 8 horas.
 
 **História da Moléstia Atual (HMA):** 
-A dor iniciou-se em região epigástrica/periumbilical de caráter contínuo e em queimação, migrando para fossa ilíaca direita (FID) nas últimas 3 horas, acompanhada de náuseas, 2 episódios de vômitos alimentares e anorexia importante. Nega febre aferida em casa.
+A dor iniciou-se em região periumbilical/epigástrica, de caráter contínuo, em cólica e queimação. Nas últimas 3 horas, migrou com intensidade crescente para a fossa ilíaca direita (FID), associando-se a náuseas, 2 episódios de vômitos alimentares e anorexia marcante. Nega queixas urinárias ou diarreia.
 
 **Sinais Vitais na Admissão:**
-- PA: 125/80 mmHg | FC: 104 bpm (taquicárdico) | FR: 18 irpm
-- Temperatura Axilar: 37,9 °C | SatO2: 98% em ar ambiente
+- **PA:** 125/80 mmHg | **FC:** 104 bpm (taquicárdico) | **FR:** 18 irpm
+- **Temperatura Axilar:** 37,9 °C (subfebril) | **SatO2:** 98% em ar ambiente
 
 **Exame Físico Dirigido:**
-- Abdome plano, ruídos hidroaéreos diminuídos.
-- Dor intensa à palpação profunda em ponto de McBurney, com defesa muscular voluntária em FID.
-- Sinal de Blumberg francamente positivo. Sinal de Rovsing positivo.
+- **Geral:** Regular estado geral, fácies de dor, anictérico, acianótico, afebril no momento.
+- **Abdome:** Plano, ruídos hidroaéreos discretamente diminuídos. Dor intensa à palpação profunda em ponto de McBurney, com defesa muscular voluntária em FID.
+- **Sinais Especiais:** Sinal de Blumberg francamente positivo. Sinal de Rovsing positivo.
 
 ---
 
 ### ❓ SUA VEZ, DOUTOR(A):
 1. Quais são as suas **2 principais hipóteses diagnósticas**?
-2. Quais **exames laboratoriais e de imagem** você solicita agora?
-3. Qual é a conduta imediata enquanto aguarda os exames?
+2. Quais **exames laboratoriais e/ou de imagem** você solicita imediatamente?
+3. Qual é a sua **conduta inicial de suporte** enquanto aguarda os exames?
 
-*(Digite sua resposta abaixo para avançarmos para a Etapa 2).*`;
-  } else if (isTrap) {
-    demoText = `### 🎯 ANÁLISE DE PEGADINHAS DE BANCA (ENARE / USP / ENAMED)
+*(Digite suas respostas abaixo para avançarmos para a Etapa 2 de resultados e conduta definitiva).*`;
+  } else if (mode === "dissecar_questao") {
+    demoText = `### 🎯 DISSECAÇÃO DE PEGADINHAS DE BANCA — ${lastUserMsg.toUpperCase()}
 
-As bancas examinadoras mais concorridas do país utilizam armadilhas bem estruturadas sobre este tema. Veja os 3 pontos onde mais de 60% dos candidatos erram:
-
----
-
-### 1. ⚠️ A Pegadinha da "Conduta Imediata vs Exame Complementar"
-> **O Erro Comum:** O enunciado descreve um paciente instável hemodinamicamente e coloca como alternativa (A) "Solicitar Angio-TC de Tórax/Abdome imediata".
-> **A Regra de Ouro:** **Paciente instável NÃO faz tomografia.** A resposta correta sempre envolve ressuscitação volêmica, monitorização e métodos à beira-leito (POCUS / FAST).
+Analisando o perfil de cobrança das bancas examinadoras mais concorridas do país (ENARE, USP, UNIFESP e ENAMED) sobre este tema:
 
 ---
 
-### 2. ⚠️ O Distrator do "Glicocorticóide Isolado"
-> **O Erro Comum:** Em choque anafilático ou crise asmática grave, a banca coloca corticoide venoso como primeira droga.
-> **A Regra de Ouro:** Adrenalina Intramuscular (vasto lateral da coxa) é a **ÚNICA** droga que reduz mortalidade imediata. Corticoides demoram 4 a 6 horas para ter efeito genômico.
+### 1. ⚠️ A Casca de Banana Principal (Onde >60% dos Candidatos Erram)
+> **A Armadilha do Enunciado:** As bancas adoram colocar o paciente em situação de instabilidade hemodinâmica e apresentar como alternativa atrativa a solicitação de exame padrão-ouro invasivo ou tomografia computadorizada.
+> **A Regra de Ouro:** **Paciente instável NÃO faz tomografia nem sai da sala vermelha.** A conduta imediata mandatória é sempre ressuscitação volêmica, monitorização e métodos à beira-leito (POCUS / FAST).
 
 ---
 
-### 3. ⚠️ A Troca de Critérios de Gravidade
-> **O Erro Comum:** Em Pré-Eclâmpsia, a presença de proteinúria maciça (>5g) **NÃO** é mais critério de gravidade isolado segundo as diretrizes da FEBRASGO e ACOG. O que define gravidade são disfunções orgânicas maternas ou plaquetas < 100.000.`;
-  } else if (isMnemonic) {
-    demoText = `### 💡 MNEMÔNICOS & REGRAS DE OURO MEDPLENI
-
-Aqui estão os mnemônicos definitivos para fixação na memória de longo prazo:
+### 2. 🧠 Anatomia dos Distratores das Bancas
+- **Distrator do Tratamento Medicamentoso Tardio:** Em emergências graves (ex: anafilaxia ou crise asmática grave), colocam corticoides venosos como primeira medida. *Lembre-se: Corticoide leva de 4 a 6 horas para ter efeito genômico. A única droga que reduz mortalidade imediata é a Adrenalina IM.*
+- **Distrator de Critérios Desatualizados:** Uso de parâmetros laboratoriais antigos como critérios de gravidade isolados que já foram abolidos nas diretrizes atuais de 2025/2026.
 
 ---
 
-### 🧠 1. Mnemônico: **A - E - I - O - U** (Indicações de Diálise de Urgência)
-- **A** = **Acidose Metabólica refratária** (pH < 7.15 refratário a bicarbonato)
-- **E** = **Eletrólitos / Hipercalemia refratária** (K > 6.5 mEq/L com alterações no ECG)
-- **I** = **Intoxicação exógena** (Lítio, Metanol, Etilenoglicol, Salicilatos)
-- **O** = **Overload / Hipervolemia refratária** (Edema agudo de pulmão sem resposta a diuréticos)
-- **U** = **Uremia sintomática** (Encefalopatia urêmica, Pericardite urêmica, Hemorragia digestiva)
+### 3. 💡 Gatilho Mental MedPleni Anti-Pegadinha
+> **"Estabilizar ANTES de Investigar"** — Se o enunciado mencionar hipotensão, taquicardia descompensada ou rebaixamento, a alternativa correta NUNCA será exame diagnóstico distante do leito.`;
+  } else if (mode === "mnemonicos") {
+    demoText = `### 💡 MNEMÔNICOS & REGRAS DE OURO MEDPLENI — ${lastUserMsg.toUpperCase()}
+
+Aqui está a estruturação mnemônica de alta retenção para memorizar e aplicar rapidamente na prova:
 
 ---
 
-### 🧠 2. Mnemônico: **P - L - E - N - I** (Checklist de Alta Performance)
-- **P** = Priorizar estabilização primária (ABCDE)
-- **L** = Linha de conduta baseada em diretrizes (1ª escolha sempre)
-- **E** = Excluir diagnósticos diferenciais fatais
-- **N** = Notificação compulsória (quando aplicável)
-- **I** = Individualização do paciente e metas terapêuticas`;
+### 🧠 1. Mnemônico de Ouro: **A - E - I - O - U** (Indicações Clássicas de Diálise de Urgência)
+- **A** ➔ **Acidose Metabólica Refratária** (pH < 7.15 refratário a bicarbonato ou reposição volêmica)
+- **E** ➔ **Eletrólitos / Hipercalemia Refratária** (K > 6.5 mEq/L com alterações eletrocardiográficas)
+- **I** ➔ **Intoxicação Exógena Dialisável** (Lítio, Metanol, Etilenoglicol, Salicilatos)
+- **O** ➔ **Overload / Hipervolemia Refratária** (Edema agudo de pulmão sem resposta a diuréticos de alça)
+- **U** ➔ **Uremia Sintomática** (Encefalopatia urêmica, Pericardite urêmica, Sangramento por disfunção plaquetária)
+
+---
+
+### ⚡ Aplicação Rápida em Prova:
+Basta buscar no enunciado qualquer um desses 5 critérios extremos refratários ao manejo clínico inicial para indicar Hemodiálise de Emergência sem hesitar.`;
   } else {
     demoText = `### 🎯 Resposta Direta & Conduta-Chave
-Com base nas diretrizes médicas brasileiras (SBC/FEBRASGO/PCDT-MS) e referências internacionais de padrão-ouro (UpToDate/Harrison), a abordagem prioritária para **${lastUserMsg.slice(0, 50)}** baseia-se na identificação precoce e estratificação de risco imediata.
+Com base nas diretrizes médicas brasileiras vigentes (SBC, FEBRASGO, SBP, PCDT/MS) e no padrão-ouro internacional (UpToDate, Harrison 21ª ed.), a abordagem prioritária para **${lastUserMsg.slice(0, 60)}** envolve identificação precoce, estratificação de risco imediata e instituição de terapêutica direcionada de 1ª linha.
 
 ---
 
 ### 🧠 Fisiopatologia & Mecanismo
-O mecanismo central envolve a quebra da homeostase tecidual e inflamação celular. Quando ocorre a descompensação, a perda do feedback homeostático gera hipoperfusão e disfunção celular progressiva.
+O mecanismo central baseia-se na perda do equilíbrio homeostático e resposta inflamatória tecidual. Quando ocorre a descompensação, a cascata fisiopatológica gera hipoperfusão tecidual, lesão celular e risco de disfunção multiorgânica progressiva se não revertida precocemente.
 
 ---
 
 ### 📋 Conduta & Propedêutica Passo a Passo
-1. **Medidas Iniciais (Minuto Zero)**: Monitorização contínua (ECG, oximetria, PANI), obtenção de 2 acessos venosos calibrosos e coleta de exames direcionados.
-2. **Exames Mandatórios**: Gasometria arterial com lactato, hemograma completo, eletrólitos, função renal e ECG de 12 derivações.
-3. **Terapêutica de 1ª Linha**: Estabilização clínica conforme os protocolos vigentes de suporte avançado.
+1. **Medidas Iniciais (Minuto Zero)**: Monitorização contínua (ECG, Oximetria de pulso, Pressão arterial não invasiva), obtenção de acessos venosos calibrosos e oxigenoterapia se SatO2 < 92%.
+2. **Exames Mandatórios**: Gasometria arterial com lactato, hemograma completo com plaquetas, função renal, eletrólitos e exames de imagem direcionados.
+3. **Terapêutica de 1ª Linha**: Tratamento farmacológico específico segundo a diretriz de referência, evitando subdosagens ou atrasos no início do protocolo.
 
 ---
 
-### ⚠️ Pegadinha de Prova & Distratores (Bancas USP / ENARE / ENAMED)
-> **Cuidado:** As bancas adoram colocar como alternativa atrativa a solicitação imediata de exames invasivos antes da estabilização hemodinâmica do paciente. Lembre-se: **Paciente instável NÃO sai da sala de emergência para tomografia!**
+### ⚠️ Pegadinha de Prova & Distratores (ENARE / USP / ENAMED)
+> **Atenção aos distratores:** As bancas costumam oferecer exames diagnósticos invasivos antes da estabilização clínica inicial do paciente. Lembre-se sempre de priorizar o suporte avançado de vida antes de transportar o paciente.
 
 ---
 
 ### 💡 Mnemônico / Regra de Ouro MedPleni
-> **"Estabilizar ANTES de Investigar"** — Na emergência e nas provas de R1, a conduta que salva vidas e garante a questão é sempre a estabilização hemodinâmica primária.`;
+> **"Identificar ➔ Estabilizar ➔ Tratar a Causa Base"** — A resposta padrão-ouro em provas de residência sempre prioriza a estabilidade clínica e a segurança do paciente.`;
   }
 
   const encoder = new TextEncoder();
@@ -224,7 +370,7 @@ O mecanismo central envolve a quebra da homeostase tecidual e inflamação celul
           choices: [{ delta: { content: word + " " } }],
         })}\n\n`;
         controller.enqueue(encoder.encode(payload));
-        await new Promise((r) => setTimeout(r, 20));
+        await new Promise((r) => setTimeout(r, 18));
       }
       controller.enqueue(encoder.encode("data: [DONE]\n\n"));
       controller.close();

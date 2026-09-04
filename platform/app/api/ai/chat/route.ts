@@ -62,6 +62,8 @@ export async function POST(req: NextRequest) {
     const stream = await callOpenRouterStream({
       messages: messages as ChatMessage[],
       model,
+      mode,
+      area,
       temperature: 0.3,
     });
 

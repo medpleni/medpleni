@@ -736,7 +736,15 @@ export default function IAMedicaPage() {
             }}>
               <textarea
                 rows={1}
-                placeholder="Pergunte ao Dr. Pleni (ex: 'Conduta em apendicite aguda', 'Pegadinha de ITU na gestante')..."
+                placeholder={
+                  selectedMode === "caso_clinico"
+                    ? "Digite o tema para o caso (ex: 'Dor torácica aguda', 'Lactente sibilante') ou responda à pergunta..."
+                    : selectedMode === "dissecar_questao"
+                    ? "Digite o tema ou banca para dissecar pegadinhas (ex: 'Pegadinha de ITU na gestante na ENARE')..."
+                    : selectedMode === "mnemonicos"
+                    ? "Digite o escore ou critérios para criar mnemônico (ex: 'Critérios de Light', 'Critérios de Jones')..."
+                    : "Pergunte ao Dr. Pleni (ex: 'Conduta na sepse foco pulmonar', 'Diferenciar TV de TPSV com aberrância')..."
+                }
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => {
