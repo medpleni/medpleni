@@ -69,3 +69,51 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: err?.message }, { status: 500 });
   }
 }
+
+export async function POST(request: Request) {
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
+    }
+
+    const body = await request.json();
+    const { conversationId, role = "assistant", content, metadata } = body;
+
+    if (!conversationId || !content) {
+      return NextResponse.json({ error: "conversationId e content são obrigatórios" }, { status: 400 });
+    }
+
+    // Insere a mensagem da IA
+    const { data: msg, error: msgErr } = await supabase
+      .from("ai_messages")
+      .insert({
+        conversation_id: conversationId,
+        user_id: user.id,
+        role,
+        content,
+        metadata: metadata || {},
+      })
+      .select("*")
+      .single();
+
+    if (msgErr) {
+      console.error("Erro ao salvar mensagem no Supabase:", msgErr);
+      return NextResponse.json({ error: msgErr.message }, { status: 500 });
+    }
+
+    // Atualiza a data de última modificação da conversa
+    await supabase
+      .from("ai_conversations")
+      .update({ updated_at: new Date().toISOString() })
+      .eq("id", conversationId);
+
+    return NextResponse.json({ success: true, message: msg });
+  } catch (err: any) {
+    console.error("Erro no POST de ai_messages:", err);
+    return NextResponse.json({ error: err?.message }, { status: 500 });
+  }
+}
+

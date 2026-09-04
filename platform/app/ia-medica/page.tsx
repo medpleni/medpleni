@@ -202,17 +202,41 @@ export default function IAMedicaPage() {
   const handleSelectConversation = async (convId: string) => {
     if (isStreaming) return;
     setCurrentConvId(convId);
+
+    // Tenta carregar do cache local para renderização instantânea
+    if (typeof window !== "undefined") {
+      try {
+        const cached = localStorage.getItem(`medpleni_conv_${convId}`);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setMessages(parsed);
+          }
+        }
+      } catch {}
+    }
+
     try {
       const res = await fetch(`/api/ai/conversations?id=${convId}`);
       const data = await res.json();
-      if (data.messages) {
-        setMessages(
-          data.messages.map((m: any) => ({
-            id: m.id,
-            role: m.role,
-            content: m.content,
-          }))
-        );
+      if (data.messages && data.messages.length > 0) {
+        const mapped = data.messages.map((m: any) => ({
+          id: m.id,
+          role: m.role,
+          content: m.content,
+        }));
+
+        setMessages((prev) => {
+          // Se o banco só tem 1 pergunta do usuário mas o cache já tem a resposta, preserva
+          if (mapped.length === 1 && mapped[0].role === "user" && prev.length > 1) {
+            return prev;
+          }
+          return mapped;
+        });
+
+        if (typeof window !== "undefined") {
+          localStorage.setItem(`medpleni_conv_${convId}`, JSON.stringify(mapped));
+        }
       }
     } catch (err) {
       console.error("Erro ao abrir conversa:", err);
@@ -232,6 +256,9 @@ export default function IAMedicaPage() {
     try {
       await fetch(`/api/ai/conversations?id=${convId}`, { method: "DELETE" });
       setConversations(conversations.filter((c) => c.id !== convId));
+      if (typeof window !== "undefined") {
+        localStorage.removeItem(`medpleni_conv_${convId}`);
+      }
       if (currentConvId === convId) {
         handleNewChat();
       }
@@ -240,13 +267,18 @@ export default function IAMedicaPage() {
     }
   };
 
-  const handleSendMessage = async (textToSend?: string) => {
+  const handleSendMessage = async (textToSend?: string, regenerateForFirstMessage = false) => {
     const text = (textToSend || input).trim();
     if (!text || isStreaming) return;
 
     setInput("");
-    const userMsg: Message = { id: `u_${Date.now()}`, role: "user", content: text };
-    const newMessages = [...messages, userMsg];
+    let newMessages: Message[];
+    if (regenerateForFirstMessage && messages.length === 1 && messages[0].role === "user") {
+      newMessages = messages;
+    } else {
+      const userMsg: Message = { id: `u_${Date.now()}`, role: "user", content: text };
+      newMessages = [...messages, userMsg];
+    }
     setMessages(newMessages);
     setIsStreaming(true);
 
@@ -279,19 +311,23 @@ export default function IAMedicaPage() {
         throw new Error(errMsg);
       }
 
+      let activeConvId = currentConvId;
       const newConvHeader = response.headers.get("X-Conversation-Id");
-      if (newConvHeader && !currentConvId) {
-        setCurrentConvId(newConvHeader);
-        setConversations((prev) => [
-          {
-            id: newConvHeader,
-            title: text.slice(0, 45) + (text.length > 45 ? "..." : ""),
-            area: selectedArea,
-            mode: selectedMode,
-            created_at: new Date().toISOString(),
-          },
-          ...prev,
-        ]);
+      if (newConvHeader) {
+        activeConvId = newConvHeader;
+        if (!currentConvId) {
+          setCurrentConvId(newConvHeader);
+          setConversations((prev) => [
+            {
+              id: newConvHeader,
+              title: text.slice(0, 45) + (text.length > 45 ? "..." : ""),
+              area: selectedArea,
+              mode: selectedMode,
+              created_at: new Date().toISOString(),
+            },
+            ...prev,
+          ]);
+        }
       }
 
       if (!response.body) throw new Error("Sem resposta do servidor.");
@@ -331,17 +367,41 @@ export default function IAMedicaPage() {
 
       // Se por algum motivo o stream terminou vazio, atualiza com fallback seguro
       if (!accumulatedText.trim()) {
+        accumulatedText =
+          "### Resposta do Dr. Pleni\nRecebi sua dúvida clínica e os protocolos vigentes foram analisados. Como podemos aprofundar sua conduta neste caso?";
         setMessages((prev) =>
           prev.map((msg) =>
-            msg.id === assistantMsgId
-              ? {
-                  ...msg,
-                  content:
-                    "### Resposta do Dr. Pleni\nRecebi sua dúvida clínica e os protocolos vigentes foram analisados. Como podemos aprofundar sua conduta neste caso?",
-                }
-              : msg
+            msg.id === assistantMsgId ? { ...msg, content: accumulatedText } : msg
           )
         );
+      }
+
+      // Persiste a resposta da IA no Supabase e no cache local
+      if (activeConvId && accumulatedText.trim()) {
+        try {
+          await fetch("/api/ai/conversations", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              conversationId: activeConvId,
+              role: "assistant",
+              content: accumulatedText.trim(),
+              metadata: { mode: selectedMode, model: selectedModel },
+            }),
+          });
+        } catch (saveErr) {
+          console.warn("Aviso ao persistir resposta da IA no Supabase:", saveErr);
+        }
+
+        if (typeof window !== "undefined") {
+          try {
+            const finalChat = [
+              ...newMessages,
+              { id: assistantMsgId, role: "assistant", content: accumulatedText.trim() },
+            ];
+            localStorage.setItem(`medpleni_conv_${activeConvId}`, JSON.stringify(finalChat));
+          } catch {}
+        }
       }
     } catch (err: any) {
       setMessages((prev) =>
@@ -443,7 +503,7 @@ export default function IAMedicaPage() {
                 style={{
                   width: "100%", padding: "10px 14px", borderRadius: 8,
                   background: `linear-gradient(135deg, ${V.pu}, #009688)`,
-                  border: "none", color: "#0A1A18", fontWeight: 700,
+                  border: "none", color: "#FFFFFF", fontWeight: 700,
                   fontSize: 13, cursor: "pointer", display: "flex",
                   alignItems: "center", justifyContent: "center", gap: 8,
                   boxShadow: "0 4px 12px rgba(0,194,168,0.25)",
@@ -576,7 +636,7 @@ export default function IAMedicaPage() {
                       fontFamily: V.db,
                       fontWeight: selectedMode === m.id ? 700 : 500,
                       background: selectedMode === m.id ? V.pu : "transparent",
-                      color: selectedMode === m.id ? "#0A1A18" : "var(--chumbo)",
+                      color: selectedMode === m.id ? "#FFFFFF" : "var(--chumbo)",
                       cursor: "pointer",
                       transition: "all 0.15s ease",
                     }}
@@ -782,6 +842,53 @@ export default function IAMedicaPage() {
                     </div>
                   </div>
                 ))}
+                {/* Caso de conversa legada com apenas a pergunta do usuário */}
+                {messages.length === 1 && messages[0].role === "user" && !isStreaming && (
+                  <div style={{
+                    maxWidth: 720,
+                    margin: "12px 0 0 0",
+                    padding: "16px 20px",
+                    borderRadius: 14,
+                    background: "var(--card-bg)",
+                    border: "1px dashed rgba(0, 194, 168, 0.4)",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 10,
+                  }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--pulso)", fontWeight: 600, fontSize: 13 }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="16" x2="12" y2="12" />
+                        <line x1="12" y1="8" x2="12.01" y2="8" />
+                      </svg>
+                      <span>Discussão selecionada do histórico</span>
+                    </div>
+                    <div style={{ fontSize: 12, color: "var(--chumbo)", lineHeight: 1.5 }}>
+                      Esta discussão anterior foi iniciada com a pergunta acima. Clique no botão abaixo para o Dr. Pleni sintetizar a conduta e resposta clínica completa agora.
+                    </div>
+                    <div>
+                      <button
+                        onClick={() => handleSendMessage(messages[0].content, true)}
+                        style={{
+                          padding: "8px 18px",
+                          borderRadius: 8,
+                          background: `linear-gradient(135deg, ${V.pu}, #009688)`,
+                          border: "none",
+                          color: "#FFFFFF",
+                          fontWeight: 700,
+                          fontSize: 12,
+                          cursor: "pointer",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 8,
+                          boxShadow: "0 2px 8px rgba(0,194,168,0.25)",
+                        }}
+                      >
+                        <span>Gerar Resposta do Dr. Pleni Agora ➔</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
                 <div ref={messagesEndRef} />
               </div>
             )}
@@ -827,7 +934,7 @@ export default function IAMedicaPage() {
                 style={{
                   padding: "9px 18px", borderRadius: 8,
                   background: isStreaming || !input.trim() ? "rgba(61,90,128,0.3)" : V.pu,
-                  border: "none", color: isStreaming || !input.trim() ? V.ch : "#0A1A18",
+                  border: "none", color: isStreaming || !input.trim() ? V.ch : "#FFFFFF",
                   fontWeight: 700, fontSize: 13, cursor: isStreaming || !input.trim() ? "not-allowed" : "pointer",
                   display: "flex", alignItems: "center", gap: 6,
                 }}
@@ -980,7 +1087,7 @@ export default function IAMedicaPage() {
                   disabled={savingFlashcard}
                   style={{
                     flex: 2, padding: "10px 0", borderRadius: 8,
-                    background: V.pu, border: "none", color: "#0A1A18",
+                    background: V.pu, border: "none", color: "#FFFFFF",
                     fontWeight: 700, fontSize: 13, cursor: savingFlashcard ? "not-allowed" : "pointer",
                   }}
                 >
