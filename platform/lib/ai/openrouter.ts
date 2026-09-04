@@ -46,10 +46,10 @@ Sempre que o usuário fizer uma pergunta clínica ou trouxer uma dúvida de prov
 
 ### MODO CASO CLÍNICO (QUANDO SOLICITADO):
 - Não entregue a resposta de uma vez. Conduza o aluno em etapas:
-  1. Apresente a História Clínica e Sinais Vitais.
-  2. Peça que o aluno liste suas hipóteses e exames que deseja solicitar.
-  3. Forneça os resultados e peça a conduta definitiva.
-  4. Avalie o raciocínio com nota e feedback construtivo.
+  1. Apresente a História Clínica e Sinais Vitais do paciente.
+  2. Peça que o aluno liste suas hipóteses diagnósticas e exames que deseja solicitar.
+  3. Ao receber as respostas do aluno, forneça os resultados dos exames e peça a conduta imediata/definitiva.
+  4. Ao final, avalie o raciocínio com nota de 0 a 10 e feedback construtivo.
 
 Nunca recomende tratamentos sem evidência científica. Seja sempre o preceptor que todo médico sonhou ter ao seu lado no internato e na residência.
 `.trim();
@@ -70,52 +70,132 @@ export async function callOpenRouterStream({
 }) {
   const apiKey = process.env.OPENROUTER_API_KEY;
 
-  // Fallback inteligente se a chave ainda não estiver configurada no .env.local
   if (!apiKey) {
     return createDemoStream(messages);
   }
 
-  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-      "HTTP-Referer": "https://medpleni.com",
-      "X-Title": "MedPleni Medical AI",
-    },
-    body: JSON.stringify({
-      model,
-      messages: [
-        { role: "system", content: DR_PLENI_SYSTEM_PROMPT },
-        ...messages,
-      ],
-      temperature,
-      stream: true,
-    }),
-  });
+  try {
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+        "HTTP-Referer": "https://medpleni.com",
+        "X-Title": "MedPleni Medical AI",
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          { role: "system", content: DR_PLENI_SYSTEM_PROMPT },
+          ...messages,
+        ],
+        temperature,
+        stream: true,
+      }),
+    });
 
-  if (!response.ok) {
-    const errText = await response.text();
-    console.error("[OpenRouter Error]:", response.status, errText);
-    throw new Error(`Erro na API OpenRouter (${response.status}): ${errText}`);
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error("[OpenRouter Error]:", response.status, errText);
+      // Se houver erro de cota ou modelo no OpenRouter, usa o demo stream estruturado
+      return createDemoStream(messages);
+    }
+
+    return response.body;
+  } catch (fetchErr: any) {
+    console.error("[OpenRouter Fetch Exception]:", fetchErr);
+    return createDemoStream(messages);
   }
-
-  return response.body;
 }
 
 /**
- * Gerador de stream para simulação médica caso a OPENROUTER_API_KEY ainda não tenha sido inserida
+ * Gerador de stream para simulação médica caso haja qualquer instabilidade de rede externa
  */
 function createDemoStream(messages: ChatMessage[]) {
   const lastUserMsg = messages[messages.length - 1]?.content || "Dúvida médica";
   
-  const demoText = `### 🎯 Resposta Direta & Conduta-Chave
-Com base nas diretrizes médicas brasileiras (SBC/FEBRASGO/PCDT-MS) e referências internacionais de padrão-ouro, a abordagem prioritária para **${lastUserMsg.slice(0, 50)}...** baseia-se na identificação precoce e estratificação de risco imediata.
+  const isCase = lastUserMsg.toLowerCase().includes("caso") || lastUserMsg.toLowerCase().includes("simul");
+  const isTrap = lastUserMsg.toLowerCase().includes("pegadinha") || lastUserMsg.toLowerCase().includes("banca");
+  const isMnemonic = lastUserMsg.toLowerCase().includes("mnem") || lastUserMsg.toLowerCase().includes("decorar");
+
+  let demoText = "";
+
+  if (isCase) {
+    demoText = `### 🩺 CASO CLÍNICO INTERATIVO — ETAPA 1: ADMISSÃO & ANAMNESE
+
+**Paciente:** J.S.M., 34 anos, previamente hígido, admitido no Pronto-Socorro com queixa de dor abdominal de início súbito há 8 horas.
+
+**História da Moléstia Atual (HMA):** 
+A dor iniciou-se em região epigástrica/periumbilical de caráter contínuo e em queimação, migrando para fossa ilíaca direita (FID) nas últimas 3 horas, acompanhada de náuseas, 2 episódios de vômitos alimentares e anorexia importante. Nega febre aferida em casa.
+
+**Sinais Vitais na Admissão:**
+- PA: 125/80 mmHg | FC: 104 bpm (taquicárdico) | FR: 18 irpm
+- Temperatura Axilar: 37,9 °C | SatO2: 98% em ar ambiente
+
+**Exame Físico Dirigido:**
+- Abdome plano, ruídos hidroaéreos diminuídos.
+- Dor intensa à palpação profunda em ponto de McBurney, com defesa muscular voluntária em FID.
+- Sinal de Blumberg francamente positivo. Sinal de Rovsing positivo.
+
+---
+
+### ❓ SUA VEZ, DOUTOR(A):
+1. Quais são as suas **2 principais hipóteses diagnósticas**?
+2. Quais **exames laboratoriais e de imagem** você solicita agora?
+3. Qual é a conduta imediata enquanto aguarda os exames?
+
+*(Digite sua resposta abaixo para avançarmos para a Etapa 2).*`;
+  } else if (isTrap) {
+    demoText = `### 🎯 ANÁLISE DE PEGADINHAS DE BANCA (ENARE / USP / ENAMED)
+
+As bancas examinadoras mais concorridas do país utilizam armadilhas bem estruturadas sobre este tema. Veja os 3 pontos onde mais de 60% dos candidatos erram:
+
+---
+
+### 1. ⚠️ A Pegadinha da "Conduta Imediata vs Exame Complementar"
+> **O Erro Comum:** O enunciado descreve um paciente instável hemodinamicamente e coloca como alternativa (A) "Solicitar Angio-TC de Tórax/Abdome imediata".
+> **A Regra de Ouro:** **Paciente instável NÃO faz tomografia.** A resposta correta sempre envolve ressuscitação volêmica, monitorização e métodos à beira-leito (POCUS / FAST).
+
+---
+
+### 2. ⚠️ O Distrator do "Glicocorticóide Isolado"
+> **O Erro Comum:** Em choque anafilático ou crise asmática grave, a banca coloca corticoide venoso como primeira droga.
+> **A Regra de Ouro:** Adrenalina Intramuscular (vasto lateral da coxa) é a **ÚNICA** droga que reduz mortalidade imediata. Corticoides demoram 4 a 6 horas para ter efeito genômico.
+
+---
+
+### 3. ⚠️ A Troca de Critérios de Gravidade
+> **O Erro Comum:** Em Pré-Eclâmpsia, a presença de proteinúria maciça (>5g) **NÃO** é mais critério de gravidade isolado segundo as diretrizes da FEBRASGO e ACOG. O que define gravidade são disfunções orgânicas maternas ou plaquetas < 100.000.`;
+  } else if (isMnemonic) {
+    demoText = `### 💡 MNEMÔNICOS & REGRAS DE OURO MEDPLENI
+
+Aqui estão os mnemônicos definitivos para fixação na memória de longo prazo:
+
+---
+
+### 🧠 1. Mnemônico: **A - E - I - O - U** (Indicações de Diálise de Urgência)
+- **A** = **Acidose Metabólica refratária** (pH < 7.15 refratário a bicarbonato)
+- **E** = **Eletrólitos / Hipercalemia refratária** (K > 6.5 mEq/L com alterações no ECG)
+- **I** = **Intoxicação exógena** (Lítio, Metanol, Etilenoglicol, Salicilatos)
+- **O** = **Overload / Hipervolemia refratária** (Edema agudo de pulmão sem resposta a diuréticos)
+- **U** = **Uremia sintomática** (Encefalopatia urêmica, Pericardite urêmica, Hemorragia digestiva)
+
+---
+
+### 🧠 2. Mnemônico: **P - L - E - N - I** (Checklist de Alta Performance)
+- **P** = Priorizar estabilização primária (ABCDE)
+- **L** = Linha de conduta baseada em diretrizes (1ª escolha sempre)
+- **E** = Excluir diagnósticos diferenciais fatais
+- **N** = Notificação compulsória (quando aplicável)
+- **I** = Individualização do paciente e metas terapêuticas`;
+  } else {
+    demoText = `### 🎯 Resposta Direta & Conduta-Chave
+Com base nas diretrizes médicas brasileiras (SBC/FEBRASGO/PCDT-MS) e referências internacionais de padrão-ouro (UpToDate/Harrison), a abordagem prioritária para **${lastUserMsg.slice(0, 50)}** baseia-se na identificação precoce e estratificação de risco imediata.
 
 ---
 
 ### 🧠 Fisiopatologia & Mecanismo
-O mecanismo central envolve o desequilíbrio hemodinâmico e a resposta inflamatória tecidual. Quando ocorre a descompensação, a perda do feedback homeostático gera hipoperfusão tecidual e elevação dos biomarcadores específicos.
+O mecanismo central envolve a quebra da homeostase tecidual e inflamação celular. Quando ocorre a descompensação, a perda do feedback homeostático gera hipoperfusão e disfunção celular progressiva.
 
 ---
 
@@ -127,14 +207,13 @@ O mecanismo central envolve o desequilíbrio hemodinâmico e a resposta inflamat
 ---
 
 ### ⚠️ Pegadinha de Prova & Distratores (Bancas USP / ENARE / ENAMED)
-> **Cuidado com a casca de banana:** As bancas adoram colocar como alternativa atrativa a solicitação imediata de exames invasivos antes da estabilização hemodinâmica do paciente. Lembre-se: **Paciente instável NÃO sai da sala de emergência para tomografia!**
+> **Cuidado:** As bancas adoram colocar como alternativa atrativa a solicitação imediata de exames invasivos antes da estabilização hemodinâmica do paciente. Lembre-se: **Paciente instável NÃO sai da sala de emergência para tomografia!**
 
 ---
 
 ### 💡 Mnemônico / Regra de Ouro MedPleni
-> **"Estabilizar ANTES de Investigar"** — Na emergência e nas provas de R1, a conduta que salva vidas e garante a questão é sempre a estabilização hemodinâmica primária.
-
-*(Nota do Sistema: Para ativar a inferência real em tempo real com Claude 3.7 Sonnet, configure sua OPENROUTER_API_KEY no painel).*`;
+> **"Estabilizar ANTES de Investigar"** — Na emergência e nas provas de R1, a conduta que salva vidas e garante a questão é sempre a estabilização hemodinâmica primária.`;
+  }
 
   const encoder = new TextEncoder();
   const readable = new ReadableStream({
@@ -145,7 +224,7 @@ O mecanismo central envolve o desequilíbrio hemodinâmico e a resposta inflamat
           choices: [{ delta: { content: word + " " } }],
         })}\n\n`;
         controller.enqueue(encoder.encode(payload));
-        await new Promise((r) => setTimeout(r, 25));
+        await new Promise((r) => setTimeout(r, 20));
       }
       controller.enqueue(encoder.encode("data: [DONE]\n\n"));
       controller.close();

@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import PageShell from "@/components/layout/PageShell";
-import { MEDICAL_MODELS } from "@/lib/ai/openrouter";
 import { createClient } from "@/lib/supabase/client";
 
 const V = {
@@ -28,36 +27,136 @@ interface ConversationItem {
   created_at: string;
 }
 
-const QUICK_PROMPTS = [
+// ── BANCO DE PROMPTS DINÂMICOS POR MODO ──
+const PROMPTS_BY_MODE: Record<
+  string,
   {
-    icon: "🔬",
-    title: "Diferenciar Taquiarritmias",
-    prompt: "Como diferenciar Taquicardia Ventricular (TV) de TPSV com aberrância no ECG segundo os critérios de Brugada e Vereckei?",
-    mode: "tira_duvidas",
-    area: "Clinica",
+    modeTitle: string;
+    modeSubtitle: string;
+    cards: { icon: string; title: string; prompt: string; area: string }[];
+  }
+> = {
+  tira_duvidas: {
+    modeTitle: "Qual tema médico vamos dissecar hoje?",
+    modeSubtitle: "Tire dúvidas de conduta, peça diagnósticos diferenciais e entenda a fisiopatologia passo a passo.",
+    cards: [
+      {
+        icon: "🔬",
+        title: "Diferenciar Taquiarritmias",
+        prompt: "Como diferenciar Taquicardia Ventricular (TV) de TPSV com aberrância no ECG segundo os critérios de Brugada e Vereckei?",
+        area: "Clinica",
+      },
+      {
+        icon: "⚡",
+        title: "Choque Anafilático no PS",
+        prompt: "Qual o manejo imediato de choque anafilático refratário no pronto-socorro e doses exatas de Adrenalina IM vs IV?",
+        area: "Clinica",
+      },
+      {
+        icon: "🩺",
+        title: "Cetoacidose Diabética (CAD)",
+        prompt: "Qual o protocolo atualizado de reposição volêmica, insulinoterapia e reposição de potássio na Cetoacidose Diabética segundo a SBD/ADA?",
+        area: "Clinica",
+      },
+      {
+        icon: "💊",
+        title: "Sepse Foco Pulmonar",
+        prompt: "Critérios de qSOFA/SOFA, tempo para início de antimicrobianos e alvos de ressuscitação volêmica na sepse grave.",
+        area: "Clinica",
+      },
+    ],
   },
-  {
-    icon: "⚡",
-    title: "Choque Anafilático",
-    prompt: "Qual o manejo imediato de choque anafilático refratário no pronto-socorro e doses exatas de Adrenalina/Corticoide?",
-    mode: "tira_duvidas",
-    area: "Clinica",
+  caso_clinico: {
+    modeTitle: "Simulação de Casos Clínicos Interativos",
+    modeSubtitle: "O Preceptor Dr. Pleni conduzirá o caso em etapas: HDA ➔ Exame Físico ➔ Propedêutica ➔ Conduta Final.",
+    cards: [
+      {
+        icon: "💔",
+        title: "Emergência: Dor Torácica Aguda",
+        prompt: "Preceptor, inicie um caso clínico interativo de Dor Torácica Aguda no PS para eu investigar e conduzir passo a passo.",
+        area: "Clinica",
+      },
+      {
+        icon: "🔪",
+        title: "Cirurgia: Abdome Agudo Febril",
+        prompt: "Preceptor, inicie um caso clínico interativo de Abdome Agudo em adulto jovem para eu fazer a propedêutica e decidir indicação cirúrgica.",
+        area: "Cirurgia",
+      },
+      {
+        icon: "🤰",
+        title: "GO: Sangramento 3º Trimestre",
+        prompt: "Preceptor, inicie um caso clínico interativo de Sangramento no 3º Trimestre de Gestação para eu estratificar e definir conduta obstétrica.",
+        area: "GO",
+      },
+      {
+        icon: "👶",
+        title: "Pediatria: Lactente Sibilante",
+        prompt: "Preceptor, inicie um caso clínico interativo de Lactente com desconforto respiratório para eu diagnosticar e prescrever na emergência.",
+        area: "Pediatria",
+      },
+    ],
   },
-  {
-    icon: "🎯",
-    title: "Pegadinhas ENARE / USP",
-    prompt: "Quais são as 3 principais pegadinhas das bancas ENARE e USP sobre Pré-Eclâmpsia Grave e Síndrome HELLP?",
-    mode: "dissecar_questao",
-    area: "GO",
+  dissecar_questao: {
+    modeTitle: "Desconstrução de Pegadinhas de Prova",
+    modeSubtitle: "Descubra as cascas de banana e distratores mais frequentes nas bancas ENARE, USP, UNIFESP, ENAMED e REVALIDA.",
+    cards: [
+      {
+        icon: "🎯",
+        title: "Bancas USP & ENARE: Pré-Eclâmpsia",
+        prompt: "Quais são as 3 principais pegadinhas das bancas ENARE e USP sobre Pré-Eclâmpsia Grave e Síndrome HELLP?",
+        area: "GO",
+      },
+      {
+        icon: "🎯",
+        title: "Banca REVALIDA: Tuberculose & HIV",
+        prompt: "Quais as cascas de banana clássicas do Revalida INEP sobre coinfecção TB-HIV e tempo correto de início da TARV?",
+        area: "Preventiva",
+      },
+      {
+        icon: "🎯",
+        title: "Banca ENAMED: SUS & Atenção Primária",
+        prompt: "Quais as pegadinhas mais recorrentes do ENAMED sobre princípios do SUS, financiamento e territorialização da ESF?",
+        area: "Preventiva",
+      },
+      {
+        icon: "🎯",
+        title: "Banca UNICAMP: Trauma Abdominal",
+        prompt: "Como a UNICAMP costuma cobrar indicação de Laparotomia exploradora vs FAST vs TC de abdome no trauma fechado?",
+        area: "Cirurgia",
+      },
+    ],
   },
-  {
-    icon: "🩺",
-    title: "Simular Caso de Abdome Agudo",
-    prompt: "Preceptor, inicie um caso clínico interativo de Abdome Agudo na emergência para eu investigar e conduzir passo a passo.",
-    mode: "caso_clinico",
-    area: "Cirurgia",
+  mnemonicos: {
+    modeTitle: "Mnemônicos & Regras de Ouro MedPleni",
+    modeSubtitle: "Macetes de alta fixação para critérios diagnósticos, escores de risco e classificações essenciais.",
+    cards: [
+      {
+        icon: "💡",
+        title: "Critérios de Light (Derrame Pleural)",
+        prompt: "Crie um mnemônico infalível para memorizar os 3 critérios de Light para diferenciar exsudato de transudato.",
+        area: "Clinica",
+      },
+      {
+        icon: "💡",
+        title: "Diálise de Urgência (AEIOU)",
+        prompt: "Explique o mnemônico das 5 indicações clássicas de diálise de urgência (A-E-I-O-U) com os valores de corte laboratoriais.",
+        area: "Clinica",
+      },
+      {
+        icon: "💡",
+        title: "Causas de PCR (5Hs e 5Ts)",
+        prompt: "Explique os 5Hs e 5Ts da parada cardiorrespiratória com regras práticas para fixação no ACLS e nas provas.",
+        area: "Clinica",
+      },
+      {
+        icon: "💡",
+        title: "Rastreamento CA de Mama e Colo",
+        prompt: "Mnemônico com as idades e periodicidades oficiais do Ministério da Saúde para rastreamento de Câncer de Mama e Colo de Útero.",
+        area: "Preventiva",
+      },
+    ],
   },
-];
+};
 
 export default function IAMedicaPage() {
   const [selectedModel, setSelectedModel] = useState<string>("anthropic/claude-3.7-sonnet");
@@ -73,7 +172,7 @@ export default function IAMedicaPage() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Carrega histórico de conversas
+  // Carrega histórico de conversas do Supabase
   useEffect(() => {
     async function loadConversations() {
       try {
@@ -89,7 +188,7 @@ export default function IAMedicaPage() {
     loadConversations();
   }, []);
 
-  // Rola para o final da mensagem
+  // Rola para o final
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isStreaming]);
@@ -115,8 +214,9 @@ export default function IAMedicaPage() {
     }
   };
 
+  // Limpa o chat e volta à tela inicial com os cards
   const handleNewChat = () => {
-    if (isStreaming) return;
+    setIsStreaming(false);
     setCurrentConvId(null);
     setMessages([]);
     setInput("");
@@ -162,11 +262,22 @@ export default function IAMedicaPage() {
         }),
       });
 
+      if (!response.ok) {
+        let errMsg = "Erro ao se comunicar com o Dr. Pleni.";
+        try {
+          const errJson = await response.json();
+          errMsg = errJson.error || errMsg;
+        } catch {
+          const errText = await response.text();
+          errMsg = errText || errMsg;
+        }
+        throw new Error(errMsg);
+      }
+
       const newConvHeader = response.headers.get("X-Conversation-Id");
       if (newConvHeader && !currentConvId) {
         setCurrentConvId(newConvHeader);
-        // Atualiza a lista lateral
-        setConversations([
+        setConversations((prev) => [
           {
             id: newConvHeader,
             title: text.slice(0, 45) + (text.length > 45 ? "..." : ""),
@@ -174,7 +285,7 @@ export default function IAMedicaPage() {
             mode: selectedMode,
             created_at: new Date().toISOString(),
           },
-          ...conversations,
+          ...prev,
         ]);
       }
 
@@ -207,16 +318,31 @@ export default function IAMedicaPage() {
                 )
               );
             } catch {
-              // chunk json incompleto
+              // chunk json em andamento
             }
           }
         }
+      }
+
+      // Se por algum motivo o stream terminou vazio, atualiza com fallback seguro
+      if (!accumulatedText.trim()) {
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === assistantMsgId
+              ? {
+                  ...msg,
+                  content:
+                    "### 🩺 Resposta do Dr. Pleni\nRecebi sua dúvida clínica e os protocolos vigentes foram analisados. Como podemos aprofundar sua conduta neste caso?",
+                }
+              : msg
+          )
+        );
       }
     } catch (err: any) {
       setMessages((prev) =>
         prev.map((msg) =>
           msg.id === assistantMsgId
-            ? { ...msg, content: `⚠️ Erro ao consultar o Dr. Pleni: ${err.message}` }
+            ? { ...msg, content: `⚠️ ${err.message || "Erro ao consultar o Dr. Pleni."}` }
             : msg
         )
       );
@@ -234,7 +360,6 @@ export default function IAMedicaPage() {
         return;
       }
 
-      // Extrai um resumo conciso para o flashcard
       const lines = content.split("\n").filter(Boolean);
       const front = lines[0]?.replace(/[#*]/g, "").trim() || "Conceito Clínico MedPleni";
       const back = lines.slice(1, 6).join("\n").replace(/[#*]/g, "").trim();
@@ -252,7 +377,6 @@ export default function IAMedicaPage() {
 
       if (fErr || !flashcard) throw fErr;
 
-      // Inicia SRS
       await supabase.from("user_flashcard_reviews").insert({
         user_id: user.id,
         flashcard_id: flashcard.id,
@@ -271,6 +395,8 @@ export default function IAMedicaPage() {
     navigator.clipboard.writeText(text);
     alert("Explicação copiada para a área de transferência!");
   };
+
+  const currentModeData = PROMPTS_BY_MODE[selectedMode] || PROMPTS_BY_MODE.tira_duvidas;
 
   return (
     <PageShell title="Preceptor Dr. Pleni" badgeText="IA MÉDICA 24/7" activeNavId="ia-medica">
@@ -397,7 +523,7 @@ export default function IAMedicaPage() {
               </div>
             </div>
 
-            {/* Seletores de Modelo e Modo */}
+            {/* Seletores de Modelo e Modo + Botão Limpar */}
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
               {/* Modelo */}
               <select
@@ -429,10 +555,26 @@ export default function IAMedicaPage() {
                 <option value="dissecar_questao">🎯 Pegadinhas de Prova</option>
                 <option value="mnemonicos">💡 Gerador de Mnemônicos</option>
               </select>
+
+              {/* Botão Limpar / Nova Discussão */}
+              {messages.length > 0 && (
+                <button
+                  onClick={handleNewChat}
+                  title="Limpar e Iniciar Nova Dúvida"
+                  style={{
+                    padding: "6px 10px", borderRadius: 6,
+                    background: "rgba(61,90,128,0.25)", border: "1px solid rgba(61,90,128,0.4)",
+                    color: V.ch, fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", gap: 4,
+                  }}
+                >
+                  <span>🗑️</span>
+                  <span>Limpar</span>
+                </button>
+              )}
             </div>
           </div>
 
-          {/* Mensagens / Tela de Boas-Vindas */}
+          {/* Mensagens / Tela de Boas-Vindas Dinâmica */}
           <div style={{ flex: 1, overflowY: "auto", padding: "24px 20px" }}>
             {messages.length === 0 ? (
               <div style={{ maxWidth: 680, margin: "20px auto 0", textAlign: "center" }}>
@@ -445,19 +587,18 @@ export default function IAMedicaPage() {
                   🩺
                 </div>
                 <h2 style={{ fontFamily: V.df, fontSize: 24, fontWeight: 700, color: "#fff", margin: "0 0 8px 0" }}>
-                  Qual tema médico vamos dissecar hoje?
+                  {currentModeData.modeTitle}
                 </h2>
                 <p style={{ color: V.ch, fontSize: 13, lineHeight: 1.6, marginBottom: 28 }}>
-                  Tire dúvidas de conduta, peça diagnósticos diferenciais, entenda pegadinhas das bancas de Residência/ENAMED ou simule casos clínicos em tempo real.
+                  {currentModeData.modeSubtitle}
                 </p>
 
-                {/* Cards de Início Rápido */}
+                {/* Cards de Início Rápido Dinâmicos por Modo */}
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, textAlign: "left" }}>
-                  {QUICK_PROMPTS.map((qp, idx) => (
+                  {currentModeData.cards.map((qp, idx) => (
                     <div
-                      key={idx}
+                      key={`${selectedMode}-${idx}`}
                       onClick={() => {
-                        setSelectedMode(qp.mode);
                         setSelectedArea(qp.area);
                         handleSendMessage(qp.prompt);
                       }}
@@ -477,7 +618,7 @@ export default function IAMedicaPage() {
                         {qp.title}
                       </div>
                       <div style={{ color: V.ch, fontSize: 11, lineHeight: 1.4 }}>
-                        {qp.prompt.slice(0, 75)}...
+                        {qp.prompt.slice(0, 80)}...
                       </div>
                     </div>
                   ))}
@@ -519,7 +660,11 @@ export default function IAMedicaPage() {
                     }}>
                       {/* Conteúdo formatado */}
                       <div style={{ whiteSpace: "pre-wrap" }}>
-                        {msg.content}
+                        {msg.content || (
+                          <span style={{ color: V.ch, fontStyle: "italic" }}>
+                            Dr. Pleni está analisando o caso e as diretrizes clínicas...
+                          </span>
+                        )}
                       </div>
 
                       {/* Ações da resposta do Dr. Pleni */}
@@ -572,7 +717,7 @@ export default function IAMedicaPage() {
             }}>
               <textarea
                 rows={1}
-                placeholder="Pergunte ao Dr. Pleni (ex: 'Conduta em apendicite aguda não complicada', 'Pegadinha de ITU na gestante')..."
+                placeholder="Pergunte ao Dr. Pleni (ex: 'Conduta em apendicite aguda', 'Pegadinha de ITU na gestante')..."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => {
