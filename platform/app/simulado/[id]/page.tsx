@@ -9,6 +9,7 @@ import {
   fetchSimulationDetails,
   finishSimulation,
   type SimulationResultSummary,
+  type ExtendedSimulado,
 } from "@/lib/supabase/simulations";
 
 /* ══════════════════════════════════════════════
@@ -33,7 +34,7 @@ export default function SimuladoDetailPage() {
   const simId = (params?.id as string) || "sim_001";
 
   const [loading, setLoading] = useState(true);
-  const [simulation, setSimulation] = useState<Simulado | null>(null);
+  const [simulation, setSimulation] = useState<ExtendedSimulado | null>(null);
   const [questions, setQuestions] = useState<Questao[]>([]);
 
   const [currentIdx, setCurrentIdx] = useState(0);
