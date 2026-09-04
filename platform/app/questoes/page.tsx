@@ -398,7 +398,17 @@ export default function QuestoesPage() {
             borderRadius: 16, maxWidth: 440, width: "100%", padding: 28, textAlign: "center",
             boxShadow: "0 20px 40px rgba(0,0,0,0.5)",
           }}>
-            <div style={{ fontSize: 40, marginBottom: 12 }}>🎯</div>
+            <div style={{
+              width: 48, height: 48, borderRadius: "50%", background: "rgba(0,194,168,0.15)",
+              display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px auto",
+              color: V.pu,
+            }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <circle cx="12" cy="12" r="6" />
+                <circle cx="12" cy="12" r="2" />
+              </svg>
+            </div>
             <div style={{ fontFamily: V.df, fontSize: 22, fontWeight: 700, color: "#fff", marginBottom: 8 }}>
               Limite Mensal Atingido (50 Questões)
             </div>

@@ -122,7 +122,7 @@ export default function AdminFinanceiroPage() {
                     color: inv.status === "pago" ? V.pu : V.wn,
                     border: `1px solid ${inv.status === "pago" ? "rgba(0,194,168,0.3)" : "rgba(245,166,35,0.3)"}`,
                   }}>
-                    {inv.status === "pago" ? "✓ Liquidado" : "⏳ Pendente"}
+                    {inv.status === "pago" ? "Liquidado" : "Pendente"}
                   </span>
                 </td>
                 <td style={{ padding: "14px 16px", fontFamily: V.dm, fontSize: 11, color: V.ch }}>

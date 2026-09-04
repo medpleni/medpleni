@@ -106,7 +106,15 @@ export default function NovaQuestaoPage() {
 
       {success ? (
         <div style={{ background: V.pe, border: `1px solid ${V.pu}`, borderRadius: 12, padding: 32, textAlign: "center" }}>
-          <div style={{ fontSize: 40, marginBottom: 10 }}>✅</div>
+          <div style={{
+            width: 48, height: 48, borderRadius: "50%", background: "rgba(0,194,168,0.15)",
+            display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 10px auto",
+            color: V.pu,
+          }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </div>
           <div style={{ fontFamily: V.df, fontSize: 20, fontWeight: 700, color: "#fff", marginBottom: 4 }}>
             Questão cadastrada com sucesso!
           </div>

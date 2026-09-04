@@ -177,7 +177,7 @@ export default function PerfilPage() {
               { label: "E-mail", value: displayEmail },
               { label: "CRM", value: profile?.crm || "—" },
               { label: "Sub-brand", value: displaySubBrand },
-              { label: "Streak atual", value: `${displayStreak} dias 🔥` },
+              { label: "Streak atual", value: `${displayStreak} dias` },
             ].map((f) => (
               <div key={f.label} style={{
                 display: "flex", justifyContent: "space-between", padding: "8px 0",

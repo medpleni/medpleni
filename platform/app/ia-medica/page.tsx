@@ -38,7 +38,7 @@ const PROMPTS_BY_MODE: Record<
   {
     modeTitle: string;
     modeSubtitle: string;
-    cards: { icon: string; title: string; prompt: string; area: string }[];
+    cards: { tag: string; title: string; prompt: string; area: string }[];
   }
 > = {
   tira_duvidas: {
@@ -46,25 +46,25 @@ const PROMPTS_BY_MODE: Record<
     modeSubtitle: "Tire dúvidas de conduta, peça diagnósticos diferenciais e entenda a fisiopatologia passo a passo.",
     cards: [
       {
-        icon: "🔬",
+        tag: "Arritmias",
         title: "Diferenciar Taquiarritmias",
         prompt: "Como diferenciar Taquicardia Ventricular (TV) de TPSV com aberrância no ECG segundo os critérios de Brugada e Vereckei?",
         area: "Clinica",
       },
       {
-        icon: "⚡",
+        tag: "Emergência",
         title: "Choque Anafilático no PS",
         prompt: "Qual o manejo imediato de choque anafilático refratário no pronto-socorro e doses exatas de Adrenalina IM vs IV?",
         area: "Clinica",
       },
       {
-        icon: "🩺",
+        tag: "Endocrino",
         title: "Cetoacidose Diabética (CAD)",
         prompt: "Qual o protocolo atualizado de reposição volêmica, insulinoterapia e reposição de potássio na Cetoacidose Diabética segundo a SBD/ADA?",
         area: "Clinica",
       },
       {
-        icon: "💊",
+        tag: "Infecto",
         title: "Sepse Foco Pulmonar",
         prompt: "Critérios de qSOFA/SOFA, tempo para início de antimicrobianos e alvos de ressuscitação volêmica na sepse grave.",
         area: "Clinica",
@@ -73,28 +73,28 @@ const PROMPTS_BY_MODE: Record<
   },
   caso_clinico: {
     modeTitle: "Simulação de Casos Clínicos Interativos",
-    modeSubtitle: "O Preceptor Dr. Pleni conduzirá o caso em etapas: HDA ➔ Exame Físico ➔ Propedêutica ➔ Conduta Final.",
+    modeSubtitle: "O Preceptor Dr. Pleni conduzirá o caso em etapas: HDA -> Exame Físico -> Propedêutica -> Conduta Final.",
     cards: [
       {
-        icon: "💔",
+        tag: "Emergência",
         title: "Emergência: Dor Torácica Aguda",
         prompt: "Preceptor, inicie um caso clínico interativo de Dor Torácica Aguda no PS para eu investigar e conduzir passo a passo.",
         area: "Clinica",
       },
       {
-        icon: "🔪",
+        tag: "Cirurgia",
         title: "Cirurgia: Abdome Agudo Febril",
         prompt: "Preceptor, inicie um caso clínico interativo de Abdome Agudo em adulto jovem para eu fazer a propedêutica e decidir indicação cirúrgica.",
         area: "Cirurgia",
       },
       {
-        icon: "🤰",
+        tag: "Obstetrícia",
         title: "GO: Sangramento 3º Trimestre",
         prompt: "Preceptor, inicie um caso clínico interativo de Sangramento no 3º Trimestre de Gestação para eu estratificar e definir conduta obstétrica.",
         area: "GO",
       },
       {
-        icon: "👶",
+        tag: "Pediatria",
         title: "Pediatria: Lactente Sibilante",
         prompt: "Preceptor, inicie um caso clínico interativo de Lactente com desconforto respiratório para eu diagnosticar e prescrever na emergência.",
         area: "Pediatria",
@@ -106,25 +106,25 @@ const PROMPTS_BY_MODE: Record<
     modeSubtitle: "Descubra as cascas de banana e distratores mais frequentes nas bancas ENARE, USP, UNIFESP, ENAMED e REVALIDA.",
     cards: [
       {
-        icon: "🎯",
+        tag: "ENARE / USP",
         title: "Bancas USP & ENARE: Pré-Eclâmpsia",
         prompt: "Quais são as 3 principais pegadinhas das bancas ENARE e USP sobre Pré-Eclâmpsia Grave e Síndrome HELLP?",
         area: "GO",
       },
       {
-        icon: "🎯",
+        tag: "REVALIDA",
         title: "Banca REVALIDA: Tuberculose & HIV",
         prompt: "Quais as cascas de banana clássicas do Revalida INEP sobre coinfecção TB-HIV e tempo correto de início da TARV?",
         area: "Preventiva",
       },
       {
-        icon: "🎯",
+        tag: "ENAMED",
         title: "Banca ENAMED: SUS & Atenção Primária",
         prompt: "Quais as pegadinhas mais recorrentes do ENAMED sobre princípios do SUS, financiamento e territorialização da ESF?",
         area: "Preventiva",
       },
       {
-        icon: "🎯",
+        tag: "UNICAMP",
         title: "Banca UNICAMP: Trauma Abdominal",
         prompt: "Como a UNICAMP costuma cobrar indicação de Laparotomia exploradora vs FAST vs TC de abdome no trauma fechado?",
         area: "Cirurgia",
@@ -136,25 +136,25 @@ const PROMPTS_BY_MODE: Record<
     modeSubtitle: "Macetes de alta fixação para critérios diagnósticos, escores de risco e classificações essenciais.",
     cards: [
       {
-        icon: "💡",
+        tag: "Pneumologia",
         title: "Critérios de Light (Derrame Pleural)",
         prompt: "Crie um mnemônico infalível para memorizar os 3 critérios de Light para diferenciar exsudato de transudato.",
         area: "Clinica",
       },
       {
-        icon: "💡",
+        tag: "Nefrologia",
         title: "Diálise de Urgência (AEIOU)",
         prompt: "Explique o mnemônico das 5 indicações clássicas de diálise de urgência (A-E-I-O-U) com os valores de corte laboratoriais.",
         area: "Clinica",
       },
       {
-        icon: "💡",
+        tag: "Cardiologia",
         title: "Causas de PCR (5Hs e 5Ts)",
         prompt: "Explique os 5Hs e 5Ts da parada cardiorrespiratória com regras práticas para fixação no ACLS e nas provas.",
         area: "Clinica",
       },
       {
-        icon: "💡",
+        tag: "Preventiva",
         title: "Rastreamento CA de Mama e Colo",
         prompt: "Mnemônico com as idades e periodicidades oficiais do Ministério da Saúde para rastreamento de Câncer de Mama e Colo de Útero.",
         area: "Preventiva",
@@ -337,7 +337,7 @@ export default function IAMedicaPage() {
               ? {
                   ...msg,
                   content:
-                    "### 🩺 Resposta do Dr. Pleni\nRecebi sua dúvida clínica e os protocolos vigentes foram analisados. Como podemos aprofundar sua conduta neste caso?",
+                    "### Resposta do Dr. Pleni\nRecebi sua dúvida clínica e os protocolos vigentes foram analisados. Como podemos aprofundar sua conduta neste caso?",
                 }
               : msg
           )
@@ -347,7 +347,7 @@ export default function IAMedicaPage() {
       setMessages((prev) =>
         prev.map((msg) =>
           msg.id === assistantMsgId
-            ? { ...msg, content: `⚠️ ${err.message || "Erro ao consultar o Dr. Pleni."}` }
+            ? { ...msg, content: `Erro: ${err.message || "Erro ao consultar o Dr. Pleni."}` }
             : msg
         )
       );
@@ -399,7 +399,7 @@ export default function IAMedicaPage() {
 
       if (!res.ok) throw new Error("Erro ao salvar flashcard.");
 
-      alert("✨ Flashcard salvo com sucesso no seu deck de repetição espaçada!");
+      alert("Flashcard salvo com sucesso no seu deck de repetição espaçada!");
       setFlashcardModalOpen(false);
     } catch (err: any) {
       alert(err.message || "Erro ao salvar flashcard.");
@@ -449,7 +449,10 @@ export default function IAMedicaPage() {
                   boxShadow: "0 4px 12px rgba(0,194,168,0.25)",
                 }}
               >
-                <span>➕</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
                 <span>Nova Dúvida Clínica</span>
               </button>
             </div>
@@ -495,7 +498,7 @@ export default function IAMedicaPage() {
                       title="Excluir"
                       style={{ background: "transparent", border: "none", color: "var(--chumbo)", cursor: "pointer", fontSize: 12 }}
                     >
-                      ✕
+                      ×
                     </button>
                   </div>
                 ))
@@ -523,11 +526,19 @@ export default function IAMedicaPage() {
                 style={{ background: "transparent", border: "none", color: V.ch, cursor: "pointer", fontSize: 16 }}
                 title="Alternar barra lateral"
               >
-                ☰
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
               </button>
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ fontSize: 18 }}>🩺</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--pulso)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3" />
+                    <path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4" />
+                    <circle cx="20" cy="10" r="2" />
+                  </svg>
                   <strong style={{ fontFamily: V.df, fontSize: 16, color: "var(--heading-color)" }}>
                     Dr. Pleni — Preceptor Clínico
                   </strong>
@@ -541,8 +552,40 @@ export default function IAMedicaPage() {
               </div>
             </div>
 
-            {/* Seletores de Modelo e Modo + Botão Limpar */}
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            {/* Seletores de Modo (Segmented Buttons) e Modelo + Botão Limpar */}
+            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+              {/* Botões Segmentados de Modo */}
+              <div style={{
+                display: "flex", gap: 3, background: "var(--input-bg)", padding: 3,
+                borderRadius: 8, border: "1px solid var(--card-border)",
+              }}>
+                {[
+                  { id: "tira_duvidas", label: "Tira-Dúvidas" },
+                  { id: "caso_clinico", label: "Caso Clínico" },
+                  { id: "dissecar_questao", label: "Pegadinhas de Prova" },
+                  { id: "mnemonicos", label: "Mnemônicos" },
+                ].map((m) => (
+                  <button
+                    key={m.id}
+                    onClick={() => setSelectedMode(m.id)}
+                    style={{
+                      padding: "5px 11px",
+                      borderRadius: 6,
+                      border: "none",
+                      fontSize: 11,
+                      fontFamily: V.db,
+                      fontWeight: selectedMode === m.id ? 700 : 500,
+                      background: selectedMode === m.id ? V.pu : "transparent",
+                      color: selectedMode === m.id ? "#0A1A18" : "var(--chumbo)",
+                      cursor: "pointer",
+                      transition: "all 0.15s ease",
+                    }}
+                  >
+                    {m.label}
+                  </button>
+                ))}
+              </div>
+
               {/* Modelo */}
               <select
                 value={selectedModel}
@@ -553,25 +596,9 @@ export default function IAMedicaPage() {
                   color: V.pu, fontFamily: V.dm, fontSize: 11, outline: "none", cursor: "pointer",
                 }}
               >
-                <option value="anthropic/claude-3.7-sonnet">🧠 Claude 3.7 Sonnet (Raciocínio Clínico)</option>
-                <option value="google/gemini-2.0-flash-001">⚡ Gemini 2.0 Flash (Ultrarrápido)</option>
-                <option value="deepseek/deepseek-r1">🔍 DeepSeek R1 (Chain of Thought)</option>
-              </select>
-
-              {/* Modo */}
-              <select
-                value={selectedMode}
-                onChange={(e) => setSelectedMode(e.target.value)}
-                style={{
-                  padding: "6px 10px", borderRadius: 6,
-                  background: "var(--input-bg)", border: "1px solid var(--card-border)",
-                  color: "var(--neblina)", fontFamily: V.db, fontSize: 11, outline: "none", cursor: "pointer",
-                }}
-              >
-                <option value="tira_duvidas">💬 Tira-Dúvidas Geral</option>
-                <option value="caso_clinico">🩺 Simulação de Caso Clínico</option>
-                <option value="dissecar_questao">🎯 Pegadinhas de Prova</option>
-                <option value="mnemonicos">💡 Gerador de Mnemônicos</option>
+                <option value="anthropic/claude-3.7-sonnet">Claude 3.7 Sonnet (Raciocínio Clínico)</option>
+                <option value="google/gemini-2.0-flash-001">Gemini 2.0 Flash (Ultrarrápido)</option>
+                <option value="deepseek/deepseek-r1">DeepSeek R1 (Chain of Thought)</option>
               </select>
 
               {/* Botão Limpar / Nova Discussão */}
@@ -582,10 +609,13 @@ export default function IAMedicaPage() {
                   style={{
                     padding: "6px 10px", borderRadius: 6,
                     background: "var(--input-bg)", border: "1px solid var(--card-border)",
-                    color: "var(--chumbo)", fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", gap: 4,
+                    color: "var(--chumbo)", fontSize: 11, cursor: "pointer", display: "flex", alignItems: "center", gap: 5,
                   }}
                 >
-                  <span>🗑️</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                  </svg>
                   <span>Limpar</span>
                 </button>
               )}
@@ -600,9 +630,13 @@ export default function IAMedicaPage() {
                   width: 56, height: 56, borderRadius: 16,
                   background: "var(--pulso-dim)", border: "1px solid rgba(0,194,168,0.4)",
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  fontSize: 28, margin: "0 auto 16px",
+                  margin: "0 auto 16px",
                 }}>
-                  🩺
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--pulso)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3" />
+                    <path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4" />
+                    <circle cx="20" cy="10" r="2" />
+                  </svg>
                 </div>
                 <h2 style={{ fontFamily: V.df, fontSize: 24, fontWeight: 700, color: "var(--heading-color)", margin: "0 0 8px 0" }}>
                   {currentModeData.modeTitle}
@@ -632,7 +666,22 @@ export default function IAMedicaPage() {
                       onMouseEnter={(e) => (e.currentTarget.style.borderColor = V.pu)}
                       onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--card-border)")}
                     >
-                      <div style={{ fontSize: 20, marginBottom: 6 }}>{qp.icon}</div>
+                      <div style={{ marginBottom: 8 }}>
+                        <span style={{
+                          fontFamily: V.dm,
+                          fontSize: 9,
+                          letterSpacing: "0.08em",
+                          textTransform: "uppercase",
+                          padding: "2px 7px",
+                          borderRadius: 4,
+                          background: "var(--input-bg)",
+                          border: "1px solid var(--card-border)",
+                          color: V.pu,
+                          fontWeight: 600,
+                        }}>
+                          {qp.tag}
+                        </span>
+                      </div>
                       <div style={{ color: "var(--heading-color)", fontWeight: 600, fontSize: 13, marginBottom: 4 }}>
                         {qp.title}
                       </div>
@@ -650,7 +699,7 @@ export default function IAMedicaPage() {
                     key={msg.id}
                     style={{
                       display: "flex",
-                      gap: 14,
+                      gap: 12,
                       alignItems: "flex-start",
                       justifyContent: msg.role === "user" ? "flex-end" : "flex-start",
                     }}
@@ -660,9 +709,13 @@ export default function IAMedicaPage() {
                         width: 34, height: 34, borderRadius: 10,
                         background: "var(--pulso-dim)", border: "1px solid rgba(0,194,168,0.4)",
                         display: "flex", alignItems: "center", justifyContent: "center",
-                        fontSize: 16, flexShrink: 0,
+                        flexShrink: 0,
                       }}>
-                        🩺
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--pulso)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3" />
+                          <path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4" />
+                          <circle cx="20" cy="10" r="2" />
+                        </svg>
                       </div>
                     )}
 
@@ -701,8 +754,12 @@ export default function IAMedicaPage() {
                               display: "flex", alignItems: "center", gap: 6,
                             }}
                           >
-                            <span>💾</span>
-                            <span>Criar Flashcard SRS</span>
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                              <polyline points="17 21 17 13 7 13 7 21" />
+                              <polyline points="7 3 7 8 15 8" />
+                            </svg>
+                            <span>Salvar como Flashcard</span>
                           </button>
 
                           <button
@@ -711,9 +768,14 @@ export default function IAMedicaPage() {
                               padding: "4px 10px", borderRadius: 6,
                               background: "var(--input-bg)", border: "1px solid var(--card-border)",
                               color: "var(--chumbo)", fontSize: 11, cursor: "pointer",
+                              display: "flex", alignItems: "center", gap: 6,
                             }}
                           >
-                            📋 Copiar Resumo
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                            </svg>
+                            <span>Copiar Resumo</span>
                           </button>
                         </div>
                       )}

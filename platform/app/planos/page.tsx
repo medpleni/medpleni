@@ -479,7 +479,15 @@ export default function PlanosPage() {
           }}>
             {checkoutSuccess ? (
               <div style={{ textAlign: "center", padding: "20px 0" }}>
-                <div style={{ fontSize: 48, marginBottom: 12 }}>🎉</div>
+                <div style={{
+                  width: 52, height: 52, borderRadius: "50%", background: "rgba(0,194,168,0.15)",
+                  display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px auto",
+                  color: V.pu,
+                }}>
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
                 <div style={{ fontFamily: V.df, fontSize: 22, fontWeight: 700, color: "#fff", marginBottom: 6 }}>
                   Assinatura Confirmada!
                 </div>
@@ -516,9 +524,14 @@ export default function PlanosPage() {
                       border: `1.5px solid ${paymentMethod === "credit_card" ? V.pu : "rgba(61,90,128,0.3)"}`,
                       color: paymentMethod === "credit_card" ? V.pu : V.ch,
                       fontFamily: V.db, fontSize: 12, fontWeight: 600, cursor: "pointer",
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
                     }}
                   >
-                    💳 Cartão de Crédito
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                      <line x1="1" y1="10" x2="23" y2="10" />
+                    </svg>
+                    <span>Cartão de Crédito</span>
                   </button>
                   <button
                     onClick={() => setPaymentMethod("pix")}
@@ -528,9 +541,13 @@ export default function PlanosPage() {
                       border: `1.5px solid ${paymentMethod === "pix" ? V.pu : "rgba(61,90,128,0.3)"}`,
                       color: paymentMethod === "pix" ? V.pu : V.ch,
                       fontFamily: V.db, fontSize: 12, fontWeight: 600, cursor: "pointer",
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
                     }}
                   >
-                    ⚡ PIX à Vista
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                    </svg>
+                    <span>PIX à Vista</span>
                   </button>
                 </div>
 
@@ -559,8 +576,13 @@ export default function PlanosPage() {
                   padding: "12px", background: "rgba(0,194,168,0.06)",
                   border: "1px solid rgba(0,194,168,0.2)", borderRadius: 8, marginBottom: 20,
                   fontSize: 11, color: V.ch, lineHeight: 1.5,
+                  display: "flex", alignItems: "center", gap: 8,
                 }}>
-                  🔒 Pagamento processado com segurança via <strong>Iugu Gateway</strong>. Garantia incondicional de 30 dias inclusa.
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={V.pu} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                  <span>Pagamento processado com segurança via <strong>Iugu Gateway</strong>. Garantia incondicional de 30 dias inclusa.</span>
                 </div>
 
                 <div style={{ display: "flex", gap: 10 }}>

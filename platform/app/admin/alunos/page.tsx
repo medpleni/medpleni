@@ -209,7 +209,10 @@ export default function AdminAlunosPage() {
               boxShadow: "0 4px 16px rgba(0,194,168,0.35)",
             }}
           >
-            <span>✉️</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2" />
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+            </svg>
             <span>+ Convidar Membro / Aluno</span>
           </button>
         </div>
@@ -227,7 +230,7 @@ export default function AdminAlunosPage() {
             fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: "pointer",
           }}
         >
-          👥 Base de Médicos & Alunos ({students.length})
+          Base de Médicos & Alunos ({students.length})
         </button>
 
         <button
@@ -240,7 +243,7 @@ export default function AdminAlunosPage() {
             fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: "pointer",
           }}
         >
-          📨 Convites Enviados ({invitations.length})
+          Convites Enviados ({invitations.length})
         </button>
       </div>
 
@@ -339,7 +342,7 @@ export default function AdminAlunosPage() {
                         {s.targetExams[0] || "ENAMED"} · {s.weeklyHours}h/sem
                       </td>
                       <td style={{ padding: "14px 16px", fontFamily: V.dm, fontSize: 12, color: V.wn }}>
-                        🔥 {s.streakDays}d
+                        {s.streakDays} dias
                       </td>
                       <td style={{ padding: "14px 16px", fontFamily: V.dm, fontSize: 11, color: V.ch }}>
                         {s.createdAt}
@@ -388,7 +391,16 @@ export default function AdminAlunosPage() {
             <div style={{ textAlign: "center", padding: 40, color: V.ch }}>Carregando convites...</div>
           ) : invitations.length === 0 ? (
             <div style={{ textAlign: "center", padding: 40, color: V.ch }}>
-              <div style={{ fontSize: 32, marginBottom: 8 }}>✉️</div>
+              <div style={{
+                width: 44, height: 44, borderRadius: "50%", background: "rgba(61,90,128,0.2)",
+                display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 8px auto",
+                color: V.ch,
+              }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="4" width="20" height="16" rx="2" />
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                </svg>
+              </div>
               <p style={{ margin: 0 }}>Nenhum convite cadastrado ainda.</p>
               <button
                 onClick={() => setShowInviteModal(true)}
@@ -426,7 +438,7 @@ export default function AdminAlunosPage() {
                         <div style={{ fontWeight: 600, color: "#fff" }}>{inv.full_name}</div>
                         <div style={{ fontSize: 11, color: V.ch }}>{inv.email}</div>
                         {inv.notes && (
-                          <div style={{ fontSize: 10, color: V.am, marginTop: 2 }}>📝 {inv.notes}</div>
+                          <div style={{ fontSize: 10, color: V.am, marginTop: 2 }}>{inv.notes}</div>
                         )}
                       </td>
                       <td style={{ padding: "14px 16px" }}>
@@ -594,12 +606,12 @@ export default function AdminAlunosPage() {
                       fontSize: 13, outline: "none",
                     }}
                   >
-                    <option value="student">👨‍🎓 Aluno / Médico Residente</option>
-                    <option value="docente">🩺 Docente & Professor</option>
-                    <option value="financeiro">💳 Financeiro & Faturamento</option>
-                    <option value="suporte">🎧 Suporte & CS</option>
-                    <option value="desenvolvedor">💻 Desenvolvedor & Engenharia</option>
-                    <option value="superadmin">⚡ Superadmin / Gestão</option>
+                    <option value="student">Aluno / Médico Residente</option>
+                    <option value="docente">Docente & Professor</option>
+                    <option value="financeiro">Financeiro & Faturamento</option>
+                    <option value="suporte">Suporte & CS</option>
+                    <option value="desenvolvedor">Desenvolvedor & Engenharia</option>
+                    <option value="superadmin">Superadmin / Gestão</option>
                   </select>
                 </div>
 
@@ -765,7 +777,15 @@ export default function AdminAlunosPage() {
             borderRadius: 16, maxWidth: 480, width: "100%", padding: 28, textAlign: "center",
             boxShadow: "0 25px 60px rgba(0,0,0,0.7)",
           }}>
-            <div style={{ fontSize: 40, marginBottom: 8 }}>✨</div>
+            <div style={{
+              width: 52, height: 52, borderRadius: "50%", background: "rgba(0,194,168,0.15)",
+              display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px auto",
+              color: V.pu,
+            }}>
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </div>
             <h3 style={{ fontFamily: V.df, fontSize: 22, color: "#fff", margin: "0 0 6px 0" }}>
               Convite Criado com Sucesso!
             </h3>
@@ -805,9 +825,10 @@ export default function AdminAlunosPage() {
                   flex: 1, padding: "10px 0", borderRadius: 8,
                   background: "rgba(34,197,94,0.15)", border: "1px solid rgba(34,197,94,0.4)",
                   color: V.su, fontWeight: 700, fontSize: 13, cursor: "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
                 }}
               >
-                📱 Compartilhar WhatsApp
+                <span>Compartilhar via WhatsApp</span>
               </button>
               <button
                 onClick={() => setCreatedInviteResult(null)}

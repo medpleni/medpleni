@@ -133,7 +133,20 @@ export default function DiagnosticoPage() {
           maxWidth: 520, textAlign: "center", animation: "fadeUp 0.5s ease",
           marginTop: 60,
         }}>
-          <div style={{ fontSize: 48, marginBottom: 20 }}>🔬</div>
+          <div style={{
+            width: 56, height: 56, borderRadius: "50%", background: "rgba(0,194,168,0.15)",
+            display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px auto",
+            color: V.pu,
+          }}>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6 18h8" />
+              <path d="M3 22h18" />
+              <path d="M14 22a7 7 0 1 0 0-14h-1" />
+              <path d="M9 14h2" />
+              <path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z" />
+              <path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3" />
+            </svg>
+          </div>
           <div style={{ fontFamily: V.df, fontSize: 28, fontWeight: 700, color: "#fff", letterSpacing: "-0.02em", marginBottom: 8 }}>
             Raio-X Inicial
           </div>
@@ -146,9 +159,11 @@ export default function DiagnosticoPage() {
             fontFamily: V.dm, fontSize: 10, letterSpacing: "0.08em",
             color: V.ch, textTransform: "uppercase",
           }}>
-            <span>⏱ ~8 min</span>
-            <span>📋 10 questões</span>
-            <span>🎯 5 áreas</span>
+            <span>~8 min</span>
+            <span>·</span>
+            <span>10 questões</span>
+            <span>·</span>
+            <span>5 áreas</span>
           </div>
           <button onClick={() => setPhase("questions")} style={{
             padding: "14px 32px", borderRadius: 10,
@@ -316,19 +331,22 @@ export default function DiagnosticoPage() {
             borderColor: "rgba(0,194,168,0.2)",
           }}>
             <div style={{ fontFamily: V.df, fontSize: 14, fontWeight: 600, color: V.pu, marginBottom: 12 }}>
-              📋 Plano de Ação Personalizado (Baseado nos seus erros)
+              Plano de Ação Personalizado (Baseado nos seus erros)
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {diagResult.recommendations.map((item, i) => (
-                <div key={i} style={{
-                  display: "flex", gap: 10, alignItems: "flex-start",
-                  padding: "10px 12px", background: "rgba(26,31,46,0.5)",
-                  borderRadius: 8, border: "1px solid rgba(61,90,128,0.15)",
-                }}>
-                  <span style={{ fontSize: 14 }}>{item.icon}</span>
-                  <span style={{ fontSize: 12, color: V.nb, lineHeight: 1.6 }}>{item.text}</span>
-                </div>
-              ))}
+              {diagResult.recommendations.map((item, i) => {
+                const dotColor = item.icon === "priority" ? V.dg : item.icon === "attention" ? V.wn : V.pu;
+                return (
+                  <div key={i} style={{
+                    display: "flex", gap: 10, alignItems: "center",
+                    padding: "10px 12px", background: "rgba(26,31,46,0.5)",
+                    borderRadius: 8, border: "1px solid rgba(61,90,128,0.15)",
+                  }}>
+                    <span style={{ width: 8, height: 8, borderRadius: "50%", background: dotColor, flexShrink: 0 }} />
+                    <span style={{ fontSize: 12, color: V.nb, lineHeight: 1.6 }}>{item.text}</span>
+                  </div>
+                );
+              })}
             </div>
           </Card>
 

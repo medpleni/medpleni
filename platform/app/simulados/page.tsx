@@ -203,7 +203,7 @@ export default function SimuladosHubPage() {
         gap: 16,
         marginBottom: 28,
       }}>
-        {/* Card 1: Provas Reais */}
+        {/* Card 1: Provas Reais Anteriores */}
         <div
           onClick={() => setActiveTab("reais")}
           style={{
@@ -216,7 +216,17 @@ export default function SimuladosHubPage() {
         >
           <div>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-              <span style={{ fontSize: 28 }}>📜</span>
+              <div style={{
+                width: 44, height: 44, borderRadius: 10, background: "rgba(0,194,168,0.12)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--pulso)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                </svg>
+              </div>
               <span style={{
                 fontFamily: V.dm, fontSize: 9, padding: "2px 8px", borderRadius: 4,
                 background: "rgba(0,194,168,0.15)", color: V.pu, fontWeight: 700, textTransform: "uppercase",
@@ -233,7 +243,7 @@ export default function SimuladosHubPage() {
           </div>
           <div style={{ marginTop: 14, color: V.pu, fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
             <span>Acessar Provas Oficiais</span>
-            <span>➔</span>
+            <span>→</span>
           </div>
         </div>
 
@@ -250,7 +260,16 @@ export default function SimuladosHubPage() {
         >
           <div>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-              <span style={{ fontSize: 28 }}>🤖</span>
+              <div style={{
+                width: 44, height: 44, borderRadius: 10, background: "rgba(107,92,231,0.15)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A29BFE" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                  <path d="M2 12h20" />
+                </svg>
+              </div>
               <span style={{
                 fontFamily: V.dm, fontSize: 9, padding: "2px 8px", borderRadius: 4,
                 background: "rgba(107,92,231,0.2)", color: "#A29BFE", fontWeight: 700, textTransform: "uppercase",
@@ -267,7 +286,7 @@ export default function SimuladosHubPage() {
           </div>
           <div style={{ marginTop: 14, color: "#A29BFE", fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
             <span>Ver Super Simulados</span>
-            <span>➔</span>
+            <span>→</span>
           </div>
         </div>
 
@@ -284,7 +303,15 @@ export default function SimuladosHubPage() {
         >
           <div>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-              <span style={{ fontSize: 28 }}>⚙️</span>
+              <div style={{
+                width: 44, height: 44, borderRadius: 10, background: "rgba(245,166,35,0.15)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+              </div>
               <span style={{
                 fontFamily: V.dm, fontSize: 9, padding: "2px 8px", borderRadius: 4,
                 background: "rgba(245,166,35,0.15)", color: V.wn, fontWeight: 700, textTransform: "uppercase",
@@ -301,13 +328,13 @@ export default function SimuladosHubPage() {
           </div>
           <div style={{ marginTop: 14, color: V.wn, fontSize: 12, fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
             <span>Montar Meu Simulado</span>
-            <span>➔</span>
+            <span>→</span>
           </div>
         </div>
       </div>
 
       {/* ── 3. NAVEGAÇÃO EM ABAS ── */}
-      <div style={{ display: "flex", gap: 12, borderBottom: "1px solid var(--card-border)", paddingBottom: 12, marginBottom: 20 }}>
+      <div style={{ display: "flex", gap: 12, borderBottom: "1px solid var(--card-border)", paddingBottom: 12, marginBottom: 20, flexWrap: "wrap" }}>
         <button
           onClick={() => setActiveTab("reais")}
           style={{
@@ -318,7 +345,7 @@ export default function SimuladosHubPage() {
             fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: "pointer",
           }}
         >
-          📜 Provas Reais Anteriores ({officialExams.length})
+          Provas Reais Anteriores ({officialExams.length})
         </button>
 
         <button
@@ -331,7 +358,7 @@ export default function SimuladosHubPage() {
             fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: "pointer",
           }}
         >
-          🤖 Provas de Predição IA ({predictionExams.length})
+          Provas de Predição IA ({predictionExams.length})
         </button>
 
         <button
@@ -344,7 +371,7 @@ export default function SimuladosHubPage() {
             fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: "pointer",
           }}
         >
-          ⚙️ Criador Personalizado
+          Criador Personalizado
         </button>
 
         <button
@@ -357,7 +384,7 @@ export default function SimuladosHubPage() {
             fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: "pointer",
           }}
         >
-          📊 Histórico & Desempenho ({completedExams.length})
+          Histórico & Desempenho ({completedExams.length})
         </button>
       </div>
 
@@ -522,8 +549,9 @@ export default function SimuladosHubPage() {
                   <span style={{
                     fontFamily: V.dm, fontSize: 10, padding: "3px 8px", borderRadius: 4,
                     background: "rgba(107,92,231,0.2)", color: "#A29BFE", fontWeight: 700, textTransform: "uppercase",
+                    letterSpacing: "0.05em",
                   }}>
-                    🤖 MATRIZ PONDERADA IA
+                    MATRIZ PONDERADA IA
                   </span>
                   <span style={{ fontSize: 11, color: V.pu, fontWeight: 600 }}>
                     Corte Estimado: 74%
@@ -542,7 +570,7 @@ export default function SimuladosHubPage() {
                   background: "var(--input-bg)", border: "1px solid var(--card-border)",
                   borderRadius: 8, padding: "10px 12px", marginBottom: 16, fontSize: 11, color: "var(--neblina)",
                 }}>
-                  <div style={{ fontWeight: 600, color: V.pu, marginBottom: 4 }}>📊 Distribuição de Questões:</div>
+                  <div style={{ fontWeight: 600, color: V.pu, marginBottom: 4 }}>Distribuição de Questões:</div>
                   23% Clínica · 17% GO · 16% Pediatria · 14% MFC · 12% Cirurgia · 18% Outras
                 </div>
               </div>
@@ -567,7 +595,16 @@ export default function SimuladosHubPage() {
       {activeTab === "custom" && (
         <div style={{ maxWidth: 680, margin: "0 auto", background: "var(--card-bg)", border: "1px solid rgba(245,166,35,0.35)", borderRadius: 16, padding: "28px 32px", boxShadow: "var(--card-shadow)" }}>
           <div style={{ textAlign: "center", marginBottom: 24 }}>
-            <span style={{ fontSize: 32 }}>⚙️</span>
+            <div style={{
+              width: 48, height: 48, borderRadius: 12, background: "rgba(245,166,35,0.15)",
+              display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px auto",
+              color: V.wn,
+            }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+              </svg>
+            </div>
             <h3 style={{ fontFamily: V.df, fontSize: 22, color: "var(--heading-color)", margin: "6px 0 4px 0", fontWeight: 700 }}>
               Custom Exam Builder
             </h3>
@@ -623,7 +660,18 @@ export default function SimuladosHubPage() {
                         cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
                       }}
                     >
-                      <span>{isSelected ? "☑" : "☐"}</span>
+                      <span style={{
+                        width: 16, height: 16, borderRadius: 4,
+                        border: `1.5px solid ${isSelected ? V.pu : "var(--chumbo)"}`,
+                        background: isSelected ? V.pu : "transparent",
+                        display: "inline-flex", alignItems: "center", justifyContent: "center",
+                      }}>
+                        {isSelected && (
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0A1A18" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        )}
+                      </span>
                       <span>{area}</span>
                     </div>
                   );
@@ -690,7 +738,7 @@ export default function SimuladosHubPage() {
                     cursor: "pointer",
                   }}
                 >
-                  <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 2 }}>⏱️ Modo Prova Real</div>
+                  <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 2 }}>Modo Prova Real</div>
                   <div style={{ fontSize: 11, opacity: 0.8 }}>Cronômetro estrito e gabarito apenas no final.</div>
                 </div>
 
@@ -704,7 +752,7 @@ export default function SimuladosHubPage() {
                     cursor: "pointer",
                   }}
                 >
-                  <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 2 }}>💡 Estudo Guiado</div>
+                  <div style={{ fontWeight: 600, fontSize: 13, marginBottom: 2 }}>Estudo Guiado</div>
                   <div style={{ fontSize: 11, opacity: 0.8 }}>Comentários da IA liberados questão a questão.</div>
                 </div>
               </div>

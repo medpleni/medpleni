@@ -90,26 +90,26 @@ export function calculateDiagnosticResult(
 
   if (criticalAreas.length > 0) {
     recommendations.push({
-      icon: "🔴",
+      icon: "priority",
       text: `${criticalAreas.join(" e ")} ${criticalAreas.length > 1 ? "são suas maiores prioridades" : "é sua maior prioridade"} — recomendamos iniciar por simulados focados nesses temas.`,
     });
   }
   if (attentionAreas.length > 0) {
     recommendations.push({
-      icon: "🟡",
+      icon: "attention",
       text: `${attentionAreas.join(", ")} necessita${attentionAreas.length > 1 ? "m" : ""} de revisão ativa e reforço em flashcards de repetição espaçada.`,
     });
   }
   if (strongAreas.length > 0) {
     recommendations.push({
-      icon: "🟢",
+      icon: "strong",
       text: `Excelente base em ${strongAreas.join(" e ")}. Mantenha a cadência de questões para sustentar a retenção.`,
     });
   }
 
   if (recommendations.length === 0) {
     recommendations.push({
-      icon: "🎯",
+      icon: "general",
       text: "Seu diagnóstico geral indica perfil equilibrado. Foque no cronograma adaptativo de alto rendimento.",
     });
   }

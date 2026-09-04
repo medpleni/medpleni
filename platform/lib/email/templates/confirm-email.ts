@@ -15,7 +15,7 @@ export function renderConfirmEmail({ name, confirmUrl }: ConfirmEmailProps) {
   `;
 
   const secondaryNote = `
-    🛡️ <strong>Privacidade & Segurança:</strong> Se você não criou esta conta, por favor desconsidere esta mensagem. Seus dados estão protegidos conforme as normas da LGPD.
+    <strong>Privacidade & Segurança:</strong> Se você não criou esta conta, por favor desconsidere esta mensagem. Seus dados estão protegidos conforme as normas da LGPD.
   `;
 
   return renderEmailLayout({

@@ -16,7 +16,7 @@ export function renderWelcomeEmail({ name, loginUrl }: WelcomeEmailProps) {
   `;
 
   const secondaryNote = `
-    💡 <strong>Dica clínica:</strong> Recomendamos realizar o teste diagnóstico logo no primeiro acesso para calibrar o algoritmo de recomendação de questões para sua especialidade e instituição-alvo.
+    <strong>Dica clínica:</strong> Recomendamos realizar o teste diagnóstico logo no primeiro acesso para calibrar o algoritmo de recomendação de questões para sua especialidade e instituição-alvo.
   `;
 
   return renderEmailLayout({

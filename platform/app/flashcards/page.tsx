@@ -201,7 +201,7 @@ export default function FlashcardsPage() {
               fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: "pointer",
             }}
           >
-            ⚡ Sessão de Revisão ({total} pendentes)
+            Sessão de Revisão ({total} pendentes)
           </button>
 
           <button
@@ -217,7 +217,7 @@ export default function FlashcardsPage() {
               fontFamily: V.db, fontSize: 13, fontWeight: 600, cursor: "pointer",
             }}
           >
-            📚 Meus Decks & Histórico ({allCards.length})
+            Meus Decks & Histórico ({allCards.length})
           </button>
         </div>
 
@@ -230,7 +230,10 @@ export default function FlashcardsPage() {
             fontSize: 12, cursor: "pointer", display: "flex", alignItems: "center", gap: 6,
           }}
         >
-          <span>➕</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
           <span>Criar Flashcard</span>
         </button>
       </div>
@@ -244,11 +247,20 @@ export default function FlashcardsPage() {
             </div>
           ) : currentIdx >= total ? (
             <div style={{ maxWidth: 520, margin: "60px auto", textAlign: "center" }}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
-              <div style={{ fontFamily: V.df, fontSize: 24, fontWeight: 700, color: "#fff", marginBottom: 8 }}>
+              <div style={{
+                width: 56, height: 56, borderRadius: "50%", background: "var(--pulso-dim)",
+                border: "1px solid rgba(0,194,168,0.3)", display: "flex", alignItems: "center",
+                justifyContent: "center", margin: "0 auto 16px auto", color: V.pu,
+              }}>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+              </div>
+              <div style={{ fontFamily: V.df, fontSize: 24, fontWeight: 700, color: "var(--heading-color)", marginBottom: 8 }}>
                 Sessão de Repetição Espaçada Concluída!
               </div>
-              <div style={{ fontSize: 14, color: V.ch, lineHeight: 1.6, marginBottom: 24 }}>
+              <div style={{ fontSize: 14, color: "var(--chumbo)", lineHeight: 1.6, marginBottom: 24 }}>
                 Você revisou <strong style={{ color: V.pu }}>{sessionCount} flashcards</strong> hoje.
                 O algoritmo já reagendou os próximos cards de acordo com seu ritmo de retenção e curva de esquecimento.
               </div>
@@ -348,25 +360,31 @@ export default function FlashcardsPage() {
                       flex: 1, padding: "12px 0", borderRadius: 8,
                       background: "rgba(255,107,107,0.1)", border: `1.5px solid rgba(255,107,107,0.35)`,
                       color: V.dg, fontFamily: V.db, fontSize: 13, fontWeight: 700, cursor: "pointer",
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
                       transition: "all 0.15s",
                     }}>
-                      😓 Difícil (+1d)
+                      <span style={{ width: 8, height: 8, borderRadius: "50%", background: V.dg }} />
+                      <span>Difícil (+1d)</span>
                     </button>
                     <button onClick={() => handleRate("ok")} style={{
                       flex: 1, padding: "12px 0", borderRadius: 8,
                       background: "rgba(245,166,35,0.1)", border: `1.5px solid rgba(245,166,35,0.35)`,
                       color: V.wn, fontFamily: V.db, fontSize: 13, fontWeight: 700, cursor: "pointer",
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
                       transition: "all 0.15s",
                     }}>
-                      🤔 Ok (+3d)
+                      <span style={{ width: 8, height: 8, borderRadius: "50%", background: V.wn }} />
+                      <span>Bom (+3d)</span>
                     </button>
                     <button onClick={() => handleRate("facil")} style={{
                       flex: 1, padding: "12px 0", borderRadius: 8,
                       background: "rgba(34,197,94,0.1)", border: `1.5px solid rgba(34,197,94,0.35)`,
                       color: V.su, fontFamily: V.db, fontSize: 13, fontWeight: 700, cursor: "pointer",
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
                       transition: "all 0.15s",
                     }}>
-                      😊 Fácil (+7d)
+                      <span style={{ width: 8, height: 8, borderRadius: "50%", background: V.su }} />
+                      <span>Fácil (+7d)</span>
                     </button>
                   </div>
                 </div>
@@ -398,7 +416,7 @@ export default function FlashcardsPage() {
                   ))}
                   {currentIdx >= total - 1 && (
                     <div style={{ padding: "10px 12px", textAlign: "center", fontSize: 11, color: "var(--chumbo)" }}>
-                      Fim da fila ✓
+                      Fim da fila
                     </div>
                   )}
                 </div>
@@ -456,7 +474,15 @@ export default function FlashcardsPage() {
             <div style={{ textAlign: "center", padding: 40, color: "var(--chumbo)" }}>Carregando flashcards...</div>
           ) : filteredHistory.length === 0 ? (
             <div style={{ textAlign: "center", padding: 40, color: "var(--chumbo)" }}>
-              <div style={{ fontSize: 32, marginBottom: 8 }}>📭</div>
+              <div style={{
+                width: 44, height: 44, borderRadius: "50%", background: "var(--input-bg)",
+                display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 10px auto",
+                color: "var(--chumbo)",
+              }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                </svg>
+              </div>
               <p>Nenhum flashcard encontrado com os filtros atuais.</p>
             </div>
           ) : (
@@ -504,9 +530,16 @@ export default function FlashcardsPage() {
                     <button
                       onClick={() => handleDeleteCard(fc.id)}
                       title="Excluir flashcard"
-                      style={{ background: "transparent", border: "none", color: V.dg, fontSize: 11, cursor: "pointer" }}
+                      style={{
+                        background: "transparent", border: "none", color: V.dg, fontSize: 11, cursor: "pointer",
+                        display: "flex", alignItems: "center", gap: 4,
+                      }}
                     >
-                      🗑️ Excluir
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                      </svg>
+                      <span>Excluir</span>
                     </button>
                   </div>
                 </div>

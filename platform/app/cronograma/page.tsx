@@ -27,8 +27,8 @@ const areaColor: Record<string, string> = {
   "Ginecologia e Obstetrícia": V.dg, "Psiquiatria": "#A99EF5",
 };
 
-const tipoIcon: Record<string, string> = {
-  simulado: "📝", questoes: "❓", revisao: "📖", flashcards: "🔁", descanso: "☕",
+const tipoDotColor: Record<string, string> = {
+  simulado: "var(--warn)", questoes: "var(--pulso)", revisao: "var(--resid-light)", flashcards: "var(--indigo)", descanso: "var(--chumbo)",
 };
 
 const tipoLabel: Record<string, string> = {
@@ -118,6 +118,7 @@ export default function CronogramaPage() {
                 <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                   {dia.blocos.map((b, i) => {
                     const bc = areaColor[b.area] || V.ch;
+                    const dc = tipoDotColor[b.tipo] || V.pu;
                     return (
                       <div key={i} style={{
                         padding: "9px 10px", borderRadius: 8,
@@ -132,7 +133,10 @@ export default function CronogramaPage() {
                           }}>
                             {b.horario}
                           </span>
-                          <span style={{ fontSize: 11 }}>{tipoIcon[b.tipo]}</span>
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 9, color: "var(--chumbo)" }}>
+                            <span style={{ width: 6, height: 6, borderRadius: "50%", background: dc }} />
+                            {tipoLabel[b.tipo]}
+                          </span>
                         </div>
                         <div style={{ fontSize: 11, fontWeight: 600, color: "var(--heading-color)", lineHeight: 1.3, marginBottom: 2 }}>
                           {b.area}
@@ -181,7 +185,7 @@ export default function CronogramaPage() {
               ].map((t) => (
                 <div key={t.tipo} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span>{tipoIcon[t.tipo]}</span>
+                    <span style={{ width: 8, height: 8, borderRadius: "50%", background: tipoDotColor[t.tipo] || V.pu }} />
                     <span style={{ fontSize: 12, color: "var(--neblina)" }}>{t.label}</span>
                   </div>
                   <span style={{ fontFamily: V.dm, fontSize: 11, color: "var(--chumbo)" }}>{t.horas}</span>
@@ -197,7 +201,7 @@ export default function CronogramaPage() {
             borderRadius: 14, padding: "16px",
           }}>
             <div style={{ fontFamily: V.df, fontSize: 13, fontWeight: 600, color: V.pu, marginBottom: 6 }}>
-              💡 Recomendação da IA MedPleni
+              Recomendação da IA MedPleni
             </div>
             <div style={{ fontSize: 12, color: "var(--neblina)", lineHeight: 1.6 }}>
               Concentre seu estudo de <strong>Saúde Coletiva</strong> nos flashcards matinais e resolva o simulado de <strong>Trauma (Cirurgia)</strong> na quarta-feira para consolidar o índice de corte da sua banca.

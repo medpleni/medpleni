@@ -29,10 +29,37 @@ const chipStyle = (selected: boolean, disabled?: boolean): React.CSSProperties =
 });
 
 const focusCards = [
-  { id: "residencia", label: "Residência Médica", desc: "ENARE, USP, Sírio, Einstein, UNIFESP...", color: V.re, icon: "🏥" },
-  { id: "enamed", label: "ENAMED", desc: "Exame Nacional de Medicina", color: V.pu, icon: "📋" },
-  { id: "revalida", label: "Revalida", desc: "Revalidação de diploma estrangeiro", color: V.ind, icon: "🌎", disabled: true, badge: "Em breve" },
-  { id: "especializacao", label: "Especialização", desc: "Título de especialista", color: V.wn, icon: "🎓", disabled: true },
+  {
+    id: "residencia",
+    label: "Residência Médica",
+    desc: "ENARE, USP, Sírio, Einstein, UNIFESP...",
+    color: V.re,
+    iconType: "hospital",
+  },
+  {
+    id: "enamed",
+    label: "ENAMED",
+    desc: "Exame Nacional de Medicina",
+    color: V.pu,
+    iconType: "exam",
+  },
+  {
+    id: "revalida",
+    label: "Revalida",
+    desc: "Revalidação de diploma estrangeiro",
+    color: V.ind,
+    iconType: "globe",
+    disabled: true,
+    badge: "Em breve",
+  },
+  {
+    id: "especializacao",
+    label: "Especialização",
+    desc: "Título de especialista",
+    color: V.wn,
+    iconType: "grad",
+    disabled: true,
+  },
 ];
 
 const provas = ["ENAMED", "ENARE", "USP", "Sírio-Libanês", "Einstein", "UNIFESP", "FMABC", "UERJ", "UNICAMP", "FAMERP"];
@@ -196,7 +223,42 @@ export default function OnboardingPage() {
                       {(c as any).badge}
                     </span>
                   )}
-                  <div style={{ fontSize: 28, marginBottom: 10 }}>{c.icon}</div>
+                  <div style={{
+                    width: 44, height: 44, borderRadius: 10,
+                    background: `${c.color}18`,
+                    border: `1px solid ${c.color}35`,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    marginBottom: 12, color: c.color,
+                  }}>
+                    {c.iconType === "hospital" && (
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 6v4m0 0v4m0-4h4m-4 0H8" />
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                      </svg>
+                    )}
+                    {c.iconType === "exam" && (
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                        <polyline points="10 9 9 9 8 9" />
+                      </svg>
+                    )}
+                    {c.iconType === "globe" && (
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="2" y1="12" x2="22" y2="12" />
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                      </svg>
+                    )}
+                    {c.iconType === "grad" && (
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                        <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                      </svg>
+                    )}
+                  </div>
                   <div style={{ fontSize: 14, fontWeight: 600, color: sel ? "#fff" : V.nb, marginBottom: 4 }}>
                     {c.label}
                   </div>

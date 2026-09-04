@@ -20,7 +20,7 @@ export function renderResetPasswordEmail({
   `;
 
   const secondaryNote = `
-    🔒 <strong>Aviso de Segurança:</strong> Este link é de uso único e expira em <strong>${expiresIn}</strong>. Se você não solicitou a redefinição de senha, nenhuma ação é necessária e sua senha atual permanecerá segura.
+    <strong>Aviso de Segurança:</strong> Este link é de uso único e expira em <strong>${expiresIn}</strong>. Se você não solicitou a redefinição de senha, nenhuma ação é necessária e sua senha atual permanecerá segura.
   `;
 
   return renderEmailLayout({

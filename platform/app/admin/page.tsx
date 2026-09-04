@@ -212,7 +212,7 @@ export default function AdminDashboardPage() {
             borderRadius: 14, padding: "18px 20px",
           }}>
             <div style={{ fontFamily: V.df, fontSize: 13, fontWeight: 700, color: V.pu, marginBottom: 6 }}>
-              💡 Alavanca de Faturamento v2.1
+              Alavanca de Faturamento v2.1
             </div>
             <div style={{ fontSize: 12, color: V.nb, lineHeight: 1.6 }}>
               O mix anual está em <strong>{metrics.mixAnualPct}%</strong>. Para cada 10 novos alunos que entram no ciclo 2027, o plano anual antecipa R$ 10.479 no caixa no Dia 1 e reduz o churn para zero durante 12 meses.

@@ -235,7 +235,7 @@ export default function PredicaoPage() {
                     border: "1px solid var(--card-border)",
                     padding: "6px 10px", borderRadius: 6,
                   }}>
-                    🎯 <strong style={{ color: V.pu }}>Conduta:</strong> {al.rec}
+                    <strong style={{ color: V.pu }}>Conduta:</strong> {al.rec}
                   </div>
                 </div>
               ))}
@@ -248,7 +248,7 @@ export default function PredicaoPage() {
             borderColor: "rgba(0,194,168,0.2)",
           }}>
             <div style={{ fontFamily: V.df, fontSize: 13, fontWeight: 600, color: V.pu, marginBottom: 8 }}>
-              💡 Estratégia de Preparação ENAMED
+              Estratégia de Preparação ENAMED
             </div>
             <div style={{ fontSize: 12, color: "var(--neblina)", lineHeight: 1.6 }}>
               O ENAMED valoriza fortemente o raciocínio clínico aplicado ao <strong>SUS e à Atenção Primária</strong>. Candidatos com mais de 80% em Saúde Coletiva garantem uma folga decisiva de pontuação sobre a média nacional.

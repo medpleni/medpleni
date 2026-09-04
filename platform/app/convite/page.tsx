@@ -183,7 +183,17 @@ function ConviteContent() {
     return (
       <div style={{ minHeight: "100vh", background: "var(--abismo)", display: "flex", alignItems: "center", justifyContent: "center", padding: 20 }}>
         <div style={{ background: "var(--card-bg)", border: "1px solid rgba(255,107,107,0.4)", borderRadius: 16, padding: 32, maxWidth: 440, width: "100%", textAlign: "center", boxShadow: "var(--card-shadow)" }}>
-          <div style={{ fontSize: 40, marginBottom: 12 }}>⚠️</div>
+          <div style={{
+            width: 48, height: 48, borderRadius: "50%", background: "rgba(255,107,107,0.15)",
+            display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px auto",
+            color: V.dg,
+          }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+          </div>
           <h2 style={{ fontFamily: V.df, fontSize: 22, color: "var(--heading-color)", marginBottom: 8 }}>Convite Indisponível</h2>
           <p style={{ color: V.ch, fontSize: 13, lineHeight: 1.6, marginBottom: 24 }}>
             {error || "Este link de convite expirou, foi cancelado ou já foi utilizado."}
@@ -260,7 +270,15 @@ function ConviteContent() {
 
         {success ? (
           <div style={{ textAlign: "center", padding: "20px 0" }}>
-            <div style={{ fontSize: 36, marginBottom: 12 }}>🎉</div>
+            <div style={{
+              width: 48, height: 48, borderRadius: "50%", background: "rgba(0,194,168,0.15)",
+              display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px auto",
+              color: V.pu,
+            }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </div>
             <h3 style={{ color: "var(--heading-color)", fontSize: 18, marginBottom: 6 }}>Acesso Ativado com Sucesso!</h3>
             <p style={{ color: V.ch, fontSize: 12 }}>Redirecionando para seu painel em instantes...</p>
           </div>

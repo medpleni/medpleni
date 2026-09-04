@@ -28,7 +28,7 @@ export function renderInvitationEmail({
     <!-- Card de Benefícios e Permissões -->
     <div style="background: rgba(13, 17, 28, 0.7); border: 1px solid rgba(0, 194, 168, 0.3); border-radius: 12px; padding: 20px; margin: 24px 0;">
       <div style="font-family: 'Courier New', Courier, monospace; font-size: 11px; color: #00C2A8; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; font-weight: 700;">
-        ⚡ Detalhes da Concessão de Acesso
+        Detalhes da Concessão de Acesso
       </div>
 
       <table style="width: 100%; border-collapse: collapse; font-size: 14px; color: #E0E6F0;">

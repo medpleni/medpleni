@@ -188,22 +188,22 @@ export default function LandingPage() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 18 }}>
           {[
             {
-              icon: "🩺",
+              type: "diag",
               title: "Diagnóstico Raio-X",
               desc: "Mapeamento minucioso de 50 a 80 questões por eixo temático, identificando suas lacunas críticas.",
             },
             {
-              icon: "❓",
+              type: "quest",
               title: "Questões Comentadas",
               desc: "Banco com resolução comentada questão por questão, justificativas oficiais e classificação de complexidade.",
             },
             {
-              icon: "🔁",
+              type: "srs",
               title: "Spaced Repetition (SM-2)",
               desc: "Flashcards com algoritmo de repetição espaçada para blindar sua retenção contra a curva de esquecimento.",
             },
             {
-              icon: "⏱️",
+              type: "timer",
               title: "Simulados Cronometrados",
               desc: "Simulações oficiais com timer regressivo, calibração de confiança (1-5) e comparativo com a nota de corte.",
             },
@@ -212,7 +212,42 @@ export default function LandingPage() {
               background: V.pe, border: "1px solid rgba(61,90,128,0.3)",
               borderRadius: 14, padding: "26px 22px",
             }}>
-              <div style={{ fontSize: 32, marginBottom: 14 }}>{item.icon}</div>
+              <div style={{
+                width: 44, height: 44, borderRadius: 10, background: "rgba(0,194,168,0.12)",
+                display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14,
+                color: V.pu,
+              }}>
+                {item.type === "diag" && (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M6 18h8" />
+                    <path d="M3 22h18" />
+                    <path d="M14 22a7 7 0 1 0 0-14h-1" />
+                    <path d="M9 14h2" />
+                    <path d="M9 12a2 2 0 0 1-2-2V6h6v4a2 2 0 0 1-2 2Z" />
+                    <path d="M12 6V3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3" />
+                  </svg>
+                )}
+                {item.type === "quest" && (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                )}
+                {item.type === "srs" && (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="23 4 23 10 17 10" />
+                    <polyline points="1 20 1 14 7 14" />
+                    <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+                  </svg>
+                )}
+                {item.type === "timer" && (
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                )}
+              </div>
               <div style={{ fontFamily: V.df, fontSize: 18, fontWeight: 700, color: "#fff", marginBottom: 8 }}>
                 {item.title}
               </div>

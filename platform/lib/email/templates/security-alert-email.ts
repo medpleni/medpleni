@@ -26,7 +26,7 @@ export function renderSecurityAlertEmail({
   `;
 
   const secondaryNote = `
-    ⚠️ <strong>Não reconhece esta atividade?</strong> Se você não realizou essa alteração, entre em contato imediatamente com o nosso time de suporte ou altere sua senha de acesso.
+    <strong>Não reconhece esta atividade?</strong> Se você não realizou essa alteração, entre em contato imediatamente com o nosso time de suporte ou altere sua senha de acesso.
   `;
 
   return renderEmailLayout({
