@@ -171,7 +171,48 @@ export async function POST(request: Request) {
       );
     }
 
-    // 2. Se o perfil já existe na base, atualiza permissões imediatamente
+    // 2. Pre-provisionamento no Supabase Auth se Service Role Key estiver configurada
+    let userCreatedInAuth = false;
+    let authErrorMessage: string | null = null;
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (serviceRoleKey) {
+      try {
+        const { createClient: createAdminSupabase } = await import("@supabase/supabase-js");
+        const adminSupabase = createAdminSupabase(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          serviceRoleKey,
+          { auth: { autoRefreshToken: false, persistSession: false } }
+        );
+
+        const { data: authCreated, error: authCreateErr } = await adminSupabase.auth.admin.createUser({
+          email: cleanEmail,
+          email_confirm: true,
+          user_metadata: {
+            full_name: fullName.trim(),
+            role,
+            plan,
+            sub_brand: subBrand,
+          },
+        });
+
+        if (!authCreateErr && authCreated?.user) {
+          userCreatedInAuth = true;
+        } else if (authCreateErr) {
+          if (authCreateErr.message?.toLowerCase().includes("already") || authCreateErr.message?.toLowerCase().includes("registered")) {
+            userCreatedInAuth = true;
+          } else {
+            authErrorMessage = authCreateErr.message;
+            console.warn("[Aviso ao pré-criar usuário no Supabase Auth]:", authCreateErr.message);
+          }
+        }
+      } catch (adminAuthErr: any) {
+        authErrorMessage = adminAuthErr?.message;
+        console.warn("[Erro no client admin do Supabase]:", adminAuthErr);
+      }
+    }
+
+    // 3. Se o perfil já existe na base, atualiza permissões imediatamente
     const { data: existingProfile } = await supabase
       .from("profiles")
       .select("id")
@@ -191,11 +232,11 @@ export async function POST(request: Request) {
         .eq("id", existingProfile.id);
     }
 
-    // 3. Monta o link do convite com a URL real do ambiente
+    // 4. Monta o link do convite com a URL real do ambiente
     const origin = request.headers.get("origin") || process.env.NEXT_PUBLIC_APP_URL || "https://medpleni.com";
     const inviteUrl = `${origin}/convite?token=${token}`;
 
-    // 4. Dispara e-mail via Resend diretamente (sem loopback fetch)
+    // 5. Dispara e-mail via Resend diretamente com domínio verificado
     let emailSent = false;
     let emailErrorMessage = null;
     if (sendEmail) {
@@ -227,7 +268,7 @@ export async function POST(request: Request) {
       }
     }
 
-    // 5. Log de Auditoria
+    // 6. Log de Auditoria
     try {
       await supabase.from("admin_audit_logs").insert({
         admin_id: adminProfile ? user.id : null,
@@ -243,6 +284,8 @@ export async function POST(request: Request) {
           expiresAt,
           emailSent,
           emailErrorMessage,
+          userCreatedInAuth,
+          authErrorMessage,
         },
       });
     } catch (auditErr) {
@@ -255,6 +298,8 @@ export async function POST(request: Request) {
       inviteUrl,
       emailSent,
       emailErrorMessage,
+      userCreatedInAuth,
+      authErrorMessage,
     });
   } catch (err: any) {
     console.error("Erro interno no POST de convite:", err);

@@ -64,22 +64,81 @@ export async function POST(
       );
     }
 
+    const body = await request.json().catch(() => ({}));
+    const password = body?.password;
+
     // 2. Busca usuário atual autenticado
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (user) {
-      // Atualiza o perfil do usuário logado
-      await supabase
-        .from("profiles")
-        .update({
-          full_name: invite.full_name || undefined,
-          role: invite.role,
-          plan: invite.plan,
-          sub_brand: invite.sub_brand,
-          access_expires_at: invite.access_expires_at,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", user.id);
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    let activatedUserId = user?.id;
+
+    // Se temos a Service Role Key e uma senha foi enviada pelo formulário de ativação
+    if (serviceRoleKey && password && !user) {
+      try {
+        const { createClient: createAdminSupabase } = await import("@supabase/supabase-js");
+        const adminSupabase = createAdminSupabase(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          serviceRoleKey,
+          { auth: { autoRefreshToken: false, persistSession: false } }
+        );
+
+        // Busca o usuário pelo e-mail
+        const { data: userList } = await adminSupabase.auth.admin.listUsers();
+        const existingAuthUser = userList?.users?.find(
+          (u) => u.email?.toLowerCase() === invite.email.toLowerCase()
+        );
+
+        if (existingAuthUser) {
+          await adminSupabase.auth.admin.updateUserById(existingAuthUser.id, {
+            password,
+            email_confirm: true,
+            user_metadata: {
+              full_name: invite.full_name,
+              role: invite.role,
+              plan: invite.plan,
+              sub_brand: invite.sub_brand,
+            },
+          });
+          activatedUserId = existingAuthUser.id;
+        } else {
+          const { data: createdUser } = await adminSupabase.auth.admin.createUser({
+            email: invite.email,
+            password,
+            email_confirm: true,
+            user_metadata: {
+              full_name: invite.full_name,
+              role: invite.role,
+              plan: invite.plan,
+              sub_brand: invite.sub_brand,
+            },
+          });
+          if (createdUser?.user) {
+            activatedUserId = createdUser.user.id;
+          }
+        }
+      } catch (adminErr) {
+        console.warn("[Aviso ao provisionar via service role no convite]:", adminErr);
+      }
+    }
+
+    if (activatedUserId || user) {
+      const targetUserId = activatedUserId || user?.id;
+
+      // Atualiza o perfil do usuário
+      if (targetUserId) {
+        await supabase
+          .from("profiles")
+          .update({
+            full_name: invite.full_name || undefined,
+            role: invite.role,
+            plan: invite.plan,
+            sub_brand: invite.sub_brand,
+            access_expires_at: invite.access_expires_at,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", targetUserId);
+      }
 
       // Marca o convite como aceito
       await supabase
@@ -92,6 +151,15 @@ export async function POST(
 
       return NextResponse.json({ success: true, userRole: invite.role });
     }
+
+    // Caso anônimo sem service role key
+    await supabase
+      .from("admin_invitations")
+      .update({
+        status: "accepted",
+        accepted_at: new Date().toISOString(),
+      })
+      .eq("id", invite.id);
 
     return NextResponse.json({ success: true, pendingAuth: true });
   } catch (err: any) {

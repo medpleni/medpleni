@@ -87,22 +87,22 @@ function ConviteContent() {
     try {
       const supabase = createClient();
 
-      // 1. Tenta criar conta para novo usuário
+      // 1. Tenta criar conta para novo usuário com dados seguros (evita violação de check constraint na trigger legada)
       const { data: authData, error: authErr } = await supabase.auth.signUp({
         email: invite.email,
         password: password,
         options: {
           data: {
             full_name: invite.full_name,
-            role: invite.role,
-            plan: invite.plan,
-            sub_brand: invite.sub_brand,
+            role: "student", // padrão seguro para a trigger handle_new_user
+            plan: "diagnostico", // padrão seguro para a trigger handle_new_user
+            sub_brand: invite.sub_brand || "RESID",
           },
         },
       });
 
       // Se já existe no Auth
-      if (authErr && (authErr.message.includes("already registered") || authErr.message.includes("unique"))) {
+      if (authErr && (authErr.message.includes("already registered") || authErr.message.includes("unique") || authErr.message.includes("User already registered"))) {
         setIsExistingAccount(true);
         // Tenta fazer login com a senha que acabou de digitar
         const { error: signInErr } = await supabase.auth.signInWithPassword({
@@ -115,12 +115,22 @@ function ConviteContent() {
             "Este e-mail já possui uma conta ativa no MedPleni. Por favor, digite a senha da sua conta existente para ativar o novo acesso, ou recupere sua senha."
           );
         }
-      } else if (authErr) {
+      } else if (authErr && !authErr.message.toLowerCase().includes("rate limit")) {
         throw authErr;
       }
 
-      // 2. Confirma ativação do convite na API
-      await fetch(`/api/invites/${token}`, { method: "POST" });
+      // 2. Confirma ativação do convite na API (enviando senha para provisionamento no backend)
+      await fetch(`/api/invites/${token}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+
+      // Se não estava autenticado, tenta fazer login
+      await supabase.auth.signInWithPassword({
+        email: invite.email,
+        password: password,
+      }).catch(() => {});
 
       setSuccess(true);
       setTimeout(() => {

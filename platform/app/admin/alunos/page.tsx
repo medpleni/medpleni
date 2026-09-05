@@ -46,7 +46,14 @@ export default function AdminAlunosPage() {
   const [loadingInvites, setLoadingInvites] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [sendingInvite, setSendingInvite] = useState(false);
-  const [createdInviteResult, setCreatedInviteResult] = useState<{ inviteUrl: string; name: string; email: string } | null>(null);
+  const [createdInviteResult, setCreatedInviteResult] = useState<{
+    inviteUrl: string;
+    name: string;
+    email: string;
+    emailSent?: boolean;
+    emailErrorMessage?: string | null;
+    userCreatedInAuth?: boolean;
+  } | null>(null);
 
   // Form de Convite
   const [inviteForm, setInviteForm] = useState({
@@ -128,6 +135,9 @@ export default function AdminAlunosPage() {
         inviteUrl: data.inviteUrl,
         name: inviteForm.fullName,
         email: inviteForm.email,
+        emailSent: data.emailSent,
+        emailErrorMessage: data.emailErrorMessage,
+        userCreatedInAuth: data.userCreatedInAuth,
       });
 
       // Reseta form
@@ -797,9 +807,38 @@ export default function AdminAlunosPage() {
             <h3 style={{ fontFamily: V.df, fontSize: 22, color: "var(--heading-color)", margin: "0 0 6px 0" }}>
               Convite Criado com Sucesso!
             </h3>
-            <p style={{ color: "var(--chumbo)", fontSize: 13, marginBottom: 20 }}>
+            <p style={{ color: "var(--chumbo)", fontSize: 13, marginBottom: 16 }}>
               O acesso de <strong>{createdInviteResult.name}</strong> ({createdInviteResult.email}) foi registrado.
             </p>
+
+            {/* Status de Envio de E-mail */}
+            {createdInviteResult.emailSent ? (
+              <div style={{
+                background: "rgba(34,197,94,0.12)", border: "1px solid rgba(34,197,94,0.35)",
+                borderRadius: 8, padding: "10px 14px", marginBottom: 16,
+                color: V.su, fontSize: 12, display: "flex", alignItems: "center", gap: 8, textAlign: "left"
+              }}>
+                <span>✓ E-mail oficial entregue com sucesso via Resend (noreply@medpleni.com).</span>
+              </div>
+            ) : (
+              <div style={{
+                background: "rgba(245,166,35,0.12)", border: "1px solid rgba(245,166,35,0.35)",
+                borderRadius: 8, padding: "10px 14px", marginBottom: 16,
+                color: V.wn, fontSize: 12, display: "flex", flexDirection: "column", gap: 4, textAlign: "left"
+              }}>
+                <div style={{ fontWeight: 700 }}>
+                  ⚠️ O convite foi registrado, mas o e-mail não pôde ser entregue automaticamente.
+                </div>
+                {createdInviteResult.emailErrorMessage && (
+                  <div style={{ fontSize: 11, color: "var(--chumbo)" }}>
+                    Motivo: {createdInviteResult.emailErrorMessage}
+                  </div>
+                )}
+                <div style={{ fontSize: 11, color: "var(--heading-color)", marginTop: 2 }}>
+                  Envie o link de ativação diretamente ao médico pelo WhatsApp ou copie o link abaixo.
+                </div>
+              </div>
+            )}
 
             <div style={{
               background: "var(--input-bg)", border: "1px solid var(--card-border)",

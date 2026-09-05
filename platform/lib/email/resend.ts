@@ -23,8 +23,7 @@ export async function sendEmail({
   from = DEFAULT_FROM_EMAIL,
 }: SendEmailOptions) {
   try {
-    // 1. Tenta envio pelo remetente padrão configurado
-    let result = await resend.emails.send({
+    const result = await resend.emails.send({
       from,
       to,
       subject,
@@ -33,24 +32,7 @@ export async function sendEmail({
     });
 
     if (result.error) {
-      console.warn("[Resend Warning with default sender]:", result.error);
-      // 2. Se o domínio personalizado ainda não estiver verificado no Resend, tenta com o domínio de testes
-      if (
-        result.error.message?.includes("domain") ||
-        result.error.message?.includes("verify") ||
-        result.error.message?.includes("forbidden")
-      ) {
-        result = await resend.emails.send({
-          from: "MedPleni <onboarding@resend.dev>",
-          to,
-          subject,
-          html,
-          text,
-        });
-      }
-    }
-
-    if (result.error) {
+      console.error("[Resend Error]:", result.error);
       return { success: false, error: result.error.message };
     }
 
