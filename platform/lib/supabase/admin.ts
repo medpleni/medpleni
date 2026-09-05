@@ -32,7 +32,13 @@ export interface AdminStudentSummary {
   crm?: string;
   role: AdminRole;
   plan: string;
+  status: "active" | "blocked" | "suspended";
+  blockedReason?: string;
+  accessExpiresAt?: string | null;
+  subBrand?: string;
   createdAt: string;
+  lastActiveAt?: string | null;
+  specialty?: string | null;
   streakDays: number;
   targetExams: string[];
   weeklyHours: number;
@@ -51,20 +57,21 @@ export async function fetchExecutiveMetrics(): Promise<ExecutiveMetrics> {
     // Contagem de perfis
     const { data: profiles } = await supabase
       .from("profiles")
-      .select("id, full_name, email, plano, role, created_at");
+      .select("id, full_name, email, plan, role, created_at");
 
     const totalStudents = profiles?.length || 0;
-    const paidProfiles = profiles?.filter((p) => p.plano === "pleno_anual" || p.plano === "pleno_mensal" || p.plano === "residente" || p.plano === "aprovacao") || [];
+    const paidProfiles = profiles?.filter((p) => p.plan === "pleno_anual" || p.plan === "pleno_mensal" || p.plan === "residente" || p.plan === "aprovacao") || [];
     const paidStudents = paidProfiles.length;
     const freeStudents = Math.max(0, totalStudents - paidStudents);
 
     // Mix anual
-    const anualCount = paidProfiles.filter((p) => p.plano === "pleno_anual" || p.plano === "aprovacao").length;
+    const anualCount = paidProfiles.filter((p) => p.plan === "pleno_anual" || p.plan === "aprovacao").length;
     const mixAnualPct = paidStudents > 0 ? Math.round((anualCount / paidStudents) * 100) : 65;
 
     // Faturamento MRR (R$ 1.497/ano ≈ R$ 124,75/mês | Mensal = R$ 247/mês)
     const mrr = paidProfiles.reduce((acc, p) => {
-      if (p.plano === "pleno_anual" || p.plano === "aprovacao") return acc + 124.75;
+      const pl = p.plan;
+      if (pl === "pleno_anual" || pl === "aprovacao") return acc + 124.75;
       return acc + 247.00;
     }, 0);
     const arr = mrr * 12;
@@ -155,7 +162,8 @@ export async function fetchAdminStudents(search?: string, planFilter?: string): 
     let query = supabase.from("profiles").select("*").order("created_at", { ascending: false });
 
     if (planFilter && planFilter !== "Todos") {
-      query = query.eq("plano", planFilter);
+      // Suporta busca tanto por 'plan' quanto por 'plano'
+      query = query.or(`plan.eq.${planFilter},plano.eq.${planFilter}`);
     }
 
     const { data: profiles, error } = await query;
@@ -177,13 +185,19 @@ export async function fetchAdminStudents(search?: string, planFilter?: string): 
         email: p.email,
         crm: p.crm || undefined,
         role: (p.role as AdminRole) || "student",
-        plan: p.plano || "diagnostico",
+        plan: p.plan || p.plano || "diagnostico",
         createdAt: p.created_at ? new Date(p.created_at).toLocaleDateString("pt-BR") : "—",
         streakDays: p.streak_days || 0,
         targetExams: p.target_exams || ["ENAMED"],
         weeklyHours: p.weekly_study_hours || 20,
-        questionsAnsweredCount: 42,
-        simulationsCompletedCount: 2,
+        status: (p.status as "active" | "blocked") || "active",
+        blockedReason: p.blocked_reason || undefined,
+        accessExpiresAt: p.access_expires_at || undefined,
+        subBrand: p.sub_brand || undefined,
+        lastActiveAt: p.last_active_at || undefined,
+        specialty: p.target_specialty || p.specialty || undefined,
+        questionsAnsweredCount: p.questions_answered_count || 0,
+        simulationsCompletedCount: p.simulations_completed_count || 0,
       }));
   } catch (err) {
     console.warn("Aviso ao buscar alunos no painel admin:", err);

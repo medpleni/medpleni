@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { fetchAdminStudents, updateStudentPlanManually, type AdminStudentSummary } from "@/lib/supabase/admin";
 import { useUser } from "@/lib/supabase/use-user";
+import StudentDrawer360 from "./components/student-drawer-360";
 
 const V = {
   pu: "var(--pulso)", re: "var(--resgate)", rel: "#64B5E8", ind: "#6B5CE7",
@@ -40,6 +41,7 @@ export default function AdminAlunosPage() {
   const [planFilter, setPlanFilter] = useState("Todos");
   const [editingStudent, setEditingStudent] = useState<AdminStudentSummary | null>(null);
   const [newPlan, setNewPlan] = useState("pleno_anual");
+  const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
 
   // Convites
   const [invitations, setInvitations] = useState<AdminInvitation[]>([]);
@@ -327,9 +329,35 @@ export default function AdminAlunosPage() {
                   </thead>
                   <tbody>
                     {students.map((s) => (
-                      <tr key={s.id} style={{ borderBottom: "1px solid var(--card-border)" }}>
+                      <tr
+                        key={s.id}
+                        onClick={() => setSelectedStudentId(s.id)}
+                        style={{
+                          borderBottom: "1px solid var(--card-border)",
+                          cursor: "pointer",
+                          transition: "background 0.15s ease",
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.03)")}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                      >
                         <td style={{ padding: "14px 16px" }}>
-                          <div style={{ fontWeight: 600, color: "var(--heading-color)" }}>{s.fullName}</div>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <div style={{ fontWeight: 600, color: "var(--heading-color)" }}>{s.fullName}</div>
+                            <span
+                              style={{
+                                fontSize: 9,
+                                fontFamily: V.dm,
+                                padding: "2px 6px",
+                                borderRadius: 4,
+                                background: s.status === "blocked" ? "rgba(239,68,68,0.2)" : "rgba(34,197,94,0.15)",
+                                color: s.status === "blocked" ? "#ef4444" : "#22c55e",
+                                fontWeight: 700,
+                                textTransform: "uppercase",
+                              }}
+                            >
+                              {s.status === "blocked" ? "Bloqueado" : "Ativo"}
+                            </span>
+                          </div>
                           <div style={{ fontSize: 11, color: V.ch }}>{s.email} {s.crm ? `· CRM ${s.crm}` : ""}</div>
                         </td>
                         <td style={{ padding: "14px 16px" }}>
@@ -348,7 +376,7 @@ export default function AdminAlunosPage() {
                               color: s.plan === "pleno_anual" ? V.pu : s.plan === "pleno_mensal" ? V.rel : V.ch,
                               fontWeight: 600,
                             }}>
-                              {s.plan === "pleno_anual" ? "Pleno Anual" : s.plan === "pleno_mensal" ? "Pleno Mensal" : "Diagnóstico"}
+                              {s.plan === "pleno_anual" ? "Pleno Anual" : s.plan === "pleno_mensal" ? "Pleno Mensal" : s.plan === "aprovacao" ? "Aprovação" : s.plan === "cortesia_vip" ? "Cortesia VIP" : "Diagnóstico"}
                             </span>
                           </div>
                         </td>
@@ -364,7 +392,24 @@ export default function AdminAlunosPage() {
                         <td style={{ padding: "14px 16px" }}>
                           <div style={{ display: "flex", gap: 6 }}>
                             <button
-                              onClick={() => openWhatsApp(s)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedStudentId(s.id);
+                              }}
+                              title="Ver Perfil 360° Completo"
+                              style={{
+                                padding: "5px 9px", borderRadius: 6,
+                                background: "rgba(0,229,153,0.15)", border: "1px solid rgba(0,229,153,0.3)",
+                                color: "#00e599", fontSize: 11, fontWeight: 700, cursor: "pointer",
+                              }}
+                            >
+                              Ver 360°
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openWhatsApp(s);
+                              }}
                               title="Contato Comercial WhatsApp"
                               style={{
                                 padding: "5px 8px", borderRadius: 6,
@@ -375,7 +420,8 @@ export default function AdminAlunosPage() {
                               WhatsApp
                             </button>
                             <button
-                              onClick={() => {
+                              onClick={(e) => {
+                                e.stopPropagation();
                                 setEditingStudent(s);
                                 setNewPlan(s.plan || "pleno_anual");
                               }}
@@ -385,7 +431,7 @@ export default function AdminAlunosPage() {
                                 color: V.nb, fontSize: 11, cursor: "pointer",
                               }}
                             >
-                              Alterar Plano
+                              Alterar
                             </button>
                           </div>
                         </td>
@@ -944,6 +990,14 @@ export default function AdminAlunosPage() {
           </div>
         </div>
       )}
+
+      {/* ── DRAWER PERFIL 360° DO ALUNO ── */}
+      <StudentDrawer360
+        studentId={selectedStudentId}
+        isOpen={!!selectedStudentId}
+        onClose={() => setSelectedStudentId(null)}
+        onStudentUpdated={loadData}
+      />
     </div>
   );
 }
