@@ -19,22 +19,76 @@ export async function GET(
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
-    // 1. Busca perfil do aluno
-    const { data: profile, error: profileErr } = await supabase
+    let adminSupabase = supabase;
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (serviceRoleKey) {
+      const { createClient: createAdminSupabase } = await import("@supabase/supabase-js");
+      adminSupabase = createAdminSupabase(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        serviceRoleKey,
+        { auth: { autoRefreshToken: false, persistSession: false } }
+      );
+    }
+
+    // 1. Busca perfil do aluno ou convite pelo ID
+    let profile: any = null;
+
+    const { data: pData } = await adminSupabase
       .from("profiles")
       .select("*")
       .eq("id", id)
-      .single();
+      .maybeSingle();
 
-    if (profileErr || !profile) {
-      return NextResponse.json({ error: "Aluno não encontrado." }, { status: 404 });
+    if (pData) {
+      profile = pData;
+    } else {
+      // Se não encontrou pelo ID em profiles, busca em admin_invitations
+      const { data: invData } = await adminSupabase
+        .from("admin_invitations")
+        .select("*")
+        .eq("id", id)
+        .maybeSingle();
+
+      if (invData) {
+        // Verifica se há perfil com esse e-mail
+        const { data: pByEmail } = await adminSupabase
+          .from("profiles")
+          .select("*")
+          .eq("email", invData.email)
+          .maybeSingle();
+
+        if (pByEmail) {
+          profile = pByEmail;
+        } else {
+          profile = {
+            id: invData.id,
+            full_name: invData.full_name,
+            email: invData.email,
+            role: invData.role || "student",
+            plan: invData.plan || "pleno_anual",
+            sub_brand: invData.sub_brand || "RESID",
+            access_expires_at: invData.access_expires_at,
+            status: invData.status === "revoked" ? "blocked" : "active",
+            blocked_reason: invData.status === "revoked" ? "Convite revogado" : null,
+            created_at: invData.created_at,
+            updated_at: invData.created_at,
+            target_exams: ["ENAMED"],
+            weekly_study_hours: 20,
+            streak_days: 0,
+          };
+        }
+      }
     }
 
-    // 2. Busca métricas de questões respondidas
-    const { data: answersData, count: totalAnswers } = await supabase
+    if (!profile) {
+      return NextResponse.json({ error: "Aluno ou convite não encontrado." }, { status: 404 });
+    }
+
+    // 2. Busca métricas de questões respondidas (se houver perfil real)
+    const { data: answersData, count: totalAnswers } = await adminSupabase
       .from("user_answers")
       .select("is_correct", { count: "exact" })
-      .eq("user_id", id);
+      .eq("user_id", profile.id);
 
     const totalQuestionsAnswered = totalAnswers || 0;
     const correctAnswers = answersData ? answersData.filter((a) => a.is_correct).length : 0;
@@ -43,7 +97,7 @@ export async function GET(
       : 0;
 
     // 3. Busca simulados do aluno
-    const { data: userSimulations } = await supabase
+    const { data: userSimulations } = await adminSupabase
       .from("user_simulations")
       .select(`
         id,
@@ -59,7 +113,7 @@ export async function GET(
           total_questions
         )
       `)
-      .eq("user_id", id)
+      .eq("user_id", profile.id)
       .order("started_at", { ascending: false });
 
     const simulationsCompleted = userSimulations
@@ -67,20 +121,20 @@ export async function GET(
       : 0;
 
     // 4. Busca diagnósticos (Raio-X)
-    const { data: diagnostics } = await supabase
+    const { data: diagnostics } = await adminSupabase
       .from("user_diagnostics")
       .select("*")
-      .eq("user_id", id)
+      .eq("user_id", profile.id)
       .order("created_at", { ascending: false })
       .limit(1);
 
     const latestDiagnostic = diagnostics && diagnostics.length > 0 ? diagnostics[0] : null;
 
     // 5. Busca histórico de e-mails enviados para o aluno (user_id ou email)
-    const { data: emailsLog, error: emailErr } = await supabase
+    const { data: emailsLog, error: emailErr } = await adminSupabase
       .from("user_emails_log")
       .select("*")
-      .or(`user_id.eq.${id},recipient_email.eq.${profile.email}`)
+      .or(`user_id.eq.${profile.id},recipient_email.eq.${profile.email}`)
       .order("created_at", { ascending: false });
 
     if (emailErr) {
@@ -156,15 +210,51 @@ export async function PATCH(
       return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
-    // Busca perfil atual do aluno
-    const { data: currentProfile, error: currErr } = await supabase
+    let adminSupabase = supabase;
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (serviceRoleKey) {
+      const { createClient: createAdminSupabase } = await import("@supabase/supabase-js");
+      adminSupabase = createAdminSupabase(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        serviceRoleKey,
+        { auth: { autoRefreshToken: false, persistSession: false } }
+      );
+    }
+
+    // Busca perfil atual do aluno ou convite
+    let currentProfile: any = null;
+    let isInviteTarget = false;
+
+    const { data: pData } = await adminSupabase
       .from("profiles")
       .select("*")
       .eq("id", id)
-      .single();
+      .maybeSingle();
 
-    if (currErr || !currentProfile) {
-      return NextResponse.json({ error: "Aluno não encontrado" }, { status: 404 });
+    if (pData) {
+      currentProfile = pData;
+    } else {
+      const { data: invData } = await adminSupabase
+        .from("admin_invitations")
+        .select("*")
+        .eq("id", id)
+        .maybeSingle();
+
+      if (invData) {
+        isInviteTarget = true;
+        currentProfile = {
+          id: invData.id,
+          email: invData.email,
+          full_name: invData.full_name,
+          role: invData.role,
+          plan: invData.plan,
+          status: invData.status === "revoked" ? "blocked" : "active",
+        };
+      }
+    }
+
+    if (!currentProfile) {
+      return NextResponse.json({ error: "Aluno ou convite não encontrado" }, { status: 404 });
     }
 
     const body = await request.json();
@@ -172,27 +262,47 @@ export async function PATCH(
 
     // AÇÃO 1: Atualização de Dados (Papel, Plano, Status, Bloqueio, Expiração)
     if (action === "update_profile") {
-      const updateData: Record<string, any> = {
-        updated_at: new Date().toISOString(),
-      };
+      if (isInviteTarget) {
+        const invUpdate: Record<string, any> = {};
+        if (body.role !== undefined) invUpdate.role = body.role;
+        if (body.plan !== undefined) invUpdate.plan = body.plan;
+        if (body.status === "blocked") invUpdate.status = "revoked";
+        if (body.status === "active") invUpdate.status = "accepted";
+        if (body.access_expires_at !== undefined) invUpdate.access_expires_at = body.access_expires_at;
 
-      if (body.role !== undefined) updateData.role = body.role;
-      if (body.plan !== undefined) {
-        updateData.plan = body.plan;
-        updateData.plano = body.plan; // retrocompatibilidade
+        await adminSupabase.from("admin_invitations").update(invUpdate).eq("id", id);
       }
-      if (body.status !== undefined) updateData.status = body.status;
-      if (body.blocked_reason !== undefined) updateData.blocked_reason = body.blocked_reason;
-      if (body.access_expires_at !== undefined) updateData.access_expires_at = body.access_expires_at;
-      if (body.sub_brand !== undefined) updateData.sub_brand = body.sub_brand;
 
-      const { error: updateErr } = await supabase
+      // Se houver registro em profiles (pelo ID ou pelo email do convite)
+      const { data: existingProfile } = await adminSupabase
         .from("profiles")
-        .update(updateData)
-        .eq("id", id);
+        .select("id")
+        .or(`id.eq.${id},email.eq.${currentProfile.email}`)
+        .maybeSingle();
 
-      if (updateErr) {
-        return NextResponse.json({ error: `Falha ao atualizar perfil: ${updateErr.message}` }, { status: 500 });
+      if (existingProfile) {
+        const updateData: Record<string, any> = {
+          updated_at: new Date().toISOString(),
+        };
+
+        if (body.role !== undefined) updateData.role = body.role;
+        if (body.plan !== undefined) {
+          updateData.plan = body.plan;
+          updateData.plano = body.plan; // retrocompatibilidade
+        }
+        if (body.status !== undefined) updateData.status = body.status;
+        if (body.blocked_reason !== undefined) updateData.blocked_reason = body.blocked_reason;
+        if (body.access_expires_at !== undefined) updateData.access_expires_at = body.access_expires_at;
+        if (body.sub_brand !== undefined) updateData.sub_brand = body.sub_brand;
+
+        const { error: updateErr } = await adminSupabase
+          .from("profiles")
+          .update(updateData)
+          .eq("id", existingProfile.id);
+
+        if (updateErr) {
+          console.warn("Aviso ao atualizar perfil vinculado:", updateErr.message);
+        }
       }
 
       // Registro de Auditoria

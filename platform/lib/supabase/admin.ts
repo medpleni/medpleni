@@ -158,47 +158,18 @@ export async function fetchExecutiveMetrics(): Promise<ExecutiveMetrics> {
  */
 export async function fetchAdminStudents(search?: string, planFilter?: string): Promise<AdminStudentSummary[]> {
   try {
-    const supabase = createClient();
-    let query = supabase.from("profiles").select("*").order("created_at", { ascending: false });
+    const params = new URLSearchParams();
+    if (search) params.set("search", search);
+    if (planFilter && planFilter !== "Todos") params.set("plan", planFilter);
 
-    if (planFilter && planFilter !== "Todos") {
-      // Suporta busca tanto por 'plan' quanto por 'plano'
-      query = query.or(`plan.eq.${planFilter},plano.eq.${planFilter}`);
+    const res = await fetch(`/api/admin/students?${params.toString()}`);
+    if (!res.ok) {
+      console.warn("Falha ao buscar alunos via API:", res.statusText);
+      return [];
     }
 
-    const { data: profiles, error } = await query;
-    if (error || !profiles) return [];
-
-    return profiles
-      .filter((p: any) => {
-        if (!search) return true;
-        const s = search.toLowerCase();
-        return (
-          p.full_name?.toLowerCase().includes(s) ||
-          p.email?.toLowerCase().includes(s) ||
-          p.crm?.includes(s)
-        );
-      })
-      .map((p: any) => ({
-        id: p.id,
-        fullName: p.full_name || "Médico(a) Aluno(a)",
-        email: p.email,
-        crm: p.crm || undefined,
-        role: (p.role as AdminRole) || "student",
-        plan: p.plan || p.plano || "diagnostico",
-        createdAt: p.created_at ? new Date(p.created_at).toLocaleDateString("pt-BR") : "—",
-        streakDays: p.streak_days || 0,
-        targetExams: p.target_exams || ["ENAMED"],
-        weeklyHours: p.weekly_study_hours || 20,
-        status: (p.status as "active" | "blocked") || "active",
-        blockedReason: p.blocked_reason || undefined,
-        accessExpiresAt: p.access_expires_at || undefined,
-        subBrand: p.sub_brand || undefined,
-        lastActiveAt: p.last_active_at || undefined,
-        specialty: p.target_specialty || p.specialty || undefined,
-        questionsAnsweredCount: p.questions_answered_count || 0,
-        simulationsCompletedCount: p.simulations_completed_count || 0,
-      }));
+    const data = await res.json();
+    return data.students || [];
   } catch (err) {
     console.warn("Aviso ao buscar alunos no painel admin:", err);
     return [];

@@ -496,7 +496,17 @@ export default function AdminAlunosPage() {
                     const fullInviteUrl = `${appUrl}/convite?token=${inv.token}`;
 
                     return (
-                      <tr key={inv.id} style={{ borderBottom: "1px solid var(--card-border)" }}>
+                      <tr
+                        key={inv.id}
+                        onClick={() => setSelectedStudentId(inv.id)}
+                        style={{
+                          borderBottom: "1px solid var(--card-border)",
+                          cursor: "pointer",
+                          transition: "background 0.15s ease",
+                        }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.03)")}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                      >
                         <td style={{ padding: "14px 16px" }}>
                           <div style={{ fontWeight: 600, color: "var(--heading-color)" }}>{inv.full_name}</div>
                           <div style={{ fontSize: 11, color: V.ch }}>{inv.email}</div>
@@ -537,11 +547,28 @@ export default function AdminAlunosPage() {
                           </span>
                         </td>
                         <td style={{ padding: "14px 16px" }}>
-                          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedStudentId(inv.id);
+                              }}
+                              title="Ver Perfil 360° Completo"
+                              style={{
+                                padding: "5px 9px", borderRadius: 6,
+                                background: "rgba(0,229,153,0.15)", border: "1px solid rgba(0,229,153,0.3)",
+                                color: "#00e599", fontSize: 11, fontWeight: 700, cursor: "pointer",
+                              }}
+                            >
+                              Ver 360°
+                            </button>
                             {inv.status === "pending" && (
                               <>
                                 <button
-                                  onClick={() => copyToClipboard(fullInviteUrl)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    copyToClipboard(fullInviteUrl);
+                                  }}
                                   title="Copiar Link de Ativação"
                                   style={{
                                     padding: "5px 8px", borderRadius: 6,
@@ -552,7 +579,10 @@ export default function AdminAlunosPage() {
                                   Copiar Link
                                 </button>
                                 <button
-                                  onClick={() => shareInviteWhatsApp(inv.full_name, fullInviteUrl)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    shareInviteWhatsApp(inv.full_name, fullInviteUrl);
+                                  }}
                                   title="Enviar via WhatsApp"
                                   style={{
                                     padding: "5px 8px", borderRadius: 6,
@@ -563,7 +593,10 @@ export default function AdminAlunosPage() {
                                   WhatsApp
                                 </button>
                                 <button
-                                  onClick={() => handleRevokeInvite(inv.id)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleRevokeInvite(inv.id);
+                                  }}
                                   title="Cancelar Convite"
                                   style={{
                                     padding: "5px 8px", borderRadius: 6,
