@@ -115,7 +115,12 @@ function ConviteContent() {
             "Este e-mail já possui uma conta ativa no MedPleni. Por favor, digite a senha da sua conta existente para ativar o novo acesso, ou recupere sua senha."
           );
         }
-      } else if (authErr && !authErr.message.toLowerCase().includes("rate limit")) {
+      } else if (authErr) {
+        if (authErr.message?.toLowerCase().includes("rate limit")) {
+          throw new Error(
+            "O serviço de autenticação do Supabase atingiu o limite temporário de requisições por hora (rate limit). Por favor, aguarde alguns instantes ou configure a chave de serviço (Service Role) no painel."
+          );
+        }
         throw authErr;
       }
 
