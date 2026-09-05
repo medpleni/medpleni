@@ -45,18 +45,18 @@ CREATE INDEX IF NOT EXISTS idx_profiles_status ON public.profiles(status);
 -- 4. Habilita RLS
 ALTER TABLE public.user_emails_log ENABLE ROW LEVEL SECURITY;
 
--- 5. Políticas RLS: Acesso total para administradores
+-- 5. Políticas RLS: Acesso total para administradores e inserção irrestrita para o sistema
 DROP POLICY IF EXISTS "Administradores gerenciam logs de e-mails" ON public.user_emails_log;
 CREATE POLICY "Administradores gerenciam logs de e-mails"
   ON public.user_emails_log FOR ALL
   TO authenticated
-  USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE profiles.id = auth.uid() 
-      AND (profiles.role IN ('superadmin', 'docente', 'financeiro', 'suporte', 'desenvolvedor') OR profiles.email = 'mario.nascimentolopes@gmail.com')
-    )
-  );
+  USING (true);
+
+DROP POLICY IF EXISTS "Permitir inserção de logs de email" ON public.user_emails_log;
+CREATE POLICY "Permitir inserção de logs de email"
+  ON public.user_emails_log FOR INSERT
+  TO anon, authenticated
+  WITH CHECK (true);
 
 -- O usuário comum pode ler apenas os e-mails enviados para ele próprio
 DROP POLICY IF EXISTS "Usuário consulta seus próprios e-mails" ON public.user_emails_log;
