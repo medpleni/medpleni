@@ -4,8 +4,14 @@ const apiKey = process.env.RESEND_API_KEY;
 
 export const resend = new Resend(apiKey);
 
-export const DEFAULT_FROM_EMAIL =
-  process.env.RESEND_FROM_EMAIL || "MedPleni <noreply@medpleni.com>";
+function cleanFromEmail(raw?: string): string {
+  if (!raw) return "MedPleni <noreply@medpleni.com>";
+  // Remove aspas adicionadas acidentalmente nas variáveis de ambiente da Vercel
+  const cleaned = raw.replace(/^["'\s]+|["'\s]+$/g, "").trim();
+  return cleaned || "MedPleni <noreply@medpleni.com>";
+}
+
+export const DEFAULT_FROM_EMAIL = cleanFromEmail(process.env.RESEND_FROM_EMAIL);
 
 export interface SendEmailOptions {
   to: string | string[];
@@ -23,8 +29,9 @@ export async function sendEmail({
   from = DEFAULT_FROM_EMAIL,
 }: SendEmailOptions) {
   try {
+    const sanitizedFrom = cleanFromEmail(from);
     const result = await resend.emails.send({
-      from,
+      from: sanitizedFrom,
       to,
       subject,
       html,
