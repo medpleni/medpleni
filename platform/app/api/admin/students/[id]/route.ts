@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { sendEmail as dispatchResendEmail } from "@/lib/email/resend";
+import { renderResetPasswordEmail } from "@/lib/email/templates/reset-password-email";
+import { renderSupportEmail } from "@/lib/email/templates/support-email";
 
 export async function GET(
   request: Request,
@@ -371,47 +373,11 @@ export async function PATCH(
         }
       }
 
-      const emailHtml = `
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <title>Acesso à Plataforma MedPleni</title>
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #0d1117; color: #e6edf3; margin: 0; padding: 24px; }
-    .container { max-width: 580px; margin: 0 auto; background: #161b22; border-radius: 12px; border: 1px solid #30363d; padding: 32px; }
-    .header { text-align: center; margin-bottom: 24px; border-bottom: 1px solid #21262d; padding-bottom: 20px; }
-    .logo-badge { display: inline-block; background: #00e599; color: #0d1117; font-weight: 800; font-size: 14px; padding: 4px 12px; border-radius: 6px; letter-spacing: 0.5px; }
-    h1 { color: #f0f6fc; font-size: 22px; margin-top: 16px; margin-bottom: 8px; }
-    p { color: #8b949e; line-height: 1.6; font-size: 15px; }
-    .highlight-box { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 16px; margin: 20px 0; }
-    .btn { display: inline-block; background: #00e599; color: #0d1117 !important; font-weight: 700; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-size: 16px; margin: 20px 0; text-align: center; }
-    .footer { font-size: 12px; color: #484f58; text-align: center; margin-top: 32px; border-top: 1px solid #21262d; padding-top: 16px; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <span class="logo-badge">MEDPLENI</span>
-      <h1>Seu Acesso à Plataforma</h1>
-    </div>
-    <p>Olá, <strong>${studentName}</strong>!</p>
-    <p>Nossa equipe administrativa reenviou seu link de acesso à plataforma preparatória para Residência Médica <strong>MedPleni</strong>.</p>
-    <div class="highlight-box">
-      <p style="margin: 0; color: #c9d1d9;"><strong>E-mail cadastrado:</strong> ${studentEmail}</p>
-      <p style="margin: 6px 0 0 0; color: #c9d1d9;"><strong>Status da conta:</strong> Ativa e Liberada</p>
-    </div>
-    <div style="text-align: center;">
-      <a href="${recoveryLink}" class="btn">Entrar na Plataforma</a>
-    </div>
-    <p style="font-size: 13px; color: #6e7681; text-align: center;">Ou copie o link no navegador:<br><span style="word-break: break-all; color: #58a6ff;">${recoveryLink}</span></p>
-    <div class="footer">
-      <p>MedPleni Educação Médica de Alta Performance &bull; Suporte: suporte@medpleni.com</p>
-    </div>
-  </div>
-</body>
-</html>
-      `;
+      const emailHtml = renderResetPasswordEmail({
+        name: studentName,
+        resetUrl: recoveryLink,
+        expiresIn: "24 horas",
+      });
 
       const emailResult = await dispatchResendEmail({
         to: studentEmail,
@@ -455,39 +421,11 @@ export async function PATCH(
       const studentEmail = currentProfile.email;
       const studentName = currentProfile.full_name || "Médico(a) Aluno(a)";
 
-      const emailHtml = `
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <title>${subject}</title>
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #0d1117; color: #e6edf3; margin: 0; padding: 24px; }
-    .container { max-width: 580px; margin: 0 auto; background: #161b22; border-radius: 12px; border: 1px solid #30363d; padding: 32px; }
-    .header { text-align: center; margin-bottom: 24px; border-bottom: 1px solid #21262d; padding-bottom: 20px; }
-    .logo-badge { display: inline-block; background: #00e599; color: #0d1117; font-weight: 800; font-size: 14px; padding: 4px 12px; border-radius: 6px; }
-    h1 { color: #f0f6fc; font-size: 20px; margin-top: 16px; margin-bottom: 8px; }
-    p { color: #8b949e; line-height: 1.6; font-size: 15px; }
-    .content-box { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 20px; margin: 20px 0; color: #e6edf3; white-space: pre-wrap; line-height: 1.6; }
-    .footer { font-size: 12px; color: #484f58; text-align: center; margin-top: 32px; border-top: 1px solid #21262d; padding-top: 16px; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <span class="logo-badge">MEDPLENI</span>
-      <h1>${subject}</h1>
-    </div>
-    <p>Olá, <strong>${studentName}</strong>,</p>
-    <div class="content-box">${message.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</div>
-    <p>Qualquer dúvida adicional, basta responder a este e-mail.</p>
-    <div class="footer">
-      <p>Equipe de Atendimento e Coordenação Acadêmica &bull; MedPleni</p>
-    </div>
-  </div>
-</body>
-</html>
-      `;
+      const emailHtml = renderSupportEmail({
+        name: studentName,
+        subject: subject.trim(),
+        message: message.trim(),
+      });
 
       const emailResult = await dispatchResendEmail({
         to: studentEmail,

@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { fetchAdminStudents, updateStudentPlanManually, type AdminStudentSummary } from "@/lib/supabase/admin";
 import { useUser } from "@/lib/supabase/use-user";
-import StudentDrawer360 from "./components/student-drawer-360";
+import StudentProfile360View from "./components/student-profile-360-view";
 
 const V = {
   pu: "var(--pulso)", re: "var(--resgate)", rel: "#64B5E8", ind: "#6B5CE7",
@@ -195,6 +195,17 @@ export default function AdminAlunosPage() {
     );
     window.open(`https://wa.me/?text=${text}`, "_blank");
   };
+
+  // Se um aluno ou convite estiver selecionado, abre o Módulo Perfil 360° em tela cheia
+  if (selectedStudentId) {
+    return (
+      <StudentProfile360View
+        studentId={selectedStudentId}
+        onBack={() => setSelectedStudentId(null)}
+        onStudentUpdated={loadData}
+      />
+    );
+  }
 
   return (
     <div>
@@ -1023,14 +1034,6 @@ export default function AdminAlunosPage() {
           </div>
         </div>
       )}
-
-      {/* ── DRAWER PERFIL 360° DO ALUNO ── */}
-      <StudentDrawer360
-        studentId={selectedStudentId}
-        isOpen={!!selectedStudentId}
-        onClose={() => setSelectedStudentId(null)}
-        onStudentUpdated={loadData}
-      />
     </div>
   );
 }
