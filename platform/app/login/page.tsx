@@ -18,6 +18,12 @@ function LoginForm() {
   const [mensagemSucesso, setMensagemSucesso] = useState<string | null>(null);
 
   useEffect(() => {
+    const token = searchParams.get("token");
+    if (token) {
+      router.replace(`/convite?token=${token}`);
+      return;
+    }
+
     if (searchParams.get("error") === "auth_callback_failed") {
       setErro("Falha na autenticação via link. Por favor, tente novamente.");
     }
@@ -27,7 +33,7 @@ function LoginForm() {
     if (searchParams.get("msg") === "reset_done") {
       setMensagemSucesso("Senha redefinida com sucesso! Faça login com a nova senha.");
     }
-  }, [searchParams]);
+  }, [searchParams, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

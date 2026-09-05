@@ -49,6 +49,7 @@ export async function updateSession(request: NextRequest) {
   const isAuthRoute =
     pathname.startsWith("/login") ||
     pathname.startsWith("/cadastro") ||
+    pathname.startsWith("/convite") ||
     pathname.startsWith("/recuperar-senha") ||
     pathname.startsWith("/redefinir-senha") ||
     pathname.startsWith("/auth");
