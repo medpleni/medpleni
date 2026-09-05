@@ -6,12 +6,22 @@ export const resend = new Resend(apiKey);
 
 function cleanFromEmail(raw?: string): string {
   if (!raw) return "MedPleni <noreply@medpleni.com>";
-  // Remove aspas adicionadas acidentalmente nas variáveis de ambiente da Vercel
-  const cleaned = raw.replace(/^["'\s]+|["'\s]+$/g, "").trim();
-  return cleaned || "MedPleni <noreply@medpleni.com>";
+  // Extrai o endereço de e-mail limpo ignorando aspas, barras invertidas e caracteres de escape
+  const match = raw.match(/<([^>]+)>/);
+  if (match && match[1]) {
+    const cleanAddress = match[1].replace(/[^a-zA-Z0-9@._+-]/g, "").trim();
+    if (cleanAddress.includes("@")) {
+      return `MedPleni <${cleanAddress}>`;
+    }
+  }
+  const emailOnly = raw.replace(/[^a-zA-Z0-9@._+-]/g, "").trim();
+  if (emailOnly.includes("@")) {
+    return `MedPleni <${emailOnly}>`;
+  }
+  return "MedPleni <noreply@medpleni.com>";
 }
 
-export const DEFAULT_FROM_EMAIL = cleanFromEmail(process.env.RESEND_FROM_EMAIL);
+export const DEFAULT_FROM_EMAIL = "MedPleni <noreply@medpleni.com>";
 
 export interface SendEmailOptions {
   to: string | string[];
