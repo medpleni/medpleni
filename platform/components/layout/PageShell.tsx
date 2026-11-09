@@ -27,6 +27,7 @@ const routeMap: Record<string, string> = {
   predicao: "/predicao",
   flashcards: "/flashcards",
   cronograma: "/cronograma",
+  "central-aprovacoes": "/central-aprovacoes",
   perfil: "/perfil",
   planos: "/planos",
   resid: "/dashboard",
@@ -79,6 +80,43 @@ export default function PageShell({
         .toUpperCase()
     : "MP";
 
+  // Identifica sócios e diretores para exibir atalho da Central B2B
+  const isPartner = React.useMemo(() => {
+    const email = (user?.email || "").toLowerCase();
+    return (
+      email.includes("filipe") ||
+      email.includes("andrade") ||
+      email.includes("bruno") ||
+      email.includes("farnetano") ||
+      email.includes("mario") ||
+      email.includes("renato") ||
+      email.endsWith("@medpleni.com") ||
+      email.endsWith("@medpleni.com.br")
+    );
+  }, [user?.email]);
+
+  const navSections = React.useMemo(() => {
+    if (!isPartner) return defaultSections;
+    return [
+      ...defaultSections,
+      {
+        label: "Sócios & Governança",
+        items: [
+          {
+            id: "central-aprovacoes",
+            label: "Central B2B (Aprovações)",
+            icon: (
+              <svg viewBox="0 0 16 16" fill="none" width="16" height="16">
+                <rect x="2" y="3" width="12" height="10" rx="1.5" stroke="#00C2A8" strokeWidth="1.3" />
+                <path d="M5 8l2 2 4-4" stroke="#00C2A8" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            ),
+          },
+        ],
+      },
+    ];
+  }, [isPartner]);
+
   const handleNavigate = (id: string) => {
     if (id === "menu") {
       setDrawerOpen(true);
@@ -124,7 +162,7 @@ export default function PageShell({
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
         {/* Sidebar Desktop (Oculta via CSS no mobile) */}
         <Sidebar
-          sections={defaultSections}
+          sections={navSections}
           activeId={activeNavId}
           onNavigate={handleNavigate}
           userName={displayNome}

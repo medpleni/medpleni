@@ -310,17 +310,29 @@ export default function CentralAprovacoesPage() {
     // 1. Sócios fundadores da ata 05/11
     if (INITIAL_AUTHORIZED_EMAILS.includes(userEmail)) return true;
 
-    // 2. E-mails convidados e salvos no banco / lista
+    // 2. Reconhecimento automático dos sócios por nome/sobrenome (mesmo com e-mail pessoal/gmail)
+    if (
+      userEmail.includes("filipe") ||
+      userEmail.includes("andrade") ||
+      userEmail.includes("bruno") ||
+      userEmail.includes("farnetano") ||
+      userEmail.includes("mario") ||
+      userEmail.includes("renato")
+    ) {
+      return true;
+    }
+
+    // 3. E-mails convidados e salvos no banco / lista
     if (invitedEmails.some((inv) => inv.email.toLowerCase().trim() === userEmail)) {
       return true;
     }
 
-    // 3. Qualquer e-mail institucional corporativo da MedPleni
+    // 4. Qualquer e-mail institucional corporativo da MedPleni
     if (userEmail.endsWith("@medpleni.com") || userEmail.endsWith("@medpleni.com.br")) {
       return true;
     }
 
-    // 4. Role administrativa no perfil do Supabase
+    // 5. Role administrativa no perfil do Supabase
     const userRole = (profile as any)?.role;
     if (
       userRole === "admin" ||
