@@ -126,7 +126,7 @@ const PARTNERS: UserProfile[] = [
     id: "bruno",
     name: "Dr. Bruno Farnetano",
     role: "Sócio Médico · Conteúdo & Questões",
-    email: "bruno.farnetano@medpleni.com.br",
+    email: "brunofarnetano@yahoo.com.br",
     avatar: "BF",
     color: "#0077B6",
   },
@@ -134,7 +134,7 @@ const PARTNERS: UserProfile[] = [
     id: "filipe",
     name: "Dr. Filipe Moreira de Andrade",
     role: "Sócio Médico · Pedagógico & ENAMED",
-    email: "filipe.andrade@medpleni.com.br",
+    email: "filipetorax@hotmail.com",
     avatar: "FA",
     color: "#6B5CE7",
   },
@@ -246,7 +246,7 @@ const INITIAL_INVITED_EMAILS: InvitedEmail[] = [
   },
   {
     id: "inv-2",
-    email: "bruno.farnetano@medpleni.com.br",
+    email: "brunofarnetano@yahoo.com.br",
     name: "Dr. Bruno Farnetano",
     role: "Sócio Médico · Conteúdo",
     priority: "Alta",
@@ -255,7 +255,7 @@ const INITIAL_INVITED_EMAILS: InvitedEmail[] = [
   },
   {
     id: "inv-3",
-    email: "filipe.andrade@medpleni.com.br",
+    email: "filipetorax@hotmail.com",
     name: "Dr. Filipe Moreira de Andrade",
     role: "Sócio Médico · Pedagógico",
     priority: "Alta",
@@ -293,12 +293,18 @@ export default function CentralAprovacoesPage() {
   // ── Autorização e Validação de E-mails ─────────────────────────────────
   const userEmail = (user?.email || "").toLowerCase().trim();
 
-  // Sócios Fundadores e Whitelist Principal
+  // Sócios Fundadores e Whitelist Principal (todos os e-mails reais de cada sócio)
   const INITIAL_AUTHORIZED_EMAILS = useMemo(
     () => [
+      // Mario Lopes
       "mario.nascimentolopes@gmail.com",
+      // Dr. Bruno Farnetano
       "bruno.farnetano@medpleni.com.br",
+      "brunofarnetano@yahoo.com.br",
+      // Dr. Filipe Moreira de Andrade
       "filipe.andrade@medpleni.com.br",
+      "filipetorax@hotmail.com",
+      // Renato
       "renato@medpleni.com.br",
     ],
     []
@@ -348,9 +354,18 @@ export default function CentralAprovacoesPage() {
   // Alinhamento automático do perfil do sócio com base no e-mail conectado
   useEffect(() => {
     if (!userEmail) return;
-    if (userEmail.includes("bruno") || userEmail.includes("farnetano")) {
+    if (
+      userEmail.includes("bruno") ||
+      userEmail.includes("farnetano") ||
+      userEmail === "brunofarnetano@yahoo.com.br"
+    ) {
       setActivePartnerId("bruno");
-    } else if (userEmail.includes("filipe") || userEmail.includes("andrade")) {
+    } else if (
+      userEmail.includes("filipe") ||
+      userEmail.includes("andrade") ||
+      userEmail === "filipetorax@hotmail.com" ||
+      userEmail.includes("torax")
+    ) {
       setActivePartnerId("filipe");
     } else if (userEmail.includes("renato")) {
       setActivePartnerId("renato");
