@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={"darkMode":"class","theme":{"extend":{"colors":{"surface-container-lowest":"#090e1c","primary-container":"#00c2a8","primary-fixed-dim":"#41ddc2","primary":"#42dec3","on-secondary-fixed":"#001d32","on-error":"#690005","surface":"#0e1321","tertiary-container":"#e1a03f","background":"#0e1321","error-container":"#93000a","tertiary-fixed-dim":"#feb956","surface-variant":"#2f3444","on-error-container":"#ffdad6","surface-container-low":"#161b2a","on-primary-fixed":"#00201b","on-secondary":"#003352","inverse-on-surface":"#2b3040","on-background":"#dee2f7","on-primary-container":"#00493e","surface-container-high":"#252a39","on-surface-variant":"#bbcac4","on-secondary-container":"#f5f8ff","on-primary-fixed-variant":"#005045","on-primary":"#00382f","error":"#ffb4ab","surface-bright":"#343949","outline-variant":"#3c4a46","on-tertiary":"#452b00","surface-tint":"#41ddc2","inverse-primary":"#006b5c","outline":"#85948f","secondary":"#94ccff","on-tertiary-fixed":"#291800","surface-container":"#1a1f2e","on-secondary-fixed-variant":"#004b74","secondary-fixed-dim":"#94ccff","tertiary":"#ffbb5a","secondary-container":"#0378b7","on-surface":"#dee2f7","surface-container-highest":"#2f3444","inverse-surface":"#dee2f7","primary-fixed":"#65fade","on-tertiary-fixed-variant":"#633f00","surface-dim":"#0e1321","tertiary-fixed":"#ffddb4","on-tertiary-container":"#5b3900","secondary-fixed":"#cde5ff"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"space-sm":"0.25rem","space-lg":"0.75rem","gutter-compact":"0.25rem","space-md":"0.5rem","margin":"0.75rem","space-xl":"1rem","margin-mobile":"0.5rem","space-xs":"0.125rem","gutter":"0.5rem"},"fontFamily":{"headline-md":["Space Grotesk"],"metric-stat-lg":["JetBrains Mono"],"body-md":["Inter"],"display-lg-mobile":["Space Grotesk"],"headline-sm":["Space Grotesk"],"metric-stat-md":["JetBrains Mono"],"display-lg":["Space Grotesk"],"body-sm":["Inter"],"label-data-micro":["JetBrains Mono"],"code-telemetry":["JetBrains Mono"]},"fontSize":{"headline-md":["20px",{"lineHeight":"26px","letterSpacing":"-0.01em","fontWeight":"600"}],"metric-stat-lg":["28px",{"lineHeight":"32px","letterSpacing":"-0.03em","fontWeight":"700"}],"body-md":["13px",{"lineHeight":"18px","letterSpacing":"0em","fontWeight":"400"}],"display-lg-mobile":["26px",{"lineHeight":"34px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-sm":["16px",{"lineHeight":"22px","letterSpacing":"-0.01em","fontWeight":"600"}],"metric-stat-md":["18px",{"lineHeight":"22px","letterSpacing":"-0.02em","fontWeight":"700"}],"display-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-sm":["12px",{"lineHeight":"16px","letterSpacing":"0em","fontWeight":"400"}],"label-data-micro":["10px",{"lineHeight":"12px","letterSpacing":"0.06em","fontWeight":"600"}],"code-telemetry":["12px",{"lineHeight":"16px","letterSpacing":"-0.01em","fontWeight":"500"}]}}}}</script></head><body class="bg-surface text-on-surface font-body-sm text-body-sm antialiased selection:bg-primary-container selection:text-on-primary-container"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container border-r border-outline-variant z-50 flex flex-col justify-between"><div class="flex flex-col"><div class="h-16 px-margin flex items-center gap-space-md border-b border-outline-variant bg-surface-container-low"><div class="w-7 h-7 bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">terminal</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm uppercase tracking-wider text-on-surface leading-none">MedPleni</span><span class="font-label-data-micro text-label-data-micro text-primary uppercase mt-space-xs">Intelligence Deck</span></div></div><div class="px-margin py-space-md bg-surface-container-lowest border-b border-outline-variant"><div class="font-label-data-micro text-label-data-micro text-on-surface-variant uppercase tracking-wider">Nó Regulatório</div><div class="font-code-telemetry text-code-telemetry text-on-surface truncate mt-space-xs">FMUSP — Hosp. Clínicas</div><div class="font-label-data-micro text-label-data-micro text-secondary truncate">CENTRO REGULATÓRIO ENAMED</div></div><div class="px-margin py-space-sm"><span class="font-label-data-micro text-label-data-micro text-outline uppercase tracking-wider">Módulos de Comando</span></div><nav class="flex flex-col space-y-space-xs px-space-xs" data-active-classes="bg-surface-container-high text-primary border-l-2 border-primary font-semibold"><a class="flex items-center px-space-md py-space-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-code-telemetry text-code-telemetry border-l-2 border-transparent transition-colors" data-path="visao-executiva-e-comando" href="#"><span class="w-5 text-outline text-[10px]">01</span><span>Visão Executiva &amp; Comando</span></a><a class="flex items-center px-space-md py-space-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-code-telemetry text-code-telemetry border-l-2 border-transparent transition-colors" data-path="preditor-enamed" href="#"><span class="w-5 text-outline text-[10px]">02</span><span>Preditor ENAMED</span></a><a class="flex items-center px-space-md py-space-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-code-telemetry text-code-telemetry border-l-2 border-transparent transition-colors" data-path="matriz-dcn-e-competencias" href="#"><span class="w-5 text-outline text-[10px]">03</span><span>Matriz DCN &amp; Competências</span></a><a class="flex items-center px-space-md py-space-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-code-telemetry text-code-telemetry border-l-2 border-transparent transition-colors" data-path="gestao-de-internato-e-coortes" href="#"><span class="w-5 text-outline text-[10px]">04</span><span>Gestão Internato &amp; Coortes</span></a><a class="flex items-center px-space-md py-space-sm text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-code-telemetry text-code-telemetry border-l-2 border-transparent transition-colors" data-path="auditoria-e-e-mec" href="#"><span class="w-5 text-outline text-[10px]">05</span><span>Auditoria &amp; e-MEC</span></a></nav></div><div class="border-t border-outline-variant bg-surface-container-lowest p-margin"><div class="flex items-center justify-between mb-space-sm"><span class="font-label-data-micro text-label-data-micro uppercase text-outline">Telemetria MEC</span><span class="flex items-center gap-space-xs font-label-data-micro text-label-data-micro text-primary"><span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>ONLINE</span></div><div class="space-y-space-xs"><div class="flex justify-between font-label-data-micro text-label-data-micro"><span class="text-on-surface-variant">INEP Live-Sync:</span><span class="text-on-surface font-code-telemetry text-code-telemetry">100% OK</span></div><div class="flex justify-between font-label-data-micro text-label-data-micro"><span class="text-on-surface-variant">Latência Rede:</span><span class="text-primary font-code-telemetry text-code-telemetry">12ms</span></div><div class="flex justify-between font-label-data-micro text-label-data-micro"><span class="text-on-surface-variant">Último Snapshot:</span><span class="text-on-surface font-code-telemetry text-code-telemetry">14:02:41 UTC</span></div></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-low border-b border-outline-variant z-40 flex items-center justify-between px-margin"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm px-space-md py-space-xs bg-surface-container border border-outline-variant"><span class="material-symbols-outlined text-primary text-[14px]">sync_alt</span><span class="font-label-data-micro text-label-data-micro text-on-surface-variant uppercase">Ciclo Ativo:</span><span class="font-code-telemetry text-code-telemetry text-on-surface font-semibold">2025.1</span><span class="text-outline font-label-data-micro text-label-data-micro">|</span><span class="font-label-data-micro text-label-data-micro text-secondary uppercase">Triênio INEP</span></div><div class="hidden xl:flex items-center gap-space-md text-on-surface-variant font-code-telemetry text-code-telemetry"><span class="flex items-center gap-space-xs"><span class="w-1 h-1 bg-primary rounded-full"></span>Latência: 12ms</span><span class="text-outline-variant">•</span><span>Base Sincronizada: 100%</span><span class="text-outline-variant">•</span><span class="text-tertiary flex items-center gap-space-xs"><span class="material-symbols-outlined text-[13px]">verified</span>Validação INEP Ativa</span></div></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs px-space-md py-space-xs bg-surface-container border border-outline-variant text-tertiary cursor-pointer hover:bg-surface-container-high transition-colors"><span class="material-symbols-outlined text-[14px]">notification_important</span><span class="font-label-data-micro text-label-data-micro font-bold">3 ALERTAS REGULATÓRIOS</span></div><div class="h-6 w-px bg-outline-variant"></div><div class="flex items-center gap-space-md pl-space-xs"><div class="text-right"><div class="font-headline-sm text-headline-sm text-on-surface leading-tight text-[13px]">Dr. Carlos Mendes</div><div class="font-label-data-micro text-label-data-micro text-primary uppercase">Pró-Reitor Ed. Médica</div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 bg-surface px-margin py-margin"><div class="flex flex-col w-full text-on-surface antialiased">
+<!-- CONSOLE TOPBAR CONTROLS & META BREADCRUMB -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md py-space-sm mb-space-md bg-surface-container border border-outline-variant px-margin">
+<div class="flex flex-wrap items-center gap-space-md">
+<div class="flex items-center gap-space-xs text-primary font-code-telemetry text-code-telemetry">
+<span class="w-2 h-2 bg-primary"></span>
+<span class="font-bold tracking-wider uppercase">DECK-CMD // OPERAÇÃO-01: VISÃO EXECUTIVA &amp; REGULAÇÃO</span>
+</div>
+<span class="text-outline-variant text-[10px]">/</span>
+<div class="flex items-center gap-space-xs font-label-data-micro text-label-data-micro text-on-surface-variant">
+<span>FRAMEWORK:</span>
+<span class="text-on-surface font-code-telemetry">DCN CNE/CES 3/2014</span>
+</div>
+<span class="text-outline-variant text-[10px]">/</span>
+<div class="flex items-center gap-space-xs font-label-data-micro text-label-data-micro text-on-surface-variant">
+<span>PREDITOR ENAMED:</span>
+<span class="text-secondary font-code-telemetry">BAYES-MODEL v4.8</span>
+</div>
+</div>
+<!-- COMMAND FILTERS & EXPORT -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<div class="flex items-center bg-surface-container-lowest border border-outline-variant p-space-xs">
+<span class="font-label-data-micro text-label-data-micro text-outline px-space-xs uppercase">VISÃO:</span>
+<button class="px-space-sm py-space-xs font-label-data-micro text-label-data-micro uppercase bg-surface-container-high text-primary font-semibold transition-colors" id="btn-view-agrupada">Agrupada</button>
+<button class="px-space-sm py-space-xs font-label-data-micro text-label-data-micro uppercase text-on-surface-variant hover:text-on-surface transition-colors" id="btn-view-analitica">Analítica</button>
+<button class="px-space-sm py-space-xs font-label-data-micro text-label-data-micro uppercase text-on-surface-variant hover:text-on-surface transition-colors" id="btn-view-dcn">Eixo DCN</button>
+</div>
+<div class="h-4 w-px bg-outline-variant"></div>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs bg-surface-container-lowest border border-outline-variant text-on-surface hover:border-secondary font-code-telemetry text-code-telemetry transition-colors">
+<span class="material-symbols-outlined text-secondary text-[14px]">sim_card_download</span>
+<span class="font-label-data-micro text-label-data-micro tracking-wider uppercase">EXPORTAR AUDITORIA INEP</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs bg-primary text-on-primary font-code-telemetry text-code-telemetry font-bold hover:bg-primary-fixed-dim transition-colors">
+<span class="material-symbols-outlined text-[14px]">sensors</span>
+<span class="font-label-data-micro text-label-data-micro tracking-wider uppercase">SALA DE SITUAÇÃO</span>
+</button>
+</div>
+</div>
+<!-- 1. EXECUTIVE TELEMETRY STRIP (5 KPI PANELS) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-space-sm mb-space-md">
+<!-- KPI 1 -->
+<div class="bg-surface-container border border-outline-variant p-space-md flex flex-col justify-between relative group hover:border-primary transition-colors">
+<div class="flex items-center justify-between border-b border-outline-variant pb-space-xs mb-space-xs">
+<span class="font-label-data-micro text-label-data-micro uppercase text-on-surface-variant tracking-wider">Prontidão Global ENAMED</span>
+<span class="font-label-data-micro text-label-data-micro text-primary flex items-center gap-space-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>FAIXA 5
+        </span>
+</div>
+<div class="my-space-xs">
+<div class="font-metric-stat-lg text-metric-stat-lg text-primary tracking-tight font-code-telemetry flex items-baseline gap-space-xs">
+          89.4<span class="text-headline-sm font-headline-sm">%</span>
+</div>
+<div class="flex items-center gap-space-xs font-label-data-micro text-label-data-micro text-primary mt-space-xs">
+<span class="material-symbols-outlined text-[13px]">trending_up</span>
+<span>+3.8 p.p. vs ciclo 2024</span>
+</div>
+</div>
+<div class="pt-space-xs border-t border-outline-variant flex justify-between font-label-data-micro text-label-data-micro text-outline">
+<span>Meta: <strong class="text-on-surface font-code-telemetry">85.0%</strong></span>
+<span>Bayes: <strong class="text-secondary font-code-telemetry">99.4%</strong></span>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-surface-container border border-outline-variant p-space-md flex flex-col justify-between relative group hover:border-secondary transition-colors">
+<div class="flex items-center justify-between border-b border-outline-variant pb-space-xs mb-space-xs">
+<span class="font-label-data-micro text-label-data-micro uppercase text-on-surface-variant tracking-wider">Projeção Média INEP</span>
+<span class="font-label-data-micro text-label-data-micro text-secondary font-code-telemetry">TOP 4.2%</span>
+</div>
+<div class="my-space-xs">
+<div class="font-metric-stat-lg text-metric-stat-lg text-secondary tracking-tight font-code-telemetry flex items-baseline gap-space-xs">
+          81.6<span class="text-headline-sm font-headline-sm text-outline">/100</span>
+</div>
+<div class="flex items-center gap-space-xs font-label-data-micro text-label-data-micro text-on-surface-variant mt-space-xs">
+<span>Decil Nacional: </span>
+<span class="text-secondary font-bold font-code-telemetry">Nível A1</span>
+</div>
+</div>
+<div class="pt-space-xs border-t border-outline-variant flex justify-between font-label-data-micro text-label-data-micro text-outline">
+<span>Intervalo 95%:</span>
+<span class="text-on-surface font-code-telemetry">79.8 — 83.4</span>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="bg-surface-container border border-outline-variant p-space-md flex flex-col justify-between relative group hover:border-outline transition-colors">
+<div class="flex items-center justify-between border-b border-outline-variant pb-space-xs mb-space-xs">
+<span class="font-label-data-micro text-label-data-micro uppercase text-on-surface-variant tracking-wider">Coorte Monitorada</span>
+<span class="font-label-data-micro text-label-data-micro text-on-surface font-code-telemetry">T48 — T51</span>
+</div>
+<div class="my-space-xs">
+<div class="font-metric-stat-lg text-metric-stat-lg text-on-surface tracking-tight font-code-telemetry flex items-baseline gap-space-xs">
+          1.240<span class="text-headline-sm font-headline-sm text-outline">disc.</span>
+</div>
+<div class="flex items-center gap-space-xs font-label-data-micro text-label-data-micro text-on-surface-variant mt-space-xs">
+<span>Internato: <strong class="text-on-surface font-code-telemetry">512</strong></span>
+<span class="text-outline-variant">|</span>
+<span>Clínico: <strong class="text-on-surface font-code-telemetry">728</strong></span>
+</div>
+</div>
+<div class="pt-space-xs border-t border-outline-variant flex justify-between font-label-data-micro text-label-data-micro text-outline">
+<span>Preceptores:</span>
+<span class="text-primary font-code-telemetry">84 Ativos</span>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="bg-surface-container border border-outline-variant p-space-md flex flex-col justify-between relative group hover:border-error transition-colors">
+<div class="flex items-center justify-between border-b border-outline-variant pb-space-xs mb-space-xs">
+<span class="font-label-data-micro text-label-data-micro uppercase text-on-surface-variant tracking-wider">Risco Regulatório</span>
+<span class="font-label-data-micro text-label-data-micro text-error font-bold flex items-center gap-space-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span>CRÍTICO
+        </span>
+</div>
+<div class="my-space-xs">
+<div class="font-metric-stat-lg text-metric-stat-lg text-error tracking-tight font-code-telemetry flex items-baseline gap-space-xs">
+          11<span class="text-headline-sm font-headline-sm text-outline">casos</span>
+</div>
+<div class="flex items-center gap-space-xs font-label-data-micro text-label-data-micro text-on-surface-variant mt-space-xs">
+<span>6 Tutoria</span>
+<span class="text-outline-variant">|</span>
+<span class="text-error font-semibold">5 Triagem Imediata</span>
+</div>
+</div>
+<div class="pt-space-xs border-t border-outline-variant flex justify-between font-label-data-micro text-label-data-micro text-outline">
+<span>Impacto INEP:</span>
+<span class="text-error font-code-telemetry">0.88% da amostra</span>
+</div>
+</div>
+<!-- KPI 5 -->
+<div class="bg-surface-container border border-outline-variant p-space-md flex flex-col justify-between relative group hover:border-primary transition-colors">
+<div class="flex items-center justify-between border-b border-outline-variant pb-space-xs mb-space-xs">
+<span class="font-label-data-micro text-label-data-micro uppercase text-on-surface-variant tracking-wider">Aderência DCN Geral</span>
+<span class="font-label-data-micro text-label-data-micro text-primary font-code-telemetry">93.2%</span>
+</div>
+<div class="my-space-xs">
+<div class="font-metric-stat-lg text-metric-stat-lg text-primary tracking-tight font-code-telemetry flex items-baseline gap-space-xs">
+          93.2<span class="text-headline-sm font-headline-sm">%</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-1.5 mt-space-xs overflow-hidden">
+<div class="bg-primary h-full w-[93.2%]"></div>
+</div>
+</div>
+<div class="pt-space-xs border-t border-outline-variant flex justify-between font-label-data-micro text-label-data-micro text-outline">
+<span>Auditados:</span>
+<span class="text-on-surface font-code-telemetry">28 / 30 Eixos DCN</span>
+</div>
+</div>
+</div>
+<!-- MAIN 2-COLUMN WORKSTATION SECTION -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-sm mb-space-md">
+<!-- SECTION A: PREDITOR ENAMED & EVOLUÇÃO TEMPORAL (7 COLUMNS) -->
+<div class="xl:col-span-7 bg-surface-container border border-outline-variant flex flex-col">
+<div class="p-space-md border-b border-outline-variant flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs bg-surface-container-low">
+<div class="flex items-center gap-space-sm">
+<div class="w-2.5 h-2.5 bg-primary"></div>
+<div>
+<span class="font-headline-sm text-headline-sm text-on-surface">Curva Preditiva ENAMED vs Referência Nacional</span>
+<div class="font-label-data-micro text-label-data-micro text-outline">SÉRIE HISTÓRICA 2020—2024 &amp; PROJEÇÃO BAYESIANA 2025.1</div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 bg-primary/10 text-primary font-label-data-micro text-label-data-micro uppercase border border-primary/30">+18.0 p.p. SUPERAÇÃO</span>
+</div>
+</div>
+<!-- FILTER TABS FOR DISCIPLINE -->
+<div class="flex flex-wrap items-center gap-space-xs px-space-md py-space-xs border-b border-outline-variant bg-surface-container-lowest font-label-data-micro text-label-data-micro">
+<span class="text-outline uppercase mr-space-xs">EIXO:</span>
+<button class="px-space-sm py-0.5 bg-surface-container-high text-primary font-semibold border-b-2 border-primary">GERAL ACADÊMICO</button>
+<button class="px-space-sm py-0.5 text-on-surface-variant hover:text-on-surface">CLÍNICA MÉDICA</button>
+<button class="px-space-sm py-0.5 text-on-surface-variant hover:text-on-surface">CIRURGIA GERAL</button>
+<button class="px-space-sm py-0.5 text-on-surface-variant hover:text-on-surface">PEDIATRIA</button>
+<button class="px-space-sm py-0.5 text-on-surface-variant hover:text-on-surface">GINEC. &amp; OBST.</button>
+<button class="px-space-sm py-0.5 text-on-surface-variant hover:text-on-surface">MFC / SAÚDE COLETIVA</button>
+</div>
+<!-- CHART CONTAINER & LEGEND -->
+<div class="p-space-md flex-1 flex flex-col justify-between">
+<!-- SVG Interactive Chart Visual -->
+<div class="relative w-full h-64 bg-surface-container-lowest border border-outline-variant/50 p-space-sm flex flex-col justify-between">
+<!-- Background Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between p-space-md pointer-events-none opacity-20">
+<div class="border-b border-outline-variant w-full flex justify-between"><span class="font-label-data-micro text-[9px] text-outline">100%</span></div>
+<div class="border-b border-outline-variant w-full flex justify-between"><span class="font-label-data-micro text-[9px] text-outline">85% (META)</span></div>
+<div class="border-b border-outline-variant w-full flex justify-between"><span class="font-label-data-micro text-[9px] text-outline">70% (LIMIAR INEP)</span></div>
+<div class="border-b border-outline-variant w-full flex justify-between"><span class="font-label-data-micro text-[9px] text-outline">60%</span></div>
+<div class="border-b border-outline-variant w-full flex justify-between"><span class="font-label-data-micro text-[9px] text-outline">0%</span></div>
+</div>
+<!-- Target & Threshold Threshold Lines -->
+<div class="absolute inset-x-0 top-[28%] border-b border-dashed border-tertiary/60 pointer-events-none">
+<span class="absolute right-2 -top-2.5 font-label-data-micro text-[9px] text-tertiary bg-surface px-1">META: 85.0%</span>
+</div>
+<div class="absolute inset-x-0 top-[52%] border-b border-dashed border-error/50 pointer-events-none">
+<span class="absolute right-2 -top-2.5 font-label-data-micro text-[9px] text-error bg-surface px-1">LIMIAR SEGURANÇA INEP: 70.0%</span>
+</div>
+<!-- SVG Chart Paths -->
+<svg class="w-full h-full relative z-10" preserveaspectratio="none" viewbox="0 0 600 200">
+<defs>
+<lineargradient id="medpleni-grad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#42dec3" stop-opacity="0.25"></stop>
+<stop offset="100%" stop-color="#42dec3" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<!-- National Average Line (Gray/Blue) -->
+<polyline fill="none" points="40,150 140,146 250,140 360,138 470,135 560,134" stroke="#85948f" stroke-dasharray="3 3" stroke-width="1.5"></polyline>
+<!-- MedPleni Confidence Band (Projected 2025) -->
+<polygon fill="#42dec3" fill-opacity="0.1" points="470,48 560,32 560,54 470,68"></polygon>
+<!-- MedPleni Real / Projected Curve -->
+<polygon fill="url(#medpleni-grad)" points="40,122 140,105 250,82 360,65 470,58 560,40 560,195 40,195"></polygon>
+<polyline fill="none" points="40,122 140,105 250,82 360,65 470,58 560,40" stroke="#42dec3" stroke-width="2.5"></polyline>
+<!-- Data Points -->
+<!-- 2020: 67.2% -->
+<circle class="fill-surface stroke-primary stroke-2" cx="40" cy="122" r="3.5"></circle>
+<!-- 2021: 72.8% -->
+<circle class="fill-surface stroke-primary stroke-2" cx="140" cy="105" r="3.5"></circle>
+<!-- 2022: 78.9% -->
+<circle class="fill-surface stroke-primary stroke-2" cx="250" cy="82" r="3.5"></circle>
+<!-- 2023: 82.5% -->
+<circle class="fill-surface stroke-primary stroke-2" cx="360" cy="65" r="3.5"></circle>
+<!-- 2024: 85.6% -->
+<circle class="fill-surface stroke-primary stroke-2" cx="470" cy="58" r="4"></circle>
+<!-- 2025.1 PROJ: 89.4% -->
+<circle class="fill-primary stroke-surface stroke-2 animate-pulse" cx="560" cy="40" r="5"></circle>
+</svg>
+<!-- X-Axis Timestamps -->
+<div class="flex justify-between pt-space-xs border-t border-outline-variant font-code-telemetry text-code-telemetry text-on-surface-variant text-[10px]">
+<span>2020 (67.2%)</span>
+<span>2021 (72.8%)</span>
+<span>2022 (78.9%)</span>
+<span>2023 (82.5%)</span>
+<span>2024 (85.6%)</span>
+<span class="text-primary font-bold">2025.1 [P: 89.4%]</span>
+</div>
+</div>
+<!-- Telemetry Breakdown Footer -->
+<div class="grid grid-cols-3 gap-space-sm pt-space-sm mt-space-sm border-t border-outline-variant font-code-telemetry text-[11px]">
+<div class="p-space-xs bg-surface-container-lowest border border-outline-variant">
+<span class="font-label-data-micro text-label-data-micro text-outline block">MÉDIA BRASIL (INEP 2024)</span>
+<span class="text-on-surface font-semibold">61.4% <span class="text-[10px] text-outline font-normal">(-28.0 vs MedPleni)</span></span>
+</div>
+<div class="p-space-xs bg-surface-container-lowest border border-outline-variant">
+<span class="font-label-data-micro text-label-data-micro text-outline block">DESVIO PADRÃO COORTE</span>
+<span class="text-secondary font-semibold">σ = ±4.12 <span class="text-[10px] text-outline font-normal">(Baixa Variância)</span></span>
+</div>
+<div class="p-space-xs bg-surface-container-lowest border border-outline-variant">
+<span class="font-label-data-micro text-label-data-micro text-outline block">PROJEÇÃO CONFIÁVEL</span>
+<span class="text-primary font-semibold">Faixa 5 Garantida <span class="text-[10px] text-outline font-normal">(IC 99.4%)</span></span>
+</div>
+</div>
+</div>
+</div>
+<!-- SECTION B: HEATMAP MATRIZ DE COMPETÊNCIAS DCN (5 COLUMNS) -->
+<div class="xl:col-span-5 bg-surface-container border border-outline-variant flex flex-col">
+<div class="p-space-md border-b border-outline-variant flex items-center justify-between bg-surface-container-low">
+<div class="flex items-center gap-space-sm">
+<div class="w-2.5 h-2.5 bg-secondary"></div>
+<div>
+<span class="font-headline-sm text-headline-sm text-on-surface">Matriz DCN &amp; Domínios Clínicos</span>
+<div class="font-label-data-micro text-label-data-micro text-outline">PROFICIÊNCIA POR NÍVEL DE COMPLEXIDADE COGNITIVA</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline text-[18px]">grid_view</span>
+</div>
+<!-- MATRIX TABLE -->
+<div class="p-space-md flex-1 overflow-x-auto">
+<table class="w-full text-left font-code-telemetry text-[11px] border-collapse">
+<thead>
+<tr class="border-b border-outline-variant font-label-data-micro text-label-data-micro text-outline">
+<th class="py-space-xs pr-space-xs">GRANDE ÁREA DCN</th>
+<th class="py-space-xs px-space-xs text-center" title="Cognitivo Teórico">TEOR</th>
+<th class="py-space-xs px-space-xs text-center" title="Raciocínio Clínico">RAC.</th>
+<th class="py-space-xs px-space-xs text-center" title="OSCE / Prático">OSCE</th>
+<th class="py-space-xs px-space-xs text-center" title="Urgência &amp; Decisão">URG.</th>
+<th class="py-space-xs pl-space-xs text-right">SCORE</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1: Emergência -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="py-space-xs pr-space-xs">
+<span class="font-semibold text-on-surface block">Emergência &amp; Trauma</span>
+<span class="font-label-data-micro text-[9px] text-error flex items-center gap-0.5">
+<span class="w-1.5 h-1.5 bg-error"></span> Alerta Choque/Via Aérea
+                </span>
+</td>
+<td class="p-space-xs text-center"><div class="bg-primary/20 text-primary py-0.5 px-1 border border-primary/40">82%</div></td>
+<td class="p-space-xs text-center"><div class="bg-primary/20 text-primary py-0.5 px-1 border border-primary/40">79%</div></td>
+<td class="p-space-xs text-center"><div class="bg-error/30 text-error py-0.5 px-1 font-bold border border-error">64%</div></td>
+<td class="p-space-xs text-center"><div class="bg-tertiary/20 text-tertiary py-0.5 px-1 border border-tertiary">71%</div></td>
+<td class="py-space-xs pl-space-xs text-right font-bold text-error">78.2%</td>
+</tr>
+<!-- Row 2: Saúde Coletiva -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="py-space-xs pr-space-xs">
+<span class="font-semibold text-on-surface block">Saúde Coletiva / APS</span>
+<span class="font-label-data-micro text-[9px] text-primary">Plena Conformidade</span>
+</td>
+<td class="p-space-xs text-center"><div class="bg-primary text-on-primary py-0.5 px-1 font-bold">96%</div></td>
+<td class="p-space-xs text-center"><div class="bg-primary text-on-primary py-0.5 px-1 font-bold">94%</div></td>
+<td class="p-space-xs text-center"><div class="bg-primary/30 text-primary py-0.5 px-1 border border-primary/50">92%</div></td>
+<td class="p-space-xs text-center"><div class="bg-primary text-on-primary py-0.5 px-1 font-bold">96%</div></td>
+<td class="py-space-xs pl-space-xs text-right font-bold text-primary">94.6%</td>
+</tr>
+<!-- Row 3: Pediatria -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="py-space-xs pr-space-xs">
+<span class="font-semibold text-on-surface block">Pediatria &amp; Neonato</span>
+<span class="font-label-data-micro text-[9px] text-secondary">Estabilidade Preditiva</span>
+</td>
+<td class="p-space-xs text-center"><div class="bg-primary/30 text-primary py-0.5 px-1 border border-primary/50">91%</div></td>
+<td class="p-space-xs text-center"><div class="bg-primary/30 text-primary py-0.5 px-1 border border-primary/50">88%</div></td>
+<td class="p-space-xs text-center"><div class="bg-primary/20 text-primary py-0.5 px-1 border border-primary/30">85%</div></td>
+<td class="p-space-xs text-center"><div class="bg-tertiary/20 text-tertiary py-0.5 px-1 border border-tertiary">78%</div></td>
+<td class="py-space-xs pl-space-xs text-right font-bold text-secondary">88.1%</td>
+</tr>
+<!-- Row 4: Clínica Médica -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="py-space-xs pr-space-xs">
+<span class="font-semibold text-on-surface block">Clínica Médica &amp; Racioc.</span>
+<span class="font-label-data-micro text-[9px] text-primary">Decil Top 2% Brasil</span>
+</td>
+<td class="p-space-xs text-center"><div class="bg-primary text-on-primary py-0.5 px-1 font-bold">95%</div></td>
+<td class="p-space-xs text-center"><div class="bg-primary text-on-primary py-0.5 px-1 font-bold">93%</div></td>
+<td class="p-space-xs text-center"><div class="bg-primary/30 text-primary py-0.5 px-1 border border-primary/50">89%</div></td>
+<td class="p-space-xs text-center"><div class="bg-primary/30 text-primary py-0.5 px-1 border border-primary/50">89%</div></td>
+<td class="py-space-xs pl-space-xs text-right font-bold text-primary">91.4%</td>
+</tr>
+<!-- Row 5: Ginecologia & Obstetrícia -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="py-space-xs pr-space-xs">
+<span class="font-semibold text-on-surface block">Ginecologia &amp; Obstetrícia</span>
+<span class="font-label-data-micro text-[9px] text-tertiary flex items-center gap-0.5">
+<span class="w-1.5 h-1.5 bg-tertiary"></span> Emergência Puerperal
+                </span>
+</td>
+<td class="p-space-xs text-center"><div class="bg-primary/20 text-primary py-0.5 px-1 border border-primary/30">86%</div></td>
+<td class="p-space-xs text-center"><div class="bg-primary/20 text-primary py-0.5 px-1 border border-primary/30">84%</div></td>
+<td class="p-space-xs text-center"><div class="bg-tertiary/20 text-tertiary py-0.5 px-1 border border-tertiary">79%</div></td>
+<td class="p-space-xs text-center"><div class="bg-error/30 text-error py-0.5 px-1 font-bold border border-error">68%</div></td>
+<td class="py-space-xs pl-space-xs text-right font-bold text-tertiary">84.7%</td>
+</tr>
+</tbody>
+</table>
+<!-- Heatmap Legend -->
+<div class="flex items-center justify-between pt-space-sm mt-space-sm border-t border-outline-variant font-label-data-micro text-[10px]">
+<span class="text-outline">ESCALA REGULATÓRIA:</span>
+<div class="flex items-center gap-space-xs">
+<span class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-error"></span> &lt;70% Risco</span>
+<span class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-tertiary"></span> 70-80% Atenção</span>
+<span class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-primary/40 border border-primary"></span> 80-90% Seguro</span>
+<span class="flex items-center gap-1"><span class="w-2.5 h-2.5 bg-primary"></span> &gt;90% Pleno</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- SECTION C: TELEMETRIA DE TURMAS & COORTES (T48 A T51) -->
+<div class="bg-surface-container border border-outline-variant mb-space-md">
+<div class="p-space-md border-b border-outline-variant flex flex-col md:flex-row md:items-center justify-between gap-space-sm bg-surface-container-low">
+<div class="flex items-center gap-space-sm">
+<div class="w-2.5 h-2.5 bg-primary"></div>
+<div>
+<span class="font-headline-sm text-headline-sm text-on-surface">Telemetria de Turmas &amp; Coortes em Monitoramento Ativo</span>
+<div class="font-label-data-micro text-label-data-micro text-outline">DESEMPENHO LONGITUDINAL DO INTERNATO AO CICLO CLÍNICO AVANÇADO</div>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-data-micro text-label-data-micro text-on-surface-variant">CICLO ATUAL: <strong class="text-primary font-code-telemetry">2025.1</strong></span>
+<button class="px-space-md py-space-xs bg-surface-container-lowest border border-outline-variant text-on-surface hover:text-primary font-code-telemetry text-code-telemetry">
+          AUDITORIA COMPLETA DE TURMA
+        </button>
+</div>
+</div>
+<!-- DENSE TABLE -->
+<div class="overflow-x-auto">
+<table class="w-full text-left font-code-telemetry text-code-telemetry border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest border-b border-outline-variant font-label-data-micro text-label-data-micro text-outline">
+<th class="py-space-sm px-space-md">TURMA // FASE ACADÊMICA</th>
+<th class="py-space-sm px-space-md text-right">DISCENTES</th>
+<th class="py-space-sm px-space-md text-center">PRESENÇA SIMULADOS</th>
+<th class="py-space-sm px-space-md text-right">SCORE ATUAL</th>
+<th class="py-space-sm px-space-md text-right">PROJEÇÃO INEP</th>
+<th class="py-space-sm px-space-md text-center">CRÍTICOS (&lt;60)</th>
+<th class="py-space-sm px-space-md text-center">STATUS REGULATÓRIO</th>
+<th class="py-space-sm px-space-md text-right">AÇÃO RECOMENDADA</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant text-[12px]">
+<!-- T48: Finalistas -->
+<tr class="hover:bg-surface-container-high transition-colors bg-surface-container/50">
+<td class="py-space-sm px-space-md">
+<div class="font-bold text-on-surface flex items-center gap-space-xs">
+<span>T48 — 12º SEMESTRE</span>
+<span class="px-1.5 py-0.2 bg-primary/20 text-primary text-[9px] uppercase font-semibold">FINALISTAS ENAMED</span>
+</div>
+<span class="font-label-data-micro text-[10px] text-on-surface-variant">Internato II / Urgência &amp; Rotativo</span>
+</td>
+<td class="py-space-sm px-space-md text-right font-bold text-on-surface">128</td>
+<td class="py-space-sm px-space-md text-center">
+<span class="text-primary font-bold">99.2%</span>
+<span class="text-[10px] text-outline block">127/128 submetidos</span>
+</td>
+<td class="py-space-sm px-space-md text-right font-bold text-primary">84.8 / 100</td>
+<td class="py-space-sm px-space-md text-right font-bold text-primary">Faixa 5 (89.2%)</td>
+<td class="py-space-sm px-space-md text-center">
+<span class="px-space-xs py-0.5 bg-error/20 text-error font-bold border border-error/50">3 alunos</span>
+</td>
+<td class="py-space-sm px-space-md text-center">
+<span class="inline-flex items-center gap-1 px-space-xs py-0.5 bg-primary/10 text-primary border border-primary/30 font-label-data-micro text-[10px]">
+<span class="w-1.5 h-1.5 bg-primary"></span> PRONTO P/ ENAMED
+              </span>
+</td>
+<td class="py-space-sm px-space-md text-right">
+<button class="px-space-sm py-1 bg-surface-container-lowest border border-primary text-primary hover:bg-primary hover:text-on-primary text-[10px] uppercase font-bold transition-colors">
+                CONVOCAR SIMULADO OSCE
+              </button>
+</td>
+</tr>
+<!-- T49: Internato I -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="py-space-sm px-space-md">
+<div class="font-bold text-on-surface flex items-center gap-space-xs">
+<span>T49 — 11º SEMESTRE</span>
+<span class="px-1.5 py-0.2 bg-secondary/20 text-secondary text-[9px] uppercase font-semibold">INTERNATO I</span>
+</div>
+<span class="font-label-data-micro text-[10px] text-on-surface-variant">Clínica, Cirurgia, G.O. &amp; Pediatria</span>
+</td>
+<td class="py-space-sm px-space-md text-right font-bold text-on-surface">132</td>
+<td class="py-space-sm px-space-md text-center">
+<span class="text-secondary font-bold">96.9%</span>
+<span class="text-[10px] text-outline block">128/132 submetidos</span>
+</td>
+<td class="py-space-sm px-space-md text-right font-bold text-secondary">81.1 / 100</td>
+<td class="py-space-sm px-space-md text-right font-bold text-secondary">Faixa 5 (86.4%)</td>
+<td class="py-space-sm px-space-md text-center">
+<span class="px-space-xs py-0.5 bg-tertiary/20 text-tertiary font-bold border border-tertiary/50">4 alunos</span>
+</td>
+<td class="py-space-sm px-space-md text-center">
+<span class="inline-flex items-center gap-1 px-space-xs py-0.5 bg-secondary/10 text-secondary border border-secondary/30 font-label-data-micro text-[10px]">
+<span class="w-1.5 h-1.5 bg-secondary"></span> EM EVOLUÇÃO
+              </span>
+</td>
+<td class="py-space-sm px-space-md text-right">
+<button class="px-space-sm py-1 bg-surface-container-lowest border border-outline-variant text-on-surface hover:border-secondary text-[10px] uppercase font-bold transition-colors">
+                DESPACHAR TUTORIA
+              </button>
+</td>
+</tr>
+<!-- T50: Clínica Avançada -->
+<tr class="hover:bg-surface-container-high transition-colors bg-surface-container/50">
+<td class="py-space-sm px-space-md">
+<div class="font-bold text-on-surface flex items-center gap-space-xs">
+<span>T50 — 10º SEMESTRE</span>
+<span class="px-1.5 py-0.2 bg-tertiary/20 text-tertiary text-[9px] uppercase font-semibold">PRÉ-INTERNATO</span>
+</div>
+<span class="font-label-data-micro text-[10px] text-on-surface-variant">Clínica Médica e Farmacologia</span>
+</td>
+<td class="py-space-sm px-space-md text-right font-bold text-on-surface">126</td>
+<td class="py-space-sm px-space-md text-center">
+<span class="text-tertiary font-bold">94.4%</span>
+<span class="text-[10px] text-outline block">119/126 submetidos</span>
+</td>
+<td class="py-space-sm px-space-md text-right font-bold text-tertiary">76.3 / 100</td>
+<td class="py-space-sm px-space-md text-right font-bold text-tertiary">Faixa 4 (80.1%)</td>
+<td class="py-space-sm px-space-md text-center">
+<span class="px-space-xs py-0.5 bg-error/20 text-error font-bold border border-error/50">3 alunos</span>
+</td>
+<td class="py-space-sm px-space-md text-center">
+<span class="inline-flex items-center gap-1 px-space-xs py-0.5 bg-tertiary/10 text-tertiary border border-tertiary/30 font-label-data-micro text-[10px]">
+<span class="w-1.5 h-1.5 bg-tertiary"></span> GAP FARMACOLÓGICO
+              </span>
+</td>
+<td class="py-space-sm px-space-md text-right">
+<button class="px-space-sm py-1 bg-surface-container-lowest border border-tertiary text-tertiary hover:bg-tertiary hover:text-on-surface-container-lowest text-[10px] uppercase font-bold transition-colors">
+                OFICINA PRESCRITIVA
+              </button>
+</td>
+</tr>
+<!-- T51: Semiologia -->
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="py-space-sm px-space-md">
+<div class="font-bold text-on-surface flex items-center gap-space-xs">
+<span>T51 — 8º SEMESTRE</span>
+<span class="px-1.5 py-0.2 bg-outline/20 text-on-surface-variant text-[9px] uppercase font-semibold">CICLO CLÍNICO</span>
+</div>
+<span class="font-label-data-micro text-[10px] text-on-surface-variant">Semiologia &amp; Raciocínio Propedêutico</span>
+</td>
+<td class="py-space-sm px-space-md text-right font-bold text-on-surface">126</td>
+<td class="py-space-sm px-space-md text-center">
+<span class="text-primary font-bold">98.4%</span>
+<span class="text-[10px] text-outline block">124/126 submetidos</span>
+</td>
+<td class="py-space-sm px-space-md text-right font-bold text-on-surface">78.9 / 100</td>
+<td class="py-space-sm px-space-md text-right font-bold text-secondary">Faixa 4 (82.0%)</td>
+<td class="py-space-sm px-space-md text-center">
+<span class="px-space-xs py-0.5 bg-error/20 text-error font-bold border border-error/50">1 aluno</span>
+</td>
+<td class="py-space-sm px-space-md text-center">
+<span class="inline-flex items-center gap-1 px-space-xs py-0.5 bg-primary/10 text-primary border border-primary/30 font-label-data-micro text-[10px]">
+<span class="w-1.5 h-1.5 bg-primary"></span> BASE ESTÁVEL
+              </span>
+</td>
+<td class="py-space-sm px-space-md text-right">
+<button class="px-space-sm py-1 bg-surface-container-lowest border border-outline-variant text-on-surface hover:border-primary text-[10px] uppercase font-bold transition-colors">
+                VALIDAR SEMIOLOGIA
+              </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- SECTION D & E: INCIDENT ROOM & PIPELINE DE INTERVENÇÕES (2 COLUMNS) -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-sm mb-space-md">
+<!-- SECTION D: CENTRAL DE RISCOS & TRIAGEM DE ALERTAS (7 COLUMNS) -->
+<div class="xl:col-span-7 bg-surface-container border border-outline-variant flex flex-col">
+<div class="p-space-md border-b border-outline-variant flex items-center justify-between bg-surface-container-low">
+<div class="flex items-center gap-space-sm">
+<div class="w-2.5 h-2.5 bg-error animate-pulse"></div>
+<div>
+<span class="font-headline-sm text-headline-sm text-on-surface">Incident Room // Central de Riscos Regulatórios</span>
+<div class="font-label-data-micro text-label-data-micro text-outline">ALERTAS PEDAGÓGICOS E INFRAÇÕES DCN CLASSIFICADAS POR SEVERIDADE</div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs font-label-data-micro text-label-data-micro">
+<span class="px-space-xs py-0.5 bg-error text-on-error font-bold">1 ALFA</span>
+<span class="px-space-xs py-0.5 bg-tertiary text-on-tertiary font-bold">1 BETA</span>
+<span class="px-space-xs py-0.5 bg-secondary text-on-secondary font-bold">1 GAMA</span>
+</div>
+</div>
+<!-- INCIDENT FEED -->
+<div class="p-space-md flex flex-col space-y-space-sm">
+<!-- Incident 1: ALFA / RED -->
+<div class="p-space-md bg-surface-container-lowest border-l-4 border-l-error border border-outline-variant flex flex-col justify-between">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 bg-error/20 text-error font-code-telemetry text-[10px] font-bold border border-error/40">SEV-ALFA // CRÍTICO</span>
+<span class="font-label-data-micro text-label-data-micro text-outline">INC-2025-089</span>
+<span class="text-outline-variant">•</span>
+<span class="font-label-data-micro text-label-data-micro text-on-surface-variant font-code-telemetry">T48 FINALISTAS (HOSP. ESCOLA)</span>
+</div>
+<span class="font-label-data-micro text-label-data-micro text-error font-code-telemetry">SLA: 48 HORAS</span>
+</div>
+<div class="my-space-xs">
+<span class="font-semibold text-on-surface block text-[13px]">Disparidade de 22% em estações práticas de Reanimação Cardiopulmonar (RCP)</span>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-0.5">
+              Auditoria de OSCE realizada em 08/04 detectou assimetria entre competência teórica (88%) e execução manual de vias aéreas e arritmias chocáveis (64%) em 28 internos da T48. Risco de reprovação sumária na estação prática do ENAMED.
+            </p>
+</div>
+<div class="flex items-center justify-between pt-space-xs border-t border-outline-variant">
+<span class="font-label-data-micro text-label-data-micro text-error">Ação Mandatória: Convocação compulsória de laboratório de alta fidelidade.</span>
+<button class="px-space-sm py-0.5 bg-error text-on-error font-code-telemetry text-[10px] font-bold uppercase hover:bg-error-container hover:text-on-error-container transition-colors">
+              DESPACHAR INTERVENÇÃO
+            </button>
+</div>
+</div>
+<!-- Incident 2: BETA / AMBER -->
+<div class="p-space-md bg-surface-container-lowest border-l-4 border-l-tertiary border border-outline-variant flex flex-col justify-between">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 bg-tertiary/20 text-tertiary font-code-telemetry text-[10px] font-bold border border-tertiary/40">SEV-BETA // ATENÇÃO</span>
+<span class="font-label-data-micro text-label-data-micro text-outline">INC-2025-072</span>
+<span class="text-outline-variant">•</span>
+<span class="font-label-data-micro text-label-data-micro text-on-surface-variant font-code-telemetry">T50 CLÍNICA (AMBULATÓRIO)</span>
+</div>
+<span class="font-label-data-micro text-label-data-micro text-tertiary font-code-telemetry">SLA: 5 DIAS</span>
+</div>
+<div class="my-space-xs">
+<span class="font-semibold text-on-surface block text-[13px]">Gap de 14.8% no cálculo de dosagens e prescrição antimicrobiana pediátrica</span>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-0.5">
+              Simulado de Raciocínio Clínico Farmacológico apontou erro sistemático em ajuste posológico por peso corporal em pediatria e insuficiência renal aguda. 19 discentes com notas inferiores a 6.0 no bloco.
+            </p>
+</div>
+<div class="flex items-center justify-between pt-space-xs border-t border-outline-variant">
+<span class="font-label-data-micro text-label-data-micro text-tertiary">Ação Recomendada: Módulo imersivo de cálculo medicamentoso com preceptoria.</span>
+<button class="px-space-sm py-0.5 bg-surface-container-high text-tertiary border border-tertiary font-code-telemetry text-[10px] font-bold uppercase hover:bg-tertiary hover:text-on-tertiary transition-colors">
+              ATIVAR OFICINA
+            </button>
+</div>
+</div>
+<!-- Incident 3: GAMA / BLUE REGULATORY -->
+<div class="p-space-md bg-surface-container-lowest border-l-4 border-l-secondary border border-outline-variant flex flex-col justify-between">
+<div class="flex items-start justify-between gap-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 bg-secondary/20 text-secondary font-code-telemetry text-[10px] font-bold border border-secondary/40">SEV-GAMA // REGULATÓRIO</span>
+<span class="font-label-data-micro text-label-data-micro text-outline">INC-2025-045</span>
+<span class="text-outline-variant">•</span>
+<span class="font-label-data-micro text-label-data-micro text-on-surface-variant font-code-telemetry">SISTEMA e-MEC / CH INTERNATO</span>
+</div>
+<span class="font-label-data-micro text-label-data-micro text-secondary font-code-telemetry">SLA: REGULAR</span>
+</div>
+<div class="my-space-xs">
+<span class="font-semibold text-on-surface block text-[13px]">Validação de Carga Horária e-MEC: 98.6% de conformidade com ICP-Brasil</span>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-0.5">
+              505 de 512 cadernetas de internato foram validadas via assinatura digital ICP-Brasil. Restam 7 cadernetas pendentes de homologação de preceptores externos na rede SUS municipal.
+            </p>
+</div>
+<div class="flex items-center justify-between pt-space-xs border-t border-outline-variant">
+<span class="font-label-data-micro text-label-data-micro text-secondary">Status: Em conformidade com a portaria normativa MEC 21/2017.</span>
+<button class="px-space-sm py-0.5 bg-surface-container-high text-secondary border border-secondary font-code-telemetry text-[10px] font-bold uppercase hover:bg-secondary hover:text-on-secondary transition-colors">
+              HOMOLOGAR RESTANTES
+            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- SECTION E: PIPELINE DE INTERVENÇÕES PEDAGÓGICAS ATIVAS (5 COLUMNS) -->
+<div class="xl:col-span-5 bg-surface-container border border-outline-variant flex flex-col">
+<div class="p-space-md border-b border-outline-variant flex items-center justify-between bg-surface-container-low">
+<div class="flex items-center gap-space-sm">
+<div class="w-2.5 h-2.5 bg-primary"></div>
+<div>
+<span class="font-headline-sm text-headline-sm text-on-surface">Pipeline de Intervenções Ativas</span>
+<div class="font-label-data-micro text-label-data-micro text-outline">PROGRAMAS DE REMEDIAÇÃO &amp; MENTORIA DE ALTO IMPACTO</div>
+</div>
+</div>
+<span class="font-label-data-micro text-label-data-micro text-primary font-code-telemetry">3 PROGRAMAS</span>
+</div>
+<div class="p-space-md flex-1 flex flex-col justify-between space-y-space-md">
+<!-- Pipeline Item 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-space-md">
+<div class="flex justify-between items-center mb-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface text-[14px]">Nivelamento Intensivo ENAMED</span>
+<span class="px-space-xs py-0.5 bg-primary/20 text-primary font-label-data-micro text-[10px] uppercase font-bold border border-primary/30">FASE FINAL T48</span>
+</div>
+<div class="flex justify-between text-body-sm font-body-sm text-on-surface-variant mb-space-xs">
+<span>Alunos recuperados acima do limiar:</span>
+<span class="font-code-telemetry text-primary font-bold">38 / 42 (90.4%)</span>
+</div>
+<div class="w-full bg-surface h-2 border border-outline-variant overflow-hidden mb-space-xs">
+<div class="bg-primary h-full w-[90.4%]"></div>
+</div>
+<div class="flex justify-between font-label-data-micro text-label-data-micro text-outline pt-space-xs border-t border-outline-variant">
+<span>Coordenador: Dr. Roberto Guimarães</span>
+<span class="text-primary font-code-telemetry">Meta: 100% até 25/04</span>
+</div>
+</div>
+<!-- Pipeline Item 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-space-md">
+<div class="flex justify-between items-center mb-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface text-[14px]">Oficina de Prescrição Racional</span>
+<span class="px-space-xs py-0.5 bg-tertiary/20 text-tertiary font-label-data-micro text-[10px] uppercase font-bold border border-tertiary/30">EM EXECUÇÃO T50</span>
+</div>
+<div class="flex justify-between text-body-sm font-body-sm text-on-surface-variant mb-space-xs">
+<span>Módulos de dosagem concluídos:</span>
+<span class="font-code-telemetry text-tertiary font-bold">107 / 126 (84.9%)</span>
+</div>
+<div class="w-full bg-surface h-2 border border-outline-variant overflow-hidden mb-space-xs">
+<div class="bg-tertiary h-full w-[84.9%]"></div>
+</div>
+<div class="flex justify-between font-label-data-micro text-label-data-micro text-outline pt-space-xs border-t border-outline-variant">
+<span>Farmacologia Clínica HC-FMUSP</span>
+<span class="text-tertiary font-code-telemetry">Sessão 4 de 5</span>
+</div>
+</div>
+<!-- Pipeline Item 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-space-md">
+<div class="flex justify-between items-center mb-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface text-[14px]">Mentoria de Risco Preditivo</span>
+<span class="px-space-xs py-0.5 bg-secondary/20 text-secondary font-label-data-micro text-[10px] uppercase font-bold border border-secondary/30">1-ON-1 PRECEPTORIA</span>
+</div>
+<div class="flex justify-between text-body-sm font-body-sm text-on-surface-variant mb-space-xs">
+<span>Acompanhamento semanal de casos:</span>
+<span class="font-code-telemetry text-secondary font-bold">14 / 14 Discentes (100%)</span>
+</div>
+<div class="w-full bg-surface h-2 border border-outline-variant overflow-hidden mb-space-xs">
+<div class="bg-secondary h-full w-[100%]"></div>
+</div>
+<div class="flex justify-between font-label-data-micro text-label-data-micro text-outline pt-space-xs border-t border-outline-variant">
+<span>Preceptores: 8 Médicos Tutores</span>
+<span class="text-secondary font-code-telemetry">Feedback Semanal OK</span>
+</div>
+</div>
+<!-- Dispatch New Action Button -->
+<button class="w-full py-space-sm bg-primary text-on-primary font-code-telemetry text-code-telemetry font-bold uppercase tracking-wider hover:bg-primary-fixed-dim transition-colors flex items-center justify-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px]">add_circle</span>
+<span>DISPARAR NOVO PLANO DE INTERVENÇÃO REGULATÓRIA</span>
+</button>
+</div>
+</div>
+</div>
+<!-- CONSOLE STATUS FOOTER TELEMETRY -->
+<div class="p-space-md bg-surface-container-lowest border border-outline-variant flex flex-col md:flex-row md:items-center justify-between gap-space-sm font-code-telemetry text-[11px] text-outline">
+<div class="flex flex-wrap items-center gap-space-md">
+<span class="flex items-center gap-space-xs text-primary font-bold">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span> CONSOLE STATUS: OPERACIONAL EM TEMPO REAL
+      </span>
+<span>•</span>
+<span>CLUSTER: HC-FMUSP-NODE-01</span>
+<span>•</span>
+<span>ALGORITMO PREDITIVO: REGRESSÃO LOGÍSTICA BAYESIANA // C-STATISTIC 0.942</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span>MEDPLENI REGULATORY INTELLIGENCE SUITE © 2025</span>
+<span class="text-on-surface font-bold">REV 4.8.2</span>
+</div>
+</div>
+</div>
+<!-- INTERACTION MICRO-SCRIPT (TAB SELECTION & TELEMETRY SIMULATION) -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabs = ['btn-view-agrupada', 'btn-view-analitica', 'btn-view-dcn'];
+    tabs.forEach(id => {
+      const btn = document.getElementById(id);
+      if (!btn) return;
+      btn.addEventListener('click', () => {
+        tabs.forEach(t => {
+          const el = document.getElementById(t);
+          if (el) {
+            el.className = 'px-space-sm py-space-xs font-label-data-micro text-label-data-micro uppercase text-on-surface-variant hover:text-on-surface transition-colors';
+          }
+        });
+        btn.className = 'px-space-sm py-space-xs font-label-data-micro text-label-data-micro uppercase bg-surface-container-high text-primary font-semibold transition-colors';
+      });
+    });
+  });
+</script></main></div></body></html>

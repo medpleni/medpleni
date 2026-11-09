@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-dim": "#0e1321", "on-primary-fixed-variant": "#005045", "surface": "#0e1321", "secondary-fixed-dim": "#94ccff", "on-primary-fixed": "#00201b", "on-secondary": "#003352", "on-background": "#dee2f7", "secondary-container": "#0378b7", "surface-container": "#1a1f2e", "tertiary": "#acc9f5", "surface-tint": "#41ddc2", "surface-container-low": "#161b2a", "tertiary-fixed": "d3e3ff", "on-error-container": "#ffdad6", "on-error": "#690005", "on-tertiary": "#103155", "primary-fixed": "#65fade", "primary-container": "#00c2a8", "secondary": "#94ccff", "on-tertiary-fixed": "#001c39", "on-primary-container": "#00493e", "error": "#ffb4ab", "surface-container-lowest": "#090e1c", "on-secondary-fixed": "#001d32", "primary": "#42dec3", "tertiary-container": "#91aed9", "secondary-fixed": "#cde5ff", "surface-bright": "#343949", "on-tertiary-fixed-variant": "#2a486d", "surface-container-highest": "#2f3444", "on-surface": "#dee2f7", "outline-variant": "#3c4a46", "surface-variant": "#2f3444", "primary-fixed-dim": "#41ddc2", "inverse-on-surface": "#2b3040", "inverse-surface": "#dee2f7", "background": "#0e1321", "on-secondary-fixed-variant": "#004b74", "error-container": "#93000a", "on-secondary-container": "#f5f8ff", "on-surface-variant": "#bbcac4", "on-primary": "#00382f", "inverse-primary": "#006b5c", "tertiary-fixed-dim": "#abc8f4", "surface-container-high": "#252a39", "on-tertiary-container": "#234166", "outline": "#85948f" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-xl": "1.5rem", "gutter-dense": "0.5rem", "space-md": "0.75rem", "space-xs": "0.25rem", "space-lg": "1rem", "margin": "1rem", "space-2xs": "0.125rem", "margin-panel": "0.75rem", "space-sm": "0.5rem", "gutter": "0.75rem" }, "fontFamily": { "metric-display": [ "JetBrains Mono" ], "headline-sm": [ "Plus Jakarta Sans" ], "body-sm": [ "Inter" ], "body-lg": [ "Inter" ], "label-md": [ "Inter" ], "headline-xl": [ "Plus Jakarta Sans" ], "metric-micro": [ "JetBrains Mono" ], "metric-value": [ "JetBrains Mono" ], "body-md": [ "Inter" ], "headline-lg": [ "Plus Jakarta Sans" ] }, "fontSize": { "metric-display": [ "1.75rem", { "lineHeight": "2rem", "letterSpacing": "-0.03em", "fontWeight": "600" } ], "headline-sm": [ "1.125rem", { "lineHeight": "1.5rem", "letterSpacing": "-0.01em", "fontWeight": "600" } ], "body-sm": [ "0.75rem", { "lineHeight": "1rem", "fontWeight": "400" } ], "body-lg": [ "0.9375rem", { "lineHeight": "1.375rem", "fontWeight": "400" } ], "label-md": [ "0.6875rem", { "lineHeight": "0.875rem", "letterSpacing": "0.04em", "fontWeight": "600" } ], "headline-xl": [ "2rem", { "lineHeight": "2.5rem", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "metric-micro": [ "0.6875rem", { "lineHeight": "0.875rem", "letterSpacing": "0em", "fontWeight": "400" } ], "metric-value": [ "1.125rem", { "lineHeight": "1.375rem", "letterSpacing": "-0.02em", "fontWeight": "500" } ], "body-md": [ "0.8125rem", { "lineHeight": "1.125rem", "fontWeight": "400" } ], "headline-lg": [ "1.5rem", { "lineHeight": "2rem", "letterSpacing": "-0.015em", "fontWeight": "600" } ] } } } };</script></head><body class="bg-background font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest z-50 flex flex-col justify-between border-r border-outline-variant/40"><div class="flex flex-col"><div class="h-16 px-space-md flex items-center justify-between border-b border-outline-variant/30 bg-surface-container-low"><div class="flex items-center gap-space-sm"><div class="w-7 h-7 rounded bg-primary-container flex items-center justify-center"><span class="material-symbols-outlined text-on-primary-container text-[18px]">analytics</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm font-bold text-on-surface tracking-tight">MedPleni</span><span class="font-metric-micro text-metric-micro text-primary font-medium tracking-wider uppercase">v4.6 BI ENGINE</span></div></div><span class="material-symbols-outlined text-outline text-[18px]">terminal</span></div><div class="p-space-sm"><div class="px-space-xs py-space-2xs text-[10px] uppercase font-bold tracking-wider text-outline mb-space-2xs">Controles Rápidos</div><div class="flex items-center justify-between bg-surface-container-high px-space-sm py-space-xs rounded mb-space-sm"><span class="font-label-md text-label-md text-on-surface-variant">Sincronismo MEC</span><span class="flex items-center gap-1 font-metric-micro text-metric-micro text-primary"><span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span> ONLINE</span></div></div><div class="px-space-sm overflow-y-auto max-h-[calc(100vh-210px)]"><div class="mb-space-md"><div class="px-space-xs py-space-2xs text-[10px] uppercase font-bold tracking-wider text-outline mb-space-2xs">VISÕES ANALÍTICAS</div><nav class="flex flex-col gap-0.5" data-active-classes="bg-surface-container-high text-primary font-semibold border-l-2 border-primary"><a class="flex items-center px-space-sm py-space-xs rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-body-sm text-body-sm transition-colors" data-path="painel-geral-distribuicao" href="#"><span class="material-symbols-outlined mr-2 text-[16px]">dashboard</span><span>01. Painel Geral &amp; Distribuição</span></a><a class="flex items-center px-space-sm py-space-xs rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-body-sm text-body-sm transition-colors" data-path="evolucao-series-historicas" href="#"><span class="material-symbols-outlined mr-2 text-[16px]">trending_up</span><span>02. Evolução &amp; Séries Históricas</span></a><a class="flex items-center px-space-sm py-space-xs rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-body-sm text-body-sm transition-colors" data-path="matriz-dcn-heatmap-cognitivo" href="#"><span class="material-symbols-outlined mr-2 text-[16px]">grid_view</span><span>03. Matriz DCN &amp; Heatmap</span></a><a class="flex items-center px-space-sm py-space-xs rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-body-sm text-body-sm transition-colors" data-path="dispersao-curvas-de-gauss" href="#"><span class="material-symbols-outlined mr-2 text-[16px]">scatter_plot</span><span>04. Dispersão &amp; Curvas Gauss</span></a><a class="flex items-center px-space-sm py-space-xs rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-body-sm text-body-sm transition-colors" data-path="coortes-benchmarking" href="#"><span class="material-symbols-outlined mr-2 text-[16px]">compare_arrows</span><span>05. Coortes &amp; Benchmarking</span></a><a class="flex items-center px-space-sm py-space-xs rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-body-sm text-body-sm transition-colors" data-path="discentes-em-risco-fatores" href="#"><span class="material-symbols-outlined mr-2 text-[16px]">warning</span><span>06. Discentes Risco &amp; Fatores</span></a></nav></div><div class="mb-space-md"><div class="px-space-xs py-space-2xs text-[10px] uppercase font-bold tracking-wider text-outline mb-space-2xs">EXPLORADOR BI &amp; DRILL-DOWN</div><nav class="flex flex-col gap-0.5" data-active-classes="bg-surface-container-high text-primary font-semibold border-l-2 border-primary"><a class="flex items-center px-space-sm py-space-xs rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-body-sm text-body-sm transition-colors" data-path="construtor-de-queries" href="#"><span class="material-symbols-outlined mr-2 text-[16px]">database</span><span>Construtor de Queries</span></a><a class="flex items-center px-space-sm py-space-xs rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-body-sm text-body-sm transition-colors" data-path="projecoes-bayesiana-enamed" href="#"><span class="material-symbols-outlined mr-2 text-[16px]">batch_prediction</span><span>Projeções Bayesiana ENAMED</span></a><a class="flex items-center px-space-sm py-space-xs rounded text-on-surface-variant hover:bg-surface-container hover:text-on-surface font-body-sm text-body-sm transition-colors" data-path="relatorios-de-regulacao-mec" href="#"><span class="material-symbols-outlined mr-2 text-[16px]">verified</span><span>Relatórios Regulação MEC</span></a></nav></div></div></div><div class="p-space-sm border-t border-outline-variant/30 bg-surface-container-low"><div class="flex items-center justify-between text-outline font-metric-micro text-metric-micro"><span>CLUSTER: MED-SP-04</span><span>LAT: 12ms</span></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-28 bg-surface-container-lowest/95 backdrop-blur border-b border-outline-variant/40 z-40 flex flex-col justify-between"><div class="h-14 px-space-lg flex items-center justify-between border-b border-outline-variant/20"><div class="flex items-center gap-space-md"><span class="px-space-xs py-space-2xs rounded bg-surface-container text-secondary font-label-md text-label-md tracking-wider border border-outline-variant/40">ANALYTICS INTELLIGENCE SUITE // v4.6 BI</span><div class="flex items-center gap-space-xs text-outline font-body-sm text-body-sm"><span class="material-symbols-outlined text-[16px] text-primary">storage</span><span class="font-metric-micro text-metric-micro text-on-surface-variant">Base: <strong class="text-on-surface font-semibold">1.480 Discentes ativos</strong> | Sincronizado INEP/e-MEC às 08:30 (IC 99.2%)</span></div></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs"><button class="flex items-center gap-1 px-space-sm py-space-xs bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md rounded border border-outline-variant/40 transition-colors" type="button"><span class="material-symbols-outlined text-[15px]">tune</span>Filtros Avançados</button><button class="flex items-center gap-1 px-space-sm py-space-xs bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md rounded border border-outline-variant/40 transition-colors" type="button"><span class="material-symbols-outlined text-[15px]">download</span>Exportar Dataset CSV/BI</button><button class="flex items-center gap-1 px-space-sm py-space-xs bg-primary text-on-primary font-label-md text-label-md font-semibold rounded hover:bg-primary-container transition-colors" type="button"><span class="material-symbols-outlined text-[15px]">bookmark</span>Salvar Visão</button></div><div class="h-6 w-px bg-outline-variant/40"></div><div class="flex items-center gap-space-sm"><div class="flex flex-col text-right"><span class="font-body-sm text-body-sm font-semibold text-on-surface leading-none">Dr. Roberto Guimarães</span><span class="font-metric-micro text-metric-micro text-outline leading-tight">Diretor Analytics &amp; Regulação Médica</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></div><div class="h-14 px-space-lg flex items-center justify-between gap-space-md bg-surface-container-low/70 overflow-x-auto"><div class="flex items-center gap-space-xs"><div class="flex items-center bg-surface-container px-space-sm py-1 rounded border border-outline-variant/40 gap-1.5"><span class="material-symbols-outlined text-[15px] text-outline">apartment</span><span class="text-outline font-label-md text-label-md uppercase">Campus:</span><span class="font-body-sm text-body-sm text-on-surface font-medium">FMUSP — HC Central</span></div><div class="flex items-center bg-surface-container px-space-sm py-1 rounded border border-outline-variant/40 gap-1.5"><span class="material-symbols-outlined text-[15px] text-outline">event</span><span class="text-outline font-label-md text-label-md uppercase">Período:</span><span class="font-body-sm text-body-sm text-on-surface font-medium">2025.1 Vigente</span></div><div class="flex items-center bg-surface-container px-space-sm py-1 rounded border border-outline-variant/40 gap-1.5"><span class="material-symbols-outlined text-[15px] text-outline">groups</span><span class="text-outline font-label-md text-label-md uppercase">Coorte:</span><span class="font-body-sm text-body-sm text-on-surface font-medium">Todas as Coortes (T47 - T52)</span></div><div class="flex items-center bg-surface-container px-space-sm py-1 rounded border border-outline-variant/40 gap-1.5"><span class="material-symbols-outlined text-[15px] text-outline">local_library</span><span class="text-outline font-label-md text-label-md uppercase">DCN:</span><span class="font-body-sm text-body-sm text-on-surface font-medium">Todas as DCNs Médicas</span></div><div class="flex items-center bg-surface-container px-space-sm py-1 rounded border border-outline-variant/40 gap-1.5"><span class="material-symbols-outlined text-[15px] text-outline">calendar_today</span><span class="text-outline font-label-md text-label-md uppercase">Ciclo:</span><span class="font-body-sm text-body-sm text-on-surface font-medium">Exames 2024.2 - 2025.1</span></div></div><div class="flex items-center gap-space-xs"><span class="px-space-xs py-space-2xs bg-surface-container-high text-primary font-metric-micro text-metric-micro rounded border border-outline-variant/50">N=1480</span><span class="px-space-xs py-space-2xs bg-surface-container-high text-secondary font-metric-micro text-metric-micro rounded border border-outline-variant/50">P95: 84.8%</span></div></div></header><main class="relative pt-28 bg-background min-h-screen w-full px-space-lg py-space-md"><div class="flex flex-col w-full gap-space-lg">
+<!-- TOP ANALYTICAL CONTEXT STRIP -->
+<div class="flex flex-col gap-space-sm bg-surface-container-low p-space-md rounded-lg shadow-sm">
+<div class="flex flex-wrap items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-xs font-body-sm text-body-sm">
+<span class="text-outline">Analytics Institucional</span>
+<span class="material-symbols-outlined text-[14px] text-outline">chevron_right</span>
+<span class="text-outline">Panorama Executivo Multidimensional</span>
+<span class="material-symbols-outlined text-[14px] text-outline">chevron_right</span>
+<span class="text-primary font-semibold">Ciclo Regulatório &amp; Acadêmico 2025.1</span>
+<span class="ml-space-sm px-space-xs py-space-2xs bg-surface-container text-secondary font-metric-micro text-metric-micro rounded">ID: ANL-MED-2025-V4</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="flex items-center gap-1 px-space-sm py-space-xs bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md rounded transition-colors" type="button">
+<span class="material-symbols-outlined text-[15px]">bookmark_border</span>
+          Salvar Visão
+        </button>
+<button class="flex items-center gap-1 px-space-sm py-space-xs bg-secondary-container text-on-secondary-container font-label-md text-label-md font-semibold rounded hover:bg-secondary transition-colors" type="button">
+<span class="material-symbols-outlined text-[15px]">file_download</span>
+          Exportar Dataset (Parquet / CSV)
+        </button>
+</div>
+</div>
+<!-- Active Filter Pills Strip -->
+<div class="flex flex-wrap items-center gap-space-xs pt-space-xs">
+<span class="text-outline font-label-md text-label-md uppercase tracking-wider mr-1">Filtros Ativos:</span>
+<div class="flex items-center gap-1 px-space-sm py-space-2xs bg-primary/10 text-primary font-body-sm text-body-sm rounded cursor-pointer hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-[14px]">domain</span>
+<span>Campus: FMUSP Central</span>
+<span class="material-symbols-outlined text-[13px] ml-1 text-primary">arrow_drop_down</span>
+</div>
+<div class="flex items-center gap-1 px-space-sm py-space-2xs bg-primary/10 text-primary font-body-sm text-body-sm rounded cursor-pointer hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-[14px]">groups</span>
+<span>Coortes: T47 a T51 (5 ativas)</span>
+<span class="material-symbols-outlined text-[13px] ml-1 text-primary">arrow_drop_down</span>
+</div>
+<div class="flex items-center gap-1 px-space-sm py-space-2xs bg-primary/10 text-primary font-body-sm text-body-sm rounded cursor-pointer hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-[14px]">school</span>
+<span>Foco: Todos os Ciclos (Básico, Clínico, Internato)</span>
+<span class="material-symbols-outlined text-[13px] ml-1 text-primary">arrow_drop_down</span>
+</div>
+<div class="flex items-center gap-1 px-space-sm py-space-2xs bg-primary/10 text-primary font-body-sm text-body-sm rounded cursor-pointer hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-[14px]">leaderboard</span>
+<span>Comparador: Top 5% Nacional (e-MEC)</span>
+<span class="material-symbols-outlined text-[13px] ml-1 text-primary">arrow_drop_down</span>
+</div>
+<div class="flex items-center gap-1 px-space-sm py-space-2xs bg-surface-container text-on-surface-variant font-body-sm text-body-sm rounded cursor-pointer hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[14px]">date_range</span>
+<span>Triênio 2023–2025 (Longitudinal)</span>
+<span class="material-symbols-outlined text-[13px] ml-1">arrow_drop_down</span>
+</div>
+</div>
+</div>
+<!-- ROW 1: PRIMARY KPI METRIC STRIP -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-space-md">
+<!-- CARD 1: IPG -->
+<div class="flex flex-col justify-between bg-surface-container p-space-md rounded-lg shadow-sm">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-outline uppercase tracking-wider">Índice de Prontidão Global (IPG)</span>
+<span class="font-metric-micro text-metric-micro text-secondary">Previsão ENAMED 2025 • N=1.480</span>
+</div>
+<span class="px-space-xs py-space-2xs bg-primary/10 text-primary font-metric-micro text-metric-micro font-semibold rounded">META: 85.0%</span>
+</div>
+<div class="flex items-baseline justify-between mt-space-sm">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-metric-display text-metric-display text-on-surface">89.4%</span>
+<span class="flex items-center text-primary font-metric-micro text-metric-micro font-semibold">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span>+3.8 p.p.
+          </span>
+</div>
+<!-- Embedded Mini Sparkline SVG -->
+<svg class="w-24 h-8" fill="none" viewbox="0 0 96 32">
+<path d="M2 26 L18 22 L36 19 L54 14 L72 8 L94 4" stroke="#42dec3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path>
+<circle cx="94" cy="4" fill="#42dec3" r="3"></circle>
+</svg>
+</div>
+<div class="pt-space-xs mt-space-xs bg-surface-container-lowest/60 p-space-xs rounded flex flex-col gap-0.5">
+<div class="flex justify-between items-center text-outline font-metric-micro text-metric-micro">
+<span>IC 95%: [88.1% — 90.7%]</span>
+<span class="text-primary">Pearson r=0.94</span>
+</div>
+</div>
+</div>
+<!-- CARD 2: CONCEITO INEP FAIXAS -->
+<div class="flex flex-col justify-between bg-surface-container p-space-md rounded-lg shadow-sm">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-outline uppercase tracking-wider">Distribuição Conceito INEP</span>
+<span class="font-metric-micro text-metric-micro text-secondary">Simulação Contínua Faixas 1–5</span>
+</div>
+<span class="px-space-xs py-space-2xs bg-primary/15 text-primary font-metric-micro text-metric-micro font-bold rounded">96.0% APROV.</span>
+</div>
+<div class="flex items-baseline justify-between mt-space-sm">
+<span class="font-metric-display text-metric-display text-on-surface">Faixa 5</span>
+<span class="font-metric-value text-metric-value text-primary">74.2%</span>
+</div>
+<!-- Proportional Distribution Bar -->
+<div class="flex flex-col gap-1 mt-space-xs">
+<div class="w-full h-3 bg-surface-container-lowest rounded-full overflow-hidden flex">
+<div class="h-full bg-primary" style="width: 74.2%;" title="Faixa 5: 74.2%"></div>
+<div class="h-full bg-secondary-container" style="width: 21.8%;" title="Faixa 4: 21.8%"></div>
+<div class="h-full bg-surface-bright" style="width: 3.2%;" title="Faixa 3: 3.2%"></div>
+<div class="h-full bg-error" style="width: 0.8%;" title="Faixa 1-2: 0.8%"></div>
+</div>
+<div class="flex justify-between items-center font-metric-micro text-metric-micro text-outline pt-0.5">
+<span class="text-primary font-semibold">F5: 74.2%</span>
+<span class="text-secondary">F4: 21.8%</span>
+<span class="text-on-surface-variant">F3: 3.2%</span>
+<span class="text-error font-semibold">Risco: 0.8%</span>
+</div>
+</div>
+</div>
+<!-- CARD 3: ADERÊNCIA DCN -->
+<div class="flex flex-col justify-between bg-surface-container p-space-md rounded-lg shadow-sm">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-outline uppercase tracking-wider">Aderência DCN CNE/CES</span>
+<span class="font-metric-micro text-metric-micro text-secondary">Matriz Curricular &amp; Estágios Obrigatórios</span>
+</div>
+<span class="px-space-xs py-space-2xs bg-secondary-container/30 text-secondary font-metric-micro text-metric-micro font-semibold rounded">28/30 EIXOS</span>
+</div>
+<div class="flex items-baseline justify-between mt-space-sm">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-metric-display text-metric-display text-on-surface">94.8%</span>
+<span class="flex items-center text-primary font-metric-micro text-metric-micro font-semibold">
+<span class="material-symbols-outlined text-[14px]">arrow_upward</span>+2.1% ciclo
+          </span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-primary">verified</span>
+          Homologado
+        </div>
+</div>
+<div class="pt-space-xs mt-space-xs bg-surface-container-lowest/60 p-space-xs rounded flex items-center justify-between">
+<span class="text-outline font-metric-micro text-metric-micro">Ponto Focal: Urgência &amp; Trauma</span>
+<span class="text-error font-metric-micro text-metric-micro font-semibold">81.2% (Gargalo)</span>
+</div>
+</div>
+<!-- CARD 4: COORTE CRÍTICA -->
+<div class="flex flex-col justify-between bg-surface-container p-space-md rounded-lg shadow-sm">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-outline uppercase tracking-wider">Discentes Sob Intervenção</span>
+<span class="font-metric-micro text-metric-micro text-secondary">Triagem de Risco Precoce</span>
+</div>
+<span class="px-space-xs py-space-2xs bg-error/15 text-error font-metric-micro text-metric-micro font-bold rounded">ALERTA ATIVO</span>
+</div>
+<div class="flex items-baseline justify-between mt-space-sm">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-metric-display text-metric-display text-error">42</span>
+<span class="font-body-sm text-body-sm text-outline">/ 1.480 alunos (2.84%)</span>
+</div>
+<span class="flex items-center text-primary font-metric-micro text-metric-micro font-semibold">
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span>-12 vs triênio
+        </span>
+</div>
+<div class="pt-space-xs mt-space-xs bg-surface-container-lowest/60 p-space-xs rounded flex items-center justify-between">
+<span class="text-secondary font-metric-micro text-metric-micro">28 Tutoria Prescritiva</span>
+<span class="text-outline font-metric-micro text-metric-micro">|</span>
+<span class="text-error font-metric-micro text-metric-micro">14 Repescagem OSCE</span>
+</div>
+</div>
+</div>
+<!-- ROW 2: MAIN COMPARATIVE CHARTS (60% / 40%) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md">
+<!-- LEFT: EVOLUÇÃO HISTÓRICA LONGITUDINAL (7 Cols = ~58%) -->
+<div class="lg:col-span-7 flex flex-col bg-surface-container p-space-md rounded-lg shadow-sm">
+<div class="flex flex-wrap items-center justify-between gap-space-sm pb-space-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">query_stats</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Evolução Histórica &amp; Série Temporal Longitudinal (2020 – 2025)</span>
+</div>
+<span class="font-metric-micro text-metric-micro text-outline">Trajetória comparada institucional vs Benchmark Top 5% Nacional e Limiar MEC</span>
+</div>
+<!-- Metric Domain Toggle Chips -->
+<div class="flex items-center bg-surface-container-low p-0.5 rounded gap-0.5">
+<button class="px-space-xs py-space-2xs bg-primary text-on-primary font-label-md text-label-md font-bold rounded" type="button">Geral</button>
+<button class="px-space-xs py-space-2xs text-on-surface-variant hover:text-on-surface font-label-md text-label-md rounded transition-colors" type="button">Clínica</button>
+<button class="px-space-xs py-space-2xs text-on-surface-variant hover:text-on-surface font-label-md text-label-md rounded transition-colors" type="button">Cirurgia</button>
+<button class="px-space-xs py-space-2xs text-on-surface-variant hover:text-on-surface font-label-md text-label-md rounded transition-colors" type="button">Pediatria</button>
+<button class="px-space-xs py-space-2xs text-on-surface-variant hover:text-on-surface font-label-md text-label-md rounded transition-colors" type="button">G&amp;O</button>
+<button class="px-space-xs py-space-2xs text-on-surface-variant hover:text-on-surface font-label-md text-label-md rounded transition-colors" type="button">SUS</button>
+</div>
+</div>
+<!-- Chart Legend -->
+<div class="flex flex-wrap items-center gap-space-md py-space-xs bg-surface-container-low/50 px-space-sm rounded">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-1 rounded bg-primary"></span>
+<span class="font-metric-micro text-metric-micro text-on-surface">MedPleni FMUSP (Atual: 89.4%)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-1 border-t-2 border-dashed border-secondary"></span>
+<span class="font-metric-micro text-metric-micro text-secondary">Benchmark Top 5% Brasil (85.2%)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-1 border-t-2 border-dotted border-error"></span>
+<span class="font-metric-micro text-metric-micro text-error">Limiar Regulatório MEC (70.0%)</span>
+</div>
+<span class="ml-auto font-metric-micro text-metric-micro text-outline">Intervalo de Amostragem: Semestral • IC 95%</span>
+</div>
+<!-- Longitudinal SVG Chart Canvas -->
+<div class="relative w-full h-64 mt-space-md">
+<svg class="w-full h-full" fill="none" preserveaspectratio="none" viewbox="0 0 680 240">
+<defs>
+<lineargradient id="primaryAreaGrad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#42dec3" stop-opacity="0.25"></stop>
+<stop offset="100%" stop-color="#42dec3" stop-opacity="0.0"></stop>
+</lineargradient>
+<lineargradient id="ciBandGrad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#94ccff" stop-opacity="0.12"></stop>
+<stop offset="100%" stop-color="#94ccff" stop-opacity="0.02"></stop>
+</lineargradient>
+</defs>
+<!-- Y-Axis Grid Lines & Labels -->
+<g stroke="#2f3444" stroke-dasharray="2 4" stroke-width="1">
+<line x1="50" x2="660" y1="20" y2="20"></line>
+<line x1="50" x2="660" y1="65" y2="65"></line>
+<line x1="50" x2="660" y1="110" y2="110"></line>
+<line x1="50" x2="660" y1="155" y2="155"></line>
+<line x1="50" x2="660" y1="200" y2="200"></line>
+</g>
+<!-- Y-Axis Values (100%, 85%, 70%, 55%, 40%) -->
+<text fill="#85948f" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="40" y="24">100%</text>
+<text fill="#85948f" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="40" y="69">85%</text>
+<text fill="#85948f" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="40" y="114">70%</text>
+<text fill="#85948f" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="40" y="159">55%</text>
+<text fill="#85948f" font-family="JetBrains Mono" font-size="10" text-anchor="end" x="40" y="204">40%</text>
+<!-- MEC Regulatory Threshold Line (70.0% -> y=110) -->
+<line stroke="#ffb4ab" stroke-dasharray="4 4" stroke-width="1.8" x1="50" x2="660" y1="110" y2="110"></line>
+<text fill="#ffb4ab" font-family="JetBrains Mono" font-size="9" text-anchor="end" x="655" y="104">Ponto de Corte 70.0%</text>
+<!-- Benchmark Top 5% Line (85.2% -> y=64.4) -->
+<path d="M70 95 L180 88 L290 80 L400 72 L510 68 L620 64.4" fill="none" stroke="#94ccff" stroke-dasharray="5 5" stroke-width="2"></path>
+<text fill="#94ccff" font-family="JetBrains Mono" font-size="9" text-anchor="end" x="635" y="60">Top 5%: 85.2%</text>
+<!-- CI 95% Band Polygon around Institutional Curve -->
+<polygon fill="url(#ciBandGrad)" points="70,125 180,111 290,90 400,74 510,61 620,47 620,57 510,73 400,88 290,105 180,127 70,140"></polygon>
+<!-- MedPleni Institutional Area Fill -->
+<path d="M70 132 L180 119 L290 98 L400 81 L510 67 L620 52 L620 200 L70 200 Z" fill="url(#primaryAreaGrad)"></path>
+<!-- MedPleni Institutional Stroke Line -->
+<path d="M70 132 L180 119 L290 98 L400 81 L510 67 L620 52" fill="none" stroke="#42dec3" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+<!-- Data Points on Primary Curve -->
+<!-- 2020: 68.2% -> y=132 -->
+<circle cx="70" cy="132" fill="#0e1321" r="4.5" stroke="#42dec3" stroke-width="2.5"></circle>
+<text fill="#dee2f7" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="70" y="150">68.2%</text>
+<!-- 2021: 72.4% -> y=119 -->
+<circle cx="180" cy="119" fill="#0e1321" r="4.5" stroke="#42dec3" stroke-width="2.5"></circle>
+<text fill="#dee2f7" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="180" y="137">72.4%</text>
+<!-- 2022: 78.9% -> y=98 -->
+<circle cx="290" cy="98" fill="#0e1321" r="4.5" stroke="#42dec3" stroke-width="2.5"></circle>
+<text fill="#dee2f7" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="290" y="90">78.9%</text>
+<!-- 2023: 83.5% -> y=81 -->
+<circle cx="400" cy="81" fill="#0e1321" r="4.5" stroke="#42dec3" stroke-width="2.5"></circle>
+<text fill="#dee2f7" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="400" y="73">83.5%</text>
+<!-- 2024: 87.1% -> y=67 -->
+<circle cx="510" cy="67" fill="#0e1321" r="4.5" stroke="#42dec3" stroke-width="2.5"></circle>
+<text fill="#dee2f7" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="510" y="59">87.1%</text>
+<!-- 2025: 89.4% -> y=52 -->
+<circle cx="620" cy="52" fill="#42dec3" r="5.5" stroke="#0e1321" stroke-width="2"></circle>
+<text fill="#42dec3" font-family="JetBrains Mono" font-size="10" font-weight="700" text-anchor="middle" x="620" y="42">89.4%</text>
+<!-- X-Axis Labels -->
+<text fill="#85948f" font-family="Inter" font-size="10" text-anchor="middle" x="70" y="218">2020.2</text>
+<text fill="#85948f" font-family="Inter" font-size="10" text-anchor="middle" x="180" y="218">2021.2</text>
+<text fill="#85948f" font-family="Inter" font-size="10" text-anchor="middle" x="290" y="218">2022.2</text>
+<text fill="#85948f" font-family="Inter" font-size="10" text-anchor="middle" x="400" y="218">2023.2</text>
+<text fill="#85948f" font-family="Inter" font-size="10" text-anchor="middle" x="510" y="218">2024.2</text>
+<text fill="#42dec3" font-family="Inter" font-size="10" font-weight="700" text-anchor="middle" x="620" y="218">2025.1 Vigente</text>
+</svg>
+</div>
+<!-- Insight Statistical Callout -->
+<div class="mt-space-sm p-space-sm bg-surface-container-low rounded flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px] shrink-0">insights</span>
+<div class="flex flex-col gap-0.5">
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">Análise Longitudinal &amp; Projeção Preditiva</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+            Taxa composta de avanço anual de <strong class="text-primary font-semibold">+4.8% a.a.</strong> O modelo bayesiano projeta probabilidade de <strong class="text-on-surface font-semibold">98.6%</strong> de manutenção no Conceito 5 ENAMED. Coeficiente de determinação <strong class="text-on-surface font-semibold">R²=0.91</strong> entre as notas de simulação longitudinal e a pontuação nas provas de acesso direto à Residência Médica (SUS-SP / ENARE).
+          </span>
+</div>
+</div>
+</div>
+<!-- RIGHT: CURVA NORMAL DE GAUSS & DISPERSÃO (5 Cols = ~42%) -->
+<div class="lg:col-span-5 flex flex-col bg-surface-container p-space-md rounded-lg shadow-sm">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[18px]">stacked_bar_chart</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Distribuição Gaussiana Discente</span>
+</div>
+<span class="font-metric-micro text-metric-micro text-outline">Histograma paramétrico &amp; Quartis (N=1.480 discentes)</span>
+</div>
+<span class="px-space-xs py-space-2xs bg-surface-container-high text-on-surface font-metric-micro text-metric-micro rounded">μ=82.4 | σ=±6.8</span>
+</div>
+<!-- Statistical Density SVG (Bell Curve + Bins) -->
+<div class="relative w-full h-48 mt-space-sm">
+<svg class="w-full h-full" fill="none" viewbox="0 0 460 190">
+<defs>
+<lineargradient id="gaussGrad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#94ccff" stop-opacity="0.35"></stop>
+<stop offset="100%" stop-color="#94ccff" stop-opacity="0.02"></stop>
+</lineargradient>
+</defs>
+<!-- Bins (Histogram Bars Behind Curve) -->
+<rect fill="#2f3444" height="15" opacity="0.6" width="22" x="25" y="150"></rect>
+<rect fill="#2f3444" height="23" opacity="0.7" width="22" x="52" y="142"></rect>
+<rect fill="#2f3444" height="35" opacity="0.8" width="22" x="79" y="130"></rect>
+<rect fill="#0378b7" height="53" opacity="0.35" width="22" x="106" y="112"></rect>
+<rect fill="#0378b7" height="80" opacity="0.5" width="22" x="133" y="85"></rect>
+<rect fill="#0378b7" height="110" opacity="0.7" width="22" x="160" y="55"></rect>
+<rect fill="#42dec3" height="133" opacity="0.45" width="22" x="187" y="32"></rect>
+<rect fill="#42dec3" height="141" opacity="0.75" width="22" x="214" y="24"></rect>
+<rect fill="#42dec3" height="137" opacity="0.65" width="22" x="241" y="28"></rect>
+<rect fill="#0378b7" height="120" opacity="0.7" width="22" x="268" y="45"></rect>
+<rect fill="#0378b7" height="95" opacity="0.55" width="22" x="295" y="70"></rect>
+<rect fill="#0378b7" height="63" opacity="0.4" width="22" x="322" y="102"></rect>
+<rect fill="#2f3444" height="37" opacity="0.8" width="22" x="349" y="128"></rect>
+<rect fill="#2f3444" height="19" opacity="0.6" width="22" x="376" y="146"></rect>
+<rect fill="#2f3444" height="10" opacity="0.5" width="22" x="403" y="155"></rect>
+<!-- Continuous Bell Curve Path -->
+<path d="M 25 160 C 90 158, 140 120, 180 48 C 210 15, 235 15, 260 48 C 300 120, 350 158, 425 160" fill="none" stroke="#94ccff" stroke-width="2.5"></path>
+<path d="M 25 160 C 90 158, 140 120, 180 48 C 210 15, 235 15, 260 48 C 300 120, 350 158, 425 160 L 425 165 L 25 165 Z" fill="url(#gaussGrad)"></path>
+<!-- Center Mean Line (μ=82.4) -->
+<line stroke="#42dec3" stroke-dasharray="3 3" stroke-width="2" x1="225" x2="225" y1="20" y2="165"></line>
+<circle cx="225" cy="20" fill="#42dec3" r="3"></circle>
+<text fill="#42dec3" font-family="JetBrains Mono" font-size="9" font-weight="600" text-anchor="middle" x="225" y="14">Média μ=82.4</text>
+<!-- Cutoff Annotation Line (<70 pts) -->
+<line stroke="#ffb4ab" stroke-dasharray="2 3" stroke-width="1.5" x1="145" x2="145" y1="50" y2="165"></line>
+<text fill="#ffb4ab" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="145" y="44">Limiar 70.0</text>
+<!-- Sigma Ticks at Base -->
+<text fill="#85948f" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="75" y="177">-2σ (68.8)</text>
+<text fill="#85948f" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="150" y="177">-1σ (75.6)</text>
+<text fill="#42dec3" font-family="JetBrains Mono" font-size="9" font-weight="600" text-anchor="middle" x="225" y="177">μ (82.4)</text>
+<text fill="#85948f" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="300" y="177">+1σ (89.2)</text>
+<text fill="#85948f" font-family="JetBrains Mono" font-size="9" text-anchor="middle" x="375" y="177">+2σ (96.0)</text>
+</svg>
+</div>
+<!-- Segmentation Breakdown Table Strip -->
+<div class="flex flex-col gap-1 mt-space-sm">
+<div class="grid grid-cols-4 gap-1">
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col">
+<span class="font-metric-micro text-metric-micro text-error uppercase">Risco Crítico</span>
+<span class="font-metric-value text-metric-value text-error">&lt;60.0 pts</span>
+<span class="font-body-sm text-body-sm text-outline">12 alunos (0.8%)</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col">
+<span class="font-metric-micro text-metric-micro text-tertiary uppercase">Limítrofe</span>
+<span class="font-metric-value text-metric-value text-on-surface">60–70 pts</span>
+<span class="font-body-sm text-body-sm text-outline">30 alunos (2.0%)</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col">
+<span class="font-metric-micro text-metric-micro text-secondary uppercase">Aprovado</span>
+<span class="font-metric-value text-metric-value text-secondary">70–85 pts</span>
+<span class="font-body-sm text-body-sm text-outline">810 alunos (54.7%)</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded flex flex-col">
+<span class="font-metric-micro text-metric-micro text-primary uppercase">Excelência</span>
+<span class="font-metric-value text-metric-value text-primary">&gt;85.0 pts</span>
+<span class="font-body-sm text-body-sm text-outline">628 alunos (42.4%)</span>
+</div>
+</div>
+<div class="flex items-center justify-between px-space-xs py-space-2xs bg-surface-container-lowest/40 rounded mt-1 font-metric-micro text-metric-micro text-outline">
+<span>Mediana: <strong class="text-on-surface">83.1 pts</strong></span>
+<span>Desvio Padrão: <strong class="text-on-surface">±6.8 pts</strong></span>
+<span>Assimetria de Pearson: <strong class="text-primary">-0.32 (Favorável)</strong></span>
+<span>Kurtosis: <strong class="text-on-surface">3.14</strong></span>
+</div>
+</div>
+</div>
+</div>
+<!-- ROW 3: HEATMAP COGNITIVO & COMPARATIVO ENTRE TURMAS (50% / 50%) -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-space-md">
+<!-- LEFT: HEATMAP DE COMPETÊNCIAS DCN POR COORTE -->
+<div class="flex flex-col bg-surface-container p-space-md rounded-lg shadow-sm">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">grid_4x4</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Heatmap Cognitivo DCN por Coorte &amp; Ciclo</span>
+</div>
+<span class="font-metric-micro text-metric-micro text-outline">Matriz de proficiência nos 6 macrodomínios de formação médica</span>
+</div>
+<!-- Legend Strip -->
+<div class="flex items-center gap-1 font-metric-micro text-metric-micro">
+<span class="w-2.5 h-2.5 rounded-sm bg-primary"></span><span class="text-outline">&gt;88%</span>
+<span class="w-2.5 h-2.5 rounded-sm bg-secondary-container ml-1"></span><span class="text-outline">80–87%</span>
+<span class="w-2.5 h-2.5 rounded-sm bg-surface-bright ml-1"></span><span class="text-outline">70–79%</span>
+<span class="w-2.5 h-2.5 rounded-sm bg-error ml-1"></span><span class="text-outline">&lt;70%</span>
+</div>
+</div>
+<!-- Heatmap Table Matrix -->
+<div class="overflow-x-auto mt-space-sm">
+<table class="w-full text-left font-body-sm text-body-sm">
+<thead>
+<tr class="bg-surface-container-low text-outline font-label-md text-label-md uppercase">
+<th class="py-space-xs px-space-sm font-semibold">Macrodomínio Clínico</th>
+<th class="py-space-xs px-space-xs text-center font-semibold">T47 (12º)</th>
+<th class="py-space-xs px-space-xs text-center font-semibold">T48 (11º)</th>
+<th class="py-space-xs px-space-xs text-center font-semibold">T49 (10º)</th>
+<th class="py-space-xs px-space-xs text-center font-semibold">T50 (8º)</th>
+<th class="py-space-xs px-space-xs text-center font-semibold">T51 (6º)</th>
+</tr>
+</thead>
+<tbody class="divide-y-0">
+<!-- Row 1: Clínica Médica -->
+<tr class="hover:bg-surface-container-high/40 transition-colors">
+<td class="py-space-xs px-space-sm font-medium text-on-surface">1. Clínica Médica &amp; Raciocínio</td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-primary/20 text-primary font-metric-micro text-metric-micro font-bold">92.4%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-primary/20 text-primary font-metric-micro text-metric-micro font-bold">89.1%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-secondary-container/30 text-secondary font-metric-micro text-metric-micro font-semibold">84.6%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-secondary-container/30 text-secondary font-metric-micro text-metric-micro font-semibold">81.0%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-secondary-container/30 text-secondary font-metric-micro text-metric-micro font-semibold">82.5%</span></td>
+</tr>
+<!-- Row 2: Cirurgia -->
+<tr class="hover:bg-surface-container-high/40 transition-colors">
+<td class="py-space-xs px-space-sm font-medium text-on-surface">2. Cirurgia Geral &amp; Trauma</td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-primary/20 text-primary font-metric-micro text-metric-micro font-bold">88.7%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-secondary-container/30 text-secondary font-metric-micro text-metric-micro font-semibold">85.3%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-surface-bright text-on-surface-variant font-metric-micro text-metric-micro">78.2%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-surface-bright text-on-surface-variant font-metric-micro text-metric-micro">74.9%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-secondary-container/30 text-secondary font-metric-micro text-metric-micro font-semibold">80.1%</span></td>
+</tr>
+<!-- Row 3: Pediatria -->
+<tr class="hover:bg-surface-container-high/40 transition-colors">
+<td class="py-space-xs px-space-sm font-medium text-on-surface">3. Pediatria &amp; Neonatologia</td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-primary/20 text-primary font-metric-micro text-metric-micro font-bold">90.2%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-secondary-container/30 text-secondary font-metric-micro text-metric-micro font-semibold">86.8%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-secondary-container/30 text-secondary font-metric-micro text-metric-micro font-semibold">83.4%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-surface-bright text-on-surface-variant font-metric-micro text-metric-micro">79.1%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-secondary-container/30 text-secondary font-metric-micro text-metric-micro font-semibold">83.9%</span></td>
+</tr>
+<!-- Row 4: G&O -->
+<tr class="hover:bg-surface-container-high/40 transition-colors">
+<td class="py-space-xs px-space-sm font-medium text-on-surface">4. Ginecologia &amp; Obstetrícia</td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-primary/20 text-primary font-metric-micro text-metric-micro font-bold">89.8%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-secondary-container/30 text-secondary font-metric-micro text-metric-micro font-semibold">87.2%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-secondary-container/30 text-secondary font-metric-micro text-metric-micro font-semibold">82.0%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-surface-bright text-on-surface-variant font-metric-micro text-metric-micro">77.8%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-secondary-container/30 text-secondary font-metric-micro text-metric-micro font-semibold">81.4%</span></td>
+</tr>
+<!-- Row 5: Emergência / Choque (Critical bottleneck) -->
+<tr class="hover:bg-surface-container-high/40 transition-colors">
+<td class="py-space-xs px-space-sm font-medium text-on-surface flex items-center justify-between">
+<span>5. Emergência / Sala Vermelha</span>
+<span class="material-symbols-outlined text-error text-[15px]">warning</span>
+</td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-secondary-container/30 text-secondary font-metric-micro text-metric-micro font-semibold">82.3%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-surface-bright text-on-surface-variant font-metric-micro text-metric-micro">76.5%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-error/20 text-error font-metric-micro text-metric-micro font-bold">68.4%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-error/20 text-error font-metric-micro text-metric-micro font-bold">64.2%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-surface-bright text-on-surface-variant font-metric-micro text-metric-micro">73.0%</span></td>
+</tr>
+<!-- Row 6: Saúde Coletiva / SUS -->
+<tr class="hover:bg-surface-container-high/40 transition-colors">
+<td class="py-space-xs px-space-sm font-medium text-on-surface">6. Atenção Primária &amp; Bioética</td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-primary/20 text-primary font-metric-micro text-metric-micro font-bold">95.1%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-primary/20 text-primary font-metric-micro text-metric-micro font-bold">92.0%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-primary/20 text-primary font-metric-micro text-metric-micro font-bold">88.5%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-secondary-container/30 text-secondary font-metric-micro text-metric-micro font-semibold">85.4%</span></td>
+<td class="p-1 text-center"><span class="block py-1 rounded bg-primary/20 text-primary font-metric-micro text-metric-micro font-bold">88.8%</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mt-space-sm p-space-xs bg-surface-container-lowest/60 rounded flex items-center justify-between text-outline font-metric-micro text-metric-micro">
+<span class="text-error font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">flag</span>
+          Gargalo Pedagógico: Emergência nas turmas T49 (68.4%) e T50 (64.2%)
+        </span>
+<button class="text-primary hover:underline flex items-center gap-0.5" type="button">
+          Ver Plano de Ação <span class="material-symbols-outlined text-[13px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- RIGHT: COMPARATIVO MULTIVARIADO ENTRE COORTES & CICLOS -->
+<div class="flex flex-col bg-surface-container p-space-md rounded-lg shadow-sm">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[18px]">balance</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Comparativo Tripartite de Competências</span>
+</div>
+<span class="font-metric-micro text-metric-micro text-outline">Simulados Teóricos vs OSCE Prático vs Avaliação Preceptoria</span>
+</div>
+<div class="flex items-center gap-2 font-metric-micro text-metric-micro">
+<span class="flex items-center gap-1 text-primary"><span class="w-2 h-2 rounded bg-primary"></span> Cognitivo</span>
+<span class="flex items-center gap-1 text-secondary"><span class="w-2 h-2 rounded bg-secondary-container"></span> OSCE (18 Estações)</span>
+<span class="flex items-center gap-1 text-tertiary"><span class="w-2 h-2 rounded bg-surface-bright"></span> Preceptoria</span>
+</div>
+</div>
+<!-- Cohorts Comparative List with Segment Bars -->
+<div class="flex flex-col gap-space-sm mt-space-sm">
+<!-- Turma 47 -->
+<div class="flex flex-col gap-1 p-space-xs bg-surface-container-low rounded">
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">Turma 47 — 12º Semestre (Internato II / Finalistas)</span>
+<span class="px-space-xs py-space-2xs bg-primary/10 text-primary font-metric-micro text-metric-micro font-semibold rounded">Prontidão Consolidada</span>
+</div>
+<div class="grid grid-cols-3 gap-space-xs mt-1">
+<div>
+<div class="flex justify-between font-metric-micro text-metric-micro text-outline mb-0.5"><span>Cognitivo:</span> <strong class="text-primary">89.2%</strong></div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-primary" style="width: 89.2%;"></div></div>
+</div>
+<div>
+<div class="flex justify-between font-metric-micro text-metric-micro text-outline mb-0.5"><span>OSCE Prático:</span> <strong class="text-secondary">94.1%</strong></div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-secondary-container" style="width: 94.1%;"></div></div>
+</div>
+<div>
+<div class="flex justify-between font-metric-micro text-metric-micro text-outline mb-0.5"><span>Preceptoria:</span> <strong class="text-tertiary">96.5%</strong></div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-surface-bright" style="width: 96.5%;"></div></div>
+</div>
+</div>
+</div>
+<!-- Turma 48 -->
+<div class="flex flex-col gap-1 p-space-xs bg-surface-container-low rounded">
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">Turma 48 — 11º Semestre (Internato I)</span>
+<span class="px-space-xs py-space-2xs bg-secondary-container/20 text-secondary font-metric-micro text-metric-micro font-semibold rounded">Evolução Estável</span>
+</div>
+<div class="grid grid-cols-3 gap-space-xs mt-1">
+<div>
+<div class="flex justify-between font-metric-micro text-metric-micro text-outline mb-0.5"><span>Cognitivo:</span> <strong class="text-primary">86.4%</strong></div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-primary" style="width: 86.4%;"></div></div>
+</div>
+<div>
+<div class="flex justify-between font-metric-micro text-metric-micro text-outline mb-0.5"><span>OSCE Prático:</span> <strong class="text-secondary">91.8%</strong></div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-secondary-container" style="width: 91.8%;"></div></div>
+</div>
+<div>
+<div class="flex justify-between font-metric-micro text-metric-micro text-outline mb-0.5"><span>Preceptoria:</span> <strong class="text-tertiary">93.0%</strong></div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-surface-bright" style="width: 93.0%;"></div></div>
+</div>
+</div>
+</div>
+<!-- Turma 49 -->
+<div class="flex flex-col gap-1 p-space-xs bg-surface-container-low rounded">
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">Turma 49 — 10º Semestre (Ciclo Clínico Avançado)</span>
+<span class="px-space-xs py-space-2xs bg-error/15 text-error font-metric-micro text-metric-micro font-semibold rounded">Gaps em Emergência</span>
+</div>
+<div class="grid grid-cols-3 gap-space-xs mt-1">
+<div>
+<div class="flex justify-between font-metric-micro text-metric-micro text-outline mb-0.5"><span>Cognitivo:</span> <strong class="text-primary">81.2%</strong></div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-primary" style="width: 81.2%;"></div></div>
+</div>
+<div>
+<div class="flex justify-between font-metric-micro text-metric-micro text-outline mb-0.5"><span>OSCE Prático:</span> <strong class="text-secondary">84.5%</strong></div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-secondary-container" style="width: 84.5%;"></div></div>
+</div>
+<div>
+<div class="flex justify-between font-metric-micro text-metric-micro text-outline mb-0.5"><span>Preceptoria:</span> <strong class="text-tertiary">88.2%</strong></div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-surface-bright" style="width: 88.2%;"></div></div>
+</div>
+</div>
+</div>
+<!-- Turma 50 -->
+<div class="flex flex-col gap-1 p-space-xs bg-surface-container-low rounded">
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">Turma 50 — 8º Semestre (Propedêutica &amp; Semiologia)</span>
+<span class="px-space-xs py-space-2xs bg-tertiary/20 text-tertiary font-metric-micro text-metric-micro font-semibold rounded">Plano Nivelamento Ativo</span>
+</div>
+<div class="grid grid-cols-3 gap-space-xs mt-1">
+<div>
+<div class="flex justify-between font-metric-micro text-metric-micro text-outline mb-0.5"><span>Cognitivo:</span> <strong class="text-primary">78.5%</strong></div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-primary" style="width: 78.5%;"></div></div>
+</div>
+<div>
+<div class="flex justify-between font-metric-micro text-metric-micro text-outline mb-0.5"><span>OSCE Prático:</span> <strong class="text-secondary">79.2%</strong></div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-secondary-container" style="width: 79.2%;"></div></div>
+</div>
+<div>
+<div class="flex justify-between font-metric-micro text-metric-micro text-outline mb-0.5"><span>Preceptoria:</span> <strong class="text-tertiary">84.1%</strong></div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-surface-bright" style="width: 84.1%;"></div></div>
+</div>
+</div>
+</div>
+<!-- Turma 51 -->
+<div class="flex flex-col gap-1 p-space-xs bg-surface-container-low rounded">
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">Turma 51 — 6º Semestre (Transição Básico–Clínico)</span>
+<span class="px-space-xs py-space-2xs bg-primary/10 text-primary font-metric-micro text-metric-micro font-semibold rounded">+3.2% vs Média Histórica</span>
+</div>
+<div class="grid grid-cols-3 gap-space-xs mt-1">
+<div>
+<div class="flex justify-between font-metric-micro text-metric-micro text-outline mb-0.5"><span>Cognitivo:</span> <strong class="text-primary">82.1%</strong></div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-primary" style="width: 82.1%;"></div></div>
+</div>
+<div>
+<div class="flex justify-between font-metric-micro text-metric-micro text-outline mb-0.5"><span>OSCE Prático:</span> <strong class="text-secondary">85.0%</strong></div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-secondary-container" style="width: 85.0%;"></div></div>
+</div>
+<div>
+<div class="flex justify-between font-metric-micro text-metric-micro text-outline mb-0.5"><span>Preceptoria:</span> <strong class="text-tertiary">90.4%</strong></div>
+<div class="h-1.5 w-full bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-surface-bright" style="width: 90.4%;"></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ROW 4: TABELA ANALÍTICA DE ALTA DENSIDADE COM DRILL-DOWN INVESTIGATIVO -->
+<div class="flex flex-col bg-surface-container p-space-md rounded-lg shadow-sm">
+<div class="flex flex-wrap items-center justify-between gap-space-sm pb-space-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">table_rows</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Detalhamento Investigativo por Subdomínio Clínico &amp; Fatores de Erro</span>
+</div>
+<span class="font-metric-micro text-metric-micro text-outline">Matriz microanalítica com dispersão sigma, coorte abaixo do limiar regulatório e etiologia de falha</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<div class="flex items-center bg-surface-container-low px-space-sm py-space-xs rounded gap-2">
+<span class="material-symbols-outlined text-outline text-[16px]">search</span>
+<input class="bg-transparent text-on-surface font-body-sm text-body-sm focus:outline-none placeholder:text-outline w-48" placeholder="Filtrar subdomínio ou CID-11..." type="text"/>
+</div>
+<button class="px-space-sm py-space-xs bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-md text-label-md rounded transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[15px]">filter_list</span>
+          Filtrar Quartil
+        </button>
+</div>
+</div>
+<!-- Data Grid -->
+<div class="overflow-x-auto">
+<table class="w-full text-left font-body-sm text-body-sm">
+<thead>
+<tr class="bg-surface-container-low text-outline font-label-md text-label-md uppercase">
+<th class="py-space-sm px-space-sm font-semibold">Subdomínio Clínico / Eixo DCN</th>
+<th class="py-space-sm px-space-sm text-right font-semibold">Média (%)</th>
+<th class="py-space-sm px-space-sm text-right font-semibold">Δ Benchmark (pp)</th>
+<th class="py-space-sm px-space-sm text-right font-semibold">Dispersão (σ)</th>
+<th class="py-space-sm px-space-sm text-right font-semibold">&lt;70% (Risco)</th>
+<th class="py-space-sm px-space-sm text-center font-semibold">Tendência</th>
+<th class="py-space-sm px-space-sm font-semibold">Fator Primário de Erro Identificado</th>
+<th class="py-space-sm px-space-sm text-center font-semibold">Ação Analítica</th>
+</tr>
+</thead>
+<tbody class="divide-y-0">
+<!-- Row 1: ATLS Trauma -->
+<tr class="hover:bg-surface-container-high transition-colors bg-surface-container">
+<td class="py-space-sm px-space-sm font-medium text-on-surface">
+<div class="flex flex-col">
+<span class="text-on-surface font-semibold">Suporte Avançado à Vida no Trauma (ATLS/PHTLS)</span>
+<span class="text-outline font-metric-micro text-metric-micro">DCN-CIR-08 • 4 Estações de Simulação</span>
+</div>
+</td>
+<td class="py-space-sm px-space-sm text-right font-metric-value text-metric-value text-error font-bold">69.4%</td>
+<td class="py-space-sm px-space-sm text-right font-metric-micro text-metric-micro text-primary font-semibold">+4.2 pp</td>
+<td class="py-space-sm px-space-sm text-right font-metric-micro text-metric-micro text-on-surface">±8.4</td>
+<td class="py-space-sm px-space-sm text-right font-metric-value text-metric-value text-error">38 alunos</td>
+<td class="py-space-sm px-space-sm text-center">
+<svg class="w-16 h-5 inline-block" fill="none" viewbox="0 0 64 20">
+<path d="M2 6 L18 12 L34 10 L50 16 L62 14" stroke="#ffb4ab" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</td>
+<td class="py-space-sm px-space-sm text-on-surface-variant font-body-sm text-body-sm">
+<span class="text-error font-semibold">Gargalo:</span> Conduta em Choque Obstrutivo &amp; Drenagem Torácica
+            </td>
+<td class="py-space-sm px-space-sm text-center">
+<button class="px-space-xs py-space-2xs bg-surface-container-high hover:bg-surface-bright text-primary font-label-md text-label-md rounded inline-flex items-center gap-1 transition-colors" type="button">
+                Investigar <span class="material-symbols-outlined text-[13px]">arrow_outward</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Farmacologia e Ajuste Renal -->
+<tr class="hover:bg-surface-container-high transition-colors bg-surface-container-low/30">
+<td class="py-space-sm px-space-sm font-medium text-on-surface">
+<div class="flex flex-col">
+<span class="text-on-surface font-semibold">Prescrição Farmacológica &amp; Ajuste em Insuficiência Renal</span>
+<span class="text-outline font-metric-micro text-metric-micro">DCN-CLI-14 • Cálculo Dialítico e Depuração</span>
+</div>
+</td>
+<td class="py-space-sm px-space-sm text-right font-metric-value text-metric-value text-tertiary font-bold">73.1%</td>
+<td class="py-space-sm px-space-sm text-right font-metric-micro text-metric-micro text-primary font-semibold">+7.8 pp</td>
+<td class="py-space-sm px-space-sm text-right font-metric-micro text-metric-micro text-on-surface">±6.1</td>
+<td class="py-space-sm px-space-sm text-right font-metric-value text-metric-value text-on-surface-variant">24 alunos</td>
+<td class="py-space-sm px-space-sm text-center">
+<svg class="w-16 h-5 inline-block" fill="none" viewbox="0 0 64 20">
+<path d="M2 15 L18 13 L34 8 L50 9 L62 5" stroke="#94ccff" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</td>
+<td class="py-space-sm px-space-sm text-on-surface-variant font-body-sm text-body-sm">
+<span class="text-on-surface font-semibold">Fator:</span> Subdosagem de vancomicina / aminoglicosídeos em ClCr &lt; 30ml/min
+            </td>
+<td class="py-space-sm px-space-sm text-center">
+<button class="px-space-xs py-space-2xs bg-surface-container-high hover:bg-surface-bright text-primary font-label-md text-label-md rounded inline-flex items-center gap-1 transition-colors" type="button">
+                Investigar <span class="material-symbols-outlined text-[13px]">arrow_outward</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Protocolo SPIKES -->
+<tr class="hover:bg-surface-container-high transition-colors bg-surface-container">
+<td class="py-space-sm px-space-sm font-medium text-on-surface">
+<div class="flex flex-col">
+<span class="text-on-surface font-semibold">Comunicação de Más Notícias (Protocolo SPIKES)</span>
+<span class="text-outline font-metric-micro text-metric-micro">DCN-BIO-03 • OSCE Humanização &amp; Terminalidade</span>
+</div>
+</td>
+<td class="py-space-sm px-space-sm text-right font-metric-value text-metric-value text-primary font-bold">94.2%</td>
+<td class="py-space-sm px-space-sm text-right font-metric-micro text-metric-micro text-primary font-semibold">+18.5 pp</td>
+<td class="py-space-sm px-space-sm text-right font-metric-micro text-metric-micro text-on-surface">±3.2</td>
+<td class="py-space-sm px-space-sm text-right font-metric-value text-metric-value text-primary">2 alunos</td>
+<td class="py-space-sm px-space-sm text-center">
+<svg class="w-16 h-5 inline-block" fill="none" viewbox="0 0 64 20">
+<path d="M2 16 L18 10 L34 6 L50 4 L62 2" stroke="#42dec3" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</td>
+<td class="py-space-sm px-space-sm text-on-surface-variant font-body-sm text-body-sm">
+<span class="text-primary font-semibold">Consolidado:</span> Excelente acolhimento empático e plano terapêutico compartilhado
+            </td>
+<td class="py-space-sm px-space-sm text-center">
+<button class="px-space-xs py-space-2xs bg-surface-container-high hover:bg-surface-bright text-primary font-label-md text-label-md rounded inline-flex items-center gap-1 transition-colors" type="button">
+                Investigar <span class="material-symbols-outlined text-[13px]">arrow_outward</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: ECG na Sala de Emergência -->
+<tr class="hover:bg-surface-container-high transition-colors bg-surface-container-low/30">
+<td class="py-space-sm px-space-sm font-medium text-on-surface">
+<div class="flex flex-col">
+<span class="text-on-surface font-semibold">Cardiologia: Eletrocardiograma em Sala de Emergência</span>
+<span class="text-outline font-metric-micro text-metric-micro">DCN-CLI-06 • Reconhecimento de Arritmias Graves</span>
+</div>
+</td>
+<td class="py-space-sm px-space-sm text-right font-metric-value text-metric-value text-tertiary font-bold">71.8%</td>
+<td class="py-space-sm px-space-sm text-right font-metric-micro text-metric-micro text-primary font-semibold">+5.1 pp</td>
+<td class="py-space-sm px-space-sm text-right font-metric-micro text-metric-micro text-on-surface">±7.9</td>
+<td class="py-space-sm px-space-sm text-right font-metric-value text-metric-value text-error">31 alunos</td>
+<td class="py-space-sm px-space-sm text-center">
+<svg class="w-16 h-5 inline-block" fill="none" viewbox="0 0 64 20">
+<path d="M2 14 L18 12 L34 11 L50 8 L62 9" stroke="#94ccff" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</td>
+<td class="py-space-sm px-space-sm text-on-surface-variant font-body-sm text-body-sm">
+<span class="text-on-surface font-semibold">Fator:</span> Distinção entre TV monomórfica vs Taquicardia Supraventricular com aberrância
+            </td>
+<td class="py-space-sm px-space-sm text-center">
+<button class="px-space-xs py-space-2xs bg-surface-container-high hover:bg-surface-bright text-primary font-label-md text-label-md rounded inline-flex items-center gap-1 transition-colors" type="button">
+                Investigar <span class="material-symbols-outlined text-[13px]">arrow_outward</span>
+</button>
+</td>
+</tr>
+<!-- Row 5: POCUS Trauma -->
+<tr class="hover:bg-surface-container-high transition-colors bg-surface-container">
+<td class="py-space-sm px-space-sm font-medium text-on-surface">
+<div class="flex flex-col">
+<span class="text-on-surface font-semibold">POCUS: Protocolo FAST no Trauma Abdominal</span>
+<span class="text-outline font-metric-micro text-metric-micro">DCN-CIR-11 • Ultrassonografia Point-of-Care</span>
+</div>
+</td>
+<td class="py-space-sm px-space-sm text-right font-metric-value text-metric-value text-secondary font-bold">80.5%</td>
+<td class="py-space-sm px-space-sm text-right font-metric-micro text-metric-micro text-primary font-semibold">+11.2 pp</td>
+<td class="py-space-sm px-space-sm text-right font-metric-micro text-metric-micro text-on-surface">±5.4</td>
+<td class="py-space-sm px-space-sm text-right font-metric-value text-metric-value text-on-surface-variant">14 alunos</td>
+<td class="py-space-sm px-space-sm text-center">
+<svg class="w-16 h-5 inline-block" fill="none" viewbox="0 0 64 20">
+<path d="M2 15 L18 10 L34 11 L50 6 L62 4" stroke="#42dec3" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+</td>
+<td class="py-space-sm px-space-sm text-on-surface-variant font-body-sm text-body-sm">
+<span class="text-on-surface font-semibold">Fator:</span> Dificuldade técnica na aquisição do espaço esplenorrenal e janela subxifóidea
+            </td>
+<td class="py-space-sm px-space-sm text-center">
+<button class="px-space-xs py-space-2xs bg-surface-container-high hover:bg-surface-bright text-primary font-label-md text-label-md rounded inline-flex items-center gap-1 transition-colors" type="button">
+                Investigar <span class="material-symbols-outlined text-[13px]">arrow_outward</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination & Micro Summary -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm pt-space-sm mt-space-sm text-outline font-metric-micro text-metric-micro">
+<span>Exibindo 5 subdomínios críticos de 84 monitorados no currículo médico ativo</span>
+<div class="flex items-center gap-space-xs">
+<button class="px-space-xs py-space-2xs bg-surface-container-low text-on-surface rounded hover:bg-surface-container-high disabled:opacity-50" disabled="" type="button">Anterior</button>
+<span class="px-space-xs py-space-2xs bg-primary text-on-primary font-bold rounded">1</span>
+<button class="px-space-xs py-space-2xs bg-surface-container-low text-on-surface rounded hover:bg-surface-container-high" type="button">2</button>
+<button class="px-space-xs py-space-2xs bg-surface-container-low text-on-surface rounded hover:bg-surface-container-high" type="button">3</button>
+<span class="px-space-xs">...</span>
+<button class="px-space-xs py-space-2xs bg-surface-container-low text-on-surface rounded hover:bg-surface-container-high" type="button">Próxima</button>
+</div>
+</div>
+</div>
+<!-- ROW 5: ANÁLISE DE CLUSTERS EM RISCO & FATORES ETIOLÓGICOS PEDAGÓGICOS -->
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px]">psychology</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Clusters Diagnósticos &amp; Intervenções Prescritivas</span>
+</div>
+<span class="font-metric-micro text-metric-micro text-outline">Segmentação com base em K-Means (k=3) • Algoritmo MedPleni Clustering</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<!-- Cluster A: Assimetria Teórico-Prática -->
+<div class="flex flex-col justify-between bg-surface-container p-space-md rounded-lg shadow-sm">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-start justify-between">
+<span class="px-space-xs py-space-2xs bg-surface-bright text-tertiary font-metric-micro text-metric-micro font-bold rounded">CLUSTER ALFA • N=18</span>
+<span class="material-symbols-outlined text-tertiary text-[18px]">swap_horiz</span>
+</div>
+<span class="font-body-sm text-body-sm font-bold text-on-surface">Assimetria Teórico-Prática Severa</span>
+<span class="font-metric-micro text-metric-micro text-outline">Cognitivo Alto (&gt;85%) com OSCE Limítrofe (&lt;68%)</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mt-1">
+            Discentes com excelente retenção conceitual e raciocínio fisiopatológico escrito, porém com inibição situacional, falhas de comunicação com pacientes atores e bloqueio executivo em procedimentos invasivos sob cronômetro.
+          </p>
+</div>
+<div class="mt-space-md pt-space-xs bg-surface-container-low p-space-xs rounded flex flex-col gap-1">
+<div class="flex items-center justify-between text-outline font-metric-micro text-metric-micro">
+<span>Intervenção:</span>
+<span class="text-tertiary font-semibold">Oficina de Estresse Situacional</span>
+</div>
+<button class="w-full mt-1 py-1 bg-surface-container text-tertiary hover:bg-surface-container-high font-label-md text-label-md rounded transition-colors text-center" type="button">
+            Encaminhar para Laboratório de Habilidades
+          </button>
+</div>
+</div>
+<!-- Cluster B: Risco ENAMED Faixa 2 -->
+<div class="flex flex-col justify-between bg-surface-container p-space-md rounded-lg shadow-sm">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-start justify-between">
+<span class="px-space-xs py-space-2xs bg-error/20 text-error font-metric-micro text-metric-micro font-bold rounded">CLUSTER BETA • N=12</span>
+<span class="material-symbols-outlined text-error text-[18px]">warning</span>
+</div>
+<span class="font-body-sm text-body-sm font-bold text-error">Risco Iminente de Faixa 2 INEP</span>
+<span class="font-metric-micro text-metric-micro text-outline">Déficit Persistente (&lt;62% em 3 Simulados Consecutivos)</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mt-1">
+            Concentrado em discentes da Turma 49 e 50 com lacunas acumuladas em Pediatria Clínica e Técnica Cirúrgica Básica. Risco regulatório direto para o índice do curso caso alcancem o internato sem remediação formal.
+          </p>
+</div>
+<div class="mt-space-md pt-space-xs bg-surface-container-low p-space-xs rounded flex flex-col gap-1">
+<div class="flex items-center justify-between text-outline font-metric-micro text-metric-micro">
+<span>Intervenção:</span>
+<span class="text-error font-semibold">Mentoria 1-on-1 Obrigatória</span>
+</div>
+<button class="w-full mt-1 py-1 bg-error-container text-on-error-container hover:bg-error font-label-md text-label-md rounded transition-colors text-center font-semibold" type="button">
+            Ativar Protocolo de Tutoria Prescritiva
+          </button>
+</div>
+</div>
+<!-- Cluster C: Nivelamento com Evolução Acelerada -->
+<div class="flex flex-col justify-between bg-surface-container p-space-md rounded-lg shadow-sm">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-start justify-between">
+<span class="px-space-xs py-space-2xs bg-primary/20 text-primary font-metric-micro text-metric-micro font-bold rounded">CLUSTER GAMA • N=26</span>
+<span class="material-symbols-outlined text-primary text-[18px]">rocket_launch</span>
+</div>
+<span class="font-body-sm text-body-sm font-bold text-primary">Recuperação e Avanço Acelerado</span>
+<span class="font-metric-micro text-metric-micro text-outline">Delta +12.4 pp nas últimas 8 semanas</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed mt-1">
+            Grupo anteriormente sob intervenção que apresentou curva de ganho cognitivo exponencial após inclusão na plataforma de Flashcards adaptativos e plantões tutelados no pronto-socorro infantil.
+          </p>
+</div>
+<div class="mt-space-md pt-space-xs bg-surface-container-low p-space-xs rounded flex flex-col gap-1">
+<div class="flex items-center justify-between text-outline font-metric-micro text-metric-micro">
+<span>Intervenção:</span>
+<span class="text-primary font-semibold">Transição para Monitoria Avançada</span>
+</div>
+<button class="w-full mt-1 py-1 bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md rounded transition-colors text-center font-bold" type="button">
+            Validar Alta do Nivelamento
+          </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Simple micro-interactions for analytical drill-downs
+  document.addEventListener('DOMContentLoaded', () => {
+    // Add interactive click feedback on filter pills
+    const interactiveChips = document.querySelectorAll('[data-role="chip"]');
+    interactiveChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        chip.classList.toggle('opacity-80');
+      });
+    });
+  });
+</script></main><footer class="w-full bg-surface-container-lowest border-t border-outline-variant/30 py-space-sm px-space-lg flex flex-wrap items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg text-outline font-metric-micro text-metric-micro"><span>CLUSTER: sa-east-1a [SP-CLIN-NODES-08]</span><span>STATUS: 99.98% UPTIME</span><span>LATÊNCIA: 14ms (SQL P99: 42ms)</span><span>INGESTÃO INEP: 08:30:14 UTC-3</span></div><div class="flex items-center gap-space-md text-outline font-body-sm text-body-sm"><span>Em conformidade rigorosa com a LGPD e Resoluções CNE/CES Medicina.</span><span class="text-on-surface-variant font-medium">© 2025 MedPleni Health Intelligence</span></div></footer></div></body></html>

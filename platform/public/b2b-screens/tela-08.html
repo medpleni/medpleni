@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"surface-container":"#eaedff","on-tertiary-fixed-variant":"#384760","surface":"#faf8ff","on-secondary-container":"#004972","secondary-container":"#67bafd","surface-container-high":"#e3e7fc","primary-container":"#00c2a8","surface-container-lowest":"#ffffff","on-secondary-fixed-variant":"#004b74","primary":"#006b5c","surface-variant":"#dee2f7","on-error-container":"#93000a","on-surface":"#161b2a","on-surface-variant":"#3c4a46","on-primary":"#ffffff","surface-dim":"#d5d9ee","inverse-on-surface":"#eef0ff","on-tertiary-fixed":"#0b1c32","on-secondary":"#ffffff","tertiary-fixed-dim":"#b8c7e5","surface-container-highest":"#dee2f7","surface-container-low":"#f2f3ff","surface-tint":"#006b5c","surface-bright":"#faf8ff","on-background":"#161b2a","outline":"#6c7a76","tertiary-container":"#9eadca","on-primary-container":"#00493e","inverse-surface":"#2b3040","primary-fixed":"#65fade","secondary-fixed":"#cde5ff","tertiary-fixed":"#d5e3ff","error-container":"#ffdad6","tertiary":"#505f79","on-secondary-fixed":"#001d32","inverse-primary":"#41ddc2","background":"#faf8ff","on-primary-fixed":"#00201b","on-tertiary":"#ffffff","secondary":"#006399","on-primary-fixed-variant":"#005045","on-tertiary-container":"#324159","on-error":"#ffffff","secondary-fixed-dim":"#94ccff","outline-variant":"#bbcac4","error":"#ba1a1a","primary-fixed-dim":"#41ddc2"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"gutter":"1.25rem","gutter-mobile":"0.75rem","space-xl":"2.5rem","space-lg":"1.5rem","margin":"2rem","margin-mobile":"1rem","space-md":"1rem","space-xs":"0.25rem","space-sm":"0.5rem"},"fontFamily":{"headline-lg":["Plus Jakarta Sans"],"body-sm":["Inter"],"label-lg":["Inter"],"headline-md":["Plus Jakarta Sans"],"display":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"headline-lg-mobile":["Plus Jakarta Sans"],"title-md":["Inter"],"body-md":["Inter"],"body-lg":["Inter"],"label-sm":["Inter"],"label-md":["Inter"]},"fontSize":{"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"16px","letterSpacing":"0.005em","fontWeight":"400"}],"label-lg":["13px",{"lineHeight":"18px","letterSpacing":"0.01em","fontWeight":"500"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"600"}],"display":["40px",{"lineHeight":"48px","letterSpacing":"-0.025em","fontWeight":"700"}],"headline-sm":["18px",{"lineHeight":"24px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-lg-mobile":["26px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"600"}],"title-md":["16px",{"lineHeight":"24px","letterSpacing":"-0.005em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"20px","letterSpacing":"0em","fontWeight":"400"}],"body-lg":["16px",{"lineHeight":"26px","letterSpacing":"0em","fontWeight":"400"}],"label-sm":["10px",{"lineHeight":"12px","letterSpacing":"0.06em","fontWeight":"700"}],"label-md":["11px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-low z-50 flex flex-col justify-between py-space-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col gap-space-md"><div class="px-space-lg flex items-center gap-space-sm"><div class="w-9 h-9 rounded-lg bg-primary flex items-center justify-center text-on-primary shadow-sm"><span class="material-symbols-outlined text-[20px]">vital_signs</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-on-surface leading-none">MedPleni</span><span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">Intelligence Core</span></div></div><div class="px-space-md"><div class="p-space-sm rounded-lg bg-surface-container-lowest flex items-center justify-between shadow-[0_1px_3px_rgba(26,31,46,0.04)]"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span><span class="font-label-md text-label-md text-on-surface">e-MEC / INEP</span></div><span class="font-label-sm text-label-sm px-space-xs py-0.5 rounded-full bg-primary/10 text-primary uppercase">Sincronizado</span></div></div><nav class="flex flex-col gap-space-xs px-space-sm" data-active-classes="bg-primary text-on-primary font-semibold shadow-sm"><div class="px-space-sm py-space-xs font-label-sm text-label-sm uppercase text-outline font-semibold tracking-wider">Módulos Executivos</div><a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg transition-colors bg-primary text-on-primary font-semibold shadow-sm" data-path="overview-executivo" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span><span class="font-body-md text-body-md">Painel Bento</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="matriz-competencias" href="#"><span class="material-symbols-outlined text-[20px]">verified</span><span class="font-body-md text-body-md">Competências DCN</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="cohorts-internato" href="#"><span class="material-symbols-outlined text-[20px]">clinical_notes</span><span class="font-body-md text-body-md">Ciclo Clínico &amp; Estágio</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="conformidade-regulatoria" href="#"><span class="material-symbols-outlined text-[20px]">fact_check</span><span class="font-body-md text-body-md">Auditoria Regulatória</span></a><a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="corpo-docente" href="#"><span class="material-symbols-outlined text-[20px]">groups</span><span class="font-body-md text-body-md">Preceptoria &amp; Docência</span></a></nav></div><div class="px-space-md flex flex-col gap-space-sm"><div class="p-space-sm rounded-lg bg-surface-container-high/60 flex flex-col gap-space-xs"><div class="flex items-center justify-between text-on-surface-variant"><span class="font-label-sm text-label-sm uppercase font-semibold">Ciclo Vigente</span><span class="font-label-md text-label-md font-bold text-secondary">2025.1</span></div><div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden"><div class="bg-secondary h-full w-3/4 rounded-full"></div></div><div class="flex justify-between font-label-sm text-label-sm text-outline"><span>Semana 14/20</span><span>70% concluído</span></div></div><div class="flex items-center gap-space-sm p-space-xs rounded-lg bg-surface-container-lowest shadow-[0_1px_3px_rgba(26,31,46,0.04)]"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="flex flex-col min-w-0"><span class="font-label-md text-label-md text-on-surface truncate font-semibold">Dra. Helena Valente</span><span class="font-label-sm text-label-sm text-outline truncate">Pró-Reitora de Graduação</span></div></div></div></aside><div class="pl-64 flex flex-col min-h-screen"><header class="fixed top-0 left-64 right-0 z-40 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-28 flex flex-col justify-between px-space-xl py-space-xs"><div class="flex items-center justify-between gap-space-md h-16"><div class="flex items-center gap-space-md flex-1 max-w-2xl"><div class="flex items-center gap-space-xs px-space-sm py-1.5 rounded-lg bg-surface-container-lowest shadow-[0_1px_2px_rgba(26,31,46,0.03)]"><span class="material-symbols-outlined text-[18px] text-secondary">domain</span><span class="font-label-md text-label-md text-on-surface font-semibold">FMUSP — Faculdade de Medicina</span><span class="material-symbols-outlined text-[16px] text-outline">expand_more</span></div><div class="relative flex-1"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-outline">search</span><input class="w-full pl-9 pr-space-md py-1.5 rounded-lg bg-surface-container-lowest text-on-surface placeholder:text-outline font-body-sm text-body-sm focus:outline-none shadow-[0_1px_2px_rgba(26,31,46,0.03)]" placeholder="Buscar turma, competência EPA ou docente..." type="text"/></div></div><div class="flex items-center gap-space-md"><div class="hidden xl:flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-secondary-container/20 text-on-secondary-container"><span class="material-symbols-outlined text-[16px]">cloud_done</span><span class="font-label-sm text-label-sm font-semibold">INEP Telemetria 09:42 BRT</span></div><button class="relative p-2 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:text-on-surface shadow-[0_1px_2px_rgba(26,31,46,0.03)]"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error"></span></button><div class="flex items-center gap-space-sm"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></div><div class="flex items-center justify-between h-10 pb-space-xs"><div class="flex items-center gap-space-xs font-body-sm text-body-sm text-outline"><span class="font-label-sm text-label-sm uppercase font-semibold text-secondary">Portal Institucional</span><span>/</span><span class="text-on-surface font-semibold">Dashboard Bento Executivo</span><span>/</span><span>Ciclo 2025.1</span></div><div class="flex items-center gap-space-sm"><button class="flex items-center gap-space-xs px-space-sm py-1 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container-high transition-colors font-label-md text-label-md shadow-[0_1px_2px_rgba(26,31,46,0.03)]"><span class="material-symbols-outlined text-[16px]">tune</span><span>Filtros Globais</span></button><button class="flex items-center gap-space-xs px-space-sm py-1 rounded-lg bg-primary-container text-on-primary-container hover:bg-primary hover:text-on-primary transition-colors font-label-md text-label-md shadow-sm"><span class="material-symbols-outlined text-[16px]">ios_share</span><span>Exportar Dossiê Bento</span></button></div></div></div></header><main class="flex-1 pt-28 w-full px-space-xl bg-surface"><div class="flex flex-col w-full pb-space-xl">
+<!-- Top Executive Strip / Meta Bar -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-lg">
+<div>
+<div class="flex items-center gap-space-xs mb-1">
+<span class="inline-flex items-center justify-center w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">Console de Gestão Superior • Ciclo 2025.1</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Painel Executivo de Prontidão Curricular</h1>
+<p class="font-body-md text-body-md text-outline">Monitoramento preditivo ENAMED, matrizes de competência DCN e integridade acadêmica em tempo real.</p>
+</div>
+<!-- Fast Filter Bar & Time Anchor -->
+<div class="flex items-center gap-space-sm bg-surface-container-lowest p-1 rounded-xl shadow-sm">
+<div class="flex items-center gap-1 bg-surface-container-low px-space-sm py-1 rounded-lg">
+<span class="material-symbols-outlined text-secondary text-[16px]">domain_verification</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">Campus Central — SP</span>
+</div>
+<div class="h-4 w-px bg-surface-container-high"></div>
+<span class="font-label-sm text-label-sm text-outline px-space-xs">Corte Preditivo: Junho 2025</span>
+<button class="flex items-center gap-1 px-space-sm py-1 rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface font-label-md text-label-md">
+<span class="material-symbols-outlined text-[15px]">tune</span>
+<span>Ajustar Parâmetros</span>
+</button>
+</div>
+</div>
+<!-- Bento Grid Master Layout -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-space-md">
+<!-- ============================================================== -->
+<!-- 1. HERO MODULE: ENAMED 2025 PREDICTIVE MATRIX (Col-span 2, Row-span 2) -->
+<!-- ============================================================== -->
+<div class="xl:col-span-2 xl:row-span-2 rounded-2xl bg-gradient-to-br from-inverse-surface via-[#1f2537] to-[#151a26] text-inverse-on-surface p-space-lg relative overflow-hidden shadow-xl flex flex-col justify-between group">
+<!-- Ambient Glow Behind Gauges -->
+<div class="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-primary-container/10 blur-3xl pointer-events-none"></div>
+<div class="absolute -left-20 -bottom-20 w-72 h-72 rounded-full bg-secondary-container/10 blur-3xl pointer-events-none"></div>
+<!-- Hero Header -->
+<div class="relative z-10">
+<div class="flex items-center justify-between gap-space-sm mb-space-md">
+<div class="flex items-center gap-space-xs">
+<span class="px-2.5 py-1 rounded-full bg-primary-container/20 text-inverse-primary font-label-sm text-label-sm uppercase tracking-wider font-semibold">
+              Predição Preditiva Ativa
+            </span>
+<span class="px-2 py-0.5 rounded-full bg-surface-variant/20 text-tertiary-fixed font-label-sm text-label-sm">
+              Bayesian Model v3.4
+            </span>
+</div>
+<div class="flex items-center gap-1.5 text-tertiary-fixed font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span>Acurácia 99.1%</span>
+</div>
+</div>
+<h2 class="font-headline-md text-headline-md text-inverse-on-surface font-bold tracking-tight max-w-xl">
+          Preparação &amp; Projeção ENAMED 2025
+        </h2>
+<p class="font-body-md text-body-md text-tertiary-fixed mt-1 max-w-lg">
+          Simulação bayesiana cruzada com 14 anos de histórico INEP e matrizes estruturadas OSCE.
+        </p>
+<!-- Big Metric & Circular Probability Cluster -->
+<div class="grid grid-cols-1 sm:grid-cols-12 gap-space-md mt-space-lg items-center">
+<div class="sm:col-span-7 flex flex-col">
+<span class="font-label-sm text-label-sm uppercase text-tertiary-fixed font-semibold tracking-wider">
+              Índice de Prontidão Institucional
+            </span>
+<div class="flex items-baseline gap-space-xs mt-1">
+<span class="font-display text-display text-primary-fixed leading-none font-bold">92.8%</span>
+<span class="font-label-lg text-label-lg text-inverse-primary font-semibold">Faixa 5 INEP</span>
+</div>
+<div class="mt-space-md flex flex-wrap gap-space-xs">
+<div class="px-space-sm py-1 rounded-lg bg-surface-variant/10 text-inverse-on-surface font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary-fixed">trending_up</span>
+<span class="font-semibold">+23.4 p.p.</span> vs Limiar Nacional
+              </div>
+<div class="px-space-sm py-1 rounded-lg bg-surface-variant/10 text-inverse-on-surface font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary-fixed">school</span>
+<span>1.480 Discentes Monitorados</span>
+</div>
+</div>
+</div>
+<!-- Inline Gauge & Interval Ring -->
+<div class="sm:col-span-5 flex flex-col items-center justify-center p-space-sm bg-surface-variant/10 rounded-xl">
+<div class="relative w-32 h-32 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 120 120">
+<circle class="text-surface-variant/20" cx="60" cy="60" fill="transparent" r="50" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary-container" cx="60" cy="60" fill="transparent" r="50" stroke="currentColor" stroke-dasharray="314.159" stroke-dashoffset="15.7" stroke-linecap="round" stroke-width="8"></circle>
+<circle class="text-secondary-fixed/40" cx="60" cy="60" fill="transparent" r="40" stroke="currentColor" stroke-dasharray="251.3" stroke-dashoffset="37.6" stroke-linecap="round" stroke-width="4"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span class="font-title-md text-title-md font-bold text-inverse-on-surface leading-none">98.4%</span>
+<span class="font-label-sm text-label-sm text-tertiary-fixed text-[10px] mt-0.5">Prob. Faixa 5</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-tertiary-fixed-dim text-center mt-1">
+              Intervalo de Confiança: 91.2% - 94.6%
+            </span>
+</div>
+</div>
+</div>
+<!-- Action Footer & Micro KPIs -->
+<div class="relative z-10 pt-space-lg mt-space-lg flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md text-label-sm font-label-sm text-tertiary-fixed">
+<div>
+<span class="block text-inverse-on-surface font-semibold">T47 Internato Geral</span>
+<span class="text-primary-fixed">95.4% Prontidão</span>
+</div>
+<div class="h-6 w-px bg-surface-variant/30"></div>
+<div>
+<span class="block text-inverse-on-surface font-semibold">T48 Ciclo Clínico II</span>
+<span class="text-inverse-primary">91.8% Prontidão</span>
+</div>
+</div>
+<button class="w-full sm:w-auto px-space-md py-2.5 rounded-xl bg-primary-container text-on-primary-container font-label-lg text-label-lg font-semibold hover:bg-primary hover:text-on-primary transition-all duration-200 flex items-center justify-center gap-space-xs shadow-md">
+<span>Explorar Modelo Preditivo</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- ============================================================== -->
+<!-- 2. GLOBAL CLINICAL PERFORMANCE KPI (1x1 Compact Tile) -->
+<!-- ============================================================== -->
+<div class="rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[22px]">vital_signs</span>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm font-bold">
+          Decil A+ Nacional
+        </span>
+</div>
+<div class="my-space-md">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold block">
+          Índice Global de Desempenho
+        </span>
+<div class="flex items-baseline gap-space-xs mt-1">
+<span class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight">88.6</span>
+<span class="font-title-md text-title-md text-outline">/ 100</span>
+</div>
+<!-- Delta vs previous cohort -->
+<div class="flex items-center gap-1 mt-2 text-primary font-label-md text-label-md font-semibold">
+<span class="material-symbols-outlined text-[16px]">arrow_upward</span>
+<span>+3.8 pts vs Ciclo 2024.2</span>
+</div>
+<!-- Progress Spark -->
+<div class="mt-space-md w-full bg-surface-container rounded-full h-2 overflow-hidden">
+<div class="bg-primary-container h-full rounded-full" style="width: 88.6%;"></div>
+</div>
+</div>
+<div class="pt-space-sm flex items-center justify-between text-outline font-label-sm text-label-sm">
+<span>Amostra Ponderada OSCE</span>
+<span class="font-semibold text-on-surface">Top 1.5% Brasil</span>
+</div>
+</div>
+<!-- ============================================================== -->
+<!-- 6. CRITICAL ACADEMIC RISK & NOTIFICATIONS (1x1 Alert Module) -->
+<!-- ============================================================== -->
+<div class="rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="w-2.5 h-2.5 rounded-full bg-error animate-ping"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-error font-bold">Atenção Prioritária</span>
+</div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-semibold">
+            3 Pendências
+          </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Pontos de Dispersão Crítica</h3>
+</div>
+<div class="flex flex-col gap-space-sm my-space-sm">
+<div class="p-space-sm rounded-xl bg-error-container/30 flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-error text-[18px] mt-0.5 shrink-0">medical_services</span>
+<div class="min-w-0">
+<p class="font-label-md text-label-md font-semibold text-on-surface leading-tight">12 alunos com gap em VM / PCR</p>
+<p class="font-body-sm text-body-sm text-outline">Oficina prática agendada para 28/Mar.</p>
+</div>
+</div>
+<div class="p-space-sm rounded-xl bg-surface-container-low flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[18px] mt-0.5 shrink-0">assignment_late</span>
+<div class="min-w-0">
+<p class="font-label-md text-label-md font-semibold text-on-surface leading-tight">Homologação de Preceptoria Hospitalar</p>
+<p class="font-body-sm text-body-sm text-outline">Hospital Regional • SLA residual: 48h</p>
+</div>
+</div>
+</div>
+<button class="w-full py-2 rounded-xl bg-surface-container-high hover:bg-surface-variant text-on-surface transition-colors font-label-md text-label-md font-semibold flex items-center justify-center gap-1">
+<span>Despachar Pendências</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+<!-- ============================================================== -->
+<!-- 3. LONGITUDINAL PROJECTION & BENCHMARK (Col-span 2 Horizontal) -->
+<!-- ============================================================== -->
+<div class="xl:col-span-2 rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col justify-between">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm mb-space-md">
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">Trajetória Institucional</span>
+<span class="text-outline font-label-sm text-label-sm">• 2021 a 2025</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Evolução Histórica vs Balizadores MEC / INEP</h3>
+</div>
+<!-- Filter Badges -->
+<div class="flex items-center gap-1 bg-surface-container-low p-1 rounded-lg self-start sm:self-auto">
+<button class="px-2.5 py-1 rounded bg-surface-container-lowest text-on-surface font-label-sm text-label-sm font-semibold shadow-xs">Geral</button>
+<button class="px-2.5 py-1 rounded text-outline hover:text-on-surface font-label-sm text-label-sm">Clínica</button>
+<button class="px-2.5 py-1 rounded text-outline hover:text-on-surface font-label-sm text-label-sm">Cirurgia</button>
+<button class="px-2.5 py-1 rounded text-outline hover:text-on-surface font-label-sm text-label-sm">Urgência</button>
+</div>
+</div>
+<!-- Refined SVG Chart -->
+<div class="w-full h-44 relative flex items-end">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 540 160">
+<!-- Background Grid Lines -->
+<line class="text-surface-container" stroke="currentColor" stroke-dasharray="3,3" x1="0" x2="540" y1="20" y2="20"></line>
+<line class="text-surface-container" stroke="currentColor" stroke-dasharray="3,3" x1="0" x2="540" y1="65" y2="65"></line>
+<line class="text-surface-container" stroke="currentColor" stroke-dasharray="3,3" x1="0" x2="540" y1="110" y2="110"></line>
+<!-- Cutoff Line MEC (70.0%) -->
+<line class="text-error/40" stroke="currentColor" stroke-dasharray="4,4" stroke-width="1.5" x1="0" x2="540" y1="120" y2="120"></line>
+<text class="text-error font-label-sm text-[10px] font-semibold" fill="currentColor" text-anchor="end" x="535" y="116">Corte MEC 70%</text>
+<!-- National Top 5% Line (85.2%) -->
+<path class="text-secondary/60" d="M 20 80 Q 150 72 270 58 T 520 46" fill="none" stroke="currentColor" stroke-dasharray="2,2" stroke-width="2"></path>
+<!-- MedPleni Main Trajectory Gradient Fill -->
+<defs>
+<lineargradient id="medpleniGrad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#00C2A8" stop-opacity="0.25"></stop>
+<stop offset="100%" stop-color="#00C2A8" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<path d="M 20 115 Q 140 98 270 65 T 520 24 L 520 160 L 20 160 Z" fill="url(#medpleniGrad)"></path>
+<!-- MedPleni Main Solid Line -->
+<path class="text-primary-container" d="M 20 115 Q 140 98 270 65 T 520 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="3.5"></path>
+<!-- Nodes on MedPleni line -->
+<circle class="fill-surface-container-lowest stroke-primary" cx="20" cy="115" r="4" stroke-width="2"></circle>
+<circle class="fill-surface-container-lowest stroke-primary" cx="145" cy="95" r="4" stroke-width="2"></circle>
+<circle class="fill-surface-container-lowest stroke-primary" cx="270" cy="65" r="4" stroke-width="2"></circle>
+<circle class="fill-surface-container-lowest stroke-primary" cx="395" cy="45" r="4" stroke-width="2"></circle>
+<circle class="fill-primary stroke-surface-container-lowest" cx="520" cy="24" r="5" stroke-width="2.5"></circle>
+</svg>
+</div>
+<!-- X-Axis Labels and Legends -->
+<div class="flex items-center justify-between text-outline font-label-sm text-label-sm pt-2">
+<span>2021 (71.2%)</span>
+<span>2022 (76.8%)</span>
+<span>2023 (82.1%)</span>
+<span>2024 (86.0%)</span>
+<span class="text-primary font-bold">2025.1 Projeção (89.4%)</span>
+</div>
+<div class="mt-space-md pt-space-sm flex flex-wrap items-center justify-between gap-space-sm font-label-sm text-label-sm">
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-1 rounded-full bg-primary-container"></span>
+<span class="text-on-surface font-semibold">Trajetória MedPleni</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-1 rounded-full bg-secondary-container"></span>
+<span class="text-outline">Top 5% Faculdades Brasil (85.2%)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-1 rounded-full bg-error"></span>
+<span class="text-outline">Limiar Regulatório MEC (70.0%)</span>
+</div>
+</div>
+<span class="text-secondary font-semibold">+18.2% Ganho Longitudinal</span>
+</div>
+</div>
+<!-- ============================================================== -->
+<!-- 4. COMPETENCY DOMAINS & DCN RADAR (1x2 Vertical Matrix) -->
+<!-- ============================================================== -->
+<div class="xl:col-span-1 xl:row-span-2 rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">DCN 2014/2024</span>
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm font-semibold">91.8% Médio</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Macrodomínios &amp; EPAs</h3>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Avaliação por entrustabilidade e portfólios clínicos.</p>
+<!-- Competency Bars List -->
+<div class="flex flex-col gap-space-md mt-space-lg">
+<!-- Item 1 -->
+<div>
+<div class="flex items-center justify-between font-label-md text-label-md mb-1">
+<span class="font-semibold text-on-surface">Raciocínio Clínico Hipotético</span>
+<span class="font-bold text-primary">91.4%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 91.4%;"></div>
+</div>
+<span class="font-label-sm text-label-sm text-outline mt-0.5 block">1.240 estações OSCE validadas</span>
+</div>
+<!-- Item 2 -->
+<div>
+<div class="flex items-center justify-between font-label-md text-label-md mb-1">
+<span class="font-semibold text-on-surface">Comunicação Clínica &amp; SPIKES</span>
+<span class="font-bold text-primary">94.2%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 94.2%;"></div>
+</div>
+<span class="font-label-sm text-label-sm text-outline mt-0.5 block">Notícias difíceis &amp; Bioética</span>
+</div>
+<!-- Item 3 - Attention Needed -->
+<div class="p-2 rounded-xl bg-error-container/20">
+<div class="flex items-center justify-between font-label-md text-label-md mb-1">
+<div class="flex items-center gap-1 text-on-surface font-semibold">
+<span class="material-symbols-outlined text-[15px] text-error">warning</span>
+<span>Urgência, Emergência &amp; ATLS</span>
+</div>
+<span class="font-bold text-error">79.8%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-error h-full rounded-full" style="width: 79.8%;"></div>
+</div>
+<span class="font-label-sm text-label-sm text-error mt-0.5 block font-medium">Requer oficina de reforço</span>
+</div>
+<!-- Item 4 -->
+<div>
+<div class="flex items-center justify-between font-label-md text-label-md mb-1">
+<span class="font-semibold text-on-surface">Atenção Primária &amp; Rede SUS</span>
+<span class="font-bold text-primary">95.0%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 95.0%;"></div>
+</div>
+<span class="font-label-sm text-label-sm text-outline mt-0.5 block">Clínica da Família &amp; Territorialização</span>
+</div>
+<!-- Item 5 -->
+<div>
+<div class="flex items-center justify-between font-label-md text-label-md mb-1">
+<span class="font-semibold text-on-surface">Procedimentos Invasivos &amp; POCUS</span>
+<span class="font-bold text-primary">84.6%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 84.6%;"></div>
+</div>
+<span class="font-label-sm text-label-sm text-outline mt-0.5 block">Ultrassom point-of-care certificado</span>
+</div>
+</div>
+</div>
+<div class="pt-space-md">
+<a class="w-full py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors font-label-md text-label-md font-semibold flex items-center justify-center gap-1" href="#">
+<span>Relatório Detalhado DCN</span>
+<span class="material-symbols-outlined text-[16px]">open_in_new</span>
+</a>
+</div>
+</div>
+<!-- ============================================================== -->
+<!-- 5. COHORTS & INTERNSHIP COMPARISON TABLE (Col-span 2) -->
+<!-- ============================================================== -->
+<div class="xl:col-span-2 rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between mb-space-md">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">Ciclo Clínico &amp; Internato</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Performance Comparada por Coorte</h3>
+</div>
+<button class="flex items-center gap-1 text-secondary font-label-md text-label-md font-semibold hover:underline">
+<span>Ver todas as 8 turmas</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+<!-- Cohorts Table-List -->
+<div class="flex flex-col gap-space-sm">
+<!-- Turma 47 -->
+<div class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold font-title-md">
+              T47
+            </div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-md text-label-md font-bold text-on-surface">Turma 47 • 12º Semestre</span>
+<span class="px-2 py-0.5 rounded-full bg-primary/15 text-primary font-label-sm text-label-sm font-bold">Faixa 5 Assegurada</span>
+</div>
+<span class="font-body-sm text-body-sm text-outline">Internato Rotativo Avançado • 184 estudantes</span>
+</div>
+</div>
+<div class="flex items-center gap-space-lg self-end sm:self-auto">
+<div class="w-28 bg-surface-container-high rounded-full h-2 overflow-hidden hidden md:block">
+<div class="bg-primary h-full rounded-full" style="width: 89.6%;"></div>
+</div>
+<div class="text-right">
+<span class="font-title-md text-title-md font-bold text-on-surface block">89.6%</span>
+<span class="font-label-sm text-label-sm text-outline">Média Geral</span>
+</div>
+</div>
+</div>
+<!-- Turma 48 -->
+<div class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-secondary/10 text-secondary flex items-center justify-center font-bold font-title-md">
+              T48
+            </div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-md text-label-md font-bold text-on-surface">Turma 48 • 10º Semestre</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary/15 text-secondary font-label-sm text-label-sm font-semibold">Simulado OSCE Concluído</span>
+</div>
+<span class="font-body-sm text-body-sm text-outline">Internato Saúde Coletiva &amp; Pediatria • 192 estudantes</span>
+</div>
+</div>
+<div class="flex items-center gap-space-lg self-end sm:self-auto">
+<div class="w-28 bg-surface-container-high rounded-full h-2 overflow-hidden hidden md:block">
+<div class="bg-secondary h-full rounded-full" style="width: 86.4%;"></div>
+</div>
+<div class="text-right">
+<span class="font-title-md text-title-md font-bold text-on-surface block">86.4%</span>
+<span class="font-label-sm text-label-sm text-outline">Média Geral</span>
+</div>
+</div>
+</div>
+<!-- Turma 49 -->
+<div class="p-space-sm rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high text-on-surface flex items-center justify-center font-bold font-title-md">
+              T49
+            </div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-md text-label-md font-bold text-on-surface">Turma 49 • 8º Semestre</span>
+<span class="px-2 py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-semibold">Nivelamento Ativo</span>
+</div>
+<span class="font-body-sm text-body-sm text-outline">Ciclo Clínico Integrado • 176 estudantes</span>
+</div>
+</div>
+<div class="flex items-center gap-space-lg self-end sm:self-auto">
+<div class="w-28 bg-surface-container-high rounded-full h-2 overflow-hidden hidden md:block">
+<div class="bg-primary-container h-full rounded-full" style="width: 81.2%;"></div>
+</div>
+<div class="text-right">
+<span class="font-title-md text-title-md font-bold text-on-surface block">81.2%</span>
+<span class="font-label-sm text-label-sm text-outline">Média Geral</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-space-sm pt-space-xs flex items-center justify-between text-outline font-label-sm text-label-sm">
+<span>Confiabilidade psicométrica: Alpha de Cronbach 0.88</span>
+<span>Próximo marco: OSCE T48 (15/Abr)</span>
+</div>
+</div>
+<!-- ============================================================== -->
+<!-- 7. ACTIVE PEDAGOGICAL INTERVENTIONS (1x1 Modern Pill Module) -->
+<!-- ============================================================== -->
+<div class="rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">Plano de Ação</span>
+<span class="material-symbols-outlined text-primary text-[20px]">psychology</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Intervenções em Curso</h3>
+</div>
+<div class="flex flex-col gap-space-sm my-space-sm">
+<!-- Intervention 1 -->
+<div class="p-space-sm rounded-xl bg-surface-container-low">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Mentoria Intensiva ENAMED</span>
+<span class="font-label-sm text-label-sm text-primary font-bold">89%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 89%;"></div>
+</div>
+<div class="flex justify-between font-label-sm text-label-sm text-outline mt-1.5">
+<span>38 formandos</span>
+<span>Encerra em 15 dias</span>
+</div>
+</div>
+<!-- Intervention 2 -->
+<div class="p-space-sm rounded-xl bg-surface-container-low">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Imersão em Casos Críticos (Lab)</span>
+<span class="font-label-sm text-label-sm text-secondary font-bold">64%</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 64%;"></div>
+</div>
+<div class="flex justify-between font-label-sm text-label-sm text-outline mt-1.5">
+<span>24 internos</span>
+<span>6 preceptores sêniores</span>
+</div>
+</div>
+</div>
+<button class="w-full py-2 rounded-xl bg-primary text-on-primary hover:bg-primary/90 transition-colors font-label-md text-label-md font-semibold flex items-center justify-center gap-1 shadow-xs">
+<span class="material-symbols-outlined text-[16px]">add_circle</span>
+<span>Nova Intervenção Curricular</span>
+</button>
+</div>
+<!-- ============================================================== -->
+<!-- 8. RECENT AUDIT & ACTIVITY FEED (1x1 Clean Timeline) -->
+<!-- ============================================================== -->
+<div class="rounded-2xl bg-surface-container-lowest p-space-lg shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">Trilha Regulatória</span>
+<span class="material-symbols-outlined text-outline text-[18px]">history</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Eventos Recentes</h3>
+</div>
+<!-- Compact Feed -->
+<div class="flex flex-col gap-space-md my-space-sm relative">
+<div class="absolute left-2 top-2 bottom-2 w-px bg-surface-container"></div>
+<!-- Event 1 -->
+<div class="flex items-start gap-space-sm relative pl-6">
+<span class="w-2 h-2 rounded-full bg-primary absolute left-1 top-1.5 ring-4 ring-surface-container-lowest"></span>
+<div>
+<p class="font-label-md text-label-md font-semibold text-on-surface leading-tight">Simulado OSCE Semestral concluído</p>
+<span class="font-label-sm text-label-sm text-outline">94.6% de presença discente • Hoje, 10:14</span>
+</div>
+</div>
+<!-- Event 2 -->
+<div class="flex items-start gap-space-sm relative pl-6">
+<span class="w-2 h-2 rounded-full bg-secondary absolute left-1 top-1.5 ring-4 ring-surface-container-lowest"></span>
+<div>
+<p class="font-label-md text-label-md font-semibold text-on-surface leading-tight">Parecer DCN homologado pelo Colegiado</p>
+<span class="font-label-sm text-label-sm text-outline">Ata nº 402/2025 assinada • Ontem, 16:45</span>
+</div>
+</div>
+<!-- Event 3 -->
+<div class="flex items-start gap-space-sm relative pl-6">
+<span class="w-2 h-2 rounded-full bg-primary-container absolute left-1 top-1.5 ring-4 ring-surface-container-lowest"></span>
+<div>
+<p class="font-label-md text-label-md font-semibold text-on-surface leading-tight">Sincronização e-MEC / Censo Concluída</p>
+<span class="font-label-sm text-label-sm text-outline">Hash SHA-256 verificado • Ontem, 08:30</span>
+</div>
+</div>
+</div>
+<div class="pt-space-xs flex items-center justify-between text-outline font-label-sm text-label-sm">
+<span>Log imutável</span>
+<button class="text-secondary font-semibold hover:underline">Auditoria Completa</button>
+</div>
+</div>
+</div>
+<!-- Bottom Fast Dispatch Banner (Executive Control Footer) -->
+<div class="mt-space-md p-space-md rounded-2xl bg-surface-container-lowest shadow-sm flex flex-col md:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[24px]">verified_user</span>
+</div>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface font-semibold">Relatório de Conformidade Regulatória INEP — Ciclo 2025</h4>
+<p class="font-body-sm text-body-sm text-outline">Todos os critérios de infraestrutura, titulação docente e matriz curricular estão compatíveis com a Nota 5.</p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm w-full md:w-auto">
+<button class="flex-1 md:flex-initial px-space-md py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-colors">
+        Gerar Relatório de Preceptoria
+      </button>
+<button class="flex-1 md:flex-initial px-space-md py-2 rounded-xl bg-primary text-on-primary hover:bg-primary/90 font-label-md text-label-md font-semibold transition-colors flex items-center justify-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+<span>Exportar Dossiê do Reitor (PDF)</span>
+</button>
+</div>
+</div>
+</div>
+<script>
+  // Simple micro-interactions for interactive feedback
+  document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(btn => {
+      btn.addEventListener('mousedown', () => {
+        btn.classList.add('scale-[0.98]');
+      });
+      btn.addEventListener('mouseup', () => {
+        btn.classList.remove('scale-[0.98]');
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.classList.remove('scale-[0.98]');
+      });
+    });
+  });
+</script></main><footer class="w-full bg-surface-container-low py-space-md px-space-xl mt-space-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col md:flex-row items-center justify-between gap-space-sm text-outline font-label-sm text-label-sm"><div class="flex items-center gap-space-sm"><span class="font-semibold text-on-surface">MedPleni Intelligence Framework v4.2.8-clinical</span><span class="w-1 h-1 rounded-full bg-outline"></span><span>Conformidade Portaria MEC 2.117/19 &amp; Diretrizes Curriculares Nacionais de Medicina</span></div><div class="flex items-center gap-space-md"><span>Segurança de Dados CFM / LGPD Médica</span><span>Auditoria Ativa INEP 2025</span></div></div></footer></div></body></html>

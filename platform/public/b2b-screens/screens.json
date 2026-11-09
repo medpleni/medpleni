@@ -1,0 +1,102 @@
+[
+  {
+    "id": "tela-01",
+    "title": "Data-First · Distribuição Analítica",
+    "category": "Analytics & KPIs",
+    "tag": "Data-Dense",
+    "desc": "Dashboard analítico de alta densidade com heatmaps por competência, distribuição de notas e radar comparativo de turmas.",
+    "image": "/b2b-screens/tela-01.png",
+    "html": "/b2b-screens/tela-01.html",
+    "folder": "painel_geral_distribui_o_anal_tica_medpleni_data_first"
+  },
+  {
+    "id": "tela-02",
+    "title": "Dark Intelligence · Clinical Command",
+    "category": "Executivo / Dark",
+    "tag": "Fundo Abismo (#0A0E18)",
+    "desc": "Painel de comando executivo em modo escuro profundo, focado em monitoramento em tempo real da prontidão dos concluintes para o ENAMED.",
+    "image": "/b2b-screens/tela-02.png",
+    "html": "/b2b-screens/tela-02.html",
+    "folder": "vis_o_executiva_comando_medpleni_dark_intelligence"
+  },
+  {
+    "id": "tela-03",
+    "title": "Enterprise · Visão Corporativa / Mantenedora",
+    "category": "Gestão & Redes",
+    "tag": "Multi-Campus",
+    "desc": "Visão executiva desenhada para dirigentes de grandes grupos educacionais e mantenedoras com múltiplos campi e cursos de medicina.",
+    "image": "/b2b-screens/tela-03.png",
+    "html": "/b2b-screens/tela-03.html",
+    "folder": "vis_o_executiva_enterprise"
+  },
+  {
+    "id": "tela-04",
+    "title": "Minimalist Functional · Clinical Clarity",
+    "category": "Minimalismo",
+    "tag": "Clean / Direto",
+    "desc": "Layout cirúrgico e funcional sem distrações visuais, priorizando tomada de decisão rápida e planos de ação pedagógica.",
+    "image": "/b2b-screens/tela-04.png",
+    "html": "/b2b-screens/tela-04.html",
+    "folder": "vis_o_executiva_medpleni_minimalist_functional"
+  },
+  {
+    "id": "tela-05",
+    "title": "Swiss Editorial · Tipografia Médica & Elegância",
+    "category": "Editorial / Suíço",
+    "tag": "Design Suíço",
+    "desc": "Design baseado no estilo internacional suíço: tipografia precisa, grids harmoniosos e estética visual premium de alta credibilidade acadêmica.",
+    "image": "/b2b-screens/tela-05.png",
+    "html": "/b2b-screens/tela-05.html",
+    "folder": "vis_o_executiva_medpleni_swiss_editorial"
+  },
+  {
+    "id": "tela-06",
+    "title": "Academic Institutional · Visão NDE & Regulação",
+    "category": "Acadêmico / MEC",
+    "tag": "Foco DCN / MEC",
+    "desc": "Interface estruturada para coordenações de curso e NDE, com matrizes de competência DCN e conformidade de indicadores regulatórios.",
+    "image": "/b2b-screens/tela-06.png",
+    "html": "/b2b-screens/tela-06.html",
+    "folder": "vis_o_institucional_medpleni_academic_institutional"
+  },
+  {
+    "id": "tela-07",
+    "title": "Editorial Data Journalism · Intelligence Dispatch",
+    "category": "Relatórios & Inteligência",
+    "tag": "Data Storytelling",
+    "desc": "Narrativa visual de dados e diagnósticos em formato editorial para relatórios mensais enviados a reitores e diretores de faculdade.",
+    "image": "/b2b-screens/tela-07.png",
+    "html": "/b2b-screens/tela-07.html",
+    "folder": "vis_o_executiva_medpleni_editorial_data_journalism"
+  },
+  {
+    "id": "tela-08",
+    "title": "Modular Bento Grid · Blocos Dinâmicos",
+    "category": "Moderno / Modular",
+    "tag": "Bento UI",
+    "desc": "Estrutura contemporânea em blocos Bento Grid independentes, facilitando customização por perfil de usuário e visualização rápida.",
+    "image": "/b2b-screens/tela-08.png",
+    "html": "/b2b-screens/tela-08.html",
+    "folder": "vis_o_executiva_medpleni_modular_bento_grid"
+  },
+  {
+    "id": "tela-09",
+    "title": "Warm Intelligence · Acompanhamento Tutorial",
+    "category": "Tutoria & Formativo",
+    "tag": "Tons Acolhedores",
+    "desc": "Paleta mais quente e visual acolhedor para tutores e preceptores acompanharem o desenvolvimento longitudinal e bem-estar dos estudantes.",
+    "image": "/b2b-screens/tela-09.png",
+    "html": "/b2b-screens/tela-09.html",
+    "folder": "vis_o_formativa_geral_medpleni_warm_intelligence"
+  },
+  {
+    "id": "tela-10",
+    "title": "Healthcare Technology · Healthtech Moderna",
+    "category": "Healthtech & IA",
+    "tag": "Saúde Digital",
+    "desc": "Visual de plataforma contemporânea de saúde digital com destaque para alertas preditivos de IA e intervenções precoces.",
+    "image": "/b2b-screens/tela-10.png",
+    "html": "/b2b-screens/tela-10.html",
+    "folder": "vis_o_institucional_medpleni_healthcare_technology"
+  }
+]

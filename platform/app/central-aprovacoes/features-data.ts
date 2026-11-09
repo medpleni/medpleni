@@ -1,0 +1,1090 @@
+// Catálogo Oficial de Módulos e 96 Features B2B MedPleni
+// Extraído de medpleni-b2b-validacao-funcional.html
+
+export interface B2BModulo {
+  id: string;
+  nome: string;
+  desc: string;
+}
+
+export interface B2BFeatureRaw {
+  id: string;
+  mod: string;
+  nome: string;
+  desc: string;
+  estado: 'demo' | 'parcial' | 'novo' | 'mvp';
+  origem: '12/10' | '05/11' | 'REL' | 'DCN' | 'PLV' | 'IA' | 'MKT';
+  reuniao?: string;
+  sugestao: 'manter' | 'ajustar' | 'remover' | 'novo' | 'discutir';
+  pergunta?: string;
+}
+
+export const MODULOS: B2BModulo[] = [
+  {
+    "id": "exec",
+    "nome": "Visão executiva (dirigente)",
+    "desc": "Tela de entrada do diretor/mantenedor: estado geral do curso."
+  },
+  {
+    "id": "regua",
+    "nome": "Régua ENAMED (3 etapas)",
+    "desc": "Visão do curso organizada por 4º, 8º e 12º semestre."
+  },
+  {
+    "id": "acad",
+    "nome": "Turmas & competências (coordenação)",
+    "desc": "Agregado por turma, detalhe por competência, visão individual protegida."
+  },
+  {
+    "id": "prog",
+    "nome": "Avaliação programática",
+    "desc": "Mapa currículo × competência e trilha longitudinal."
+  },
+  {
+    "id": "interv",
+    "nome": "Intervenções pedagógicas",
+    "desc": "Da lacuna à ação com responsável, adesão e reteste."
+  },
+  {
+    "id": "tutor",
+    "nome": "Acompanhamento individual (tutor)",
+    "desc": "Lista de estudantes sinalizados e registro de orientações."
+  },
+  {
+    "id": "prova",
+    "nome": "Provas & avaliações",
+    "desc": "Montagem, revisão, publicação, aplicação, correção e análise."
+  },
+  {
+    "id": "qbank",
+    "nome": "Banco de questões",
+    "desc": "Cobertura, pipeline editorial, motores, simulador, qualidade."
+  },
+  {
+    "id": "docente",
+    "nome": "Espaço do docente",
+    "desc": "Fila curta de trabalho do professor."
+  },
+  {
+    "id": "aluno",
+    "nome": "Minha jornada (estudante)",
+    "desc": "Experiência do aluno dentro do contrato institucional."
+  },
+  {
+    "id": "admin",
+    "nome": "Governança & TI",
+    "desc": "Estrutura, papéis, LGPD, exportação, integrações, auditoria."
+  },
+  {
+    "id": "trans",
+    "nome": "Transversais",
+    "desc": "Perfis, temas, busca, white label, roteiro."
+  },
+  {
+    "id": "comercial",
+    "nome": "Modelo comercial e operação do banco",
+    "desc": "Decisões de negócio discutidas em 05/11 que afetam o produto."
+  }
+];
+
+export const RAW_FEATURES: B2BFeatureRaw[] = [
+  {
+    "id": "EX-01",
+    "mod": "exec",
+    "nome": "KPIs institucionais (5 cards)",
+    "desc": "Índice institucional (0–100, % de acertos ponderado), concluintes ≥ 60 no simulado, competências críticas, estudantes em acompanhamento, intervenções ativas. Cada card abre o módulo correspondente.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "05/11: Mario disse que quais KPIs são \"os principais\" é decisão dos médicos (\"vocês vão dizer lá na frente quais são os KPIs mais importantes\").",
+    "sugestao": "discutir",
+    "pergunta": "Quais 4–6 indicadores o dirigente precisa ver primeiro? Algum deve sair (ex.: \"concluintes ≥ 60\")?"
+  },
+  {
+    "id": "EX-02",
+    "mod": "exec",
+    "nome": "Seletor de avaliação de referência",
+    "desc": "Troca a avaliação-base de todos os números da tela (diagnóstico, prova ordinária, simulado, progresso).",
+    "estado": "demo",
+    "origem": "IA",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "EX-03",
+    "mod": "exec",
+    "nome": "Mapa turma × área (heatmap)",
+    "desc": "Média por turma nas 7 áreas de formação; clique abre a turma. Legenda por faixas.",
+    "estado": "demo",
+    "origem": "12/10",
+    "reuniao": "12/10: Filipe — 7 áreas do ENAMED são a \"trilha\" natural para o B2B.",
+    "sugestao": "manter",
+    "pergunta": "As faixas de cor (≥78, 70–77, 62–69, 55–61, 48–54, <48) fazem sentido pedagógico ou devem seguir outro corte (ex.: 60 = proficiente)?"
+  },
+  {
+    "id": "EX-04",
+    "mod": "exec",
+    "nome": "Alertas por regra explícita",
+    "desc": "Lista de alertas gerados por regras legíveis (competência < 55 em N turmas; estudantes sinalizados; intervenção concluída com Δ).",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter",
+    "pergunta": "Limiar 55 é adequado? Deve ser configurável por instituição?"
+  },
+  {
+    "id": "EX-05",
+    "mod": "exec",
+    "nome": "Evolução temporal (gráfico de linhas)",
+    "desc": "Instituição e turmas ao longo das avaliações de 2026, com linha de referência 60 e aviso de que avaliações diferentes não são estritamente comparáveis.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "05/11: Bruno perguntou de onde vem o índice — \"alimentado pelas respostas às provas\".",
+    "sugestao": "manter"
+  },
+  {
+    "id": "EX-06",
+    "mod": "exec",
+    "nome": "Plano de ação em andamento",
+    "desc": "Resumo das intervenções ativas na própria tela do dirigente.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "EX-07",
+    "mod": "exec",
+    "nome": "Relatório executivo (modal + exportação)",
+    "desc": "Síntese, competências por prioridade, intervenções e resultados, limites de interpretação, hash de auditoria; botões Exportar CSV e Gerar PDF (simulados).",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter",
+    "pergunta": "Esse relatório serve para CPA/NDE/MEC? Que seções faltam?"
+  },
+  {
+    "id": "EX-08",
+    "mod": "exec",
+    "nome": "Cobertura da matriz institucional",
+    "desc": "% de competências, contextos e áreas cobertas pelas avaliações aplicadas.",
+    "estado": "demo",
+    "origem": "IA",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "RE-01",
+    "mod": "regua",
+    "nome": "Página Régua ENAMED em 3 etapas",
+    "desc": "Cards para 1ª (4º sem.), 2ª (8º sem., somativa pré-internato) e 3ª etapa (12º) com turma de referência e competências críticas; estado regulatório rotulado como \"PLV aprovado, pendente de sanção\".",
+    "estado": "demo",
+    "origem": "PLV",
+    "reuniao": "05/11: Filipe — preparo no 4º e 8º período \"ainda não existe no mercado… é um diferencial, dá para fazer propaganda em cima disso\". Bruno: cursinhos vão demorar a fazer isso direito.",
+    "sugestao": "manter",
+    "pergunta": "Virar módulo central do posicionamento? Atualizar quando sair a sanção/regulamentação."
+  },
+  {
+    "id": "RE-02",
+    "mod": "regua",
+    "nome": "Tabela \"como a plataforma apoia cada etapa\"",
+    "desc": "Diagnóstico / preparação / verificação / evidência por etapa.",
+    "estado": "demo",
+    "origem": "IA",
+    "reuniao": "05/11: Filipe — a prova do 4º período provavelmente cobra conteúdo básico (anatomia etc.), diferente da prova clínica do 12º; \"vamos aguardar o que o governo vai falar\".",
+    "sugestao": "ajustar",
+    "pergunta": "A 1ª etapa deve ter taxonomia própria de ciclo básico (anatomia, fisiologia, bioquímica…)? Isso muda o banco."
+  },
+  {
+    "id": "RE-03",
+    "mod": "regua",
+    "nome": "Aviso \"o que a plataforma não faz\" (sem predição de nota)",
+    "desc": "Texto explícito de que não há previsão de nota ENAMED nem garantia de proficiência.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter",
+    "pergunta": "Manter a \"régua honesta\" mesmo com concorrente (SPR Med) vendendo previsão?"
+  },
+  {
+    "id": "TC-01",
+    "mod": "acad",
+    "nome": "Lista de turmas com índice, participação, tendência, críticas, em acompanhamento",
+    "desc": "Tabela clicável por turma com sparkline de evolução.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "05/11: demonstrado; Filipe validou o direcionamento geral.",
+    "sugestao": "manter"
+  },
+  {
+    "id": "TC-02",
+    "mod": "acad",
+    "nome": "Competências — média institucional e por contexto de atuação",
+    "desc": "Barras por competência e gráfico por 6 contextos da Matriz.",
+    "estado": "demo",
+    "origem": "12/10",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "TC-03",
+    "mod": "acad",
+    "nome": "Detalhe da turma: aba Competências (agregado)",
+    "desc": "Tabela ordenada por prioridade, com itens/aluno, status e tendência.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "TC-04",
+    "mod": "acad",
+    "nome": "Painel da competência: distribuição, objetivos educacionais, evidências, comparação com turma paralela",
+    "desc": "Abre ao clicar na competência; mostra em qual período foi introduzida/retomada; itens de maior erro; botões para intervenção e trilha.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter",
+    "pergunta": "Os \"objetivos educacionais\" (3 por competência) são o nível certo de granularidade para diagnosticar lacunas?"
+  },
+  {
+    "id": "TC-05",
+    "mod": "acad",
+    "nome": "Aba Estudantes (individual) com aviso 🔒 e registro de acesso",
+    "desc": "Lista nominal só para coordenação/tutor/docente; cada abertura de perfil vai para auditoria; sem ranking.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter",
+    "pergunta": "Quem pode ver dados individuais na instituição? Coordenador sempre? Docente só das suas turmas?"
+  },
+  {
+    "id": "TC-06",
+    "mod": "acad",
+    "nome": "Perfil do estudante (modal): evolução vs. turma, competências, registro de acompanhamento",
+    "desc": "Inclui botão \"Registrar orientação\" e \"Ver como o estudante vê\".",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "TC-07",
+    "mod": "acad",
+    "nome": "Aba Avaliações aplicadas (por turma)",
+    "desc": "Lista de avaliações, participação, média; \"usar como referência\".",
+    "estado": "demo",
+    "origem": "IA",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "TC-08",
+    "mod": "acad",
+    "nome": "Botões \"+ Intervenção\" e \"+ Prova para a turma\" no cabeçalho da turma",
+    "desc": "Atalhos que já abrem o wizard com a turma/competência pré-selecionadas.",
+    "estado": "demo",
+    "origem": "IA",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "AP-01",
+    "mod": "prog",
+    "nome": "Nome do módulo: \"Avaliação programática\"",
+    "desc": "Título atual do módulo.",
+    "estado": "demo",
+    "origem": "12/10",
+    "reuniao": "05/11: Filipe — \"o espírito é esse, mas talvez devêssemos mudar o nome… avaliação programática precisaria incluir outros tipos de prova, como nota de prova prática… de repente 'avaliação programática teórica'\". Próxima etapa do grupo: definir nome e parâmetros.",
+    "sugestao": "ajustar",
+    "pergunta": "Nome sugerido? Opções: \"Avaliação programática — teórica\", \"Acompanhamento longitudinal por competência\", \"Trilha de competências\"."
+  },
+  {
+    "id": "AP-02",
+    "mod": "prog",
+    "nome": "Mapa currículo × competência (períodos 2–12)",
+    "desc": "Heatmap com média da turma de cada período na competência; \"•\" marca previsto no PPC sem avaliação ainda.",
+    "estado": "demo",
+    "origem": "12/10",
+    "reuniao": "05/11: Filipe conferiu C01 (6º, 8º, 10º, 12º) e entendeu que o número é o aproveitamento da turma na competência; \"ótimo\".",
+    "sugestao": "manter"
+  },
+  {
+    "id": "AP-03",
+    "mod": "prog",
+    "nome": "Trilha longitudinal de uma competência (todas as turmas)",
+    "desc": "Gráfico de linhas por turma ao longo das avaliações, com limiar crítico e texto de leitura; aviso de que a comparação entre turmas é observacional.",
+    "estado": "demo",
+    "origem": "12/10",
+    "reuniao": "05/11: Mario contou o case (conteúdo do 4º período, lacuna detectada depois, intervenção, reteste, índice subiu). Filipe: \"consegui entender… é isso mesmo\".",
+    "sugestao": "manter"
+  },
+  {
+    "id": "AP-04",
+    "mod": "prog",
+    "nome": "Plano de acompanhamento (timeline DCN art. 36–37)",
+    "desc": "Modelo com pontos de avaliação, gatilho, intervenção, reteste e somativa pré-internato.",
+    "estado": "demo",
+    "origem": "DCN",
+    "reuniao": "—",
+    "sugestao": "manter",
+    "pergunta": "Os gatilhos (média < 55 em duas avaliações consecutivas) correspondem à prática da coordenação?"
+  },
+  {
+    "id": "AP-05",
+    "mod": "prog",
+    "nome": "Inclusão de notas de prova prática / OSCE / outras avaliações no longitudinal",
+    "desc": "Não existe no protótipo: hoje só avaliações objetivas alimentam a trilha.",
+    "estado": "novo",
+    "origem": "05/11",
+    "reuniao": "05/11: Filipe — \"para uma avaliação programática eu precisaria incluir outros tipos de prova também, como nota de prova prática\".",
+    "sugestao": "novo",
+    "pergunta": "Fase 1: importar nota/conceito de prova prática por competência (lançamento manual ou planilha) é suficiente? OSCE com checklist fica para depois?"
+  },
+  {
+    "id": "IN-01",
+    "mod": "interv",
+    "nome": "Lista de intervenções com antes/depois, adesão e progresso",
+    "desc": "Cards por intervenção; filtros por status.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "05/11: demonstrado (\"intervenções pedagógicas para cada uma das turmas\").",
+    "sugestao": "manter"
+  },
+  {
+    "id": "IN-02",
+    "mod": "interv",
+    "nome": "Wizard \"Nova intervenção\" (lacuna → ação → verificação)",
+    "desc": "Turma, competência, título, tipo de ação, responsável, datas, conteúdo vinculado do banco, reteste, alvo (turma inteira ou só sinalizados — plano individual DCN art. 37 §1º).",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "05/11: demonstrado com as 14 competências; Filipe perguntou a origem das competências → alinhar ao INEP/MEC (ver CO-02).",
+    "sugestao": "manter"
+  },
+  {
+    "id": "IN-03",
+    "mod": "interv",
+    "nome": "Detalhe da intervenção: gráfico com faixa da intervenção, turma paralela, Δ, atividades com checkbox, mudar status, vincular reteste",
+    "desc": "Modal completo com observações de limite (sem causalidade).",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "IN-04",
+    "mod": "interv",
+    "nome": "Tipos de ação pré-definidos",
+    "desc": "Lista dirigida de questões; oficina de casos; tutoria individual; aula de reforço; preceptoria em cenário de prática.",
+    "estado": "demo",
+    "origem": "IA",
+    "reuniao": "—",
+    "sugestao": "discutir",
+    "pergunta": "Que tipos de intervenção as escolas realmente fazem? Falta algo (monitoria, PBL, revisão em grupo)?"
+  },
+  {
+    "id": "IN-05",
+    "mod": "interv",
+    "nome": "Adesão medida pela plataforma",
+    "desc": "Percentual de estudantes que executaram a atividade vinculada (lista/reteste).",
+    "estado": "parcial",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "IN-06",
+    "mod": "interv",
+    "nome": "Reteste embutido na próxima prova",
+    "desc": "Opção de inserir N itens da competência na prova seguinte para medir efeito.",
+    "estado": "demo",
+    "origem": "IA",
+    "reuniao": "05/11: o case apresentado usa exatamente esse mecanismo.",
+    "sugestao": "manter"
+  },
+  {
+    "id": "TU-01",
+    "mod": "tutor",
+    "nome": "Perfil \"Tutor(a)\" como papel separado",
+    "desc": "Papel próprio no seletor e no menu.",
+    "estado": "demo",
+    "origem": "IA",
+    "reuniao": "05/11: Mario — \"esses papéis também foi uma ideia da IA… não tem nada a ver esse papel do tutor… a gente vai remover isso\". Filipe não se opôs.",
+    "sugestao": "remover",
+    "pergunta": "Remover o papel ou fundir suas telas no perfil Coordenador/Docente? Quem na escola faz acompanhamento individual (NAE, mentor, preceptor)?"
+  },
+  {
+    "id": "TU-02",
+    "mod": "tutor",
+    "nome": "Lista de estudantes sinalizados por regra explícita",
+    "desc": "Média < 55 na última avaliação ou queda > 10 pontos; motivo exibido; botão para editar a regra.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter",
+    "pergunta": "Se o papel tutor sair, esta lista vai para a coordenação? Regra de sinalização adequada?"
+  },
+  {
+    "id": "TU-03",
+    "mod": "tutor",
+    "nome": "Registro de orientações e metas acordadas (histórico no perfil do aluno)",
+    "desc": "Timeline de orientações; \"Registrar orientação\"; metas com status.",
+    "estado": "demo",
+    "origem": "DCN",
+    "reuniao": "05/11: Mario citou \"registrar a orientação… para acompanhar a normativa do DCN\".",
+    "sugestao": "manter",
+    "pergunta": "Manter como evidência do plano individualizado (DCN art. 37 §1º) mesmo sem o papel tutor?"
+  },
+  {
+    "id": "TU-04",
+    "mod": "tutor",
+    "nome": "KPIs de tutoria (sinalizados, com plano, orientações em 30 d, saíram do sinal)",
+    "desc": "Cards no topo da tela.",
+    "estado": "demo",
+    "origem": "IA",
+    "reuniao": "—",
+    "sugestao": "discutir"
+  },
+  {
+    "id": "PR-01",
+    "mod": "prova",
+    "nome": "Lista de avaliações com status (rascunho → em revisão → aprovada → publicada → aplicada)",
+    "desc": "Tabela com turmas, itens, versões, data, autor, status; KPIs de volume e tempo de montagem.",
+    "estado": "demo",
+    "origem": "12/10",
+    "reuniao": "05/11: demonstrado (\"coordenador de avaliação… todas as avaliações que foram feitas\").",
+    "sugestao": "manter"
+  },
+  {
+    "id": "PR-02",
+    "mod": "prova",
+    "nome": "Wizard Nova avaliação — etapa Matriz",
+    "desc": "Título, turma, tipo (ordinária, simulado ENAMED, progresso, somativa pré-internato, lista de reteste), nº de itens, versões, competências (lacunas pré-marcadas com ●), distribuição de dificuldade.",
+    "estado": "demo",
+    "origem": "12/10",
+    "reuniao": "05/11: demonstrado; \"a plataforma já identifica uma competência crítica\".",
+    "sugestao": "manter",
+    "pergunta": "Faltam parâmetros? (nível Bloom, contexto de atuação, cota por área da Matriz, tempo de prova)"
+  },
+  {
+    "id": "PR-03",
+    "mod": "prova",
+    "nome": "Wizard — etapa Seleção assistida de itens",
+    "desc": "Seleção automática equilibrando competência/dificuldade e evitando itens já usados pela turma em 12 meses; ajuste manual com checkboxes; mostra p e usos.",
+    "estado": "demo",
+    "origem": "12/10",
+    "reuniao": "05/11: demonstrado (\"35.000 questões… ele vai selecionar essas questões, a gente vai revisando\").",
+    "sugestao": "manter"
+  },
+  {
+    "id": "PR-04",
+    "mod": "prova",
+    "nome": "Wizard — etapa Revisão (revisores por área, prazo, checagens automáticas)",
+    "desc": "Revisores sugeridos pela área das competências; checagens: sem repetição, cobertura, gabarito/comentário presentes, IA já revisada.",
+    "estado": "demo",
+    "origem": "IA",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "PR-05",
+    "mod": "prova",
+    "nome": "Wizard — etapa Publicação (data, modalidade)",
+    "desc": "Modalidades: presencial com folha de respostas; online na plataforma; híbrida.",
+    "estado": "parcial",
+    "origem": "05/11",
+    "reuniao": "05/11 DECIDIDO: três formatos — 100% papel com correção por foto/QR code; híbrido (prova no papel, gabarito online por link/código único); 100% online.",
+    "sugestao": "ajustar",
+    "pergunta": "Confirmar nomenclatura e fluxo de cada formato na tela."
+  },
+  {
+    "id": "PR-06",
+    "mod": "prova",
+    "nome": "Revisão de itens pela coordenação/NDE (modal)",
+    "desc": "Para cada item: OK / Comentar / Substituir; concluir e aprovar.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "PR-07",
+    "mod": "prova",
+    "nome": "Caderno fixo versionado + versões embaralhadas + gabarito separado (PDF com logo da instituição)",
+    "desc": "Botão \"Caderno / gabarito\" na prova publicada.",
+    "estado": "parcial",
+    "origem": "REL",
+    "reuniao": "05/11: Filipe perguntou se imprime em PDF; Mario: \"tem a liberdade de colocar a logo dela\".",
+    "sugestao": "manter"
+  },
+  {
+    "id": "PR-08",
+    "mod": "prova",
+    "nome": "Prova aplicada: resultado por competência",
+    "desc": "Barras por competência das turmas que fizeram a prova.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "PR-09",
+    "mod": "prova",
+    "nome": "Análise de itens (TCT): p (facilidade), discriminação, sinais",
+    "desc": "Tabela por item com aviso de amostra; explicação de que são índices de Teoria Clássica dos Testes.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "05/11: Filipe perguntou o que são discriminação e facilidade; Mario: algoritmo é propriedade intelectual da plataforma. (p = % de acerto do item; discriminação = correlação ponto-bisserial entre acertar o item e a nota total.)",
+    "sugestao": "manter",
+    "pergunta": "Exibir a definição em tooltip para a coordenação? Incluir KR-20/alfa por prova?"
+  },
+  {
+    "id": "PR-10",
+    "mod": "prova",
+    "nome": "Exportação aluno × item × alternativa (com mapa de embaralhamento)",
+    "desc": "Botão na prova aplicada; gera CSV + dicionário + hash.",
+    "estado": "parcial",
+    "origem": "REL",
+    "reuniao": "05/11: Bruno — \"a gente consegue extrair quais alternativas ele marcou, mesmo tendo errado?\" Mario: sim.",
+    "sugestao": "manter"
+  },
+  {
+    "id": "PR-11",
+    "mod": "prova",
+    "nome": "Correção automática de folha de respostas em papel por foto + QR code único por aluno",
+    "desc": "Não existe no protótipo. Fluxo: prova impressa com QR por aluno → aluno preenche gabarito → escola fotografa/escaneia → plataforma corrige sem intervenção humana.",
+    "estado": "novo",
+    "origem": "05/11",
+    "reuniao": "05/11: Filipe — \"1.000 alunos… 1.000 gabaritos… ter a foto do gabarito e corrigir automaticamente faz muita diferença\". DECIDIDO como um dos três formatos.",
+    "sugestao": "novo",
+    "pergunta": "Prioridade alta para o piloto? Scanner institucional ou foto de celular? Tolerância a erro de leitura e fluxo de conferência."
+  },
+  {
+    "id": "PR-12",
+    "mod": "prova",
+    "nome": "Gabarito online por link/código único (modelo híbrido)",
+    "desc": "Não existe no protótipo. medpleni.com/prova + código da prova + identificação do aluno; aluno marca só o gabarito.",
+    "estado": "novo",
+    "origem": "05/11",
+    "reuniao": "05/11: Mario propôs; DECIDIDO como formato híbrido.",
+    "sugestao": "novo"
+  },
+  {
+    "id": "PR-13",
+    "mod": "prova",
+    "nome": "Prova 100% online na plataforma (com tempo por item)",
+    "desc": "Já existe no MVP para simulados; falta modo \"prova institucional\" com janela, turma, caderno fixo.",
+    "estado": "mvp",
+    "origem": "05/11",
+    "reuniao": "05/11: Mario — só no online dá para medir tempo por questão; no papel só o tempo total.",
+    "sugestao": "manter"
+  },
+  {
+    "id": "PR-14",
+    "mod": "prova",
+    "nome": "Calendário de provas sugerido pela MedPleni (médicos curam provas prontas por mês)",
+    "desc": "Não existe no protótipo. Biblioteca de provas sugeridas (jan, fev, mar…) montadas pelos médicos parceiros que a instituição adota com um clique.",
+    "estado": "novo",
+    "origem": "05/11",
+    "reuniao": "05/11: Filipe — \"a gente seleciona questões e sugere uma prova para a instituição… em janeiro essa, em fevereiro essa\".",
+    "sugestao": "novo",
+    "pergunta": "Quem monta e mantém? Por período/turma? Vira produto/serviço à parte?"
+  },
+  {
+    "id": "PR-15",
+    "mod": "prova",
+    "nome": "Importar prova própria da instituição (PDF/DOCX)",
+    "desc": "Botão que envia ao Motor A com a instituição como titular.",
+    "estado": "parcial",
+    "origem": "IA",
+    "reuniao": "05/11: Bruno — vender a plataforma sem questões para a faculdade montar o próprio banco \"também pode?\" Mario: sim. Filipe: oferecer as duas opções.",
+    "sugestao": "manter"
+  },
+  {
+    "id": "PR-16",
+    "mod": "prova",
+    "nome": "Formatos discursiva/OSCE/Mini-CEX (tabela de roadmap)",
+    "desc": "Tabela informativa: objetiva v1; discursiva fase 2; OSCE fase 3; Mini-CEX fora do escopo.",
+    "estado": "demo",
+    "origem": "DCN",
+    "reuniao": "05/11: Filipe mencionou prova prática para a programática (ver AP-05).",
+    "sugestao": "discutir"
+  },
+  {
+    "id": "QB-01",
+    "mod": "qbank",
+    "nome": "Visão geral: disponíveis (publicadas) vs. acervo total, em revisão, produção, contestadas, aprovação editorial",
+    "desc": "5 KPIs; princípio \"só conta a questão classificada, revisada, com direitos e aprovada\".",
+    "estado": "demo",
+    "origem": "12/10",
+    "reuniao": "05/11: acervo real dos médicos é de 30–35 mil questões já usadas em faculdades; parte feita por outros professores (~5.000 a reescrever).",
+    "sugestao": "ajustar",
+    "pergunta": "Atualizar números de referência para 30–35 mil; distinguir \"autoral Bruno/Filipe\", \"outros professores (reescrever)\" e \"geradas por devolutiva\"."
+  },
+  {
+    "id": "QB-02",
+    "mod": "qbank",
+    "nome": "Cobertura área × contexto (heatmap com metas por célula)",
+    "desc": "Itens publicados por combinação; lacunas em vermelho; metas editoriais hipotéticas.",
+    "estado": "demo",
+    "origem": "12/10",
+    "reuniao": "—",
+    "sugestao": "manter",
+    "pergunta": "As metas por célula (300/40) são razoáveis? Quem define?"
+  },
+  {
+    "id": "QB-03",
+    "mod": "qbank",
+    "nome": "Distribuição por origem (prova anterior, IA, internacional, especialista, instituição)",
+    "desc": "Donut + lista; aviso de que IA só publica após revisão humana.",
+    "estado": "demo",
+    "origem": "12/10",
+    "reuniao": "05/11: nova origem relevante — \"gerada a partir de devolutiva\" (ver QB-13).",
+    "sugestao": "ajustar"
+  },
+  {
+    "id": "QB-04",
+    "mod": "qbank",
+    "nome": "Pipeline editorial (kanban): rascunho → triagem → classificada → rev. técnica → rev. pedagógica → aprovada → publicada",
+    "desc": "Mover item de coluna muda status; fila pessoal de revisão; tempos por etapa; gargalos.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "05/11: Mario — \"vocês vão bater o olho, validar, revisão estatística, e a gente aprova\".",
+    "sugestao": "manter",
+    "pergunta": "Duas revisões (técnica e pedagógica) ou uma só pelos médicos? Revisão amostral para itens já usados em faculdades?"
+  },
+  {
+    "id": "QB-05",
+    "mod": "qbank",
+    "nome": "Explorar itens: filtros por área, origem, status, busca por tema/competência/ID",
+    "desc": "Tabela com p, discriminação, usos, versão.",
+    "estado": "demo",
+    "origem": "12/10",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "QB-06",
+    "mod": "qbank",
+    "nome": "Ficha da questão: enunciado, alternativas, gabarito, comentário, referência, proveniência/licença, desempenho, histórico de versões, ações de status",
+    "desc": "Modal completo; contestar, marcar atualização, avançar etapa, rejeitar.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter",
+    "pergunta": "Campo \"devolutiva\" deve existir separado do \"comentário\"? Campo \"nível Bloom\"?"
+  },
+  {
+    "id": "QB-07",
+    "mod": "qbank",
+    "nome": "Nova questão autoral (formulário docente)",
+    "desc": "Área, competência, dificuldade, tema, enunciado, 4 alternativas, gabarito, referência obrigatória, justificativa; titularidade da instituição.",
+    "estado": "demo",
+    "origem": "12/10",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "QB-08",
+    "mod": "qbank",
+    "nome": "Nova questão assistida por IA (Motor B) com controles",
+    "desc": "Matriz → gerar rascunho → similaridade com acervo, referências verificadas → nunca publica sem revisão humana.",
+    "estado": "demo",
+    "origem": "12/10",
+    "reuniao": "05/11 DECIDIDO: IA treinada com o material de padronização do INEP/MEC (que Bruno e Filipe têm) para gerar itens no padrão.",
+    "sugestao": "ajustar",
+    "pergunta": "Receber o material de treinamento; definir checklist de padrão INEP no formulário."
+  },
+  {
+    "id": "QB-09",
+    "mod": "qbank",
+    "nome": "Motores de produção A–F (cards + fluxo detalhado)",
+    "desc": "A provas anteriores; B IA inédita; C internacional; D especialistas; E melhoria por desempenho; F governança/atualização.",
+    "estado": "demo",
+    "origem": "12/10",
+    "reuniao": "05/11: Mario citou \"motor internacional que o Felipe deu a ideia\".",
+    "sugestao": "ajustar",
+    "pergunta": "Adicionar Motor \"Devolutiva → questão\" e Motor \"Reescrita de acervo de terceiros\". Motor C continua prioritário?"
+  },
+  {
+    "id": "QB-10",
+    "mod": "qbank",
+    "nome": "Tabela de direitos de uso por fonte",
+    "desc": "Provas públicas, especialistas, IA, internacionais, instituição, licenciado — disponibilidade, risco, revisão, escala.",
+    "estado": "demo",
+    "origem": "MKT",
+    "reuniao": "05/11: Filipe — questão pública \"problema nenhum\"; questão de outro professor \"a gente pede, compra?\"; solução acordada: reescrever com IA a partir de devolutiva/base científica (experiência IBCLC do Mario).",
+    "sugestao": "ajustar",
+    "pergunta": "Formalizar a política: itens de outros professores só entram reescritos. Parecer jurídico?"
+  },
+  {
+    "id": "QB-11",
+    "mod": "qbank",
+    "nome": "Simulador de capacidade (brutos, aprovação, revisores, custo/item, projeção)",
+    "desc": "Parâmetros editáveis; mostra que o gargalo é a revisão humana.",
+    "estado": "demo",
+    "origem": "12/10",
+    "reuniao": "05/11: Mario — meta de 100 mil questões; reescrever 30 mil \"a 2–3 mil por dia, duas ou três semanas\". Simulador hoje assume revisão humana integral.",
+    "sugestao": "ajustar",
+    "pergunta": "Qual revisão humana para itens reescritos a partir de acervo já validado? Amostral? Isso muda a capacidade."
+  },
+  {
+    "id": "QB-12",
+    "mod": "qbank",
+    "nome": "Qualidade & governança: fila do Motor E (p, discriminação, contestações), revisão por diretriz vencida, política para IA",
+    "desc": "Decisão editorial sempre humana; sinais estatísticos não retiram itens automaticamente.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "QB-13",
+    "mod": "qbank",
+    "nome": "Motor \"Devolutiva → questão original\" (geração reversa)",
+    "desc": "Não existe no protótipo. Cada uma das ~30 mil questões tem devolutiva (explicação); a IA gera 1–2 questões originais por devolutiva, no padrão INEP.",
+    "estado": "novo",
+    "origem": "05/11",
+    "reuniao": "05/11: Filipe — \"você faz a questão de trás para frente… completamente original… dá para fazer muita questão\". DECIDIDO.",
+    "sugestao": "novo",
+    "pergunta": "Fluxo de revisão: estatística + amostral pelos médicos? Como marcar a origem (devolutiva de origem rastreável)?"
+  },
+  {
+    "id": "QB-14",
+    "mod": "qbank",
+    "nome": "Motor \"Reescrita de acervo de terceiros\" (5.000 itens de outros professores)",
+    "desc": "Não existe no protótipo. Lote recebido via drive → reescrita por IA com base científica → devolução para validação dos médicos → publicação.",
+    "estado": "novo",
+    "origem": "05/11",
+    "reuniao": "05/11: próxima etapa — Filipe/Bruno separam as 5.000 e disponibilizam em drive; Mario processa.",
+    "sugestao": "novo"
+  },
+  {
+    "id": "QB-15",
+    "mod": "qbank",
+    "nome": "Banco por instituição: disponibilizar todo o acervo ou subconjunto; banco privado da instituição",
+    "desc": "Parcial: há titularidade por item e política \"privado por padrão\"; falta tela de \"pacote de acervo por cliente\".",
+    "estado": "parcial",
+    "origem": "05/11",
+    "reuniao": "05/11: Mario — \"a gente pode decidir se disponibiliza todas as 35.000 ou não… vocês dizem o que faz sentido para o mercado\". Bruno: vender sem questões também.",
+    "sugestao": "novo",
+    "pergunta": "Pacotes de acervo por plano? Instituição vê a origem dos itens?"
+  },
+  {
+    "id": "QB-16",
+    "mod": "qbank",
+    "nome": "Alinhamento das competências à Matriz oficial INEP/MEC (substituir as 14 competências geradas por IA)",
+    "desc": "Hoje: C01–C14 fictícias mapeadas a 7 áreas e 6 contextos. Taxonomia deve ser editável para acompanhar mudanças do MEC.",
+    "estado": "parcial",
+    "origem": "05/11",
+    "reuniao": "05/11 DECIDIDO: Filipe envia as competências do INEP/MEC; Mario atualiza; sistema deve permitir acrescentar/remover competências no futuro (\"ano que vem o ministério muda… a gente consegue mexer?\" — sim).",
+    "sugestao": "ajustar"
+  },
+  {
+    "id": "DO-01",
+    "mod": "docente",
+    "nome": "Painel do docente: itens para revisar, provas aguardando, intervenções sob responsabilidade, questões aprovadas",
+    "desc": "4 KPIs clicáveis.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "DO-02",
+    "mod": "docente",
+    "nome": "Minhas turmas × competências da minha área",
+    "desc": "Tabela compacta com badges de status.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "DO-03",
+    "mod": "docente",
+    "nome": "Sugestão baseada em dados (\"replicar intervenção na turma B\")",
+    "desc": "Callout com 1 clique para replicar.",
+    "estado": "demo",
+    "origem": "IA",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "DO-04",
+    "mod": "docente",
+    "nome": "Fila de revisão pessoal (itens IA/autorais da área)",
+    "desc": "Lista curta com prazo.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "DO-05",
+    "mod": "docente",
+    "nome": "Explicações mais consultadas pelos estudantes",
+    "desc": "Itens da área com mais usos.",
+    "estado": "demo",
+    "origem": "IA",
+    "reuniao": "—",
+    "sugestao": "discutir"
+  },
+  {
+    "id": "AL-01",
+    "mod": "aluno",
+    "nome": "Início: \"Próximo passo\" com porquê + anel da competência prioritária",
+    "desc": "Texto explica de onde vem a recomendação (objetivos onde mais errou).",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "05/11: demonstrado (\"seria a plataforma dele… a plataforma inicial nossa\").",
+    "sugestao": "manter"
+  },
+  {
+    "id": "AL-02",
+    "mod": "aluno",
+    "nome": "Evolução pessoal vs. média da turma (sem ranking)",
+    "desc": "Gráfico com linha tracejada da turma como referência.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter",
+    "pergunta": "Mostrar a média da turma ao aluno é desejável ou pode gerar comparação indesejada?"
+  },
+  {
+    "id": "AL-03",
+    "mod": "aluno",
+    "nome": "Minhas competências (ordenadas por oportunidade de ganho, ação sugerida por linha)",
+    "desc": "Tabela com status consolidada / em construção / prioridade.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "AL-04",
+    "mod": "aluno",
+    "nome": "Minhas avaliações + \"Revisar erros\" em modo leitura (sem cronômetro, não altera nota)",
+    "desc": "Corrige o achado do relatório (revisar = refazer).",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "AL-05",
+    "mod": "aluno",
+    "nome": "Praticar: lista dirigida por competência com feedback, confiança, flashcard, Preceptor IA",
+    "desc": "Responder item → comentário + referência → próximo.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "AL-06",
+    "mod": "aluno",
+    "nome": "Meu plano até a somativa (semanas, metas acordadas, reajuste após atraso, compartilhar com tutor)",
+    "desc": "Checklist semanal.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "ajustar",
+    "pergunta": "Se o papel tutor sair, \"compartilhar com tutora\" vira \"compartilhar com coordenação/professor\"?"
+  },
+  {
+    "id": "AL-07",
+    "mod": "aluno",
+    "nome": "Agenda (provas publicadas, intervenções, somativa)",
+    "desc": "Timeline no início.",
+    "estado": "demo",
+    "origem": "IA",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "GO-01",
+    "mod": "admin",
+    "nome": "Estrutura acadêmica (instituição, campi, curso, turmas) + importação de matrículas via CSV + checklist de implantação",
+    "desc": "Aba Estrutura.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "GO-02",
+    "mod": "admin",
+    "nome": "Usuários & papéis (8 papéis, escopo, status)",
+    "desc": "Lista com convite.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "05/11: papéis \"foram ideia da IA… não sei se tem todos esses papéis\"; tutor a remover.",
+    "sugestao": "ajustar",
+    "pergunta": "Lista final de papéis: Dirigente, Coordenador de curso, Coord. de avaliação/NDE, Docente, Estudante, Admin TI, Editor MedPleni? Outros (secretaria, CPA)?"
+  },
+  {
+    "id": "GO-03",
+    "mod": "admin",
+    "nome": "Matriz de permissões (capacidade × papel)",
+    "desc": "Tabela ●/◐/○ com aviso de que é simulação visual.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "GO-04",
+    "mod": "admin",
+    "nome": "LGPD & privacidade (base legal, isolamento, retenção, exclusão, uso agregado) + RIPD modelo",
+    "desc": "Aba Dados.",
+    "estado": "demo",
+    "origem": "MKT",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "GO-05",
+    "mod": "admin",
+    "nome": "Exportação auditável (6 blocos, dicionário, hash) e segurança de gabaritos",
+    "desc": "Aba Dados.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "GO-06",
+    "mod": "admin",
+    "nome": "Integrações (SIS Lyceum/TOTVS, LTI Moodle/Canvas, SSO, leitura óptica, API, webhooks)",
+    "desc": "Cards com status planejado/piloto.",
+    "estado": "demo",
+    "origem": "MKT",
+    "reuniao": "05/11: leitura de folha de respostas passa a ser funcionalidade própria (PR-11), não só integração.",
+    "sugestao": "ajustar"
+  },
+  {
+    "id": "GO-07",
+    "mod": "admin",
+    "nome": "Trilha de auditoria (ações relevantes, imutável)",
+    "desc": "Registra criações, mudanças de status, exportações, aberturas de perfil individual.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "GO-08",
+    "mod": "admin",
+    "nome": "Isolamento por instituição (multi-tenant) + RLS",
+    "desc": "Descrito; não implementado no protótipo.",
+    "estado": "parcial",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "TR-01",
+    "mod": "trans",
+    "nome": "Seletor \"Ver como\" (8 perfis)",
+    "desc": "Troca o papel e o menu visível.",
+    "estado": "demo",
+    "origem": "IA",
+    "reuniao": "05/11: demonstrado; Filipe viu os perfis.",
+    "sugestao": "ajustar",
+    "pergunta": "Ver GO-02 (lista final de papéis)."
+  },
+  {
+    "id": "TR-02",
+    "mod": "trans",
+    "nome": "Tema claro/escuro (tokens da plataforma)",
+    "desc": "Botão no topo; persistência compartilhada com a plataforma.",
+    "estado": "demo",
+    "origem": "IA",
+    "reuniao": "05/11: 10 propostas visuais geradas, claro e escuro, mesma paleta; médicos vão escolher.",
+    "sugestao": "manter"
+  },
+  {
+    "id": "TR-03",
+    "mod": "trans",
+    "nome": "White label (marca da instituição na interface e nas provas)",
+    "desc": "Parcial: logo no PDF citado; interface ainda MedPleni.",
+    "estado": "parcial",
+    "origem": "05/11",
+    "reuniao": "05/11: Mario — \"acredito que possa ser uma possibilidade trabalhar com white label… não bateu o martelo\".",
+    "sugestao": "discutir",
+    "pergunta": "White label total (interface) ou só nos materiais impressos? Impacta posicionamento de marca."
+  },
+  {
+    "id": "TR-04",
+    "mod": "trans",
+    "nome": "Busca global (aluno, turma, questão, competência)",
+    "desc": "Campo no topo.",
+    "estado": "demo",
+    "origem": "IA",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "TR-05",
+    "mod": "trans",
+    "nome": "Roteiro de demonstração (8 cenas) e selo \"DEMO · dados fictícios\"",
+    "desc": "Ferramenta de apresentação; não é feature de produto.",
+    "estado": "demo",
+    "origem": "IA",
+    "reuniao": "—",
+    "sugestao": "remover",
+    "pergunta": "Remover na versão de produto; manter só no protótipo."
+  },
+  {
+    "id": "TR-06",
+    "mod": "trans",
+    "nome": "Rótulos de honestidade (\"índice interno, não nota ENAMED\", \"ilustrativo\", limites de interpretação)",
+    "desc": "Presentes em várias telas.",
+    "estado": "demo",
+    "origem": "REL",
+    "reuniao": "—",
+    "sugestao": "manter"
+  },
+  {
+    "id": "CO-01",
+    "mod": "comercial",
+    "nome": "Ticket variável pelo número de alunos da instituição",
+    "desc": "Decisão de precificação; afeta cadastro de plano/contrato no admin.",
+    "estado": "novo",
+    "origem": "05/11",
+    "reuniao": "05/11: Filipe perguntou; Mario — \"deve variar… é proteção de marca\". Sem valores definidos.",
+    "sugestao": "discutir",
+    "pergunta": "Faixas por nº de alunos? Piloto pago ou gratuito?"
+  },
+  {
+    "id": "CO-02",
+    "mod": "comercial",
+    "nome": "Duas ofertas: plataforma com acervo MedPleni ou plataforma vazia para a faculdade construir o próprio banco",
+    "desc": "Afeta planos e tela de pacote de acervo (QB-15).",
+    "estado": "novo",
+    "origem": "05/11",
+    "reuniao": "05/11: Bruno perguntou; Filipe — \"provavelmente oferecer as duas opções\".",
+    "sugestao": "novo"
+  },
+  {
+    "id": "CO-03",
+    "mod": "comercial",
+    "nome": "Operação do acervo inicial: separar 30–35 mil questões; reescrever ~5.000 de terceiros; treinar IA com padrão INEP; gerar por devolutiva",
+    "desc": "Plano operacional acordado em 05/11; alimenta QB-13/QB-14.",
+    "estado": "novo",
+    "origem": "05/11",
+    "reuniao": "05/11: próximas etapas — Filipe/Bruno organizam o drive; Mario processa e devolve para validação.",
+    "sugestao": "novo",
+    "pergunta": "Formato dos arquivos (DOCX, planilha, PDF)? Metadados existentes (área, tema, ano, faculdade)?"
+  },
+  {
+    "id": "CO-04",
+    "mod": "comercial",
+    "nome": "Escolha da identidade visual entre 10 propostas (claro/escuro)",
+    "desc": "Decisão de design pendente dos médicos.",
+    "estado": "novo",
+    "origem": "05/11",
+    "reuniao": "05/11: Mario entrega as 10 telas; Bruno e Filipe escolhem.",
+    "sugestao": "discutir"
+  }
+];
