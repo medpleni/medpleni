@@ -2687,7 +2687,7 @@ export default function CentralAprovacoesPage() {
                       style={{
                         position: "relative",
                         height: "250px",
-                        background: "#070A10",
+                        background: "#F1F5F9",
                         cursor: "pointer",
                         overflow: "hidden",
                       }}
@@ -2708,7 +2708,7 @@ export default function CentralAprovacoesPage() {
                         style={{
                           position: "absolute",
                           inset: 0,
-                          background: "linear-gradient(to top, rgba(7, 10, 16, 0.85) 0%, transparent 60%)",
+                          background: "linear-gradient(to top, rgba(15, 23, 42, 0.75) 0%, transparent 60%)",
                           display: "flex",
                           alignItems: "flex-end",
                           padding: "16px",
@@ -2883,19 +2883,19 @@ export default function CentralAprovacoesPage() {
               position: "fixed",
               inset: 0,
               zIndex: 99999,
-              background: "#070A10",
-              color: "#FFF",
+              background: "#F1F5F9",
+              color: "#0F172A",
               display: "flex",
               flexDirection: "column",
               overflow: "hidden",
             }}
           >
-            {/* Top Toolbar Imersivo */}
+            {/* Top Toolbar Imersivo (Tema Claro Executivo) */}
             <div
               style={{
-                background: "rgba(10, 14, 24, 0.96)",
-                borderBottom: "1px solid var(--sinal)",
-                backdropFilter: "blur(12px)",
+                background: "#FFFFFF",
+                borderBottom: "1px solid #E2E8F0",
+                boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
                 padding: "10px 24px",
                 display: "flex",
                 alignItems: "center",
@@ -2905,7 +2905,7 @@ export default function CentralAprovacoesPage() {
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-                <div style={{ display: "flex", gap: "4px" }}>
+                <div style={{ display: "flex", gap: "6px" }}>
                   <button
                     onClick={() =>
                       setActiveImmersiveIndex((prev) =>
@@ -2914,12 +2914,13 @@ export default function CentralAprovacoesPage() {
                     }
                     title="Tela Anterior (Seta Esquerda)"
                     style={{
-                      background: "var(--abismo-surface)",
-                      border: "1px solid var(--border-subtle)",
-                      color: "var(--neblina)",
+                      background: "#F8FAFC",
+                      border: "1px solid #CBD5E1",
+                      color: "#1E293B",
                       padding: "6px 12px",
                       borderRadius: "6px",
                       fontSize: "12px",
+                      fontWeight: 600,
                       cursor: "pointer",
                       display: "flex",
                       alignItems: "center",
@@ -2936,12 +2937,13 @@ export default function CentralAprovacoesPage() {
                     }
                     title="Próxima Tela (Seta Direita)"
                     style={{
-                      background: "var(--abismo-surface)",
-                      border: "1px solid var(--border-subtle)",
-                      color: "var(--neblina)",
+                      background: "#F8FAFC",
+                      border: "1px solid #CBD5E1",
+                      color: "#1E293B",
                       padding: "6px 12px",
                       borderRadius: "6px",
                       fontSize: "12px",
+                      fontWeight: 600,
                       cursor: "pointer",
                       display: "flex",
                       alignItems: "center",
@@ -2952,11 +2954,11 @@ export default function CentralAprovacoesPage() {
                   </button>
                 </div>
 
-                <div style={{ borderLeft: "1px solid var(--sinal)", paddingLeft: "14px" }}>
-                  <span style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "var(--pulso)" }}>
+                <div style={{ borderLeft: "1px solid #CBD5E1", paddingLeft: "14px" }}>
+                  <span style={{ fontSize: "11px", fontFamily: "var(--font-mono)", color: "#008F7C", fontWeight: 600 }}>
                     Tela {(activeImmersiveIndex ?? 0) + 1} de {screens.length} · {activeImmersiveScreen.category}
                   </span>
-                  <h3 style={{ margin: 0, fontSize: "16px", fontWeight: 700, color: "#FFF" }}>
+                  <h3 style={{ margin: 0, fontSize: "15px", fontWeight: 700, color: "#0F172A" }}>
                     {activeImmersiveScreen.title}
                   </h3>
                 </div>
@@ -2967,18 +2969,18 @@ export default function CentralAprovacoesPage() {
                 <div
                   style={{
                     display: "flex",
-                    background: "var(--abismo-surface)",
+                    background: "#F1F5F9",
                     borderRadius: "8px",
                     padding: "3px",
-                    border: "1px solid var(--border-subtle)",
+                    border: "1px solid #E2E8F0",
                   }}
                 >
                   {activeImmersiveScreen.html && (
                     <button
                       onClick={() => setImmersiveViewMode("live")}
                       style={{
-                        background: immersiveViewMode === "live" ? "linear-gradient(135deg, var(--pulso), #0077B6)" : "transparent",
-                        color: immersiveViewMode === "live" ? "#06111A" : "var(--chumbo)",
+                        background: immersiveViewMode === "live" ? "#008F7C" : "transparent",
+                        color: immersiveViewMode === "live" ? "#FFFFFF" : "#64748B",
                         border: 0,
                         padding: "6px 14px",
                         borderRadius: "6px",
@@ -2997,8 +2999,8 @@ export default function CentralAprovacoesPage() {
                   <button
                     onClick={() => setImmersiveViewMode("width")}
                     style={{
-                      background: immersiveViewMode === "width" ? "var(--pulso)" : "transparent",
-                      color: immersiveViewMode === "width" ? "#06111A" : "var(--chumbo)",
+                      background: immersiveViewMode === "width" ? "#008F7C" : "transparent",
+                      color: immersiveViewMode === "width" ? "#FFFFFF" : "#64748B",
                       border: 0,
                       padding: "6px 14px",
                       borderRadius: "6px",
@@ -3012,8 +3014,8 @@ export default function CentralAprovacoesPage() {
                   <button
                     onClick={() => setImmersiveViewMode("fit")}
                     style={{
-                      background: immersiveViewMode === "fit" ? "var(--pulso)" : "transparent",
-                      color: immersiveViewMode === "fit" ? "#06111A" : "var(--chumbo)",
+                      background: immersiveViewMode === "fit" ? "#008F7C" : "transparent",
+                      color: immersiveViewMode === "fit" ? "#FFFFFF" : "#64748B",
                       border: 0,
                       padding: "6px 14px",
                       borderRadius: "6px",
@@ -3032,44 +3034,46 @@ export default function CentralAprovacoesPage() {
                       display: "flex",
                       alignItems: "center",
                       gap: "6px",
-                      background: "var(--abismo-surface)",
+                      background: "#F1F5F9",
                       padding: "3px 8px",
                       borderRadius: "8px",
-                      border: "1px solid var(--border-subtle)",
+                      border: "1px solid #E2E8F0",
                     }}
                   >
-                    <span style={{ fontSize: "11px", color: "var(--chumbo)", textTransform: "uppercase" }}>
+                    <span style={{ fontSize: "11px", color: "#64748B", textTransform: "uppercase", fontWeight: 600 }}>
                       Zoom Vetorial:
                     </span>
                     <button
                       onClick={() => setZoomPercent((prev) => Math.max(70, prev - 15))}
                       style={{
-                        background: "var(--input-bg)",
-                        border: "1px solid var(--border-subtle)",
-                        color: "var(--neblina)",
+                        background: "#FFFFFF",
+                        border: "1px solid #CBD5E1",
+                        color: "#0F172A",
                         width: "24px",
                         height: "24px",
                         borderRadius: "4px",
                         cursor: "pointer",
                         fontSize: "13px",
+                        fontWeight: 700,
                       }}
                     >
                       −
                     </button>
-                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "var(--pulso)", minWidth: "42px", textAlign: "center", fontWeight: 700 }}>
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "12px", color: "#008F7C", minWidth: "42px", textAlign: "center", fontWeight: 700 }}>
                       {zoomPercent}%
                     </span>
                     <button
                       onClick={() => setZoomPercent((prev) => Math.min(220, prev + 15))}
                       style={{
-                        background: "var(--input-bg)",
-                        border: "1px solid var(--border-subtle)",
-                        color: "var(--neblina)",
+                        background: "#FFFFFF",
+                        border: "1px solid #CBD5E1",
+                        color: "#0F172A",
                         width: "24px",
                         height: "24px",
                         borderRadius: "4px",
                         cursor: "pointer",
                         fontSize: "13px",
+                        fontWeight: 700,
                       }}
                     >
                       +
@@ -3077,13 +3081,14 @@ export default function CentralAprovacoesPage() {
                     <button
                       onClick={() => setZoomPercent(100)}
                       style={{
-                        background: "transparent",
-                        border: "1px solid var(--border-subtle)",
-                        color: "var(--chumbo)",
+                        background: zoomPercent === 100 ? "#E2E8F0" : "transparent",
+                        border: "1px solid #CBD5E1",
+                        color: "#475569",
                         padding: "2px 6px",
                         borderRadius: "4px",
                         fontSize: "10.5px",
                         cursor: "pointer",
+                        fontWeight: zoomPercent === 100 ? 700 : 500,
                       }}
                     >
                       100%
@@ -3091,13 +3096,14 @@ export default function CentralAprovacoesPage() {
                     <button
                       onClick={() => setZoomPercent(125)}
                       style={{
-                        background: zoomPercent === 125 ? "rgba(0,194,168,0.2)" : "transparent",
-                        border: "1px solid var(--border-subtle)",
-                        color: zoomPercent === 125 ? "var(--pulso)" : "var(--chumbo)",
+                        background: zoomPercent === 125 ? "#CCFBF1" : "transparent",
+                        border: "1px solid #CBD5E1",
+                        color: zoomPercent === 125 ? "#0F766E" : "#475569",
                         padding: "2px 6px",
                         borderRadius: "4px",
                         fontSize: "10.5px",
                         cursor: "pointer",
+                        fontWeight: zoomPercent === 125 ? 700 : 500,
                       }}
                     >
                       125%
@@ -3114,9 +3120,9 @@ export default function CentralAprovacoesPage() {
                     target="_blank"
                     rel="noreferrer"
                     style={{
-                      background: "linear-gradient(135deg, rgba(0, 194, 168, 0.2), rgba(0, 119, 182, 0.2))",
-                      border: "1px solid rgba(0, 194, 168, 0.4)",
-                      color: "var(--pulso)",
+                      background: "#F0FDFA",
+                      border: "1px solid #99F6E4",
+                      color: "#0F766E",
                       padding: "6px 14px",
                       borderRadius: "6px",
                       fontSize: "12px",
@@ -3133,12 +3139,13 @@ export default function CentralAprovacoesPage() {
                 <button
                   onClick={() => setIsCommentsDrawerOpen(!isCommentsDrawerOpen)}
                   style={{
-                    background: isCommentsDrawerOpen ? "var(--pulso)" : "var(--abismo-surface)",
-                    color: isCommentsDrawerOpen ? "#06111A" : "var(--neblina)",
-                    border: "1px solid var(--border-subtle)",
+                    background: isCommentsDrawerOpen ? "#008F7C" : "#F8FAFC",
+                    color: isCommentsDrawerOpen ? "#FFFFFF" : "#1E293B",
+                    border: "1px solid #CBD5E1",
                     padding: "6px 14px",
                     borderRadius: "6px",
                     fontSize: "12px",
+                    fontWeight: 600,
                     cursor: "pointer",
                     display: "flex",
                     alignItems: "center",
@@ -3151,9 +3158,9 @@ export default function CentralAprovacoesPage() {
                   onClick={() => setActiveImmersiveIndex(null)}
                   title="Fechar modo tela cheia (Esc)"
                   style={{
-                    background: "rgba(255, 107, 107, 0.15)",
-                    border: "1px solid rgba(255, 107, 107, 0.4)",
-                    color: "#FF6B6B",
+                    background: "#FEF2F2",
+                    border: "1px solid #FECACA",
+                    color: "#DC2626",
                     padding: "6px 14px",
                     borderRadius: "6px",
                     fontSize: "12px",
@@ -3172,7 +3179,7 @@ export default function CentralAprovacoesPage() {
                 flex: 1,
                 overflowY: "auto",
                 overflowX: "auto",
-                background: "#0A0E18",
+                background: "#E2E8F0",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "flex-start",
@@ -3197,10 +3204,10 @@ export default function CentralAprovacoesPage() {
                     style={{
                       width: zoomPercent !== 100 ? `${100 / (zoomPercent / 100)}%` : "100%",
                       height: "100%",
-                      border: "1px solid var(--border-subtle)",
+                      border: "1px solid #CBD5E1",
                       borderRadius: "8px",
-                      background: "#0A0E18",
-                      boxShadow: "0 10px 60px rgba(0, 0, 0, 0.8)",
+                      background: "#FFFFFF",
+                      boxShadow: "0 10px 40px rgba(0, 0, 0, 0.12)",
                       zoom: zoomPercent !== 100 ? zoomPercent / 100 : undefined,
                     }}
                   />
@@ -3216,7 +3223,7 @@ export default function CentralAprovacoesPage() {
                       width: "100%",
                       height: "auto",
                       borderRadius: "8px",
-                      boxShadow: "0 20px 80px rgba(0, 0, 0, 0.9)",
+                      boxShadow: "0 10px 40px rgba(0, 0, 0, 0.15)",
                       display: "block",
                       margin: "0 auto",
                     }}
@@ -3234,7 +3241,7 @@ export default function CentralAprovacoesPage() {
                       maxWidth: "96vw",
                       objectFit: "contain",
                       borderRadius: "8px",
-                      boxShadow: "0 20px 80px rgba(0, 0, 0, 0.9)",
+                      boxShadow: "0 10px 40px rgba(0, 0, 0, 0.15)",
                     }}
                   />
                 </div>
@@ -3248,10 +3255,10 @@ export default function CentralAprovacoesPage() {
                 bottom: "20px",
                 left: "50%",
                 transform: "translateX(-50%)",
-                background: "rgba(20, 28, 46, 0.95)",
+                background: "rgba(255, 255, 255, 0.98)",
                 backdropFilter: "blur(14px)",
-                border: "1px solid rgba(0, 194, 168, 0.4)",
-                boxShadow: "0 10px 40px rgba(0, 0, 0, 0.7)",
+                border: "1px solid #CBD5E1",
+                boxShadow: "0 10px 30px rgba(0, 0, 0, 0.12)",
                 borderRadius: "30px",
                 padding: "8px 24px",
                 display: "flex",
@@ -3260,12 +3267,12 @@ export default function CentralAprovacoesPage() {
                 zIndex: 100000,
               }}
             >
-              <div style={{ fontSize: "12px", color: "var(--neblina)", display: "flex", alignItems: "center", gap: "6px" }}>
+              <div style={{ fontSize: "12px", color: "#475569", display: "flex", alignItems: "center", gap: "6px" }}>
                 <span>Votando como:</span>
                 <strong style={{ color: currentPartner.color }}>{currentPartner.name}</strong>
               </div>
 
-              <div style={{ width: "1px", height: "20px", background: "var(--sinal)" }} />
+              <div style={{ width: "1px", height: "20px", background: "#E2E8F0" }} />
 
               <div style={{ display: "flex", gap: "8px" }}>
                 <button
@@ -3273,13 +3280,13 @@ export default function CentralAprovacoesPage() {
                   style={{
                     background:
                       activeImmersiveScreen.votes[activePartnerId] === "aprovado"
-                        ? "#22C55E"
-                        : "rgba(34, 197, 94, 0.15)",
+                        ? "#16A34A"
+                        : "#F0FDF4",
                     color:
                       activeImmersiveScreen.votes[activePartnerId] === "aprovado"
-                        ? "#FFF"
-                        : "#22C55E",
-                    border: "1px solid rgba(34, 197, 94, 0.5)",
+                        ? "#FFFFFF"
+                        : "#166534",
+                    border: "1px solid #86EFAC",
                     borderRadius: "20px",
                     padding: "7px 16px",
                     fontSize: "12.5px",
@@ -3295,13 +3302,13 @@ export default function CentralAprovacoesPage() {
                   style={{
                     background:
                       activeImmersiveScreen.votes[activePartnerId] === "ressalvas"
-                        ? "#F5A623"
-                        : "rgba(245, 166, 35, 0.15)",
+                        ? "#D97706"
+                        : "#FFFBEB",
                     color:
                       activeImmersiveScreen.votes[activePartnerId] === "ressalvas"
-                        ? "#06111A"
-                        : "#F5A623",
-                    border: "1px solid rgba(245, 166, 35, 0.5)",
+                        ? "#FFFFFF"
+                        : "#92400E",
+                    border: "1px solid #FDE68A",
                     borderRadius: "20px",
                     padding: "7px 16px",
                     fontSize: "12.5px",
@@ -3317,13 +3324,13 @@ export default function CentralAprovacoesPage() {
                   style={{
                     background:
                       activeImmersiveScreen.votes[activePartnerId] === "reprovado"
-                        ? "#FF6B6B"
-                        : "rgba(255, 107, 107, 0.15)",
+                        ? "#DC2626"
+                        : "#FEF2F2",
                     color:
                       activeImmersiveScreen.votes[activePartnerId] === "reprovado"
-                        ? "#FFF"
-                        : "#FF6B6B",
-                    border: "1px solid rgba(255, 107, 107, 0.5)",
+                        ? "#FFFFFF"
+                        : "#991B1B",
+                    border: "1px solid #FECACA",
                     borderRadius: "20px",
                     padding: "7px 16px",
                     fontSize: "12.5px",
@@ -3335,15 +3342,16 @@ export default function CentralAprovacoesPage() {
                 </button>
               </div>
 
-              <div style={{ width: "1px", height: "20px", background: "var(--sinal)" }} />
+              <div style={{ width: "1px", height: "20px", background: "#E2E8F0" }} />
 
               <button
                 onClick={() => setIsCommentsDrawerOpen(!isCommentsDrawerOpen)}
                 style={{
                   background: "transparent",
                   border: 0,
-                  color: isCommentsDrawerOpen ? "var(--pulso)" : "var(--chumbo)",
+                  color: isCommentsDrawerOpen ? "#008F7C" : "#64748B",
                   fontSize: "12px",
+                  fontWeight: 600,
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
@@ -3363,10 +3371,9 @@ export default function CentralAprovacoesPage() {
                   right: 0,
                   bottom: 0,
                   width: "380px",
-                  background: "rgba(20, 28, 46, 0.98)",
-                  backdropFilter: "blur(16px)",
-                  borderLeft: "1px solid var(--sinal)",
-                  boxShadow: "-10px 0 40px rgba(0,0,0,0.7)",
+                  background: "#FFFFFF",
+                  borderLeft: "1px solid #E2E8F0",
+                  boxShadow: "-10px 0 40px rgba(0,0,0,0.12)",
                   zIndex: 100001,
                   display: "flex",
                   flexDirection: "column",
@@ -3374,12 +3381,12 @@ export default function CentralAprovacoesPage() {
                 }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-                  <h4 style={{ margin: 0, fontSize: "15px", color: "var(--heading-color)" }}>
+                  <h4 style={{ margin: 0, fontSize: "15px", color: "#0F172A", fontWeight: 700 }}>
                     Notas Médicas & Justificativas
                   </h4>
                   <button
                     onClick={() => setIsCommentsDrawerOpen(false)}
-                    style={{ background: "transparent", border: 0, color: "var(--chumbo)", cursor: "pointer", fontSize: "16px" }}
+                    style={{ background: "transparent", border: 0, color: "#64748B", cursor: "pointer", fontSize: "18px" }}
                   >
                     ✕
                   </button>
@@ -3387,7 +3394,7 @@ export default function CentralAprovacoesPage() {
 
                 <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: "10px", marginBottom: "16px" }}>
                   {activeImmersiveScreen.comments.length === 0 ? (
-                    <div style={{ fontSize: "12.5px", color: "var(--chumbo)", textAlign: "center", padding: "40px 10px" }}>
+                    <div style={{ fontSize: "12.5px", color: "#64748B", textAlign: "center", padding: "40px 10px" }}>
                       Nenhum comentário nesta tela ainda. Registre abaixo o que achou da estética para as faculdades.
                     </div>
                   ) : (
@@ -3395,18 +3402,18 @@ export default function CentralAprovacoesPage() {
                       <div
                         key={c.id}
                         style={{
-                          background: "var(--abismo-surface)",
-                          border: "1px solid var(--border-subtle)",
+                          background: "#F8FAFC",
+                          border: "1px solid #E2E8F0",
                           borderRadius: "8px",
                           padding: "10px 12px",
                           fontSize: "12.5px",
                         }}
                       >
                         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "4px" }}>
-                          <strong style={{ color: "var(--pulso)" }}>{c.author}</strong>
-                          <span style={{ fontSize: "10px", color: "var(--chumbo)" }}>{c.date}</span>
+                          <strong style={{ color: "#008F7C" }}>{c.author}</strong>
+                          <span style={{ fontSize: "10px", color: "#64748B" }}>{c.date}</span>
                         </div>
-                        <p style={{ margin: 0, color: "var(--neblina)", lineHeight: 1.4 }}>{c.text}</p>
+                        <p style={{ margin: 0, color: "#1E293B", lineHeight: 1.4 }}>{c.text}</p>
                       </div>
                     ))
                   )}
@@ -3423,9 +3430,9 @@ export default function CentralAprovacoesPage() {
                     placeholder="Adicionar nota clínica/estética..."
                     style={{
                       flex: 1,
-                      background: "var(--input-bg)",
-                      border: "1px solid var(--input-border)",
-                      color: "var(--neblina)",
+                      background: "#FFFFFF",
+                      border: "1px solid #CBD5E1",
+                      color: "#0F172A",
                       borderRadius: "6px",
                       padding: "8px 10px",
                       fontSize: "12.5px",
@@ -3435,8 +3442,8 @@ export default function CentralAprovacoesPage() {
                   <button
                     onClick={() => handleAddComment(activeImmersiveScreen.id)}
                     style={{
-                      background: "var(--pulso)",
-                      color: "#06111A",
+                      background: "#008F7C",
+                      color: "#FFFFFF",
                       border: 0,
                       borderRadius: "6px",
                       padding: "8px 14px",
