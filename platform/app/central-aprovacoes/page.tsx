@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/lib/supabase/use-user";
 import {
   MODULOS,
   RAW_FEATURES,
@@ -272,6 +274,9 @@ const INITIAL_INVITED_EMAILS: InvitedEmail[] = [
 ];
 
 export default function CentralAprovacoesPage() {
+  const router = useRouter();
+  const { user, profile, loading: authLoading, signOut } = useUser();
+
   const [activeTab, setActiveTab] = useState<
     "features" | "screens" | "overview" | "todo" | "prototype" | "access"
   >("features");
@@ -284,6 +289,63 @@ export default function CentralAprovacoesPage() {
   const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
   const [screens, setScreens] = useState<ScreenApproval[]>([]);
   const [invitedEmails, setInvitedEmails] = useState<InvitedEmail[]>(INITIAL_INVITED_EMAILS);
+
+  // ── Autorização e Validação de E-mails ─────────────────────────────────
+  const userEmail = (user?.email || "").toLowerCase().trim();
+
+  // Sócios Fundadores e Whitelist Principal
+  const INITIAL_AUTHORIZED_EMAILS = useMemo(
+    () => [
+      "mario.nascimentolopes@gmail.com",
+      "bruno.farnetano@medpleni.com.br",
+      "filipe.andrade@medpleni.com.br",
+      "renato@medpleni.com.br",
+    ],
+    []
+  );
+
+  const isUserAuthorized = useMemo(() => {
+    if (!userEmail) return false;
+
+    // 1. Sócios fundadores da ata 05/11
+    if (INITIAL_AUTHORIZED_EMAILS.includes(userEmail)) return true;
+
+    // 2. E-mails convidados e salvos no banco / lista
+    if (invitedEmails.some((inv) => inv.email.toLowerCase().trim() === userEmail)) {
+      return true;
+    }
+
+    // 3. Qualquer e-mail institucional corporativo da MedPleni
+    if (userEmail.endsWith("@medpleni.com") || userEmail.endsWith("@medpleni.com.br")) {
+      return true;
+    }
+
+    // 4. Role administrativa no perfil do Supabase
+    const userRole = (profile as any)?.role;
+    if (
+      userRole === "admin" ||
+      userRole === "superadmin" ||
+      userRole === "desenvolvedor"
+    ) {
+      return true;
+    }
+
+    return false;
+  }, [userEmail, invitedEmails, profile, INITIAL_AUTHORIZED_EMAILS]);
+
+  // Alinhamento automático do perfil do sócio com base no e-mail conectado
+  useEffect(() => {
+    if (!userEmail) return;
+    if (userEmail.includes("bruno") || userEmail.includes("farnetano")) {
+      setActivePartnerId("bruno");
+    } else if (userEmail.includes("filipe") || userEmail.includes("andrade")) {
+      setActivePartnerId("filipe");
+    } else if (userEmail.includes("renato")) {
+      setActivePartnerId("renato");
+    } else if (userEmail.includes("mario")) {
+      setActivePartnerId("mario");
+    }
+  }, [userEmail]);
 
   // ── 96 Features B2B ──────────────────────────────────────────────────
   const [featuresList, setFeaturesList] = useState<FeatureValidationItem[]>(() => {
@@ -787,6 +849,259 @@ export default function CentralAprovacoesPage() {
   const activeImmersiveScreen =
     activeImmersiveIndex !== null ? screens[activeImmersiveIndex] : null;
 
+  // ── 1. Carregamento de Sessão e Credenciais ───────────────────────────
+  if (authLoading) {
+    return (
+      <div
+        data-theme="light"
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "#F8FAFC",
+          fontFamily: "var(--font-body), sans-serif",
+          color: "#0F172A",
+          gap: "16px",
+        }}
+      >
+        <div
+          style={{
+            width: "44px",
+            height: "44px",
+            borderRadius: "50%",
+            border: "3px solid #E2E8F0",
+            borderTopColor: "#008F7C",
+            animation: "b2bSpin 0.8s linear infinite",
+          }}
+        />
+        <style>{`@keyframes b2bSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+        <div style={{ textAlign: "center" }}>
+          <p style={{ margin: 0, fontSize: "14px", fontWeight: 700, color: "#0F172A" }}>
+            MedPleni B2B · Verificando Credenciais
+          </p>
+          <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#64748B" }}>
+            Validando sessão e permissões de acesso aos módulos executivos...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // ── 2. Não Autenticado -> Redirecionamento Imediato para Login ─────────
+  if (!user) {
+    if (typeof window !== "undefined") {
+      router.push("/login?redirect=/central-aprovacoes");
+    }
+    return (
+      <div
+        data-theme="light"
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "#F8FAFC",
+          color: "#0F172A",
+          fontFamily: "var(--font-body), sans-serif",
+          padding: "24px",
+          textAlign: "center",
+        }}
+      >
+        <div
+          style={{
+            width: "52px",
+            height: "52px",
+            borderRadius: "12px",
+            background: "#FEF2F2",
+            border: "1px solid #FECACA",
+            color: "#DC2626",
+            display: "grid",
+            placeItems: "center",
+            fontSize: "24px",
+            margin: "0 auto 16px",
+          }}
+        >
+          🔒
+        </div>
+        <h2 style={{ fontSize: "18px", fontWeight: 700, margin: "0 0 8px", color: "#0F172A" }}>
+          Autenticação Obrigatória
+        </h2>
+        <p style={{ fontSize: "13.5px", color: "#64748B", margin: "0 0 20px", maxWidth: "420px" }}>
+          Esta página é restrita a membros autorizados. Redirecionando para a tela de login...
+        </p>
+        <Link
+          href="/login?redirect=/central-aprovacoes"
+          style={{
+            background: "#008F7C",
+            color: "#FFFFFF",
+            padding: "10px 22px",
+            borderRadius: "8px",
+            textDecoration: "none",
+            fontWeight: 700,
+            fontSize: "13.5px",
+            boxShadow: "0 2px 8px rgba(0, 143, 124, 0.25)",
+          }}
+        >
+          Fazer Login no MedPleni
+        </Link>
+      </div>
+    );
+  }
+
+  // ── 3. Usuário Conectado mas NÃO Autorizado na Central B2B ────────────
+  if (!isUserAuthorized) {
+    return (
+      <div
+        data-theme="light"
+        style={{
+          minHeight: "100vh",
+          background: "#F8FAFC",
+          color: "#0F172A",
+          fontFamily: "var(--font-body), sans-serif",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "24px",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "520px",
+            width: "100%",
+            background: "#FFFFFF",
+            borderRadius: "16px",
+            border: "1px solid #E2E8F0",
+            boxShadow: "0 10px 40px rgba(0, 0, 0, 0.08)",
+            padding: "36px 32px",
+            textAlign: "center",
+          }}
+        >
+          <div
+            style={{
+              width: "60px",
+              height: "60px",
+              borderRadius: "50%",
+              background: "#FEF2F2",
+              border: "1px solid #FECACA",
+              color: "#DC2626",
+              display: "grid",
+              placeItems: "center",
+              fontSize: "28px",
+              margin: "0 auto 18px",
+            }}
+          >
+            🔒
+          </div>
+
+          <span
+            style={{
+              fontSize: "11px",
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+              color: "#DC2626",
+              background: "#FEF2F2",
+              padding: "4px 12px",
+              borderRadius: "20px",
+              border: "1px solid #FECACA",
+              display: "inline-block",
+              marginBottom: "12px",
+            }}
+          >
+            Acesso Restrito · Diretoria & Sócios
+          </span>
+
+          <h2
+            style={{
+              fontSize: "20px",
+              fontWeight: 700,
+              color: "#0F172A",
+              margin: "0 0 10px",
+            }}
+          >
+            Central Executiva de Aprovações B2B
+          </h2>
+
+          <p
+            style={{
+              fontSize: "13.5px",
+              color: "#475569",
+              lineHeight: 1.5,
+              margin: "0 0 20px",
+            }}
+          >
+            Esta central contém minutas societárias, atas e a validação funcional
+            de 96 funcionalidades do módulo institucional. O acesso é exclusivo
+            para os sócios do projeto e e-mails convidados pela diretoria.
+          </p>
+
+          <div
+            style={{
+              background: "#F1F5F9",
+              border: "1px solid #CBD5E1",
+              borderRadius: "8px",
+              padding: "12px 14px",
+              marginBottom: "24px",
+              textAlign: "left",
+              fontSize: "12.5px",
+            }}
+          >
+            <div style={{ color: "#64748B", fontSize: "11px", marginBottom: "3px" }}>
+              Conta atualmente conectada:
+            </div>
+            <strong style={{ color: "#0F172A", wordBreak: "break-all" }}>
+              {user.email}
+            </strong>
+            <div style={{ color: "#DC2626", fontSize: "11px", marginTop: "4px" }}>
+              ✕ Este e-mail não consta na lista de sócios ou convidados autorizados.
+            </div>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <button
+              onClick={() => signOut()}
+              style={{
+                width: "100%",
+                background: "#008F7C",
+                color: "#FFFFFF",
+                border: 0,
+                borderRadius: "8px",
+                padding: "11px",
+                fontSize: "13.5px",
+                fontWeight: 600,
+                cursor: "pointer",
+              }}
+            >
+              Conectar com Outra Conta Autorizada
+            </button>
+
+            <Link
+              href="/dashboard"
+              style={{
+                width: "100%",
+                display: "inline-block",
+                background: "#F8FAFC",
+                color: "#475569",
+                border: "1px solid #CBD5E1",
+                borderRadius: "8px",
+                padding: "10px",
+                fontSize: "13px",
+                fontWeight: 600,
+                textDecoration: "none",
+                textAlign: "center",
+              }}
+            >
+              Voltar ao Portal MedPleni
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       data-theme="light"
@@ -979,6 +1294,52 @@ export default function CentralAprovacoesPage() {
             >
               <span>📲</span> Copiar Link WhatsApp
             </button>
+
+            {/* Sessão Conectada & Sair */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                background: "#FFFFFF",
+                padding: "6px 12px",
+                borderRadius: "8px",
+                border: "1px solid #CBD5E1",
+                fontSize: "12px",
+              }}
+            >
+              <span style={{ color: "#16A34A", fontSize: "10px" }}>●</span>
+              <span style={{ color: "#64748B" }}>Sessão:</span>
+              <strong
+                style={{
+                  color: "#0F172A",
+                  maxWidth: "180px",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+                title={user.email}
+              >
+                {user.email}
+              </strong>
+              <button
+                onClick={() => signOut()}
+                title="Desconectar desta conta"
+                style={{
+                  background: "#FEF2F2",
+                  border: "1px solid #FECACA",
+                  color: "#DC2626",
+                  fontSize: "11px",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  padding: "3px 8px",
+                  borderRadius: "4px",
+                  marginLeft: "4px",
+                }}
+              >
+                Sair
+              </button>
+            </div>
           </div>
         </div>
 

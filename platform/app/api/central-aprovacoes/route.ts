@@ -33,9 +33,21 @@ function writeLocalStore(payload: any) {
 // GET: Recupera os dados compartilhados de aprovação do banco
 export async function GET() {
   try {
+    // 0. Verificar se o usuário está logado
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json(
+        { error: "Acesso restrito. Faça login para visualizar as aprovações." },
+        { status: 401 }
+      );
+    }
+
     // 1. Tentar ler do Supabase na tabela b2b_approvals
     try {
-      const supabase = await createClient();
       const { data, error } = await supabase
         .from("b2b_approvals")
         .select("*")
@@ -78,6 +90,19 @@ export async function GET() {
 // POST: Salva voto, comentários, tarefas e status no banco de dados compartilhado
 export async function POST(req: NextRequest) {
   try {
+    // 0. Verificar se o usuário está logado
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return NextResponse.json(
+        { error: "Acesso restrito. Faça login para registrar votos ou alterações." },
+        { status: 401 }
+      );
+    }
+
     const body = await req.json();
     const { screens, tasks, featuresList, invitedEmails, lastAction } = body;
 

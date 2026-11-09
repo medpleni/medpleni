@@ -52,7 +52,6 @@ export async function updateSession(request: NextRequest) {
     pathname.startsWith("/convite") ||
     pathname.startsWith("/recuperar-senha") ||
     pathname.startsWith("/redefinir-senha") ||
-    pathname.startsWith("/central-aprovacoes") ||
     pathname.startsWith("/auth");
 
   const isPublicRoute =
