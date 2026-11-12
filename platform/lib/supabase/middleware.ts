@@ -39,9 +39,18 @@ export async function updateSession(request: NextRequest) {
 
   // IMPORTANT: Avoid writing any logic between createServerClient and
   // supabase.auth.getUser(). A simple mistake could compromise user authentication.
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Timeout de 1200ms para evitar travamento no Vercel Edge (limite ~1500ms)
+  let user = null;
+  try {
+    const userPromise = supabase.auth.getUser();
+    const timeoutPromise = new Promise<{ data: { user: null } }>((resolve) =>
+      setTimeout(() => resolve({ data: { user: null } }), 1200)
+    );
+    const result = await Promise.race([userPromise, timeoutPromise]);
+    user = result.data.user;
+  } catch {
+    user = null;
+  }
 
   const pathname = request.nextUrl.pathname;
 
