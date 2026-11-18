@@ -69,6 +69,10 @@ Arquivo: `platform/supabase/b2b/003_taxonomia.sql` (aditivo e idempotente).
    - Testar a exportação de CSV das Áreas.
    - Verificar a aba "Relatório de Questões" para auditar a cobertura e o mapeamento de-para.
 
+### Pendências / Dúvidas
+
+- **Cenários do INEP:** Mario solicitou hoje ao Dr. Filipe e aguarda o envio. A estrutura em `tax_cenarios`, o CRUD no painel e o parser CSV já estão prontos para carga imediata assim que o arquivo for disponibilizado.
+
 ---
 
 ## 2026-11-18 · P03 · Configurações Institucionais (GO-01), Importação CSV, Convites e Admin MedPleni
