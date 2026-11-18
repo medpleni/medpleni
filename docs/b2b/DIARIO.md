@@ -6,6 +6,44 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-18 · P00.1 · Correções Pré-B2B e Alinhamento de Áreas
+
+### O que foi feito
+
+- **Decisão H-04 Alinhada:** Confirmado com o Mario que a string oficial no banco e sistema é **"Cirurgia Geral"**, mantendo total compatibilidade com o acervo existente do B2C.
+- **BUG-01 corrigido:** Removida a inserção da coluna inexistente `correct_option` em `platform/lib/supabase/admin.ts`.
+- **BUG-02 corrigido:** Corrigido o UPDATE de plano em `platform/lib/supabase/admin.ts` para usar o nome real da coluna (`plan` em vez de `plano`).
+- **INC-01 corrigido:** Atualizada a tipagem de `ProfileRow.role` em `platform/lib/supabase/profile.ts` para refletir todos os papéis reais do sistema.
+- **AREA-01 (Passo 1):** Criado `platform/lib/constants.ts` com a constante canônica `AREAS_INEP`, abreviações e cores temáticas.
+- **SQL Gerados e Executados pelo Mario:**
+  - `platform/supabase/b2b/000_pre_b2b_fixes.sql`: limpeza de órfãos, FK `simulation_id` em `user_answers`, ampliação de `context_type` para aceitar `'exam'`, e colunas aditivas em `questions`.
+  - `platform/supabase/b2b/001_core_tables.sql`: tabelas core multi-tenant (`b2b_institutions`, `b2b_institution_config`, `b2b_members`, `b2b_classes`, `b2b_class_members`, `b2b_audit_logs`), políticas RLS e seed da faculdade demo.
+  - `platform/supabase/b2b/002_areas_seed.sql`: criação da tabela `b2b_areas` e seed das 7 áreas oficiais INEP.
+- **Validação:** `npx tsc --noEmit` completado sem erros e `npm run build` gerando 100% das 42 rotas com sucesso.
+
+### Arquivos criados / alterados
+
+- `platform/lib/supabase/admin.ts` (alterado: BUG-01 e BUG-02)
+- `platform/lib/supabase/profile.ts` (alterado: INC-01)
+- `platform/lib/constants.ts` (criado: constantes canônicas de áreas)
+- `platform/supabase/b2b/000_pre_b2b_fixes.sql` (criado)
+- `platform/supabase/b2b/001_core_tables.sql` (criado)
+- `platform/supabase/b2b/002_areas_seed.sql` (criado)
+- `docs/b2b/DIARIO.md` (atualizado)
+
+### SQL a rodar
+
+- `000_pre_b2b_fixes.sql` (já executado pelo Mario)
+- `001_core_tables.sql` (já executado pelo Mario)
+- `002_areas_seed.sql` (disponível para execução caso deseje popular a tabela `b2b_areas`)
+
+### Como testar
+
+- Compilação limpa via `npx tsc --noEmit`
+- Build completo de produção via `npm run build`
+
+---
+
 ## 2026-11-18 · P00 · Reconhecimento
 
 ### O que foi feito
