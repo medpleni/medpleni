@@ -6,6 +6,74 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-18 · P08 · Modelo de Dados de Avaliações Institucionais (007_avaliacoes.sql e lib/b2b/assessments.ts)
+
+### O que foi feito
+
+- **Schema Completo e Robusto de Avaliações (`007_avaliacoes.sql`):**
+  - Isolamento total em relação ao B2C (não reutiliza as tabelas legadas `simulations` e `user_simulations`, que apresentavam falta de versionamento, ausência de snapshot de questões e impossibilidade de análise por item).
+  - Tabela `assessments`: cadastro de avaliações com instituição, título, tipos canônicos (`prova_regular`, `simulado_enamed_4`, `simulado_enamed_8`, `simulado_enamed_12`, `pre_aula`, `pos_aula`), modalidades (`papel`, `hibrida`, `online`), fluxo de status (`rascunho`, `em_revisao`, `aprovada`, `publicada`, `aplicada`, `corrigida`), datas, duração, autor, coautoria compartilhada (`coauthors` em JSONB), matriz curricular planejada e par pré/pós aula vinculado (`paired_assessment_id`).
+  - Tabela `assessment_versions`: cadernos fixos e versionados. Após a publicação, o caderno é imutável: qualquer retificação exige nova versão ou anulação de item.
+  - Tabela `assessment_items`: cópia congelada (snapshot integral) de enunciado, contexto clínico, alternativas estruturadas (A-E), gabarito oficial e comentário explicativo no momento da publicação. Permite peso diferenciado por questão e status individual (`valido` ou `anulado`).
+  - Tabela `assessment_forms`: suporte a formas embaralhadas (A, B, C...) com mapeamento biunívoco (`items_shuffle_map`) tanto da ordem das questões quanto das letras das alternativas.
+  - Tabela `assessment_targets`: convocação formal de turmas (`class_group`) ou alunos individuais.
+  - Tabela `attempts`: registro de tentativas por aluno, com vínculo à forma utilizada, modalidade, status (`nao_iniciou`, `em_andamento`, `finalizada`, `ausente`), pontuação bruta ponderada e pontuação percentual.
+  - Tabela `attempt_answers`: respostas por item com a letra assinalada na forma do aluno (`marked_form_letter`) e a **letra já convertida para o caderno-base** (`marked_base_letter`), acerto (`is_correct`), tempo despendido no item quando online e canal de origem (`online`, `folha_lida`, `digitacao`).
+  - Tabela `attempt_events`: log de telemetria de sessão para exames online (troca de aba, perda de foco, visualização de item, submissão).
+  - Funções SQL security definer:
+    - `recalculate_attempt_score(p_attempt_id)`: recalcula a nota da tentativa aplicando com rigor as regras: itens anulados são excluídos do numerador e denominador; itens em branco contam como erro; proteção contra divisão por zero.
+    - `recalculate_version_attempts(p_version_id)`: recalcula em lote todas as tentativas da avaliação quando um item é anulado.
+  - Views analíticas de desempenho:
+    - `vw_assessment_student_scores`: relatório de desempenho por aluno, com comparativo em relação à régua 60 (`is_above_cut_score`), total de itens válidos, acertos e itens anulados.
+    - `vw_assessment_class_scores`: agregação por turma com média, mediana, desvio, total de presentes/ausentes e percentual de alunos acima do corte institucional.
+  - Políticas de RLS rigorosas:
+    - Dirigente e coordenador gerenciam todas as provas da instituição.
+    - Docente gerencia suas provas ou provas em coautoria e onde suas turmas foram convocadas.
+    - **Regra inegociável:** Aluno nunca lê o gabarito oficial (`frozen_correct_letter` e `frozen_explanation`) antes da liberação formal da avaliação (`status = 'corrigida'`).
+- **Módulo de Código e Regras Puras (`platform/lib/b2b/assessments.ts`):**
+  - `createAssessment`: criação de prova com definição de alvos e matriz planejada.
+  - `publishAssessment`: publicação com congelamento dos itens do caderno e geração automática das Formas A, B, C e D.
+  - `generateFormShuffleMap`: gerador determinístico/bijetivo de embaralhamento de questões e alternativas.
+  - `convertFormAnswerToBase` e `convertBaseAnswerToForm`: conversores bidirecionais de alternativas entre formas embaralhadas e o caderno-base.
+  - `calculateAttemptScore`: função pura para cálculo ponderado de notas com exclusão de anuladas e contagem de em branco como erro.
+  - `annulAssessmentItem`: anulação de item com disparo do recálculo automático de notas no banco.
+  - `recordAttemptAnswer`: registro e conversão em tempo real da alternativa do aluno para o caderno-base.
+  - `submitAttempt`: encerramento da tentativa e consolidação da nota final.
+- **Qualidade e Testes Automatizados:**
+  - `platform/lib/b2b/__tests__/assessments.test.ts`: 10 testes unitários validando:
+    1. Cálculo 100% em prova perfeita.
+    2. Questão em branco computada como erro (0 pontos).
+    3. Pesos diferenciados por questão.
+    4. Anulação de item recalcula a nota e a base sem penalizar o aluno.
+    5. Proteção contra divisão por zero em casos extremos.
+    6. Conversão de alternativas da forma embaralhada para o caderno-base.
+    7. Bijetividade bidirecional (forma -> base -> forma).
+    8. Consistência e permutação de todas as 5 alternativas da forma.
+    9. Congelamento imutável do caderno contra mutações posteriores no banco de questões.
+  - Total da suíte: **74 testes passando em 8 arquivos de teste**.
+
+### Arquivos criados / alterados
+
+- `platform/supabase/b2b/007_avaliacoes.sql`
+- `platform/lib/b2b/assessments.ts`
+- `platform/lib/b2b/__tests__/assessments.test.ts`
+- `docs/b2b/DIARIO.md`
+
+### SQL a rodar no Supabase
+
+- Executar `platform/supabase/b2b/007_avaliacoes.sql` no SQL Editor do Supabase (aditivo e idempotente).
+
+### Como testar
+
+1. Rode a suíte de testes unitários:
+   `cd platform && npx vitest run lib/b2b/__tests__/assessments.test.ts`
+2. Verifique a tipagem estática:
+   `cd platform && npx tsc --noEmit`
+3. Execute o build de produção:
+   `cd platform && npm run build`
+
+---
+
 ## 2026-11-18 · P07 · Piloto do Motor de Geração de Questões Assistida por IA, 3 Modos e Validação por Amostragem (QB-08, QB-09, QB-13, QB-14)
 
 ### O que foi feito
