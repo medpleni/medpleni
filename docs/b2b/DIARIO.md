@@ -6,6 +6,78 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-18 · P05 · Banco de Questões Institucional, Fichas Técnicas e Fila de Revisão
+
+### O que foi feito
+
+- **Schema e Extensões Aditivas no Banco de Dados (`004_banco.sql`):**
+  - Adição de colunas não destrutivas em `public.questions`:
+    - `b2b_visibility`: `'medpleni_public'` ou `'institution_private'`.
+    - `institution_id`: vínculo com a faculdade proprietária (nulo para acervo público MedPleni).
+    - `b2b_status`: `'draft'`, `'in_review'`, `'approved'`, `'published'`, `'archived'`.
+    - Metadados de proveniência e origem: `origin_institution_name`, `origin_year`, `b2b_origin_label` (formatado estritamente como "Instituição-ano" ou "ano"), `provenance_source`, `license_type`.
+    - Proteção de itens de terceiros: `original_third_party_text` (guardado de forma protegida para conformidade e nunca exposto às instituições).
+    - Métricas psicométricas: `times_used_in_exams`, `historical_facility_p` ($p$) e `historical_point_biserial_r` ($r_{pb}$).
+  - Novas tabelas de suporte ao fluxo editorial e pedagógico:
+    - `question_reviews`: histórico de pareceres da etapa única de revisão (`approved`, `returned_with_comments`, `rejected`) com comentários pedagógicos.
+    - `question_versions`: versionamento de enunciados, gabaritos e justificativas a cada edição ou parecer.
+    - `question_disputes`: canal de contestação/inconsistência pedagógica para apontamentos diretos (QB-15).
+  - Índices compostos de alta performance para resposta sub-segundo com mais de 30 mil questões:
+    - `idx_questions_b2b_visibility_status`
+    - `idx_questions_b2b_filter_combo` (visibilidade, status, ano, imagem, uso em provas)
+    - `idx_questions_b2b_text_search` (GIN com `to_tsvector` em português sobre o enunciado)
+  - Políticas de RLS de Isolamento de Acervo por Plano (`can_access_question_b2b`):
+    - *Plano "vazia":* enxerga estritamente o banco privado da sua instituição (`institution_id = user_inst_id`).
+    - *Planos "com acervo" e "plus":* enxergam o acervo publicado MedPleni (`b2b_visibility = 'medpleni_public' AND b2b_status = 'published'`) somado ao seu próprio acervo privado.
+    - *Isolamento multi-instituição estrito:* uma instituição **nunca** enxerga questões privadas de outra instituição.
+    - *Compatibilidade B2C:* usuários não vinculados continuam acessando o catálogo público MedPleni sem quebra.
+  - Função RPC de alto desempenho `get_bank_overview_stats(p_institution_id)`: calcula em lote os quantitativos por grande área e o mapa bidimensional Área × Cenário (sem metas por célula, apenas contagem real - QB-03).
+- **Camada de Acesso e Regras de Negócio:**
+  - `platform/lib/b2b/bank-types.ts`: interfaces TypeScript completas para questões, filtros, histórico de revisões, versões e funções puras de validação de acesso (`canInstitutionAccessQuestion`), proteção de texto de terceiros (`sanitizeQuestionForInstitution`) e formatação psicométrica.
+  - `platform/lib/b2b/bank-actions.ts`: Server Actions para `getBankOverview`, `searchBankQuestionsAction` (filtros combinados), `getQuestionFullDetails`, `createDocentQuestionAction` (submissão docente com comentário obrigatório), `reviewQuestionAction` (parecer em 1 etapa) e `disputeQuestionAction`.
+- **Interface Completa em `/instituicao/banco` (`BancoClient.tsx` e `page.tsx`):**
+  - Obediência rigorosa ao limite máximo de 5 blocos visuais por tela.
+  - **Aba 1 (Visão Geral):** KPIs de acervo por plano, distribuição por área INEP e Matriz Área × Cenário (QB-03).
+  - **Aba 2 (Explorar Acervo):** Busca por texto e filtros combinados (área, cenário, tema, competência, dificuldade, ano, banca/origem, com/sem imagem, status, uso em prova - QB-04).
+  - **Aba 3 (Fila de Revisão Única):** Lista de itens pendentes com toggle "Só minha área", aprovação imediata ou devolução com apontamentos (QB-07, QB-12).
+  - **Aba 4 (Nova Questão):** Formulário docente com classificação nos 4 eixos, 5 alternativas A-E com marcação do gabarito, comentário/devolutiva obrigatória e envio automático para revisão (QB-06).
+  - **Modal de Ficha Técnica da Questão (QB-05):** Exibição do enunciado completo, alternativas com destaque verde no gabarito, justificativa detalhada, eixos taxonômicos, métricas psicométricas ($p$ e $r_{pb}$), histórico de versões e botão de contestação (QB-15).
+  - **Navegação:** Rota `/instituicao/banco` ativada como "ready" na sidebar para Dirigente, Coordenador e Docente; rota `/instituicao/banco-questoes` redireciona automaticamente para `/instituicao/banco`.
+- **Roteiro de Testes e Qualidade:**
+  - Roteiro `docs/b2b/TESTE-RLS.md` expandido com os Casos 7, 8 e 9 cobrindo o isolamento do banco.
+  - Suite de testes unitários `lib/b2b/__tests__/bank.test.ts` adicionada. Total de **45/45 testes passando no Vitest**.
+  - TypeScript compilado com 0 erros (`tsc --noEmit`).
+  - ESLint sem nenhum erro no módulo B2B.
+  - Build de produção do Next.js gerou todas as 47 rotas com sucesso.
+
+### Arquivos criados / alterados
+
+- `platform/supabase/b2b/004_banco.sql` (criado)
+- `platform/lib/b2b/bank-types.ts` (criado)
+- `platform/lib/b2b/bank-actions.ts` (criado)
+- `platform/lib/b2b/__tests__/bank.test.ts` (criado)
+- `platform/app/instituicao/banco/page.tsx` (criado)
+- `platform/app/instituicao/banco/BancoClient.tsx` (criado)
+- `platform/app/instituicao/banco-questoes/page.tsx` (criado - redirecionamento)
+- `platform/app/instituicao/components/B2BShell.tsx` (atualizado link e status para "ready")
+- `docs/b2b/TESTE-RLS.md` (atualizado com casos 7, 8 e 9)
+- `docs/b2b/DIARIO.md` (atualizado)
+
+### SQL a rodar
+
+Arquivo: `platform/supabase/b2b/004_banco.sql` (100% aditivo e idempotente).
+
+### Como testar
+
+1. **Testes automatizados:** `cd platform && npm test` (45/45 testes passando).
+2. **Build de produção:** `cd platform && npm run build` (47 rotas geradas).
+3. **Navegação:** Acessar `/instituicao/banco` como docente, dirigente ou coordenador.
+4. **Criação de Questão:** Cadastrar uma questão com comentário obrigatório na aba "Nova Questão" e verificar seu encaminhamento imediato para a Fila de Revisão.
+5. **Revisão:** Como revisor, aprovar a questão ou devolver com comentário na aba "Fila de Revisão".
+6. **Ficha Técnica e Contestação:** No Explorar, abrir a ficha completa de uma questão e submeter uma contestação pedagógica.
+
+---
+
 ## 2026-11-18 · P04 · Classificação: Área, Cenário, Tema, Competência
 
 ### O que foi feito

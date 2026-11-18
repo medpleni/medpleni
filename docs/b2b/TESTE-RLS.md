@@ -184,3 +184,66 @@ BEGIN;
   -- RESULTADO ESPERADO: Contagem total de instituições cadastradas no banco.
 ROLLBACK;
 ```
+
+---
+
+### Caso 7: Isolamento do Plano "Vazia" no Banco de Questões (P05)
+* **Hipótese:** Membro de instituição cujo plano é `'vazia'` NÃO pode ler questões do acervo MedPleni (`b2b_visibility = 'medpleni_public'`), enxergando unicamente itens privados criados pela sua própria instituição.
+* **Consulta de Teste:**
+
+```sql
+BEGIN;
+  -- Supondo que a Instituição B possua plano 'vazia'
+  SET LOCAL ROLE authenticated;
+  SET LOCAL "request.jwt.claim.sub" = '99999999-9999-9999-9999-999999999999';
+  SET LOCAL "request.jwt.claim.role" = 'authenticated';
+
+  -- Tentativa de ler questões públicas da MedPleni
+  SELECT COUNT(*) FROM public.questions
+  WHERE b2b_visibility = 'medpleni_public';
+  -- RESULTADO ESPERADO: 0 linhas.
+ROLLBACK;
+```
+
+---
+
+### Caso 8: Isolamento Estrito entre Bancos Privados de Instituições (P05)
+* **Hipótese:** A Instituição A NUNCA tem permissão de leitura sobre questões marcadas como `b2b_visibility = 'institution_private'` pertencentes à Instituição B, mesmo que o plano de A seja `'plus'`.
+* **Consulta de Teste:**
+
+```sql
+BEGIN;
+  SET LOCAL ROLE authenticated;
+  SET LOCAL "request.jwt.claim.sub" = '66666666-6666-6666-6666-666666666601'; -- Docente da FADEP
+  SET LOCAL "request.jwt.claim.role" = 'authenticated';
+
+  -- Tentativa de consultar itens privados de outra instituição
+  SELECT id, statement, institution_id 
+  FROM public.questions 
+  WHERE b2b_visibility = 'institution_private'
+    AND institution_id != '11111111-1111-1111-1111-111111111111';
+  -- RESULTADO ESPERADO: 0 linhas.
+ROLLBACK;
+```
+
+---
+
+### Caso 9: Instituição com Plano "Com Acervo" ou "Plus" (P05)
+* **Hipótese:** Docente ou Dirigente da FADEP (plano `'plus'`) enxerga o acervo MedPleni publicado (`b2b_visibility = 'medpleni_public' AND b2b_status = 'published'`) e o banco privado da sua instituição, mas não itens em rascunho de outras fontes.
+* **Consulta de Teste:**
+
+```sql
+BEGIN;
+  SET LOCAL ROLE authenticated;
+  SET LOCAL "request.jwt.claim.sub" = '66666666-6666-6666-6666-666666666601'; -- Docente da FADEP
+  SET LOCAL "request.jwt.claim.role" = 'authenticated';
+
+  SELECT b2b_visibility, b2b_status, COUNT(*)
+  FROM public.questions
+  GROUP BY b2b_visibility, b2b_status;
+  -- RESULTADO ESPERADO: 
+  -- medpleni_public: apenas status 'published'
+  -- institution_private: apenas institution_id da FADEP
+ROLLBACK;
+```
+
