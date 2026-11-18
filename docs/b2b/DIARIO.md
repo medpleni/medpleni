@@ -6,6 +6,81 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-18 · P07 · Piloto do Motor de Geração de Questões Assistida por IA, 3 Modos e Validação por Amostragem (QB-08, QB-09, QB-13, QB-14)
+
+### O que foi feito
+
+- **Schema do Motor e Governança (`006_motor_geracao.sql`):**
+  - Tabela `generation_inputs`: cadastro de insumos (Guia de Elaboração de Itens do INEP e Diretrizes/Referências Nacionais por tema médico), com citação bibliográfica, texto base e vínculo com áreas e temas canônicos.
+  - Tabela `generation_batches`: controle de lotes com modo de geração (`tema_novo`, `devolutiva_para_original`, `reescrita_terceiros`), parâmetros de amostragem (porcentagem de amostra sorteada, limite de aprovação mínima, default 80%), contadores, custo estimado em USD e status de governança (`sampling_review`, `approved_released`, `rejected`).
+  - Tabela `generated_questions`: guarda os itens gerados pelo motor com snapshot completo de prompt, modelo, insumos utilizados, validações psicométricas automatizadas (JSONB), status na amostra (`is_sample`, `sample_review_status`, `sample_review_comment`), e vínculo com a questão publicada gerada quando liberada.
+  - Seed inicial: Diretrizes Brasileiras da SBC (Insuficiência Cardíaca 2023 e Hipertensão Arterial 2020) cadastradas como insumos de referência no tema de Clínica Médica escolhido pelos médicos.
+  - Políticas de RLS estritas: visualização e criação restritas a administradores e editores MedPleni.
+- **Motor e Validação Psicométrica Automatizada (`lib/b2b/engine/`):**
+  - `quality-checker.ts` (QB-14): checagens automáticas pré-revisão:
+    1. *Alternativa correta única:* exatamente 1 alternativa com gabarito verdadeiro.
+    2. *Extensão equilibrada:* razão de tamanho entre a alternativa mais longa e a mais curta $\le 2.5$.
+    3. *Diretriz INEP:* proibição estrita de opções do tipo "todas as anteriores", "nenhuma das anteriores", "A e B estão corretas", etc.
+    4. *Comando claro:* enunciado finalizado de forma afirmativa ou interrogativa direta.
+    5. *Referência científica citada:* verificação da presença de diretriz/artigo nacional referenciado.
+    6. *Reescrita segura (QB-13):* similaridade de trigramas Jaccard com a questão de origem obrigatoriamente $< 60\%$ para blindar contra plágio e infração de direitos de terceiros, preservando vínculo rastreado com o item de origem.
+  - `generator.ts`: orquestração da síntese nos 3 modos aprovados:
+    1. `tema_novo`: gera questão inédita a partir do tema + competência + dificuldade + diretriz nacional.
+    2. `devolutiva_para_original`: extrai conceitos da devolutiva/comentário de uma questão existente para gerar 1 ou 2 novas questões originais.
+    3. `reescrita_terceiros`: reformulação integral mantendo o vínculo com o item de terceiros e resguardando que a similaridade fique abaixo de 60%.
+    - Sorteio aleatório de amostra parametrizada (ex: 20%) para conferência médica prévia.
+    - Registro de estimativa de custo de API (~$0.0042 por questão no Gemini 1.5 Flash).
+    - **Limite de segurança do piloto:** teto estrito de no máximo 20 questões por lote.
+  - `engine-actions.ts`: Server Actions para cadastro de insumos, execução do lote, revisão médica item a item da amostra e cálculo de aprovação com liberação automática para a fila normal (`b2b_status = 'in_review'`).
+  - **Regra inegociável da ESPEC atendida:** a IA nunca publica nada diretamente (`b2b_status = 'published'` é proibido para a IA). O motor gera apenas rascunhos em staging; aprovada a amostragem, o lote entra na fila de revisão humana médica (`b2b_status = 'in_review'`).
+- **Interface em `/instituicao/admin/motor` (`MotorClient.tsx`):**
+  - Acesso estritamente restrito a MedPleni Admin / Editor (`!context?.isMedPleniAdmin` redireciona para `/instituicao`).
+  - Layout limpo, sóbrio e elegante, sem "cara de IA" (paleta institucional neutra, sem gradientes roxos/ciberpunk), em 4 abas e até 5 blocos visuais por tela:
+    1. *Painel & Métricas:* estatísticas gerais, taxa de aprovação da amostra, custo total acumulado, distribuição por modo e por tema.
+    2. *Gerar Lote:* seleção intuitiva dos 3 modos, escolha da diretriz cadastrada, tema, dificuldade, tamanho do lote (com trava em 20), porcentagem de amostra e limite de aprovação.
+    3. *Validação por Amostragem:* fila de lotes aguardando conferência médica, exibição lado a lado dos itens sorteados com badges dos critérios do INEP atendidos, botões de aprovar/reprovar com comentário do médico e barra de progresso do limiar de corte do lote.
+    4. *Insumos & Diretrizes:* cadastro e listagem dos guias do INEP e diretrizes nacionais associadas às áreas e temas.
+- **Qualidade e Testes:**
+  - `lib/b2b/__tests__/engine.test.ts`: 9 testes unitários cobrindo todos os critérios do INEP (QB-14), os 3 modos de geração, taxa de similaridade em reescrita (QB-13) e a trava de segurança de até 20 questões por lote.
+  - Total da suíte B2B: 64 testes passando em 7 arquivos de teste.
+
+### Arquivos criados / alterados
+
+- `platform/supabase/b2b/006_motor_geracao.sql`
+- `platform/lib/b2b/engine/engine-types.ts`
+- `platform/lib/b2b/engine/quality-checker.ts`
+- `platform/lib/b2b/engine/generator.ts`
+- `platform/lib/b2b/engine/engine-actions.ts`
+- `platform/app/instituicao/admin/motor/page.tsx`
+- `platform/app/instituicao/admin/motor/MotorClient.tsx`
+- `platform/app/instituicao/admin/AdminInstituicaoClient.tsx`
+- `platform/lib/b2b/__tests__/engine.test.ts`
+- `docs/b2b/DIARIO.md`
+
+### SQL a rodar no Supabase
+
+- Executar `platform/supabase/b2b/006_motor_geracao.sql` no SQL Editor do Supabase (aditivo e idempotente).
+
+### Como testar
+
+1. Acesse `/instituicao/admin` com perfil de Administrador MedPleni.
+2. Clique no atalho "Motor IA (Piloto) →" ou acesse diretamente `/instituicao/admin/motor`.
+3. Na aba **Gerar Lote**:
+   - Escolha o modo 1 (*Tema Novo*), selecione a área de Clínica Médica, a diretriz pré-cadastrada da SBC (Insuficiência Cardíaca), tamanho do lote = 5 e amostra = 40% (2 questões sorteadas).
+   - Clique em "Gerar Lote de Questões".
+4. Vá para a aba **Validação por Amostragem**:
+   - Visualize os 2 itens sorteados para conferência médica com a análise automática dos critérios INEP (sem "todas as anteriores", comando claro, gabarito único, referência citada).
+   - Registre a aprovação de ambos: ao atingir a taxa exigida ($\ge 80\%$), o lote é automaticamente liberado para a Fila de Revisão humana padrão (`/instituicao/banco`).
+5. Execute os testes automatizados via terminal:
+   `cd platform && npx vitest run lib/b2b/__tests__/engine.test.ts`
+
+### Pendências
+
+- **Upload do Guia de Elaboração de Itens do INEP:** o arquivo oficial será fornecido pelo Mario; a tabela `generation_inputs` e o formulário já suportam o upload e vinculação assim que disponibilizado.
+- **Lista final de temas/cenários médicos:** aguardando envio pelo Felipe para popular toda a taxonomia do motor.
+
+---
+
 ## 2026-11-18 · P06 · Importação de Questões, Staging, Conferência Lado a Lado e Processamento de 1.000+ Questões
 
 ### O que foi feito

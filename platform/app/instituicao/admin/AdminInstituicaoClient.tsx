@@ -84,6 +84,12 @@ export default function AdminInstituicaoClient({ context, institutions }: Props)
         />
         <div className="flex items-center gap-2 self-start sm:self-auto">
           <button
+            onClick={() => router.push("/instituicao/admin/motor")}
+            className="px-3 py-2 border border-border bg-card hover:bg-muted text-foreground rounded-lg text-xs font-semibold shadow-xs"
+          >
+            Motor IA (Piloto) →
+          </button>
+          <button
             onClick={() => router.push("/instituicao/admin/classificacao")}
             className="px-3 py-2 border border-border bg-card hover:bg-muted text-foreground rounded-lg text-xs font-semibold shadow-xs"
           >
