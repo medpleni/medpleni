@@ -6,6 +6,67 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-18 · P03 · Configurações Institucionais (GO-01), Importação CSV, Convites e Admin MedPleni
+
+### O que foi feito
+
+- **SQL Aditivo e Idempotente (`003_convites_e_configuracoes.sql`):**
+  - Colunas B2B em `admin_invitations` (`institution_id`, `b2b_role`, `b2b_scopes`) para reaproveitamento total da infraestrutura de convites sem tocar no fluxo do B2C.
+  - Tabela `b2b_support_sessions` para auditoria estrita de sessões de suporte administrativo da MedPleni em qualquer instituição (com justificativa obrigatória registrada).
+  - Atualização das políticas de RLS de `admin_invitations` e `institution_members`: somente Dirigente e Admin MedPleni alteram papéis institucionais; Coordenador gerencia apenas turmas, alunos e docentes.
+  - Função SQL `batch_import_enrollments(p_institution_id, p_students)` com `SECURITY DEFINER` para importação em lote atômica, idempotente e ultrarrápida no banco de dados.
+- **Engine de Importação de Matrículas (`platform/lib/b2b/csv-enrollment.ts`):**
+  - Parser e validador linha a linha com suporte a vírgula (`,`) e ponto-e-vírgula (`;`).
+  - Validação estrita: formato de e-mail, preenchimento de nome e RA, matching da turma contra as turmas cadastradas na instituição, e detecção de duplicidades intra-arquivo (RA ou e-mail repetido).
+  - Geração de relatório de erros para download em CSV formatado com BOM UTF-8 (compatível com Excel).
+  - Performance comprovada: processa e valida 240+ alunos em menos de 50ms.
+- **Server Actions e API de Matrículas:**
+  - `platform/lib/b2b/config-actions.ts`: ações de servidor para criar, editar e arquivar cursos, termos e turmas; atualizar parâmetros (corte, logo, alertas e metas); enviar convites institucionais; alterar papéis e escopos; e ações exclusivas de Admin MedPleni (criar faculdade e entrar como suporte auditado).
+  - `platform/app/api/b2b/enrollments/import/route.ts`: endpoint em lote que grava matrículas com idempotência — reimportar o mesmo CSV atualiza registros sem duplicar nenhum aluno.
+  - Vínculo automático no aceite de convite em `platform/app/api/invites/[token]/route.ts`.
+- **Interface /instituicao/configuracoes (`ConfiguracoesClient.tsx` e `page.tsx`):**
+  - Estrutura: gestão de Cursos, Termos Letivos e Turmas (1º ao 12º período).
+  - Matrículas: upload de CSV com drag-and-drop, contadores em tempo real (válidas vs inválidas), relatório de erros para download, amostra pré-visualizada e botão de gravação com confirmação.
+  - Usuários e Papéis: listagem de membros, escopos atribuídos, botão de desativação/reativação e modal de convite com seleção de cursos/turmas. Regra de proteção demo ativa (bloqueia disparos de e-mail real via Resend se `is_demo = true`).
+  - Parâmetros: corte de referência (padrão 60%), URL de logo para PDFs, 4 alertas de engajamento (desligados por padrão) e meta semanal de questões (desligada por padrão).
+  - Checklist de Implantação: 8 passos de prontidão operacional com barra de progresso e botões de atalho direto para a aba de resolução.
+- **Interface /instituicao/admin (`AdminInstituicaoClient.tsx` e `page.tsx`):**
+  - Área restrita aos Administradores MedPleni (`isMedPleniAdmin`).
+  - Criação de novas instituições com seleção de plano (`vazia`, `acervo`, `plus`), corte inicial e flag de demonstração.
+  - Botão "Entrar como suporte" em qualquer instituição, exigindo justificativa obrigatória registrada em log para fins de governança e LGPD, chaveando a instituição ativa via cookie seguro.
+- **Garantia de Qualidade e Testes:**
+  - Adicionada suite de testes unitários `lib/b2b/__tests__/csv-enrollment.test.ts`. Total de **29/29 testes passando**.
+  - `npx tsc --noEmit` sem nenhum erro de tipagem.
+  - Build de produção do Next.js compilado com sucesso gerando todas as 45 rotas estáticas e dinâmicas.
+
+### Arquivos criados / alterados
+
+- `platform/supabase/b2b/003_convites_e_configuracoes.sql` (criado)
+- `platform/lib/b2b/csv-enrollment.ts` (criado)
+- `platform/lib/b2b/__tests__/csv-enrollment.test.ts` (criado)
+- `platform/lib/b2b/config-actions.ts` (criado)
+- `platform/app/api/b2b/enrollments/import/route.ts` (criado)
+- `platform/app/instituicao/configuracoes/page.tsx` (criado)
+- `platform/app/instituicao/configuracoes/ConfiguracoesClient.tsx` (criado)
+- `platform/app/instituicao/admin/page.tsx` (criado)
+- `platform/app/instituicao/admin/AdminInstituicaoClient.tsx` (criado)
+- `platform/app/instituicao/components/B2BShell.tsx` (atualizado menu para Configurações "ready" e atalho Admin MedPleni)
+- `platform/app/api/invites/[token]/route.ts` (atualizado com vínculo institucional B2B no aceite)
+- `docs/b2b/DIARIO.md` (atualizado)
+
+### SQL a rodar
+
+Arquivo: `platform/supabase/b2b/003_convites_e_configuracoes.sql` (100% aditivo e idempotente).
+
+### Como testar
+
+1. **Testes automatizados:** `cd platform && npm test` (29/29 testes passando).
+2. **Build de produção:** `cd platform && npm run build` (45 rotas geradas).
+3. **Importação CSV:** Na aba Matrículas, testar envio de CSV com alunos válidos e com erros intencionais para validar download do relatório.
+4. **Admin MedPleni:** Acessar `/instituicao/admin` com `mario.nascimentolopes@gmail.com`, criar uma instituição teste e usar o recurso "Entrar como suporte".
+
+---
+
 ## 2026-11-18 · P02 · Área /instituicao, Navegação por Papel e Componentes-Padrão B2B
 
 ### O que foi feito

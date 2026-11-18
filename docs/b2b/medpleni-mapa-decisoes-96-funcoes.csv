@@ -1,0 +1,97 @@
+feature_id,feature_nome,bruno,filipe,comentario_bruno,comentario_filipe,destino,acao
+EX-01,KPIs institucionais (5 cards),aprovar,aprovar,,,Mantém,
+EX-02,Seletor de avaliação de referência,discutir,discutir,,"O que é ""seletor de avaliação de referência? """,Ajusta,"Renomear e explicar na tela (ninguém entendeu ""avaliação de referência"")."
+EX-03,Mapa turma × área (heatmap),,discutir,,"Incluir essa feature do heatmap na visão do coordenador de curso. Também vale a pena ter a média final da turma (atualmente está somente por áreas). Sugerimos manter 4 faixas de cores: até 50, entre 51 e 60, entre 61 e 70, maior ou igual a 71.",Ajusta,Levar o heatmap à visão do coordenador; incluir média final da turma; 4 faixas: até 50 / 51–60 / 61–70 / ≥ 71.
+EX-04,Alertas por regra explícita,,ajustar,,Não é adequado. Sugerimos gerar alerta para notas abaixo de 60.,Ajusta,Regra única e simples: alerta para nota abaixo de 60.
+EX-05,Evolução temporal (gráfico de linhas),,aprovar,,,Mantém,
+EX-06,Plano de ação em andamento,,discutir,,,Decidir,Sem comentário; o voto mudou de aprovar para discutir. Perguntar o que incomoda.
+EX-07,Relatório executivo (modal + exportação),,aprovar,,"Serve de insumo para CPA, NDE, MEC - boa iniciativa.",Mantém,
+EX-08,Cobertura da matriz institucional,,aprovar,,,Mantém,
+RE-01,Página Régua ENAMED em 3 etapas,,aprovar,,"Sim, acho que deve ser um módulo central de posicionamento sim.",Mantém,Tratar como módulo central de posicionamento.
+RE-02,"Tabela ""como a plataforma apoia cada etapa""",,aprovar,,"Deve ter taxonomia própria sim. Entretanto, só saberemos após publicação do INEP. Independentemente disso, alunos do 1º ao 4º período podem gostar desse modelo.",Mantém,Taxonomia própria da 1ª etapa só depois da publicação do INEP.
+RE-03,"Aviso ""o que a plataforma não faz"" (sem predição de nota)",,reprovar,,Podemo vender algum tipo de previsão. Vamos ver quais.,Sai,"Sai o aviso ""sem predição"". Definir que tipo de previsão oferecer (""vamos ver quais"")."
+TC-01,"Lista de turmas com índice, participação, tendência, críticas, em acompanhamento",,aprovar,,,Mantém,
+TC-02,Competências — média institucional e por contexto de atuação,,reprovar,,"Não entendemos os 6 contextos. Sugerimos as 7 áreas (Clínica Médica, Cirurgia, Med Família, Saúde Coletiva, Saúde Mental, Pediatria, Ginecologia e Obstetrícia). E também os cenários.",Ajusta,"Refazer: trocar os ""6 contextos"" pelas 7 áreas e pelos cenários do INEP."
+TC-03,Detalhe da turma: aba Competências (agregado),,aprovar,,,Mantém,
+TC-04,"Painel da competência: distribuição, objetivos educacionais, evidências, comparação com turma paralela",,reprovar,,,Sai,Reprovado sem comentário. Confirmar o motivo antes de remover.
+TC-05,Aba Estudantes (individual) com aviso 🔒 e registro de acesso,,aprovar,,"Ver dados individuais: Dirigente, Coordenador, Professor pode ver da sua turma.",Mantém,"Regra de acesso a dado individual: dirigente, coordenador e professor da própria turma."
+TC-06,"Perfil do estudante (modal): evolução vs. turma, competências, registro de acompanhamento",,aprovar,,Está bom. Suponho que os numeros mostrados no pefil do aluno sejam a sua nota.,Mantém,Deixar explícito na tela que os números são a nota do aluno.
+TC-07,Aba Avaliações aplicadas (por turma),,ajustar,,"depois tem que definir quais as competências. Tem o rendimento de todas as áreas, mas precisa do rendimento total geral (média de todas as áreas)",Ajusta,Incluir rendimento total geral (média de todas as áreas); competências a definir.
+TC-08,"Botões ""+ Intervenção"" e ""+ Prova para a turma"" no cabeçalho da turma",,aprovar,,"Excelente layout para um Docente (para o docente, o layout precisa ser simples mesmo)",Mantém,
+AP-01,"Nome do módulo: ""Avaliação programática""",ajustar,ajustar,"Mudar o nome para ""avaliação longitudinal"", por exemplo. Aproveitamos a proposta, mas não usamos o nome ""avaliação programática"", que tem um conceito diferente","Mudar o nome para ""avaliação longitudinal"", por exemplo. Aproveitamos a proposta, mas não usamos o nome ""avaliação programática"", que tem um conceito diferente",Ajusta,"Renomear o módulo para ""Avaliação longitudinal""."
+AP-02,Mapa currículo × competência (períodos 2–12),aprovar,aprovar,,Adequado,Mantém,
+AP-03,Trilha longitudinal de uma competência (todas as turmas),aprovar,aprovar,,,Mantém,
+AP-04,Plano de acompanhamento (timeline DCN art. 36–37),ajustar,ajustar,,"Ajustar a média para 60. Ajustar a média para 60, e não 55.",Ajusta,"Usar 60 como referência, não 55."
+AP-05,Inclusão de notas de prova prática / OSCE / outras avaliações no longitudinal,discutir,discutir,Seria possível um campo aberto para o professor inserir notas de outros tipos de prova?,Seria possível um campo aberto para o professor inserir notas de outros tipos de prova? Tenho dúvidas sobre fazer isso depois mesmo. A parte de prova prática acho que devemos deixar para o futuro. Vamos nos concentrar na plataforma de avaliações teóricas.,Futuro,Prova prática fica para o futuro. Campo aberto para notas de outras provas: em discussão.
+IN-01,"Lista de intervenções com antes/depois, adesão e progresso",aprovar,aprovar,,,Mantém,
+IN-02,"Wizard ""Nova intervenção"" (lacuna → ação → verificação)",ajustar,ajustar,,"Ajustar as competências (já falado em outra feature). Além de ajustar as competências, talvez tenha muitas possibilidades de intervenção. O professor não vai usar tudo isso. Deixar no máximo 2 possibilidades. Lista de exercícios seria o principal.",Ajusta,No máximo 2 tipos de intervenção; lista de exercícios é o principal. Ajustar competências.
+IN-03,"Detalhe da intervenção: gráfico com faixa da intervenção, turma paralela, Δ, atividades com checkbox, mudar status, vincular reteste",aprovar,aprovar,,,Mantém,
+IN-04,Tipos de ação pré-definidos,discutir,discutir,,"Penso que para agora devemos diagnosticar apontando as lacunas e sugerir nova prova após intervenção institucional. Talvez a solução (intervenção pedagógica) possa ser um produto plus.  Opinião Filipe: Tem muita intervenção, fica difícil o aluno acompanhar e o professor programar essas intervenções. Acho que deveria diminuir.",Ajusta,Reduzir. Por ora: apontar lacunas e sugerir nova prova após a intervenção da instituição. Intervenção pedagógica pode ser produto plus.
+IN-05,Adesão medida pela plataforma,aprovar,aprovar,,,Mantém,
+IN-06,Reteste embutido na próxima prova,aprovar,aprovar,,,Mantém,
+TU-01,"Perfil ""Tutor(a)"" como papel separado",,reprovar,,Remover perfil Tutor.,Sai,Remover o perfil Tutor.
+TU-02,Lista de estudantes sinalizados por regra explícita,,ajustar,,Perfeito. Mas a régua deveria ser o ponto de corte com nota 60.,Ajusta,Régua = ponto de corte 60.
+TU-03,Registro de orientações e metas acordadas (histórico no perfil do aluno),,discutir,,Essa função é excelente em avaliação PRÁTICA - O professor (ou preceptor) poderia dar o FEEDBACK oralmente e o programa registra por meio escrito.,Futuro,Faz mais sentido em avaliação prática (feedback oral registrado por escrito). Futuro.
+TU-04,"KPIs de tutoria (sinalizados, com plano, orientações em 30 d, saíram do sinal)",,aprovar,,,Mantém,"Sem o perfil Tutor, os indicadores migram para o coordenador."
+PR-01,Lista de avaliações com status (rascunho → em revisão → aprovada → publicada → aplicada),,ajustar,,"Ótimo. Na versão atual, o dirigente não tem acesso. Acho que o dirigente deve ter acesso a tudo.",Ajusta,Dirigente deve ter acesso a tudo.
+PR-02,Wizard Nova avaliação — etapa Matriz,,ajustar,,"Ao abrir essa parte, clico na caixa ""Tipo"". Preciso ter opção de Simulado Enamed 4º Período, 8º ou 12º P.",Ajusta,"No campo ""Tipo"", incluir Simulado ENAMED 4º, 8º e 12º período."
+PR-03,Wizard — etapa Seleção assistida de itens,,aprovar,,,Mantém,
+PR-04,"Wizard — etapa Revisão (revisores por área, prazo, checagens automáticas)",,ajustar,,"Apenas permitir que revisores revisem questões da sua área, mas também de outras áreas. O revisor pode ter a opção de marcar uma caixa de seleção para aparecer apenas itens da sua área ou deixar aparecer itens de várias áreas.",Ajusta,"Revisor pode revisar outras áreas; caixa de seleção ""só minha área""."
+PR-05,"Wizard — etapa Publicação (data, modalidade)",,ajustar,,"Vendo essa etapa, lembrei que as questões precisam ter uma classificação entre FÁCIL, MÉDIA, DIFÍCIL - essa classificação pode ser feita pela IA, desde que nós a ensinemos como classificar.",Ajusta,"Toda questão classificada como fácil, média ou difícil; a IA classifica depois de treinada por eles."
+PR-06,Revisão de itens pela coordenação/NDE (modal),,ajustar,,"Uma revisão já é suficiente. Colocar a revisão com ""revisores"" e depois passar pela coordenação ou nde acho que é muita coisa para a instituição.",Ajusta,Uma revisão só. Tirar a segunda etapa de coordenação/NDE.
+PR-07,Caderno fixo versionado + versões embaralhadas + gabarito separado (PDF com logo da instituição),,aprovar,,"Essencial existir um gabarito com qr code e a leitura ser automática - em um scanner, ou em foto.",Mantém,Essencial: folha de respostas com QR code e leitura automática (scanner ou foto).
+PR-08,Prova aplicada: resultado por competência,,aprovar,,"Sim. Mas precisaríamos classificar as competências. Antes das competências, precisaremos classificar as questões (tem a classificação do INEP que já enviei, com área e cenário - falta a classificação clínica, que é muito grande e precisaremos de material para nos basearmos).",Mantém,"Depende de classificar as questões: área e cenário (INEP, já enviado) e a classificação clínica por tema, que ainda falta."
+PR-09,"Análise de itens (TCT): p (facilidade), discriminação, sinais",,ajustar,,"Aqui precisamos de cuidado. Precisamos ter as seguintes análises em cada prova: 1) índice de discriminação do item, 2) índice de facilidade, 3) correlação ponto-bisserial corrigida, 4) KR-20 - essas análises são muito importantes.",Ajusta,"Quatro análises obrigatórias por prova: discriminação, facilidade, ponto-bisserial corrigida e KR-20."
+PR-10,Exportação aluno × item × alternativa (com mapa de embaralhamento),,aprovar,,,Mantém,
+PR-11,Correção automática de folha de respostas em papel por foto + QR code único por aluno,,aprovar,,"Ideal é que passe no scanner e já corrija. Mas foto com celular é aceitável - problema da foto é que tem que carregar a foto na plataforma, aí demora.",Mantém,"Scanner é o ideal; foto pelo celular é aceitável, mas o envio demora."
+PR-12,Gabarito online por link/código único (modelo híbrido),,aprovar,,,Mantém,
+PR-13,Prova 100% online na plataforma (com tempo por item),,aprovar,,,Mantém,
+PR-14,Calendário de provas sugerido pela MedPleni (médicos curam provas prontas por mês),,ajustar,,"O calendário deveria ser apenas para SIMULADOS. Renato: a prestação de serviço para PREPARAR PARA ENAMED é o que tem alto valor agregado. A plataforma de questões, o mercado tem bons produtos a 8 reais por aluno - baixo custo.",Ajusta,Calendário só para simulados.
+PR-15,Importar prova própria da instituição (PDF/DOCX),,aprovar,,,Mantém,
+PR-16,Formatos discursiva/OSCE/Mini-CEX (tabela de roadmap),,ajustar,,"Retirar as avaliações práticas. Deixar apenas teórica - múltipla escolha e discursiva. A avaliação prática será excelente, mas é algo para o futuro.",Ajusta,Retirar avaliações práticas do roteiro; manter múltipla escolha e discursiva.
+QB-01,"Visão geral: disponíveis (publicadas) vs. acervo total, em revisão, produção, contestadas, aprovação editorial",,aprovar,,,Mantém,
+QB-02,Cobertura área × contexto (heatmap com metas por célula),,discutir,,O que é meta por célula 300/40?,Decidir,"Explicar ""meta por célula 300/40"" ou simplificar."
+QB-03,"Distribuição por origem (prova anterior, IA, internacional, especialista, instituição)",,ajustar,,"Sugiro apenas colocar o ANO da questão. Se foi questão de concurso, incluir. Se não foi de concurso, apenas o ano que foi construída. Então, só haveria 2 tipos de ""nome"": ""Instituição-ano"" como USP-2025 ou então ""ano"" como 2025.",Ajusta,"Rótulo de origem só em dois formatos: ""Instituição-ano"" (USP-2025) ou ""ano"" (2025)."
+QB-04,Pipeline editorial (kanban): rascunho → triagem → classificada → rev. técnica → rev. pedagógica → aprovada → publicada,,discutir,,"A revisão deve ter apenas 1 etapa. Revisão técnica + pedagógica, fica difícil. Mario: o que vai vender é se nós FORNECERMOS as questões para a instituição. O professor da instituição não quer fazer questão.",Ajusta,Revisão em uma única etapa (técnica e pedagógica juntas).
+QB-05,"Explorar itens: filtros por área, origem, status, busca por tema/competência/ID",,aprovar,,,Mantém,
+QB-06,"Ficha da questão: enunciado, alternativas, gabarito, comentário, referência, proveniência/licença, desempenho, histórico de versões, ações de status",,aprovar,,,Mantém,
+QB-07,Nova questão autoral (formulário docente),,ajustar,,"Lembrar que pelo INEP, são 2 aspectos: Área e Cenário. Além dessa classficiação, precisamos do TEMA e da COMPETÊNCIA. Precisamos desenvolver a capacidade de a IA fazer questão. Faz, mas precisa ser muito bem treinada. E apenas versões de ""alta performance"" são capazes de fazer questões adequadas. Não é fácil a IA fazer questão.",Ajusta,Classificação em dois eixos: Área e Cenário (INEP) + Tema e Competência.
+QB-08,Nova questão assistida por IA (Motor B) com controles,,aprovar,,,Mantém,
+QB-09,Motores de produção A–F (cards + fluxo detalhado),,aprovar,,,Mantém,
+QB-10,Tabela de direitos de uso por fonte,,aprovar,,,Mantém,
+QB-11,"Simulador de capacidade (brutos, aprovação, revisores, custo/item, projeção)",,aprovar,,,Mantém,
+QB-12,"Qualidade & governança: fila do Motor E (p, discriminação, contestações), revisão por diretriz vencida, política para IA",,aprovar,,"Lembrar das análises psicométricas: 1) índice de discriminação do item, 2) índice de facilidade, 3) correlação ponto-bisserial corrigida, 4) KR-20 - essas análises são muito importantes. Vamos incluir uma curva ""normal"" de distribuição das notas.",Mantém,Incluir as 4 análises psicométricas e a curva de distribuição das notas.
+QB-13,"Motor ""Devolutiva → questão original"" (geração reversa)",,aprovar,,,Mantém,
+QB-14,"Motor ""Reescrita de acervo de terceiros"" (5.000 itens de outros professores)",,aprovar,,,Mantém,
+QB-15,Banco por instituição: disponibilizar todo o acervo ou subconjunto; banco privado da instituição,,ajustar,,"Importante: para alunos, podemos ter 2 tipos de planos: apenas 1º ao 4º período o pacote completo. Para instituição, acho que precisamos disponibilizar tudo. E 35.000 questões ainda é pouco.",Ajusta,"Instituição recebe o acervo inteiro. ""35.000 questões ainda é pouco."" Para aluno: plano 1º–4º período e plano completo."
+QB-16,Alinhamento das competências à Matriz oficial INEP/MEC (substituir as 14 competências geradas por IA),,ajustar,,"Temos que ter 2 padrões: Padrão INEP: Área e Cenário.    Padrão ""geral"": Área, Tema, Competência",Ajusta,"Dois padrões de classificação: INEP (Área, Cenário) e geral (Área, Tema, Competência)."
+DO-01,"Painel do docente: itens para revisar, provas aguardando, intervenções sob responsabilidade, questões aprovadas",aprovar,aprovar,,"ótimo. Apenas lembrando que um atrativo para a instituição é o banco de questões, e nao apenas a plataforma.",Mantém,"Lembrete: o banco de questões é atrativo central, não só a plataforma."
+DO-02,Minhas turmas × competências da minha área,aprovar,discutir,,"ótimo. Mas sugiro retirar esse espaço de ""Fila de Revisão"". Fica muita coisa na tela.",Ajusta,"Tirar o bloco ""Fila de revisão"" da tela."
+DO-03,"Sugestão baseada em dados (""replicar intervenção na turma B"")",,reprovar,,Bruno: Acho que nem todos os professores podem ter autonomia para aplicar a intervenção. Filipe: acho que é uma funcionalidade pouco usada na prática. Sugiro retirar.,Sai,Remover.
+DO-04,Fila de revisão pessoal (itens IA/autorais da área),,reprovar,,"Acho que deveria ser retirado, pois fica poluída a t",Sai,Remover.
+DO-05,Explicações mais consultadas pelos estudantes,,reprovar,,"Acho desnecessária. O que importa é a análise psicométrica, rendimento dos estudantes, análises da prova. O que o estudante pesquisa é menos relevante.",Sai,Remover.
+AL-01,"Início: ""Próximo passo"" com porquê + anel da competência prioritária",,aprovar,,,Mantém,
+AL-02,Evolução pessoal vs. média da turma (sem ranking),,aprovar,,Mostrar a média da turma é interessantes sim.,Mantém,
+AL-03,"Minhas competências (ordenadas por oportunidade de ganho, ação sugerida por linha)",,aprovar,,,Mantém,
+AL-04,"Minhas avaliações + ""Revisar erros"" em modo leitura (sem cronômetro, não altera nota)",,aprovar,,,Mantém,
+AL-05,"Praticar: lista dirigida por competência com feedback, confiança, flashcard, Preceptor IA",,aprovar,,,Mantém,
+AL-06,"Meu plano até a somativa (semanas, metas acordadas, reajuste após atraso, compartilhar com tutor)",,reprovar,,"Plano até a somativa imagino que seja até a avaliação somativa pré-internato? Se for, não é necessário. Importante são as avaliações regulares, simulados. Essa somativa não é um ponto central a ser explorado não.",Sai,Remover. Foco em avaliações regulares e simulados.
+AL-07,"Agenda (provas publicadas, intervenções, somativa)",,discutir,,Ok. Nada de mais. Não sei se fica muito poluído o layout. Mas ok.,Decidir,"""Ok, nada de mais""; dúvida se polui o layout."
+GO-01,"Estrutura acadêmica (instituição, campi, curso, turmas) + importação de matrículas via CSV + checklist de implantação",,aprovar,,"Sim, é bom. Sempre lembrar de evitar telas muito cheias.",Mantém,Evitar telas cheias.
+GO-02,"Usuários & papéis (8 papéis, escopo, status)",,,,,Sem voto,
+GO-03,Matriz de permissões (capacidade × papel),,,,,Sem voto,
+GO-04,"LGPD & privacidade (base legal, isolamento, retenção, exclusão, uso agregado) + RIPD modelo",,,,,Sem voto,
+GO-05,"Exportação auditável (6 blocos, dicionário, hash) e segurança de gabaritos",,,,,Sem voto,
+GO-06,"Integrações (SIS Lyceum/TOTVS, LTI Moodle/Canvas, SSO, leitura óptica, API, webhooks)",,,,,Sem voto,
+GO-07,"Trilha de auditoria (ações relevantes, imutável)",,,,,Sem voto,
+GO-08,Isolamento por instituição (multi-tenant) + RLS,,,,,Sem voto,
+TR-01,"Seletor ""Ver como"" (8 perfis)",,,,,Sem voto,
+TR-02,Tema claro/escuro (tokens da plataforma),,,,,Sem voto,
+TR-03,White label (marca da instituição na interface e nas provas),,,,,Sem voto,
+TR-04,"Busca global (aluno, turma, questão, competência)",,,,,Sem voto,
+TR-05,"Roteiro de demonstração (8 cenas) e selo ""DEMO · dados fictícios""",,,,,Sem voto,
+TR-06,"Rótulos de honestidade (""índice interno, não nota ENAMED"", ""ilustrativo"", limites de interpretação)",,,,,Sem voto,
+CO-01,Ticket variável pelo número de alunos da instituição,aprovar,aprovar,,,Mantém,
+CO-02,Duas ofertas: plataforma com acervo MedPleni ou plataforma vazia para a faculdade construir o próprio banco,discutir,ajustar,,Considerar um produto plus com plataforma + acervo + mentoria para coordenação,Ajusta,Criar oferta plus: plataforma + acervo + mentoria à coordenação.
+CO-03,Operação do acervo inicial: separar 30–35 mil questões; reescrever ~5.000 de terceiros; treinar IA com padrão INEP; gerar por devolutiva,aprovar,aprovar,,,Mantém,
+CO-04,Escolha da identidade visual entre 10 propostas (claro/escuro),discutir,discutir,,"Bruno escreve: vamos escolher. Filipe escreve: o layout do SPR é excelente. Temos que ter cuidado para a tela não ficar muito cheia, poluída. Melhor telas elegantes e com menos informações.",Decidir,"Nenhuma das 10 telas foi votada. Referência citada: layout da SPR, telas com menos informação."

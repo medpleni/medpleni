@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MedPleni Institucional — Protótipo B2B</title>
+<meta name="description" content="Protótipo navegável da camada institucional do MedPleni (inteligência educacional para escolas médicas). Dados 100% fictícios.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════
+   MedPleni Design Tokens — conferidos em platform/app/globals.css
+   (fundo profundo #0A0E18, cards #131B2C, pulso #00C2A8, resid #0077B6)
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  --abismo:#0A0E18; --abismo-surface:#101626; --petroleo:#141C2E; --deeper:#070A10;
+  --card-bg:#131B2C; --card-border:rgba(90,125,175,.25); --sinal:rgba(78,110,155,.28); --border-subtle:rgba(78,110,155,.18);
+  --neblina:#E2E8F0; --chumbo:#94A3B8; --muted:rgba(148,163,184,.7); --heading:#FFFFFF;
+  --pulso:#00C2A8; --pulso-light:#33DEC7; --pulso-dim:rgba(0,194,168,.12);
+  --resid:#0077B6; --resid-light:#64B5E8; --resid-dim:rgba(0,119,182,.16);
+  --indigo:#6B5CE7; --indigo-light:#A99EF5; --ambar:#C98A0A;
+  --danger:#FF6B6B; --danger-bg:rgba(255,107,107,.12);
+  --warn:#F5A623; --warn-bg:rgba(245,166,35,.12);
+  --success:#22C55E; --success-bg:rgba(34,197,94,.12);
+  --input-bg:#0C1220; --input-border:rgba(90,125,175,.3); --pill-bg:rgba(43,58,82,.5);
+  --sidebar-bg:#0A0E18; --topbar-bg:rgba(10,14,24,.92);
+  --r-sm:4px; --r-md:8px; --r-lg:10px; --r-xl:14px;
+  --font-display:'IBM Plex Sans Condensed','Arial Narrow',sans-serif;
+  --font-ui:'Inter',system-ui,sans-serif;
+  --font-mono:'IBM Plex Mono','SFMono-Regular',Menlo,monospace;
+  --sidebar-w:248px;
+}
+
+:root{--callout-warn:#f7d08a;--callout-crit:#ffb3b3;--callout-info:#b9dcf2;--callout-ok:#a7e9bd;--callout-teal:#9fe8dc;--heat-empty:#1b2436;--grid:rgba(78,110,155,.18)}
+/* ── Tema claro — tokens copiados de platform/app/globals.css ([data-theme="light"]) ── */
+[data-theme="light"]{
+  --abismo:#F4F7FB; --abismo-surface:#EAEEF5; --petroleo:#FFFFFF; --deeper:#E2E8F0;
+  --sinal:#E2E8F0; --border-subtle:#CBD5E1;
+  --neblina:#0F172A; --chumbo:#475569; --muted:#64748B; --heading:#090D16;
+  --card-bg:#FFFFFF; --card-border:#E2E8F0; --sidebar-bg:#FFFFFF; --topbar-bg:rgba(255,255,255,.95);
+  --input-bg:#F8FAFC; --input-border:#CBD5E1; --pill-bg:#EDF2F7;
+  --pulso:#008F7C; --pulso-light:#00A893; --pulso-dim:rgba(0,143,124,.1);
+  --resid:#0284C7; --resid-light:#0369A1; --resid-dim:rgba(2,132,199,.1);
+  --indigo:#5B4DF0; --indigo-light:#4338CA; --ambar:#B45309;
+  --danger:#DC2626; --danger-bg:rgba(220,38,38,.08); --warn:#D97706; --warn-bg:rgba(217,119,6,.08);
+  --success:#16A34A; --success-bg:rgba(22,163,74,.08);
+  --callout-warn:#92400E; --callout-crit:#991B1B; --callout-info:#075985; --callout-ok:#166534; --callout-teal:#065F55;
+  --heat-empty:#E2E8F0; --grid:rgba(71,85,105,.18);
+  color-scheme:light;
+}
+[data-theme="light"] .card{box-shadow:0 2px 8px rgba(15,23,42,.05),0 1px 2px rgba(15,23,42,.03)}
+[data-theme="light"] .brand .logo{color:#fff}
+[data-theme="light"] .btn.primary{color:#fff}
+[data-theme="light"] .steps .st.on .n{color:#fff}
+[data-theme="light"] ::-webkit-scrollbar-thumb{background:#CBD5E1}
+[data-theme="light"] .heat .hc{color:#fff}
+[data-theme="light"] .toast{background:#fff;color:var(--neblina)}
+[data-theme="light"] .modal{box-shadow:0 30px 80px rgba(15,23,42,.25)}
+[data-theme="light"] .drawer{box-shadow:-20px 0 60px rgba(15,23,42,.15)}
+[data-theme="light"] .tb tr:hover td{background:rgba(2,132,199,.05)}
+[data-theme="light"] .nav a:hover{background:var(--abismo-surface)}
+.theme-btn{width:36px;height:36px;border-radius:var(--r-md);background:var(--input-bg);border:1px solid var(--sinal);display:grid;place-items:center;color:#F5A623;transition:.15s}
+.theme-btn:hover{border-color:var(--pulso)}
+[data-theme="light"] .theme-btn{color:#6B5CE7}
+.theme-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+html{transition:background-color .2s ease,color .2s ease}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--abismo);color:var(--neblina);font-family:var(--font-ui);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--font-display);color:var(--heading);font-weight:600;letter-spacing:.01em;line-height:1.15}
+h1{font-size:28px}h2{font-size:21px}h3{font-size:17px}h4{font-size:15px}
+.mono{font-family:var(--font-mono)}
+a{color:var(--pulso)}
+button{font-family:inherit;cursor:pointer}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#1f2a40;border-radius:6px}::-webkit-scrollbar-track{background:transparent}
+
+/* ── Layout ─────────────────────────────── */
+#app{display:grid;grid-template-columns:var(--sidebar-w) 1fr;grid-template-rows:56px 1fr;height:100vh}
+.sidebar{grid-row:1/3;background:var(--sidebar-bg);border-right:1px solid var(--sinal);display:flex;flex-direction:column;overflow:hidden}
+.topbar{grid-column:2;background:var(--topbar-bg);backdrop-filter:blur(8px);border-bottom:1px solid var(--sinal);display:flex;align-items:center;gap:14px;padding:0 20px;position:sticky;top:0;z-index:20}
+.main{grid-column:2;overflow:auto;padding:22px 26px 60px;position:relative}
+.brand{display:flex;align-items:center;gap:10px;padding:16px 18px 12px;border-bottom:1px solid var(--border-subtle)}
+.brand .logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--pulso),var(--resid));display:grid;place-items:center;font-family:var(--font-display);font-weight:700;color:#06111a;font-size:17px}
+.brand .name{font-family:var(--font-display);font-size:19px;font-weight:700;color:var(--heading);line-height:1}
+.brand .sub{font-size:10.5px;color:var(--chumbo);letter-spacing:.14em;text-transform:uppercase;font-family:var(--font-mono);margin-top:3px}
+.inst-switch{margin:12px 14px 6px;padding:10px 12px;background:var(--abismo-surface);border:1px solid var(--border-subtle);border-radius:var(--r-md);font-size:12px}
+.inst-switch b{display:block;font-size:12.5px;color:var(--heading)}
+.inst-switch span{color:var(--chumbo);font-size:11px}
+.nav{flex:1;overflow:auto;padding:8px 10px}
+.nav .grp{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:12px 10px 5px;font-family:var(--font-mono)}
+.nav a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--r-md);color:var(--chumbo);text-decoration:none;font-size:13.5px;font-weight:500;margin-bottom:1px;border:1px solid transparent}
+.nav a svg{width:17px;height:17px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav a:hover{background:var(--abismo-surface);color:var(--neblina)}
+.nav a.active{background:var(--pulso-dim);color:var(--pulso);border-color:rgba(0,194,168,.25)}
+.nav a .cnt{margin-left:auto;font-family:var(--font-mono);font-size:10.5px;background:var(--pill-bg);padding:1px 7px;border-radius:10px;color:var(--chumbo)}
+.nav a.active .cnt{background:rgba(0,194,168,.2);color:var(--pulso)}
+.nav a.locked{opacity:.45}
+.sidebar .foot{padding:10px 14px;border-top:1px solid var(--border-subtle);font-size:11px;color:var(--muted)}
+.demo-pill{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:20px;background:var(--warn-bg);color:var(--warn);font-size:11px;font-family:var(--font-mono);border:1px solid rgba(245,166,35,.3)}
+.role-switch{display:flex;align-items:center;gap:8px;margin-left:auto}
+.role-switch select,.sel{background:var(--input-bg);border:1px solid var(--input-border);color:var(--neblina);border-radius:var(--r-md);padding:6px 10px;font-size:13px;font-family:inherit}
+.topbar .crumb{color:var(--chumbo);font-size:13px}
+.topbar .crumb b{color:var(--heading);font-weight:600}
+.search{display:flex;align-items:center;gap:8px;background:var(--input-bg);border:1px solid var(--input-border);border-radius:var(--r-md);padding:5px 10px;width:300px}
+.search input{background:transparent;border:0;color:var(--neblina);outline:0;width:100%;font-family:inherit;font-size:13px}
+.iconbtn{background:transparent;border:1px solid var(--input-border);color:var(--chumbo);border-radius:var(--r-md);width:34px;height:34px;display:grid;place-items:center}
+.iconbtn:hover{color:var(--heading);border-color:var(--pulso)}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--resid-dim);color:var(--resid-light);display:grid;place-items:center;font-weight:600;font-size:12px;border:1px solid rgba(100,181,232,.3)}
+
+/* ── Page header ───────────────────────── */
+.ph{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.ph .t small{display:block;color:var(--chumbo);font-size:12.5px;margin-top:4px;max-width:720px}
+.ph .eyebrow{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--pulso);margin-bottom:6px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* ── Buttons ───────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:var(--r-md);border:1px solid var(--input-border);background:var(--abismo-surface);color:var(--neblina);font-size:13px;font-weight:500;transition:.15s}
+.btn:hover{border-color:var(--pulso);color:var(--heading)}
+.btn.primary{background:var(--pulso);color:#06111a;border-color:var(--pulso);font-weight:600}
+.btn.primary:hover{background:var(--pulso-light)}
+.btn.resid{background:var(--resid);border-color:var(--resid);color:#fff}
+.btn.danger{color:var(--danger);border-color:rgba(255,107,107,.35)}
+.btn.ghost{background:transparent}
+.btn.sm{padding:5px 10px;font-size:12px}
+.btn.xs{padding:3px 8px;font-size:11.5px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ── Cards / grid ───────────────────────── */
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g5{grid-template-columns:repeat(5,1fr)}
+.g-2-1{grid-template-columns:2fr 1fr}.g-1-2{grid-template-columns:1fr 2fr}.g-3-2{grid-template-columns:3fr 2fr}
+.card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--r-xl);padding:16px 18px;box-shadow:0 4px 20px rgba(0,0,0,.35)}
+.card.flat{box-shadow:none}
+.card .ch{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.card .ch h3{font-size:16px}
+.card .ch .hint{font-size:11.5px;color:var(--muted)}
+.kpi{padding:14px 16px}
+.kpi .lbl{font-size:11.5px;color:var(--chumbo);text-transform:uppercase;letter-spacing:.08em;font-family:var(--font-mono)}
+.kpi .val{font-family:var(--font-display);font-size:30px;font-weight:700;color:var(--heading);margin:4px 0 2px;line-height:1}
+.kpi .val small{font-size:14px;color:var(--chumbo);font-weight:500}
+.kpi .delta{font-size:12px;color:var(--chumbo)}
+.kpi .delta.up{color:var(--success)}.kpi .delta.down{color:var(--danger)}
+/* bordas laterais coloridas dos KPIs removidas a pedido (19/10) */
+.kpi.click{cursor:pointer}.kpi.click:hover{border-color:var(--pulso)}
+
+/* ── Badges / tags ─────────────────────── */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;font-family:var(--font-mono);letter-spacing:.02em;white-space:nowrap}
+.b-ok{background:var(--success-bg);color:var(--success)}
+.b-warn{background:var(--warn-bg);color:var(--warn)}
+.b-crit{background:var(--danger-bg);color:var(--danger)}
+.b-info{background:var(--resid-dim);color:var(--resid-light)}
+.b-teal{background:var(--pulso-dim);color:var(--pulso)}
+.b-indigo{background:rgba(107,92,231,.18);color:var(--indigo-light)}
+.b-mute{background:var(--pill-bg);color:var(--chumbo)}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.tag{display:inline-block;padding:2px 7px;border-radius:5px;background:var(--pill-bg);color:var(--chumbo);font-size:11px;margin:2px 3px 2px 0}
+
+/* ── Tables ─────────────────────────────── */
+table.tb{width:100%;border-collapse:collapse;font-size:13px}
+.tb th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--chumbo);font-family:var(--font-mono);font-weight:500;padding:8px 10px;border-bottom:1px solid var(--sinal);white-space:nowrap}
+.tb td{padding:9px 10px;border-bottom:1px solid var(--border-subtle);vertical-align:middle}
+.tb tr:hover td{background:rgba(78,110,155,.07)}
+.tb tr.click{cursor:pointer}
+.tb td.num,.tb th.num{text-align:right;font-family:var(--font-mono)}
+.tb th.sortable{cursor:pointer}.tb th.sortable:hover{color:var(--heading)}
+.tb .sub{display:block;font-size:11.5px;color:var(--muted)}
+
+/* ── Forms ─────────────────────────────── */
+.fld{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.fld label{font-size:12px;color:var(--chumbo);font-weight:500}
+.fld input,.fld select,.fld textarea{background:var(--input-bg);border:1px solid var(--input-border);color:var(--neblina);border-radius:var(--r-md);padding:8px 10px;font-family:inherit;font-size:13px;outline:0}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--pulso)}
+.fld textarea{min-height:80px;resize:vertical}
+.chk{display:flex;align-items:center;gap:8px;font-size:13px;padding:6px 0;cursor:pointer}
+.chk input{accent-color:var(--pulso)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.filters .sel{min-width:150px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:4px 11px;border-radius:20px;border:1px solid var(--input-border);background:transparent;color:var(--chumbo);font-size:12px}
+.chip.on{background:var(--pulso-dim);border-color:var(--pulso);color:var(--pulso)}
+
+/* ── Tabs ──────────────────────────────── */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--sinal);margin-bottom:16px;overflow:auto}
+.tabs button{background:transparent;border:0;border-bottom:2px solid transparent;color:var(--chumbo);padding:9px 14px;font-size:13px;font-weight:500;white-space:nowrap}
+.tabs button.on{color:var(--pulso);border-bottom-color:var(--pulso)}
+.tabs button:hover{color:var(--heading)}
+
+/* ── Progress / bars ────────────────────── */
+.bar{height:7px;background:var(--pill-bg);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--pulso);border-radius:6px}
+.bar.thin{height:4px}
+.bar i.warn{background:var(--warn)}.bar i.crit{background:var(--danger)}.bar i.ok{background:var(--success)}.bar i.resid{background:var(--resid)}
+.rowbar{display:grid;grid-template-columns:150px 1fr 48px;gap:10px;align-items:center;padding:5px 0;font-size:12.5px}
+.rowbar .n{text-align:right;font-family:var(--font-mono);color:var(--chumbo)}
+
+/* ── Heatmap ───────────────────────────── */
+.heat{display:grid;gap:4px}
+.heat .hc{height:38px;border-radius:6px;display:grid;place-items:center;font-family:var(--font-mono);font-size:12px;cursor:pointer;color:#fff;transition:.1s;border:1px solid transparent}
+.heat .hc:hover{border-color:#fff;transform:scale(1.04)}
+.heat .hl{font-size:11.5px;color:var(--chumbo);display:flex;align-items:center;padding-right:6px;white-space:nowrap}
+.heat .ht{font-size:10.5px;color:var(--chumbo);text-align:center;font-family:var(--font-mono);padding-bottom:4px;line-height:1.1}
+
+/* ── Alerts / callouts ─────────────────── */
+.callout{border-radius:var(--r-lg);padding:12px 14px;font-size:13px;border:1px solid;display:flex;gap:10px;align-items:flex-start}
+.callout.warn{background:var(--warn-bg);border-color:rgba(245,166,35,.3);color:var(--callout-warn)}
+.callout.crit{background:var(--danger-bg);border-color:rgba(255,107,107,.3);color:var(--callout-crit)}
+.callout.info{background:var(--resid-dim);border-color:rgba(100,181,232,.3);color:var(--callout-info)}
+.callout.ok{background:var(--success-bg);border-color:rgba(34,197,94,.3);color:var(--callout-ok)}
+.callout.teal{background:var(--pulso-dim);border-color:rgba(0,194,168,.3);color:var(--callout-teal)}
+.callout b{color:inherit;font-weight:700}
+.alert-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border-subtle);cursor:pointer}
+.alert-item:last-child{border-bottom:0}
+.alert-item:hover .ttl{color:var(--pulso)}
+.alert-item .ttl{font-weight:600;color:var(--heading);font-size:13px}
+.alert-item .ds{font-size:12px;color:var(--chumbo)}
+
+/* ── Timeline / steps ──────────────────── */
+.steps{display:flex;gap:0;align-items:center;margin-bottom:18px;overflow:auto}
+.steps .st{display:flex;align-items:center;gap:8px;padding:8px 12px;color:var(--chumbo);font-size:12.5px;white-space:nowrap;cursor:pointer}
+.steps .st .n{width:24px;height:24px;border-radius:50%;border:1px solid var(--input-border);display:grid;place-items:center;font-family:var(--font-mono);font-size:11px}
+.steps .st.on{color:var(--heading)}.steps .st.on .n{background:var(--pulso);color:#06111a;border-color:var(--pulso)}
+.steps .st.done .n{background:var(--success-bg);color:var(--success);border-color:var(--success)}
+.steps .sep{width:28px;height:1px;background:var(--sinal);flex:none}
+.pipe{display:flex;gap:8px;overflow:auto;padding-bottom:6px}
+.pipe .col{min-width:210px;flex:1;background:var(--abismo-surface);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:10px}
+.pipe .col h4{font-size:12.5px;display:flex;justify-content:space-between;color:var(--chumbo);margin-bottom:8px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.06em}
+.pipe .it{background:var(--card-bg);border:1px solid var(--card-border);border-radius:var(--r-md);padding:9px 10px;margin-bottom:7px;font-size:12.5px;cursor:pointer}
+.pipe .it:hover{border-color:var(--pulso)}
+.pipe .it .m{font-size:11px;color:var(--muted);font-family:var(--font-mono);margin-top:4px;display:flex;gap:6px;flex-wrap:wrap}
+.tl{position:relative;padding-left:22px}
+.tl:before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:1px;background:var(--sinal)}
+.tl .ev{position:relative;padding:4px 0 14px}
+.tl .ev:before{content:"";position:absolute;left:-19px;top:9px;width:9px;height:9px;border-radius:50%;background:var(--pulso);border:2px solid var(--abismo)}
+.tl .ev.warn:before{background:var(--warn)}.tl .ev.crit:before{background:var(--danger)}.tl .ev.ok:before{background:var(--success)}.tl .ev.mute:before{background:var(--chumbo)}
+.tl .ev .d{font-family:var(--font-mono);font-size:11px;color:var(--muted)}
+.tl .ev .t{font-weight:600;color:var(--heading);font-size:13px}
+.tl .ev .x{font-size:12.5px;color:var(--chumbo)}
+
+/* ── Modal / drawer / toast ────────────── */
+.ov{position:fixed;inset:0;background:rgba(3,6,12,.72);backdrop-filter:blur(3px);z-index:50;display:none;align-items:center;justify-content:center;padding:20px}
+.ov.open{display:flex}
+.modal{background:var(--petroleo);border:1px solid var(--card-border);border-radius:var(--r-xl);width:min(880px,100%);max-height:92vh;overflow:auto;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.modal.wide{width:min(1100px,100%)}
+.modal.narrow{width:min(560px,100%)}
+.modal .mh{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--sinal);position:sticky;top:0;background:var(--petroleo);z-index:2}
+.modal .mb{padding:18px 20px}
+.modal .mf{display:flex;justify-content:flex-end;gap:8px;padding:14px 20px;border-top:1px solid var(--sinal);position:sticky;bottom:0;background:var(--petroleo)}
+.drawer{position:fixed;top:0;right:-420px;width:400px;height:100vh;background:var(--petroleo);border-left:1px solid var(--card-border);z-index:60;transition:right .25s;display:flex;flex-direction:column;box-shadow:-20px 0 60px rgba(0,0,0,.5)}
+.drawer.open{right:0}
+.drawer .dh{padding:16px 18px;border-bottom:1px solid var(--sinal);display:flex;justify-content:space-between;align-items:center}
+.drawer .db{padding:14px 18px;overflow:auto;flex:1}
+.scene{padding:12px;border:1px solid var(--border-subtle);border-radius:var(--r-lg);margin-bottom:10px;cursor:pointer;background:var(--abismo-surface)}
+.scene:hover{border-color:var(--pulso)}
+.scene.on{border-color:var(--pulso);background:var(--pulso-dim)}
+.scene .sn{font-family:var(--font-mono);font-size:10.5px;color:var(--pulso);letter-spacing:.1em}
+.scene .st{font-weight:600;color:var(--heading);font-size:13.5px;margin:2px 0}
+.scene .sd{font-size:12px;color:var(--chumbo)}
+#toasts{position:fixed;bottom:22px;right:22px;z-index:100;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--petroleo);border:1px solid var(--card-border);border-left:3px solid var(--pulso);color:var(--neblina);padding:11px 14px;border-radius:var(--r-md);font-size:13px;min-width:260px;max-width:380px;box-shadow:0 10px 30px rgba(0,0,0,.5);animation:tin .2s ease}
+.toast.warn{border-left-color:var(--warn)}.toast.crit{border-left-color:var(--danger)}.toast.ok{border-left-color:var(--success)}
+@keyframes tin{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}
+.empty{text-align:center;padding:36px 16px;color:var(--chumbo);border:1px dashed var(--input-border);border-radius:var(--r-lg)}
+.empty b{display:block;color:var(--heading);font-family:var(--font-display);font-size:17px;margin-bottom:4px}
+
+/* ── Misc ───────────────────────────────── */
+.muted{color:var(--chumbo)}.small{font-size:12px}.xs{font-size:11px}.tiny{font-size:10.5px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.sb{justify-content:space-between}
+.mt{margin-top:14px}.mb{margin-bottom:14px}.mt8{margin-top:8px}.mb8{margin-bottom:8px}
+.sec{margin-top:22px}
+.kv{display:grid;grid-template-columns:140px 1fr;gap:4px 12px;font-size:12.5px}
+.kv dt{color:var(--chumbo)}.kv dd{color:var(--neblina)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--chumbo)}
+.legend i{width:10px;height:10px;border-radius:2px;display:inline-block;margin-right:5px;vertical-align:-1px}
+.score{font-family:var(--font-display);font-weight:700;font-size:22px;color:var(--heading)}
+.ring{position:relative;width:86px;height:86px}
+.ring svg{transform:rotate(-90deg)}
+.ring .rv{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--heading)}
+.q-opt{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--input-border);border-radius:var(--r-md);margin-bottom:7px;cursor:pointer;font-size:13.5px}
+.q-opt:hover{border-color:var(--pulso)}
+.q-opt.sel{border-color:var(--pulso);background:var(--pulso-dim)}
+.q-opt.ok{border-color:var(--success);background:var(--success-bg)}
+.q-opt.bad{border-color:var(--danger);background:var(--danger-bg)}
+.q-opt .l{font-family:var(--font-mono);font-weight:600;color:var(--pulso);flex:none}
+.svgchart{width:100%;height:auto;display:block}
+.pill-row{display:flex;gap:6px;flex-wrap:wrap}
+.note{font-size:11.5px;color:var(--muted);font-style:italic}
+.stat-list{display:flex;flex-direction:column;gap:6px}
+.stat-list .si{display:flex;justify-content:space-between;font-size:12.5px;padding:5px 0;border-bottom:1px solid var(--border-subtle)}
+.stat-list .si b{font-family:var(--font-mono);font-weight:500;color:var(--heading)}
+.kanban-count{font-family:var(--font-mono);color:var(--heading)}
+.perm{display:grid;grid-template-columns:200px repeat(6,1fr);font-size:12px}
+.perm div{padding:7px 8px;border-bottom:1px solid var(--border-subtle)}
+.perm .h{font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--chumbo)}
+.perm .y{color:var(--success);text-align:center}.perm .n{color:var(--muted);text-align:center}.perm .p{color:var(--warn);text-align:center}
+.spark{display:inline-block;vertical-align:middle}
+.scenario-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.scenario-grid input{width:100%}
+.engine{border:1px solid var(--card-border);border-radius:var(--r-lg);padding:12px;background:var(--abismo-surface)}
+.engine h4{display:flex;justify-content:space-between;align-items:center}
+.engine .e-id{font-family:var(--font-mono);color:var(--pulso);font-size:11px;letter-spacing:.1em}
+.engine p{font-size:12.5px;color:var(--chumbo);margin:6px 0}
+.mobile-only{display:none}
+
+@media (max-width:1180px){.g4,.g5{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}.g-2-1,.g-1-2,.g-3-2{grid-template-columns:1fr}.perm{grid-template-columns:140px repeat(6,1fr)}}
+@media (max-width:860px){
+  #app{grid-template-columns:1fr}
+  .sidebar{position:fixed;left:-270px;top:0;width:260px;z-index:70;transition:left .2s;height:100vh}
+  .sidebar.open{left:0}
+  .topbar,.main{grid-column:1}
+  .search{display:none}
+  .topbar{gap:8px;padding:0 10px}.role-switch{gap:6px}.role-switch .xs{display:none}.role-switch select{max-width:132px;font-size:12px;padding:5px 6px}.crumb{font-size:12px;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.avatar{width:28px;height:28px}
+  .mobile-only{display:inline-grid}
+  .g2,.g3,.g4,.g5{grid-template-columns:1fr}
+  .main{padding:14px 14px 80px}
+  .drawer{width:100%;right:-100%}
+  .scenario-grid{grid-template-columns:1fr 1fr}
+  .rowbar{grid-template-columns:110px 1fr 44px}
+  .heat .hc{height:32px;font-size:10.5px}
+}
+@media print{.sidebar,.topbar,#toasts{display:none}.main{padding:0}}
+</style>
+</head>
+<body>
+<script>try{var t=localStorage.getItem('medpleni_theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<div id="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo">M</div>
+      <div><div class="name">MedPleni</div><div class="sub">Institucional</div></div>
+    </div>
+    <div class="inst-switch"><b id="instName">—</b><span id="instMeta">—</span></div>
+    <nav class="nav" id="nav"></nav>
+    <div class="foot"><span class="demo-pill">● DEMO · dados fictícios</span><div class="mt8 tiny">Protótipo conceitual. Não é software em produção; papéis e permissões são simulados na interface.</div></div>
+  </aside>
+  <header class="topbar">
+    <button class="iconbtn mobile-only" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+    <div class="crumb" id="crumb"><b>Visão executiva</b></div>
+    <div class="search"><span class="muted">⌕</span><input id="gsearch" placeholder="Buscar aluno, turma, questão, competência… (ex.: Q-10241, Atenção Psicossocial)" onkeydown="if(event.key==='Enter')globalSearch(this.value)"></div>
+    <div class="role-switch">
+      <span class="xs muted">Ver como</span>
+      <select id="roleSel" onchange="setRole(this.value)"></select>
+      <button class="btn sm" onclick="openDemoGuide()" title="Roteiro de demonstração">▶ Roteiro</button>
+      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" aria-label="Alternar tema claro/escuro"></button>
+      <div class="avatar" id="avatar">RD</div>
+    </div>
+  </header>
+  <main class="main" id="view"></main>
+</div>
+
+<div class="ov" id="ov" onclick="if(event.target===this)closeModal()"><div class="modal" id="modal"></div></div>
+<div class="drawer" id="drawer"><div class="dh"><div><div class="eyebrow" style="font-family:var(--font-mono);font-size:10.5px;letter-spacing:.14em;color:var(--pulso)">ROTEIRO DA DEMONSTRAÇÃO</div><h3>8 cenas · ~25 min</h3></div><button class="iconbtn" onclick="document.getElementById('drawer').classList.remove('open')">✕</button></div><div class="db" id="drawerBody"></div></div>
+<div id="toasts"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   PARTE 1 — DADOS SIMULADOS (todos fictícios, gerados com seed)
+   ═══════════════════════════════════════════════════════════ */
+// RNG determinístico (mulberry32) → dados reproduzíveis
+function mkRng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const rng=mkRng(20261019);
+const rnd=(a,b)=>a+rng()*(b-a);
+const rndn=(m,s)=>{let u=0,v=0;while(u===0)u=rng();while(v===0)v=rng();return m+s*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)};
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const pick=a=>a[Math.floor(rng()*a.length)];
+const r1=x=>Math.round(x*10)/10;
+const hsh=str=>{let h=0;for(const ch of String(str))h=(h*31+ch.charCodeAt(0))>>>0;return (h%1000)/1000};
+const pct=x=>Math.round(x)+'%';
+const fmt=n=>n.toLocaleString('pt-BR');
+
+const INST={nome:'Faculdade de Medicina Vale do Ipê',sigla:'FAMVI',cidade:'Ipêlândia (fictícia)',campi:['Campus Centro','Campus Norte'],vagas:120,alunos:0,conceitoDemo:'2 (fictício)',
+  contrato:'Plano Institucional · piloto 2026.2'};
+
+// Taxonomia — 7 áreas de formação e 6 contextos conforme Matriz de Referência Comum (Portaria Inep 478/2025, nomenclatura via fontes secundárias; conferir texto oficial)
+const AREAS=[
+ {id:'CM',nome:'Clínica Médica',cor:'#0077B6'},
+ {id:'CG',nome:'Cirurgia Geral',cor:'#6B5CE7'},
+ {id:'GO',nome:'Ginecologia e Obstetrícia',cor:'#D96AA7'},
+ {id:'PED',nome:'Pediatria',cor:'#F5A623'},
+ {id:'MFC',nome:'Medicina de Família e Comunidade',cor:'#22C55E'},
+ {id:'SM',nome:'Saúde Mental',cor:'#FF6B6B'},
+ {id:'SC',nome:'Saúde Coletiva',cor:'#00C2A8'}];
+const AREA=Object.fromEntries(AREAS.map(a=>[a.id,a]));
+const CONTEXTOS=['Atenção Primária','Urgência e Emergência','Materno-Infantil','Atenção Psicossocial','Doenças Crônicas','Reabilitação'];
+// Competências da matriz INSTITUCIONAL (fictícia), cada uma mapeada a área/contexto da Matriz de Referência.
+// Nota: o nº oficial de competências da Matriz Inep não foi confirmado em fonte primária — este é um mapa institucional de demonstração.
+const COMPS=[
+ {id:'C01',nome:'Cuidado da pessoa adulta com doença crônica',area:'CM',ctx:'Doenças Crônicas',per:[5,6,7,9]},
+ {id:'C02',nome:'Urgências clínicas do adulto',area:'CM',ctx:'Urgência e Emergência',per:[7,8,11]},
+ {id:'C03',nome:'Abdome agudo e trauma',area:'CG',ctx:'Urgência e Emergência',per:[7,8,10]},
+ {id:'C04',nome:'Avaliação pré e pós-operatória',area:'CG',ctx:'Doenças Crônicas',per:[6,8,10]},
+ {id:'C05',nome:'Pré-natal e parto de risco habitual',area:'GO',ctx:'Materno-Infantil',per:[6,8,11]},
+ {id:'C06',nome:'Saúde da mulher na atenção primária',area:'GO',ctx:'Atenção Primária',per:[4,6,9]},
+ {id:'C07',nome:'Puericultura, crescimento e desenvolvimento',area:'PED',ctx:'Materno-Infantil',per:[4,6,9]},
+ {id:'C08',nome:'Urgências pediátricas',area:'PED',ctx:'Urgência e Emergência',per:[8,11]},
+ {id:'C09',nome:'Cuidado longitudinal e coordenação na APS',area:'MFC',ctx:'Atenção Primária',per:[2,4,6,9]},
+ {id:'C10',nome:'Transtornos mentais comuns na APS',area:'SM',ctx:'Atenção Psicossocial',per:[4,6,8]},
+ {id:'C11',nome:'Crise e urgência psiquiátrica',area:'SM',ctx:'Atenção Psicossocial',per:[8,11]},
+ {id:'C12',nome:'Epidemiologia, vigilância e indicadores',area:'SC',ctx:'Atenção Primária',per:[2,4,8]},
+ {id:'C13',nome:'Políticas de saúde, SUS e gestão',area:'SC',ctx:'Atenção Primária',per:[2,4,12]},
+ {id:'C14',nome:'Reabilitação e cuidados paliativos',area:'CM',ctx:'Reabilitação',per:[8,10,12]}];
+const COMP=Object.fromEntries(COMPS.map(c=>[c.id,c]));
+// Objetivos educacionais ilustrativos por competência (3 cada) — usados no diagnóstico de lacunas
+const OBJ={C10:['Rastrear depressão e ansiedade com instrumentos validados na APS','Indicar e titular ISRS no primeiro episódio depressivo','Reconhecer risco de suicídio e estruturar plano de segurança'],
+ C12:['Calcular e interpretar incidência, prevalência e letalidade','Interpretar medidas de associação (RR, OR) e vieses','Notificar agravos e aplicar fluxos de vigilância'],
+ C02:['Abordagem inicial da sepse e choque','Manejo da síndrome coronariana aguda','Distúrbios ácido-base e hidroeletrolíticos'],
+ C11:['Manejo da agitação psicomotora','Avaliação do risco de suicídio na emergência','Intoxicação e abstinência de álcool'],
+ C13:['Princípios e diretrizes do SUS','Financiamento e regionalização','Atenção Primária como ordenadora da rede'],
+ C05:['Rotina de pré-natal de risco habitual','Síndromes hipertensivas da gestação','Assistência ao parto e puerpério']};
+const objFor=c=>OBJ[c]||['Objetivo educacional 1 (demonstrativo)','Objetivo educacional 2 (demonstrativo)','Objetivo educacional 3 (demonstrativo)'];
+
+const DOCENTES=[
+ {id:'d1',nome:'Profa. Dra. Helena Vasconcelos',area:'SM',papel:'Docente · Coord. de Saúde Mental'},
+ {id:'d2',nome:'Prof. Dr. Ricardo Tavares',area:'CM',papel:'Docente · Clínica Médica'},
+ {id:'d3',nome:'Profa. Dra. Mônica Albuquerque',area:'SC',papel:'Docente · Saúde Coletiva'},
+ {id:'d4',nome:'Prof. Dr. Caio Fontoura',area:'CG',papel:'Docente · Cirurgia'},
+ {id:'d5',nome:'Profa. Dra. Letícia Barreto',area:'PED',papel:'Docente · Pediatria'},
+ {id:'d6',nome:'Prof. Dr. Antônio Sá Peixoto',area:'GO',papel:'Docente · GO'},
+ {id:'d7',nome:'Profa. Dra. Juliana Mendonça',area:'MFC',papel:'Docente · MFC · Tutora'}];
+const USERS={
+ dirigente:{nome:'Dra. Regina Duarte Sampaio',papel:'Diretora Acadêmica',ini:'RD'},
+ coordenador:{nome:'Prof. Dr. Marcos Vilela',papel:'Coordenador do Curso',ini:'MV'},
+ avaliacao:{nome:'Profa. Dra. Paula Figueira',papel:'Coord. de Avaliação / NDE',ini:'PF'},
+ docente:{nome:'Profa. Dra. Helena Vasconcelos',papel:'Docente · Saúde Mental',ini:'HV'},
+ tutor:{nome:'Profa. Dra. Juliana Mendonça',papel:'Tutora acadêmica',ini:'JM'},
+ aluno:{nome:'Ana Beatriz Lourenço',papel:'Estudante · 8º período',ini:'AL'},
+ admin:{nome:'Carlos Eduardo Nunes',papel:'Administrador institucional (TI)',ini:'CN'},
+ editor:{nome:'Dr. Bruno F. (MedPleni)',papel:'Editor-chefe do banco (MedPleni)',ini:'BF'}};
+const ROLE_LABEL={dirigente:'Dirigente (Diretoria)',coordenador:'Coordenação do curso',avaliacao:'Coord. de avaliação / NDE',docente:'Docente',tutor:'Tutor(a)',aluno:'Estudante',admin:'Admin institucional / TI',editor:'Editor do banco (MedPleni)'};
+
+// Turmas
+const TURMAS=[
+ {id:'T4A',nome:'4º período · A',per:4,n:52,campus:'Campus Centro'},
+ {id:'T6A',nome:'6º período · A',per:6,n:49,campus:'Campus Centro'},
+ {id:'T8A',nome:'8º período · A',per:8,n:47,campus:'Campus Centro'},
+ {id:'T8B',nome:'8º período · B',per:8,n:45,campus:'Campus Norte'},
+ {id:'T10A',nome:'10º período · A (internato)',per:10,n:44,campus:'Campus Centro'},
+ {id:'T12A',nome:'12º período · A (concluintes)',per:12,n:41,campus:'Campus Centro'}];
+const TURMA=Object.fromEntries(TURMAS.map(t=>[t.id,t]));
+// Competências avaliáveis por período (introduzida até aquele período)
+const compsForPer=p=>COMPS.filter(c=>c.per[0]<=p);
+
+// Avaliações (linha do tempo 2026)
+const AVALS=[
+ {id:'A1',nome:'Diagnóstico de entrada',tipo:'diagnostico',data:'2026-02-16',mes:'fev',itens:60},
+ {id:'A2',nome:'Prova ordinária · 1º bimestre',tipo:'prova',data:'2026-04-20',mes:'abr',itens:80},
+ {id:'A3',nome:'Simulado ENAMED institucional',tipo:'simulado',data:'2026-06-15',mes:'jun',itens:100},
+ {id:'A4',nome:'Prova ordinária · 2º bimestre',tipo:'prova',data:'2026-08-24',mes:'ago',itens:80},
+ {id:'A5',nome:'Avaliação de progresso',tipo:'progresso',data:'2026-10-05',mes:'out',itens:60}];
+const AVAL=Object.fromEntries(AVALS.map(a=>[a.id,a]));
+
+// Vieses por turma × competência (história da demo)
+const BIAS={};
+TURMAS.forEach(t=>{BIAS[t.id]={};COMPS.forEach(c=>{BIAS[t.id][c.id]=rndn(0,4)})});
+// Lacuna central: T8A e T8B fracas em C10 (TMC na APS); T10A fraca em C11; SC (C12/C13) moderadamente fraca em toda a escola
+BIAS.T8A.C10=-19;BIAS.T8B.C10=-16;BIAS.T10A.C11=-14;BIAS.T12A.C11=-6;
+TURMAS.forEach(t=>{BIAS[t.id].C12-=8;BIAS[t.id].C13-=6;BIAS[t.id].C07+=5;BIAS[t.id].C05+=3});
+BIAS.T4A.C12=-15;BIAS.T6A.C09=-9;BIAS.T12A.C02=-7;
+// Efeito da intervenção (T8A, C10): a partir de A4
+const EFFECT={T8A:{C10:{A4:11,A5:19}},T10A:{C11:{A5:9}}};
+
+const FIRST=['Ana Beatriz','Bruno','Camila','Diego','Eduarda','Felipe','Gabriela','Henrique','Isabela','João Pedro','Karina','Lucas','Mariana','Nicolas','Olívia','Pedro','Rafaela','Samuel','Tainá','Vinícius','Yasmin','Arthur','Beatriz','Caio','Daniela','Enzo','Fernanda','Gustavo','Heloísa','Igor','Júlia','Kauã','Larissa','Matheus','Natália','Otávio','Paloma','Rodrigo','Sofia','Thiago'];
+const LAST=['Lourenço','Carvalho','Nogueira','Siqueira','Prado','Menezes','Azevedo','Brandão','Camargo','Dantas','Esteves','Farias','Guimarães','Holanda','Ibiapina','Jardim','Lacerda','Macedo','Navarro','Oliveira','Pacheco','Quintela','Rangel','Sales','Teixeira','Uchoa','Vilaça','Xavier','Zanetti','Amorim'];
+
+// Alunos
+const ALUNOS=[];let aid=1;
+TURMAS.forEach(t=>{for(let i=0;i<t.n;i++){
+  const ab=clamp(rndn(63,11),28,95);
+  const comps={};COMPS.forEach(c=>comps[c.id]=rndn(0,7));
+  ALUNOS.push({id:'AL'+String(aid++).padStart(4,'0'),nome:(i===0&&t.id==='T8A')?'Ana Beatriz Lourenço':pick(FIRST)+' '+pick(LAST)+' '+pick(LAST),turma:t.id,ab,comps,
+    engaj:clamp(rndn(68,18),10,100),part:rng()>0.07});
+}});
+INST.alunos=ALUNOS.length;
+// Matriz de resultados: aluno × avaliação × competência → % de acerto (apenas para comps do período)
+const RES={};
+ALUNOS.forEach(al=>{RES[al.id]={};const t=TURMA[al.turma];const cps=compsForPer(t.per);
+ AVALS.forEach((av,ai)=>{if(!al.part&&av.id==='A5')return; if(rng()<0.04)return; // ausência ocasional
+  RES[al.id][av.id]={};cps.forEach(c=>{
+   const eff=(EFFECT[t.id]&&EFFECT[t.id][c.id]&&EFFECT[t.id][c.id][av.id])||0;
+   const itens=Math.max(3,Math.round(av.itens/cps.length));
+   const s=clamp(al.ab+BIAS[t.id][c.id]+al.comps[c.id]+ai*1.6+eff+rndn(0,6),8,99);
+   RES[al.id][av.id][c.id]={s:Math.round(s),n:itens};
+  })});});
+
+// Agregações
+function agg(alunos,avId,compId){let tot=0,n=0;alunos.forEach(a=>{const r=RES[a.id][avId];if(r&&r[compId]){tot+=r[compId].s;n++}});return n?{m:tot/n,n}:null}
+function turmaAlunos(tid){return ALUNOS.filter(a=>a.turma===tid)}
+function turmaCompAvg(tid,cid,avId){return agg(turmaAlunos(tid),avId,cid)}
+function alunoAvg(al,avId){const r=RES[al.id][avId];if(!r)return null;const v=Object.values(r);return v.reduce((s,x)=>s+x.s,0)/v.length}
+function turmaAvg(tid,avId){const v=turmaAlunos(tid).map(a=>alunoAvg(a,avId)).filter(x=>x!=null);return v.length?v.reduce((s,x)=>s+x,0)/v.length:null}
+function areaAvg(alunos,aid_,avId){const cs=COMPS.filter(c=>c.area===aid_);let t=0,n=0;cs.forEach(c=>{const r=agg(alunos,avId,c.id);if(r){t+=r.m*r.n;n+=r.n}});return n?t/n:null}
+function instAvg(avId){const v=TURMAS.map(t=>turmaAvg(t.id,avId)).filter(x=>x!=null);return v.length?v.reduce((s,x)=>s+x,0)/v.length:null}
+function participacao(tid,avId){const al=tid?turmaAlunos(tid):ALUNOS;const p=al.filter(a=>RES[a.id][avId]).length;return {p,n:al.length,pct:100*p/al.length}}
+const statusOf=s=>s>=70?'ok':s>=55?'warn':'crit';
+const statusLbl={ok:'Consolidado',warn:'Atenção',crit:'Crítico'};
+const heatColor=s=>{if(s==null)return 'var(--heat-empty)';if(s>=78)return '#0d8f7c';if(s>=70)return '#17a08a';if(s>=62)return '#8a6a12';if(s>=55)return '#b8780f';if(s>=48)return '#a63d3d';return '#c43636'};
+
+// Alunos em atenção (regra simples e explicada): média < 55 na última avaliação disponível OU queda > 10 pts entre as duas últimas
+function alunosAtencao(tid){return turmaAlunos(tid).map(a=>{const avs=AVALS.map(v=>alunoAvg(a,v.id));const last=[...avs].reverse().find(x=>x!=null);const idx=avs.lastIndexOf(last);const prev=idx>0?avs[idx-1]:null;const queda=prev!=null&&last!=null&&prev-last>10;return {a,last,prev,queda,flag:(last!=null&&last<55)||queda}}).filter(x=>x.flag)}
+
+/* ── Banco de questões ─────────────────────────────────────── */
+const TEMAS={CM:['Diabetes mellitus','Hipertensão arterial','Sepse','Síndrome coronariana aguda','DPOC e asma','Insuficiência cardíaca','Distúrbios ácido-base','Doença renal crônica','Tuberculose','HIV'],
+ CG:['Apendicite aguda','Trauma abdominal','Hérnias','Colecistite','Pré-operatório','Queimaduras','Obstrução intestinal','Câncer colorretal'],
+ GO:['Pré-natal','Pré-eclâmpsia','Hemorragia pós-parto','Climatério','Câncer de colo','Planejamento reprodutivo','Infecções na gestação'],
+ PED:['Puericultura','Desidratação','Bronquiolite','Icterícia neonatal','Vacinação','Pneumonia na infância','Desnutrição'],
+ MFC:['Abordagem familiar','Rastreamento','Multimorbidade','Cuidado domiciliar','Prevenção quaternária','Genograma'],
+ SM:['Depressão','Ansiedade','Risco de suicídio','Agitação psicomotora','Transtorno por uso de álcool','Esquizofrenia','Transtorno bipolar'],
+ SC:['Epidemiologia descritiva','Medidas de associação','Vigilância epidemiológica','Princípios do SUS','Financiamento','Atenção Primária','Indicadores de saúde']};
+const ORIGENS=[{id:'oficial',nome:'Prova anterior (fonte autorizada)',motor:'A'},{id:'ia',nome:'Inédita assistida por IA',motor:'B'},{id:'intl',nome:'Adaptada de prova internacional',motor:'C'},{id:'autoral',nome:'Autoral por especialista',motor:'D'},{id:'inst',nome:'Autoral da instituição',motor:'D'}];
+const ORIGEM=Object.fromEntries(ORIGENS.map(o=>[o.id,o]));
+const STATUS=['rascunho','triagem','classificada','rev_tecnica','rev_pedagogica','aprovada','publicada','contestada','atualizacao','arquivada'];
+const STATUS_LBL={rascunho:'Rascunho',triagem:'Triagem/Dedup',classificada:'Classificada',rev_tecnica:'Revisão técnica',rev_pedagogica:'Revisão pedagógica',aprovada:'Aprovada',publicada:'Publicada',contestada:'Contestada',atualizacao:'Em atualização',arquivada:'Arquivada'};
+const DIFIC=['facil','media','alta','muito-alta'];
+// Questões autorais de demonstração (enunciados curtos, fictícios; NÃO reproduzem provas reais)
+const QSEED=[
+ {area:'SM',tema:'Depressão',comp:'C10',ctx:'Atenção Primária',dif:'media',enun:'Mulher de 34 anos procura a UBS com humor deprimido, anedonia, insônia terminal e perda de 4 kg em 6 semanas. Nega ideação suicida. PHQ-9 = 17. Qual a conduta inicial mais adequada na APS?',alts:['Encaminhar ao CAPS sem iniciar tratamento','Iniciar ISRS (p.ex. sertralina) e agendar retorno em 2–4 semanas','Prescrever benzodiazepínico por 3 meses','Solicitar TSH e aguardar resultado para qualquer conduta'],gab:1,com:'Episódio depressivo moderado sem risco agudo pode e deve ser manejado na APS com ISRS, psicoeducação e seguimento próximo; o CAPS é referência para casos graves/refratários. TSH é útil, mas não condiciona o início do tratamento.'},
+ {area:'SM',tema:'Risco de suicídio',comp:'C10',ctx:'Atenção Psicossocial',dif:'alta',enun:'Homem de 52 anos, desempregado, relata ideação suicida com plano definido e acesso a meios. Vive sozinho. Qual é a conduta prioritária?',alts:['Agendar retorno em 7 dias com psicólogo','Encaminhamento imediato para avaliação em serviço de urgência/CAPS com garantia de acompanhamento e retirada de meios','Iniciar ISRS e orientar a família por telefone','Prescrever antipsicótico de depósito'],gab:1,com:'Ideação com plano, meios disponíveis e isolamento configuram alto risco: a conduta é proteção imediata, avaliação especializada no mesmo dia e plano de segurança — não seguimento ambulatorial de rotina.'},
+ {area:'SM',tema:'Agitação psicomotora',comp:'C11',ctx:'Urgência e Emergência',dif:'media',enun:'Paciente de 28 anos chega à emergência agitado, verbalmente agressivo, sem armas. Após falha de abordagem verbal, qual a opção farmacológica inicial recomendada?',alts:['Haloperidol IM isolado em dose alta','Benzodiazepínico + antipsicótico IM em dose padrão (p.ex. midazolam + haloperidol)','Contenção física por 6 horas sem medicação','Clorpromazina EV em bolus'],gab:1,com:'A abordagem escalonada prevê desescalada verbal, depois tranquilização rápida; combinação de benzodiazepínico com antipsicótico em doses padrão é a prática recomendada. Contenção física é último recurso e sempre acompanhada de reavaliação.'},
+ {area:'SC',tema:'Medidas de associação',comp:'C12',ctx:'Atenção Primária',dif:'media',enun:'Em um estudo de coorte, a incidência de DPOC foi de 12% entre fumantes e 3% entre não fumantes. Qual o risco relativo?',alts:['0,25','4,0','9,0','12,0'],gab:1,com:'RR = incidência nos expostos / incidência nos não expostos = 12% / 3% = 4,0.'},
+ {area:'SC',tema:'Vigilância epidemiológica',comp:'C12',ctx:'Atenção Primária',dif:'facil',enun:'Qual das situações abaixo exige notificação compulsória IMEDIATA (até 24 h) ao sistema de vigilância?',alts:['Caso confirmado de hanseníase','Caso suspeito de sarampo','Caso de tuberculose pulmonar','Acidente de trabalho leve'],gab:1,com:'Sarampo é doença de notificação imediata pela possibilidade de surto; hanseníase e tuberculose são de notificação semanal.'},
+ {area:'SC',tema:'Princípios do SUS',comp:'C13',ctx:'Atenção Primária',dif:'facil',enun:'O princípio do SUS que garante atendimento conforme a complexidade de cada caso, sem privilégios, é:',alts:['Universalidade','Equidade','Integralidade','Descentralização'],gab:1,com:'Equidade: tratar desigualmente os desiguais, priorizando quem tem maior necessidade. Universalidade é acesso para todos; integralidade, cuidado em todos os níveis.'},
+ {area:'CM',tema:'Sepse',comp:'C02',ctx:'Urgência e Emergência',dif:'alta',enun:'Homem de 70 anos com pneumonia, PA 80×50 mmHg, lactato 4,2 mmol/L após 30 mL/kg de cristaloide. Qual o próximo passo?',alts:['Repetir 30 mL/kg de cristaloide','Iniciar noradrenalina para PAM ≥ 65 mmHg','Iniciar dobutamina isolada','Aguardar culturas antes de antibiótico'],gab:1,com:'Hipotensão persistente após ressuscitação volêmica inicial define choque séptico: vasopressor de escolha é noradrenalina, com antibiótico já na primeira hora.'},
+ {area:'CM',tema:'Distúrbios ácido-base',comp:'C02',ctx:'Urgência e Emergência',dif:'alta',enun:'Gasometria: pH 7,22; pCO₂ 28; HCO₃⁻ 11; Na 138; Cl 100. Qual o distúrbio?',alts:['Acidose metabólica com ânion gap normal','Acidose metabólica com ânion gap elevado','Acidose respiratória compensada','Alcalose metabólica'],gab:1,com:'AG = 138 − (100 + 11) = 27 (> 12). pH baixo com HCO₃⁻ baixo e pCO₂ compensatoriamente reduzido: acidose metabólica de ânion gap elevado.'},
+ {area:'CM',tema:'Diabetes mellitus',comp:'C01',ctx:'Doenças Crônicas',dif:'media',enun:'Paciente com DM2, HbA1c 8,4% em uso de metformina em dose máxima, IMC 33 e DRC estágio 3a. Qual associação é preferencial?',alts:['Sulfonilureia','Inibidor de SGLT2','Insulina NPH ao deitar','Glitazona'],gab:1,com:'Na presença de DRC e obesidade, iSGLT2 oferece benefício renal e cardiovascular além do controle glicêmico.'},
+ {area:'CG',tema:'Apendicite aguda',comp:'C03',ctx:'Urgência e Emergência',dif:'facil',enun:'Jovem de 19 anos com dor periumbilical que migrou para FID há 18 h, febre 38 °C e Blumberg positivo. Conduta:',alts:['Analgesia e reavaliar em 48 h','Apendicectomia após estabilização e antibiótico profilático','Colonoscopia de urgência','Antibiótico oral e alta'],gab:1,com:'Quadro clássico de apendicite aguda: tratamento cirúrgico com profilaxia antibiótica.'},
+ {area:'GO',tema:'Pré-eclâmpsia',comp:'C05',ctx:'Materno-Infantil',dif:'media',enun:'Gestante de 34 semanas, PA 165×112 mmHg, cefaleia e proteinúria. Qual droga para controle pressórico agudo?',alts:['Captopril VO','Hidralazina EV','Atenolol VO','Nitroprussiato como 1ª linha'],gab:1,com:'Crise hipertensiva na gestação: hidralazina EV (ou nifedipino VO) e sulfato de magnésio para prevenção de eclâmpsia; IECA é contraindicado.'},
+ {area:'PED',tema:'Desidratação',comp:'C08',ctx:'Urgência e Emergência',dif:'facil',enun:'Lactente de 9 meses com diarreia, olhos fundos, irritado, bebe avidamente, sinal da prega lento. Plano de hidratação:',alts:['Plano A em domicílio','Plano B — TRO supervisionada na unidade','Plano C — hidratação venosa imediata','Antibiótico empírico'],gab:1,com:'Dois ou mais sinais de desidratação sem choque = desidratação (Plano B): TRO na unidade por 4 h com reavaliação.'},
+ {area:'MFC',tema:'Rastreamento',comp:'C09',ctx:'Atenção Primária',dif:'media',enun:'Mulher de 42 anos, assintomática, sem fatores de risco, pergunta sobre rastreamento de câncer de mama. Segundo as recomendações nacionais vigentes, a orientação é:',alts:['Mamografia anual a partir de agora','Mamografia bienal dos 50 aos 69 anos; discutir riscos/benefícios antes dos 50','Ultrassonografia anual','Autoexame mensal como método de rastreio'],gab:1,com:'Rastreamento populacional recomendado: mamografia bienal entre 50 e 69 anos; fora dessa faixa, decisão compartilhada.'},
+ {area:'PED',tema:'Puericultura',comp:'C07',ctx:'Materno-Infantil',dif:'facil',enun:'Criança de 6 meses em aleitamento materno exclusivo. Qual a orientação correta sobre introdução alimentar?',alts:['Manter exclusivo até 12 meses','Iniciar alimentos complementares mantendo o leite materno até 2 anos ou mais','Substituir o leite materno por fórmula','Introduzir mel e sucos industrializados'],gab:1,com:'Aos 6 meses inicia-se a alimentação complementar, com manutenção do aleitamento até 2 anos ou mais.'},
+ {area:'SM',tema:'Transtorno por uso de álcool',comp:'C11',ctx:'Atenção Psicossocial',dif:'media',enun:'Homem de 45 anos, etilista pesado, interna por pneumonia e em 48 h apresenta tremores, sudorese, taquicardia e alucinações visuais. Conduta:',alts:['Haloperidol isolado','Benzodiazepínico (diazepam) + tiamina','Restrição hídrica','Fenitoína profilática'],gab:1,com:'Síndrome de abstinência alcoólica grave/delirium tremens: benzodiazepínico é a base do tratamento; tiamina previne Wernicke.'},
+ {area:'SC',tema:'Indicadores de saúde',comp:'C12',ctx:'Atenção Primária',dif:'media',enun:'Um município registrou 20 óbitos em menores de 1 ano e 2.500 nascidos vivos no ano. A taxa de mortalidade infantil é:',alts:['0,8 por mil','8 por mil','80 por mil','20 por mil'],gab:1,com:'TMI = (óbitos < 1 ano / nascidos vivos) × 1.000 = 20/2.500 × 1.000 = 8‰.'}];
+// Banco de demonstração: as 16 autorais + itens gerados (placeholders rotulados) para popular filtros, pipeline e psicometria
+const QUESTOES=[];let qn=10001;
+function mkQ(seed,extra){const area=seed.area;const o=extra.origem;const st=extra.status;
+ const q={id:'Q-'+(qn++),area,tema:seed.tema,comp:seed.comp,ctx:seed.ctx,dif:seed.dif,enun:seed.enun,alts:seed.alts,gab:seed.gab,com:seed.com,
+  origem:o,status:st,versao:extra.versao||1,criadaEm:extra.criadaEm,revisadaEm:extra.revisadaEm||null,autor:extra.autor,revisor:extra.revisor||null,
+  licenca:o==='oficial'?'Uso educacional — prova pública (titularidade registrada)':o==='intl'?'Licença de adaptação (contrato nº demo)':o==='inst'?'Titularidade da instituição (cláusula contratual)':'Titularidade MedPleni',
+  fonte:o==='oficial'?'Prova pública '+(2020+Math.floor(rng()*6))+' (banca fictícia)':o==='intl'?'Banco internacional (fonte licenciada fictícia)':o==='ia'?'Gerada a partir da matriz · modelo LLM (versão demo)':'Produção '+(o==='inst'?'docente FAMVI':'especialista MedPleni'),
+  usos:extra.usos||0,p:extra.p,disc:extra.disc,contest:extra.contest||0,flags:extra.flags||[],placeholder:!!extra.placeholder,ref:extra.ref||'Diretriz clínica nacional vigente (referência demonstrativa)'};
+ QUESTOES.push(q);return q}
+QSEED.forEach((s,i)=>{mkQ(s,{origem:pick(['autoral','oficial','autoral','ia','inst']),status:i<13?'publicada':['rev_tecnica','rev_pedagogica','contestada'][i-13],criadaEm:'2026-0'+(1+Math.floor(rng()*8))+'-'+String(1+Math.floor(rng()*27)).padStart(2,'0'),revisadaEm:'2026-09-1'+Math.floor(rng()*9),autor:pick(DOCENTES).nome,revisor:pick(['Dr. Bruno F. (MedPleni)','Dr. Filipe A. (MedPleni)']),usos:Math.round(rnd(120,2400)),p:r1(rnd(.28,.88)),disc:r1(rnd(.12,.52)),contest:Math.floor(rng()*4)})});
+// placeholders
+AREAS.forEach(a=>{for(let k=0;k<9;k++){const tema=pick(TEMAS[a.id]);const comp=pick(COMPS.filter(c=>c.area===a.id));const o=pick(['oficial','oficial','ia','ia','ia','autoral','intl','inst']);
+ const st=pick(['publicada','publicada','publicada','publicada','aprovada','rev_tecnica','rev_pedagogica','classificada','triagem','rascunho','contestada','atualizacao']);
+ const p=r1(rnd(.2,.92)),disc=r1(rnd(-.05,.55));const flags=[];if(p>.9)flags.push('muito fácil');if(p<.25)flags.push('muito difícil');if(disc<.15)flags.push('baixa discriminação');
+ mkQ({area:a.id,tema,comp:comp.id,ctx:comp.ctx,dif:pick(DIFIC),enun:'[Item demonstrativo] Caso clínico sobre '+tema.toLowerCase()+' — enunciado ilustrativo gerado para popular o protótipo; não é uma questão real.',alts:['Alternativa A (demonstrativa)','Alternativa B (demonstrativa)','Alternativa C (demonstrativa)','Alternativa D (demonstrativa)'],gab:Math.floor(rng()*4),com:'Comentário demonstrativo: justificativa do gabarito e das alternativas incorretas, com referência.'},
+  {origem:o,status:st,criadaEm:'2026-0'+(1+Math.floor(rng()*9))+'-'+String(1+Math.floor(rng()*27)).padStart(2,'0'),revisadaEm:st==='publicada'||st==='aprovada'?'2026-09-0'+(1+Math.floor(rng()*9)):null,autor:o==='ia'?'Motor B (IA) · rev. pendente':pick(DOCENTES).nome,revisor:(st==='publicada'||st==='aprovada')?pick(['Dr. Bruno F. (MedPleni)','Dr. Filipe A. (MedPleni)','Profa. Helena Vasconcelos']):null,usos:st==='publicada'?Math.round(rnd(30,1800)):0,p:st==='publicada'?p:null,disc:st==='publicada'?disc:null,contest:st==='contestada'?2+Math.floor(rng()*5):Math.floor(rng()*2),flags:st==='publicada'?flags:[],placeholder:true});}});
+const Q=Object.fromEntries(QUESTOES.map(q=>[q.id,q]));
+
+// Cenário agregado do banco (hipóteses da reunião de 12/10: ≥12.000 iniciais, ~600/mês) — editável no simulador
+const BANK={total:12480,porArea:{CM:3310,CG:1690,GO:1520,PED:1640,MFC:1180,SM:1030,SC:2110},
+ porOrigem:{oficial:5140,ia:3260,intl:910,autoral:2690,inst:480},
+ porStatus:{publicada:9870,aprovada:410,rev_pedagogica:380,rev_tecnica:620,classificada:290,triagem:310,rascunho:270,contestada:64,atualizacao:188,arquivada:77},
+ semanal:[118,131,142,127,155,149,163,158],tempoRevisaoDias:{A:3.2,B:6.8,C:5.1,D:4.4},aprovacaoEditorial:{A:91,B:58,C:74,D:86}};
+const ENGINES=[
+ {id:'A',nome:'Ingestão de provas anteriores',desc:'Localiza fontes autorizadas, importa PDFs, extrai itens/alternativas, preserva origem e deduplica.',mes:120,aprov:91,custo:18,rev:3.2,humano:'Triagem + classificação; revisão técnica amostral (20%)'},
+ {id:'B',nome:'Produção inédita assistida por IA',desc:'Recebe matriz (área/competência/contexto/dificuldade), gera caso clínico, enunciado, alternativas, gabarito e justificativa com referências; sai sempre para revisão humana integral.',mes:250,aprov:58,custo:34,rev:6.8,humano:'Revisão técnica + pedagógica obrigatória (100%)'},
+ {id:'C',nome:'Adaptação de questões internacionais',desc:'Fonte licenciada → pertinência clínica → tradução → adaptação (unidades, nomenclatura, protocolos BR) → revisão → classificação → proveniência.',mes:80,aprov:74,custo:41,rev:5.1,humano:'Revisão de adequação ao contexto brasileiro (100%)'},
+ {id:'D',nome:'Produção por especialistas',desc:'Metas por área/competência distribuídas a médicos e docentes; prazos, revisão cruzada, remuneração por item aprovado, produtividade e qualidade por autor.',mes:150,aprov:86,custo:95,rev:4.4,humano:'Revisão cruzada por par (100%)'},
+ {id:'E',nome:'Melhoria contínua por desempenho',desc:'Usa respostas agregadas (p, discriminação, distratores, contestações) para sinalizar itens para revisão — com limiares de amostra mínima.',mes:0,aprov:null,custo:4,rev:2.0,humano:'Decisão editorial sobre cada sinal'},
+ {id:'F',nome:'Governança e atualização',desc:'Revisão periódica por diretriz, controle de versões, retirada de itens, registro de justificativas e estado editorial.',mes:0,aprov:null,custo:6,rev:3.5,humano:'Comitê editorial (médicos parceiros)'}];
+
+/* ── Intervenções ──────────────────────────────────────────── */
+let INTERV=[
+ {id:'I-01',titulo:'Oficina de casos: transtornos mentais comuns na APS',turma:'T8A',comp:'C10',resp:'d1',tipo:'Oficina de casos + lista dirigida',inicio:'2026-07-06',fim:'2026-08-14',status:'concluida',adesao:87,pre:'A3',pos:'A4',obs:'Antes/depois com reteste; T8B sem intervenção usada como referência (não é desenho experimental).',atividades:['4 encontros de discussão de casos (PHQ-9, GAD-7, plano de segurança)','Lista dirigida de 40 itens (C10) com comentário','Reteste embutido na Prova ordinária · 2º bimestre']},
+ {id:'I-02',titulo:'Plano de estudo dirigido: urgência psiquiátrica',turma:'T10A',comp:'C11',resp:'d1',tipo:'Lista dirigida + preceptoria',inicio:'2026-08-31',fim:'2026-10-02',status:'em_andamento',adesao:71,pre:'A4',pos:'A5',obs:'Em andamento; reteste parcial na Avaliação de progresso.',atividades:['Lista de 30 itens (C11)','2 encontros com preceptor do PS','Simulação de agitação psicomotora']},
+ {id:'I-03',titulo:'Revisão de epidemiologia aplicada (indicadores e medidas)',turma:'T4A',comp:'C12',resp:'d3',tipo:'Aula de reforço + exercícios',inicio:'2026-09-14',fim:'2026-10-23',status:'em_andamento',adesao:64,pre:'A4',pos:null,obs:'Reteste planejado na prova do 3º bimestre.',atividades:['2 aulas de reforço','Lista de 25 cálculos (incidência, prevalência, RR/OR)']},
+ {id:'I-04',titulo:'Tutoria individual — alunos em atenção (8º B)',turma:'T8B',comp:'C10',resp:'d7',tipo:'Tutoria individual',inicio:'2026-10-13',fim:null,status:'planejada',adesao:null,pre:'A5',pos:null,obs:'Aguardando confirmação de agenda dos tutores.',atividades:['Encontros quinzenais com 9 alunos sinalizados','Metas individuais acordadas']}];
+const INTERV_STATUS={planejada:['Planejada','b-info'],em_andamento:['Em andamento','b-warn'],concluida:['Concluída','b-ok'],cancelada:['Cancelada','b-mute']};
+
+/* ── Provas / avaliações institucionais (gestão) ───────────── */
+let PROVAS=[
+ {id:'P-2026-07',titulo:'Prova ordinária · 2º bimestre · 8º período',turma:'T8A,T8B',itens:80,status:'aplicada',data:'2026-08-24',autor:'Profa. Paula Figueira',versoes:2,comps:['C01','C02','C03','C05','C08','C10','C11','C12'],aval:'A4'},
+ {id:'P-2026-08',titulo:'Avaliação de progresso · todas as turmas',turma:'T4A,T6A,T8A,T8B,T10A,T12A',itens:60,status:'aplicada',data:'2026-10-05',autor:'Profa. Paula Figueira',versoes:1,comps:COMPS.map(c=>c.id),aval:'A5'},
+ {id:'P-2026-09',titulo:'Prova ordinária · 3º bimestre · 10º período',turma:'T10A',itens:80,status:'em_revisao',data:'2026-11-09',autor:'Prof. Ricardo Tavares',versoes:2,comps:['C01','C02','C03','C04','C11','C14'],aval:null},
+ {id:'P-2026-10',titulo:'Simulado ENAMED · concluintes (nov)',turma:'T12A',itens:100,status:'rascunho',data:'2026-11-23',autor:'Prof. Marcos Vilela',versoes:1,comps:COMPS.map(c=>c.id),aval:null}];
+const PROVA_STATUS={rascunho:['Rascunho','b-mute'],em_revisao:['Em revisão','b-warn'],aprovada:['Aprovada','b-teal'],publicada:['Publicada','b-info'],aplicada:['Aplicada / corrigida','b-ok']};
+
+/* ── Auditoria ─────────────────────────────────────────────── */
+let AUDIT=[
+ {t:'2026-10-18 09:12',u:'Profa. Paula Figueira',a:'Aprovou versão 2 da prova P-2026-09 (revisão de 3 itens)'},
+ {t:'2026-10-17 16:40',u:'Dr. Bruno F. (MedPleni)',a:'Publicou Q-10007 v2 (atualização de diretriz · sepse)'},
+ {t:'2026-10-17 11:05',u:'Prof. Dr. Marcos Vilela',a:'Exportou matriz aluno × item da aplicação A5 (CSV, hash 9f3a…)'},
+ {t:'2026-10-16 14:22',u:'Carlos Eduardo Nunes',a:'Importou 41 matrículas (T12A) via CSV — 0 erros'},
+ {t:'2026-10-15 10:30',u:'Profa. Helena Vasconcelos',a:'Registrou adesão da intervenção I-02 (71%)'}];
+
+/* ═══════════════════════════════════════════════════════════
+   PARTE 2 — NÚCLEO: estado, roteamento, componentes, gráficos
+   ═══════════════════════════════════════════════════════════ */
+const state={role:'dirigente',page:'exec',params:{},filters:{aval:'A3',turma:'',area:''},created:{interv:0,provas:0,questoes:0}};
+try{const s=JSON.parse(localStorage.getItem('medpleni_b2b_demo')||'null');if(s&&s.INTERV){INTERV=s.INTERV;PROVAS=s.PROVAS;AUDIT=s.AUDIT||AUDIT;(s.Q||[]).forEach(q=>{if(!Q[q.id]){QUESTOES.push(q);Q[q.id]=q}});(s.QST||[]).forEach(([id,st])=>{if(Q[id])Q[id].status=st})}}catch(e){}
+function persist(){try{localStorage.setItem('medpleni_b2b_demo',JSON.stringify({INTERV,PROVAS,AUDIT,Q:QUESTOES.filter(q=>q.novo),QST:QUESTOES.map(q=>[q.id,q.status])}))}catch(e){}}
+function resetDemo(){try{localStorage.removeItem('medpleni_b2b_demo')}catch(e){}location.reload()}
+
+const ICON={
+ exec:'<svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg>',
+ acad:'<svg viewBox="0 0 24 24"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
+ prog:'<svg viewBox="0 0 24 24"><circle cx="5" cy="6" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 7l3 3M14 14l3 3"/></svg>',
+ interv:'<svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>',
+ prova:'<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>',
+ qbank:'<svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.7-4 3-9 3s-9-1.3-9-3M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/></svg>',
+ doc:'<svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg>',
+ aluno:'<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>',
+ tutor:'<svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2 20c0-4 3-6 7-6s7 2 7 6M14 20c0-3 2-4 4-4s4 1 4 4"/></svg>',
+ admin:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>',
+ regua:'<svg viewBox="0 0 24 24"><path d="M3 17h18M6 17v-4M10 17v-7M14 17v-5M18 17v-9"/></svg>'};
+const NAV=[
+ {grp:'Gestão institucional'},
+ {id:'exec',lbl:'Visão executiva',ic:'exec',roles:['dirigente','coordenador','avaliacao','admin','editor']},
+ {id:'regua',lbl:'Régua ENAMED (3 etapas)',ic:'regua',roles:['dirigente','coordenador','avaliacao','editor']},
+ {grp:'Acadêmico'},
+ {id:'acad',lbl:'Turmas & competências',ic:'acad',roles:['dirigente','coordenador','avaliacao','docente','tutor','editor']},
+ {id:'prog',lbl:'Avaliação programática',ic:'prog',roles:['dirigente','coordenador','avaliacao','docente','tutor','editor']},
+ {id:'interv',lbl:'Intervenções',ic:'interv',cnt:()=>INTERV.filter(i=>i.status!=='concluida'&&i.status!=='cancelada').length,roles:['dirigente','coordenador','avaliacao','docente','tutor','editor']},
+ {id:'tutor',lbl:'Acompanhamento individual',ic:'tutor',roles:['coordenador','tutor','docente','editor']},
+ {grp:'Avaliação & conteúdo'},
+ {id:'prova',lbl:'Provas & avaliações',ic:'prova',cnt:()=>PROVAS.filter(p=>p.status==='em_revisao').length,roles:['coordenador','avaliacao','docente','admin','editor']},
+ {id:'qbank',lbl:'Banco de questões',ic:'qbank',cnt:()=>QUESTOES.filter(q=>['rev_tecnica','rev_pedagogica'].includes(q.status)).length,roles:['coordenador','avaliacao','docente','editor','admin']},
+ {id:'docente',lbl:'Espaço do docente',ic:'doc',roles:['docente','coordenador','avaliacao','editor']},
+ {grp:'Estudante'},
+ {id:'aluno',lbl:'Minha jornada',ic:'aluno',roles:['aluno','coordenador','dirigente','editor','avaliacao','docente','tutor']},
+ {grp:'Administração'},
+ {id:'admin',lbl:'Governança & TI',ic:'admin',roles:['admin','dirigente','editor','coordenador']}];
+const HOME={dirigente:'exec',coordenador:'acad',avaliacao:'prova',docente:'docente',tutor:'tutor',aluno:'aluno',admin:'admin',editor:'qbank'};
+
+function renderNav(){const el=document.getElementById('nav');el.innerHTML=NAV.map(n=>{if(n.grp)return `<div class="grp">${n.grp}</div>`;const can=n.roles.includes(state.role);return `<a href="#${n.id}" class="${state.page===n.id?'active':''} ${can?'':'locked'}" onclick="event.preventDefault();${can?`go('${n.id}')`:`toast('Perfil <b>${ROLE_LABEL[state.role]}</b> não tem acesso a este módulo (permissão simulada).','warn')`}">${ICON[n.ic]}<span>${n.lbl}</span>${n.cnt?`<span class="cnt">${n.cnt()}</span>`:''}</a>`}).join('');
+ document.getElementById('instName').textContent=INST.nome;document.getElementById('instMeta').textContent=`${INST.sigla} · ${INST.campi.length} campi · ${fmt(INST.alunos)} estudantes vinculados`;}
+function setRole(r){state.role=r;const u=USERS[r];document.getElementById('avatar').textContent=u.ini;document.getElementById('avatar').title=u.nome+' — '+u.papel;go(HOME[r]);toast(`Agora visualizando como <b>${u.nome}</b> · ${u.papel}`)}
+function go(page,params){state.page=page;state.params=params||{};window.scrollTo(0,0);document.getElementById('sidebar').classList.remove('open');renderNav();const fn=PAGES[page];const v=document.getElementById('view');v.innerHTML=fn?fn():'<div class="empty"><b>Módulo não encontrado</b></div>';const crumb=NAV.find(n=>n.id===page);document.getElementById('crumb').innerHTML=`<b>${crumb?crumb.lbl:page}</b>${state.params.sub?' › '+state.params.sub:''}`;document.getElementById('view').scrollTop=0}
+function rerender(){go(state.page,state.params)}
+function toast(msg,kind){const t=document.createElement('div');t.className='toast '+(kind||'');t.innerHTML=msg;document.getElementById('toasts').appendChild(t);setTimeout(()=>{t.style.opacity='0';t.style.transition='.3s';setTimeout(()=>t.remove(),320)},3800)}
+function openModal(title,body,footer,cls){document.getElementById('modal').className='modal '+(cls||'');document.getElementById('modal').innerHTML=`<div class="mh"><h3>${title}</h3><button class="iconbtn" onclick="closeModal()">✕</button></div><div class="mb">${body}</div>${footer?`<div class="mf">${footer}</div>`:''}`;document.getElementById('ov').classList.add('open')}
+function closeModal(){document.getElementById('ov').classList.remove('open')}
+function confirmAction(title,text,onok,okLbl){openModal(title,`<p>${text}</p>`,`<button class="btn" onclick="closeModal()">Cancelar</button><button class="btn primary" onclick="closeModal();(${onok})()">${okLbl||'Confirmar'}</button>`,'narrow')}
+function audit(a){AUDIT.unshift({t:new Date().toISOString().slice(0,16).replace('T',' '),u:USERS[state.role].nome,a});persist()}
+const userLbl=()=>USERS[state.role].nome;
+
+/* ── Gráficos SVG (sem dependências externas) ──────────── */
+function svgLine(series,opts){ // series: [{name,color,pts:[{x,y,lbl}]}]
+ const W=opts.w||560,H=opts.h||200,pl=36,pr=12,pt=14,pb=28;const ys=series.flatMap(s=>s.pts.map(p=>p.y)).filter(y=>y!=null);
+ const minY=opts.min!=null?opts.min:Math.max(0,Math.floor((Math.min(...ys)-8)/10)*10),maxY=opts.max!=null?opts.max:Math.min(100,Math.ceil((Math.max(...ys)+6)/10)*10);
+ const n=Math.max(...series.map(s=>s.pts.length));const xs=i=>pl+i*(W-pl-pr)/Math.max(1,n-1);const ys_=y=>pt+(H-pt-pb)*(1-(y-minY)/(maxY-minY||1));
+ let g='';for(let v=minY;v<=maxY;v+=10){g+=`<line x1="${pl}" x2="${W-pr}" y1="${ys_(v)}" y2="${ys_(v)}" stroke="var(--grid)"/><text x="${pl-6}" y="${ys_(v)+4}" fill="var(--chumbo)" font-size="10" text-anchor="end" font-family="IBM Plex Mono">${v}</text>`}
+ if(opts.ref!=null)g+=`<line x1="${pl}" x2="${W-pr}" y1="${ys_(opts.ref)}" y2="${ys_(opts.ref)}" stroke="#F5A623" stroke-dasharray="4 4"/><text x="${W-pr}" y="${ys_(opts.ref)-4}" fill="#F5A623" font-size="10" text-anchor="end" font-family="IBM Plex Mono">${opts.refLbl||'referência'}</text>`;
+ if(opts.band){g+=`<rect x="${xs(opts.band[0])}" y="${pt}" width="${xs(opts.band[1])-xs(opts.band[0])}" height="${H-pt-pb}" fill="rgba(0,194,168,.08)"/><text x="${(xs(opts.band[0])+xs(opts.band[1]))/2}" y="${pt+10}" fill="#00C2A8" font-size="10" text-anchor="middle" font-family="IBM Plex Mono">${opts.bandLbl||'intervenção'}</text>`}
+ const labels=series[0].pts.map((p,i)=>`<text x="${xs(i)}" y="${H-8}" fill="var(--chumbo)" font-size="10" text-anchor="middle" font-family="IBM Plex Mono">${p.lbl||''}</text>`).join('');
+ const lines=series.map(s=>{const d=s.pts.map((p,i)=>p.y==null?null:`${xs(i)},${ys_(p.y)}`).filter(Boolean);const path=d.length?'M'+d.join(' L'):'';return `<path d="${path}" fill="none" stroke="${s.color}" stroke-width="${s.w||2.2}" ${s.dash?'stroke-dasharray="5 4"':''}/>`+s.pts.map((p,i)=>p.y==null?'':`<circle cx="${xs(i)}" cy="${ys_(p.y)}" r="3.5" fill="${s.color}"><title>${s.name}: ${Math.round(p.y)}${p.tip?' · '+p.tip:''}</title></circle>`).join('')}).join('');
+ return `<svg class="svgchart" viewBox="0 0 ${W} ${H}">${g}${labels}${lines}</svg>`}
+function svgBars(items,opts){ // [{lbl,v,color}]
+ const W=opts.w||560,H=opts.h||180,pl=30,pr=8,pt=10,pb=36;const max=opts.max||100;const bw=(W-pl-pr)/items.length;
+ const bars=items.map((it,i)=>{const h=(H-pt-pb)*(it.v/max);const x=pl+i*bw+bw*.18;return `<rect x="${x}" y="${H-pb-h}" width="${bw*.64}" height="${h}" rx="3" fill="${it.color||'#00C2A8'}"><title>${it.lbl}: ${Math.round(it.v)}</title></rect><text x="${x+bw*.32}" y="${H-pb-h-4}" fill="var(--neblina)" font-size="10" text-anchor="middle" font-family="IBM Plex Mono">${opts.fmt?opts.fmt(it.v):Math.round(it.v)}</text><text x="${x+bw*.32}" y="${H-pb+14}" fill="var(--chumbo)" font-size="9.5" text-anchor="middle">${it.lbl.length>14?it.lbl.slice(0,13)+'…':it.lbl}</text>`}).join('');
+ const ref=opts.ref!=null?`<line x1="${pl}" x2="${W-pr}" y1="${H-pb-(H-pt-pb)*(opts.ref/max)}" y2="${H-pb-(H-pt-pb)*(opts.ref/max)}" stroke="#F5A623" stroke-dasharray="4 4"/>`:'';
+ return `<svg class="svgchart" viewBox="0 0 ${W} ${H}">${ref}${bars}</svg>`}
+function spark(vals,color,w,h){w=w||80;h=h||22;const min=Math.min(...vals),max=Math.max(...vals);const pts=vals.map((v,i)=>`${i*(w/(vals.length-1))},${h-2-(h-4)*((v-min)/((max-min)||1))}`);return `<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><path d="M${pts.join(' L')}" fill="none" stroke="${color||'#00C2A8'}" stroke-width="1.6"/></svg>`}
+function ring(v,color,size){size=size||86;const r=(size-10)/2,c=2*Math.PI*r;return `<div class="ring" style="width:${size}px;height:${size}px"><svg width="${size}" height="${size}"><circle cx="${size/2}" cy="${size/2}" r="${r}" stroke="var(--grid)" stroke-width="7" fill="none"/><circle cx="${size/2}" cy="${size/2}" r="${r}" stroke="${color||'#00C2A8'}" stroke-width="7" fill="none" stroke-dasharray="${c}" stroke-dashoffset="${c*(1-v/100)}" stroke-linecap="round"/></svg><div class="rv" style="font-size:${size/4}px">${Math.round(v)}</div></div>`}
+function donut(parts,size){size=size||120;const tot=parts.reduce((s,p)=>s+p.v,0);let acc=0;const r=(size-14)/2,c=2*Math.PI*r;const segs=parts.map(p=>{const f=p.v/tot;const s=`<circle cx="${size/2}" cy="${size/2}" r="${r}" stroke="${p.color}" stroke-width="12" fill="none" stroke-dasharray="${c*f} ${c*(1-f)}" stroke-dashoffset="${-c*acc}" transform="rotate(-90 ${size/2} ${size/2})"><title>${p.lbl}: ${fmt(p.v)}</title></circle>`;acc+=f;return s}).join('');return `<svg width="${size}" height="${size}">${segs}</svg>`}
+const badgeStatus=s=>`<span class="badge b-${s==='ok'?'ok':s==='warn'?'warn':'crit'}">${statusLbl[s]}</span>`;
+function barRow(lbl,v,extra){const st=statusOf(v);return `<div class="rowbar"><span title="${lbl}">${lbl.length>26?lbl.slice(0,25)+'…':lbl}</span><div class="bar"><i class="${st}" style="width:${v}%"></i></div><span class="n">${Math.round(v)}${extra||''}</span></div>`}
+function avalSel(onch){return `<select class="sel" onchange="${onch}">${AVALS.map(a=>`<option value="${a.id}" ${state.filters.aval===a.id?'selected':''}>${a.nome} (${a.mes}/26)</option>`).join('')}</select>`}
+function setFilter(k,v){state.filters[k]=v;rerender()}
+function globalSearch(q){q=(q||'').trim();if(!q)return;const ql=q.toLowerCase();
+ const al=ALUNOS.find(a=>a.nome.toLowerCase().includes(ql)||a.id.toLowerCase()===ql);if(al){openAluno(al.id);return}
+ const qq=QUESTOES.find(x=>x.id.toLowerCase()===ql||x.tema.toLowerCase().includes(ql));if(qq){openQuestao(qq.id);return}
+ const c=COMPS.find(x=>x.nome.toLowerCase().includes(ql)||x.ctx.toLowerCase().includes(ql)||x.id.toLowerCase()===ql);if(c){go('prog',{comp:c.id});return}
+ const t=TURMAS.find(x=>x.nome.toLowerCase().includes(ql)||x.id.toLowerCase()===ql);if(t){go('acad',{turma:t.id});return}
+ toast('Nada encontrado para "'+q+'". Tente um nome de aluno, Q-10001, uma competência ou "8º período".','warn')}
+
+/* ── Tema claro/escuro (mesma chave da plataforma: medpleni_theme) ── */
+const ICO_SUN='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>',ICO_MOON='<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+function curTheme(){return document.documentElement.getAttribute('data-theme')==='light'?'light':'dark'}
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);const b=document.getElementById('themeBtn');if(b){b.innerHTML=t==='dark'?ICO_SUN:ICO_MOON;b.title=t==='dark'?'Mudar para Tema Claro':'Mudar para Tema Escuro'}try{localStorage.setItem('medpleni_theme',t)}catch(e){}}
+function toggleTheme(){applyTheme(curTheme()==='dark'?'light':'dark')}
+
+/* ── Roteiro de demonstração ───────────────────────────── */
+const SCENES=[
+ {n:'Cena 1',t:'Visão institucional',d:'A diretora entende o estado geral (referência: simulado de junho), vê a área e as turmas que exigem atenção.',go:()=>{state.filters.aval='A3';setRoleSilent('dirigente');go('exec')}},
+ {n:'Cena 2',t:'Diagnóstico da lacuna',d:'Abrir a competência C10 na turma 8º A: evidências, objetivos e grupos.',go:()=>{state.filters.aval='A3';setRoleSilent('coordenador');go('acad',{turma:'T8A',comp:'C10'})}},
+ {n:'Cena 3',t:'Da informação à ação',d:'Criar uma intervenção com responsável, conteúdo e reteste.',go:()=>{setRoleSilent('coordenador');go('interv');setTimeout(()=>newInterv('T8B','C10'),300)}},
+ {n:'Cena 4',t:'O problema da produção de questões',d:'Cobertura, motores A–F, pipeline editorial e simulador de capacidade.',go:()=>{setRoleSilent('editor');go('qbank')}},
+ {n:'Cena 5',t:'Construção de uma prova',d:'Matriz de avaliação → seleção assistida → revisão → publicação.',go:()=>{setRoleSilent('avaliacao');go('prova');setTimeout(()=>novaProva(),300)}},
+ {n:'Cena 6',t:'Avaliação programática',d:'Trilha longitudinal de C10: como a dificuldade atravessa períodos e o que mudou após a intervenção.',go:()=>{state.filters.aval='A5';setRoleSilent('coordenador');go('prog',{comp:'C10'})}},
+ {n:'Cena 7',t:'Experiência do estudante',d:'Ana Beatriz vê avaliações, competências e próximos passos — sem ranking punitivo.',go:()=>{setRoleSilent('aluno');go('aluno')}},
+ {n:'Cena 8',t:'Governança',d:'A diretora volta à visão executiva e ao relatório; TI vê papéis, isolamento e auditoria.',go:()=>{state.filters.aval='A5';setRoleSilent('admin');go('admin')}}];
+function setRoleSilent(r){state.role=r;document.getElementById('roleSel').value=r;document.getElementById('avatar').textContent=USERS[r].ini}
+function openDemoGuide(){const d=document.getElementById('drawer');document.getElementById('drawerBody').innerHTML=`<p class="small muted mb">Clique em uma cena para navegar. O roteiro troca o perfil automaticamente.</p>`+SCENES.map((s,i)=>`<div class="scene" onclick="SCENES[${i}].go();document.querySelectorAll('.scene').forEach(x=>x.classList.remove('on'));this.classList.add('on')"><div class="sn">${s.n.toUpperCase()}</div><div class="st">${s.t}</div><div class="sd">${s.d}</div></div>`).join('')+`<div class="callout info mt"><span>ⓘ</span><div><b>Lembrete para a apresentação</b><br>Todos os números são fictícios e gerados por simulação. Nenhum indicador aqui é previsão validada de ENAMED.</div></div><button class="btn sm mt" onclick="resetDemo()">↺ Restaurar dados da demo</button>`;d.classList.add('open')}
+
+/* ═══════════════════════════════════════════════════════════
+   PARTE 3 — PÁGINAS
+   ═══════════════════════════════════════════════════════════ */
+const PAGES={};
+
+/* ── 1. VISÃO EXECUTIVA ─────────────────────────────────── */
+PAGES.exec=function(){const av=state.filters.aval;const prev=AVALS[Math.max(0,AVALS.findIndex(a=>a.id===av)-1)].id;
+ const inst=instAvg(av),instPrev=instAvg(prev);const part=participacao(null,av);
+ // competências críticas (média institucional <55)
+ const compAvg=COMPS.map(c=>{const r=agg(ALUNOS,av,c.id);return {c,m:r?r.m:null}}).filter(x=>x.m!=null).sort((a,b)=>a.m-b.m);
+ const crit=compAvg.filter(x=>x.m<55).length,warn=compAvg.filter(x=>x.m>=55&&x.m<70).length;
+ const ativas=INTERV.filter(i=>i.status==='em_andamento').length;
+ const atencao=TURMAS.reduce((s,t)=>s+alunosAtencao(t.id).length,0);
+ // régua: % alunos com média ≥60 no simulado A3 (apenas ilustrativo)
+ const conc=turmaAlunos('T12A');const ge60=conc.filter(a=>{const m=alunoAvg(a,'A3');return m!=null&&m>=60}).length;const nA3=conc.filter(a=>alunoAvg(a,'A3')!=null).length;
+ const heat=`<div class="heat" style="grid-template-columns:150px repeat(${AREAS.length},1fr)"><div></div>${AREAS.map(a=>`<div class="ht">${a.nome.replace(' e ',' & ')}</div>`).join('')}${TURMAS.map(t=>`<div class="hl">${t.nome}</div>`+AREAS.map(a=>{const v=areaAvg(turmaAlunos(t.id),a.id,av);return `<div class="hc" style="background:${heatColor(v)}" title="${t.nome} · ${a.nome}: ${v==null?'sem itens no período':Math.round(v)+'% (índice interno de domínio)'}" onclick="go('acad',{turma:'${t.id}',area:'${a.id}'})">${v==null?'—':Math.round(v)}</div>`}).join('')).join('')}</div>`;
+ const evo=svgLine([{name:'Instituição',color:'#00C2A8',pts:AVALS.map(a=>({y:instAvg(a.id),lbl:a.mes}))},{name:'8º A',color:'#FF6B6B',pts:AVALS.map(a=>({y:turmaAvg('T8A',a.id),lbl:a.mes}))},{name:'12º A',color:'#64B5E8',pts:AVALS.map(a=>({y:turmaAvg('T12A',a.id),lbl:a.mes}))}],{h:190,ref:60,refLbl:'referência interna 60'});
+ const alerts=[...compAvg.slice(0,3).map(x=>({k:'crit',t:`${x.c.nome} com média institucional de ${Math.round(x.m)}`,d:`${AREA[x.c.area].nome} · ${x.c.ctx} · ${TURMAS.filter(t=>{const r=turmaCompAvg(t.id,x.c.id,av);return r&&r.m<55}).length} turma(s) abaixo de 55`,go:`go('prog',{comp:'${x.c.id}'})`})),
+  {k:'warn',t:`${atencao} estudantes sinalizados para acompanhamento`,d:'Regra: média < 55 na última avaliação ou queda > 10 pts. Ver lista por turma.',go:"go('tutor')"},
+  {k:'ok',t:`Intervenção I-01 concluída com adesão de 87%`,d:`8º A · C10: média de ${Math.round(turmaCompAvg('T8A','C10','A3').m)} (jun) para ${Math.round(turmaCompAvg('T8A','C10','A5').m)} (out) — antes/depois, sem controle experimental.`,go:"openInterv('I-01')"}];
+ return `<div class="ph"><div class="t"><div class="eyebrow">${INST.sigla} · ${INST.contrato}</div><h1>Visão executiva</h1><small>Estado geral do curso de Medicina a partir das avaliações aplicadas na plataforma. Índices são <b>internos</b> (percentual de acerto por competência), não notas ENAMED.</small></div>
+ <div class="actions">${avalSel("setFilter('aval',this.value)")}<button class="btn" onclick="relatorioExec()">📄 Relatório executivo</button><button class="btn primary" onclick="go('interv')">Plano de ação</button></div></div>
+ <div class="grid g5 mb">
+  <div class="card kpi accent click" onclick="go('acad')"><div class="lbl">Índice institucional</div><div class="val">${Math.round(inst)}<small>/100</small></div><div class="delta ${inst>=instPrev?'up':'down'}">${inst>=instPrev?'▲':'▼'} ${r1(Math.abs(inst-instPrev))} vs. ${AVAL[prev].mes}</div></div>
+  <div class="card kpi resid click" onclick="go('regua')"><div class="lbl">Concluintes ≥ 60 (simulado jun)</div><div class="val">${Math.round(100*ge60/nA3)}<small>%</small></div><div class="delta">${ge60} de ${nA3} · ilustrativo, não é predição</div></div>
+  <div class="card kpi ${crit?'danger':'warn'} click" onclick="go('prog')"><div class="lbl">Competências críticas</div><div class="val">${crit}<small> / ${warn} em atenção</small></div><div class="delta">de ${compAvg.length} avaliadas</div></div>
+  <div class="card kpi warn click" onclick="go('tutor')"><div class="lbl">Estudantes em acompanhamento</div><div class="val">${atencao}</div><div class="delta">${pct(100*atencao/ALUNOS.length)} do corpo discente</div></div>
+  <div class="card kpi click" onclick="go('interv')"><div class="lbl">Intervenções ativas</div><div class="val">${ativas}<small> / ${INTERV.length}</small></div><div class="delta">participação na avaliação: ${pct(part.pct)}</div></div>
+ </div>
+ <div class="grid g-2-1 mb">
+  <div class="card"><div class="ch"><h3>Mapa turma × área — ${AVAL[av].nome}</h3><span class="hint">clique em uma célula para abrir a turma</span></div>${heat}<div class="legend mt8"><span><i style="background:#0d8f7c"></i>≥ 78</span><span><i style="background:#17a08a"></i>70–77</span><span><i style="background:#8a6a12"></i>62–69</span><span><i style="background:#b8780f"></i>55–61</span><span><i style="background:#a63d3d"></i>48–54</span><span><i style="background:#c43636"></i>&lt; 48</span><span class="note">Índice interno = % de acertos nos itens da área. Amostras pequenas (n &lt; 10 itens) devem ser lidas com cautela.</span></div></div>
+  <div class="card"><div class="ch"><h3>Alertas</h3><span class="hint">gerados por regras explícitas</span></div>${alerts.map(a=>`<div class="alert-item" onclick="${a.go}"><span class="badge b-${a.k}" style="margin-top:2px">${a.k==='crit'?'!':a.k==='warn'?'•':'✓'}</span><div><div class="ttl">${a.t}</div><div class="ds">${a.d}</div></div></div>`).join('')}</div>
+ </div>
+ <div class="grid g-2-1">
+  <div class="card"><div class="ch"><h3>Evolução ao longo de 2026</h3><div class="legend"><span><i style="background:#00C2A8"></i>Instituição</span><span><i style="background:#FF6B6B"></i>8º A</span><span><i style="background:#64B5E8"></i>12º A</span></div></div>${evo}<p class="note mt8">Avaliações diferentes não são estritamente comparáveis (itens distintos). A comparação é indicativa; a equiparação exigiria itens-âncora ou TRI (fase P2 do roadmap).</p></div>
+  <div class="card"><div class="ch"><h3>Plano de ação em andamento</h3><button class="btn xs" onclick="go('interv')">ver todas</button></div>${INTERV.filter(i=>i.status!=='cancelada').slice(0,4).map(i=>`<div class="alert-item" onclick="openInterv('${i.id}')"><span class="badge ${INTERV_STATUS[i.status][1]}">${INTERV_STATUS[i.status][0]}</span><div><div class="ttl">${i.titulo}</div><div class="ds">${TURMA[i.turma].nome} · ${COMP[i.comp].nome} · resp. ${DOCENTES.find(d=>d.id===i.resp).nome.split(' ').slice(0,3).join(' ')}${i.adesao!=null?' · adesão '+i.adesao+'%':''}</div></div></div>`).join('')}
+  <div class="sec"><h4 class="mb8">Cobertura da matriz institucional</h4>${(()=>{const cov=COMPS.filter(c=>agg(ALUNOS,av,c.id)).length;return barRow('Competências avaliadas',100*cov/COMPS.length,'%')+barRow('Contextos cobertos',100*new Set(COMPS.filter(c=>agg(ALUNOS,av,c.id)).map(c=>c.ctx)).size/6,'%')+barRow('Áreas cobertas',100,'%')})()}</div></div>
+ </div>`};
+function relatorioExec(){const av=state.filters.aval;const compAvg=COMPS.map(c=>({c,r:agg(ALUNOS,av,c.id)})).filter(x=>x.r).sort((a,b)=>a.r.m-b.r.m);
+ openModal('Relatório executivo — '+AVAL[av].nome,`<div class="callout info mb"><span>ⓘ</span><div>Relatório gerado a partir dos dados da plataforma (fictícios). Cada número é reproduzível a partir da exportação aluno × item (hash de auditoria incluído no rodapé).</div></div>
+ <h4>1. Síntese</h4><p class="small">Índice institucional de <b>${Math.round(instAvg(av))}</b> (escala interna 0–100), participação de <b>${pct(participacao(null,av).pct)}</b>. ${compAvg.filter(x=>x.r.m<55).length} competências em nível crítico, concentradas em <b>${[...new Set(compAvg.filter(x=>x.r.m<55).map(x=>AREA[x.c.area].nome))].join(', ')||'—'}</b>.</p>
+ <h4 class="mt">2. Competências por prioridade</h4><table class="tb"><tr><th>Competência</th><th>Área · contexto</th><th class="num">Média</th><th class="num">Turmas &lt; 55</th><th>Intervenção</th></tr>${compAvg.slice(0,8).map(x=>`<tr><td>${x.c.nome}</td><td class="small muted">${AREA[x.c.area].nome} · ${x.c.ctx}</td><td class="num">${Math.round(x.r.m)}</td><td class="num">${TURMAS.filter(t=>{const r=turmaCompAvg(t.id,x.c.id,av);return r&&r.m<55}).length}</td><td>${INTERV.find(i=>i.comp===x.c.id)?'<span class="badge b-teal">registrada</span>':'<span class="badge b-mute">nenhuma</span>'}</td></tr>`).join('')}</table>
+ <h4 class="mt">3. Intervenções e resultados</h4>${INTERV.filter(i=>i.status==='concluida').map(i=>{const pre=turmaCompAvg(i.turma,i.comp,i.pre),pos=turmaCompAvg(i.turma,i.comp,i.pos);return `<p class="small"><b>${i.titulo}</b> (${TURMA[i.turma].nome}): ${Math.round(pre.m)} → ${Math.round(pos.m)} entre ${AVAL[i.pre].mes} e ${AVAL[i.pos].mes}; adesão ${i.adesao}%. <i class="muted">${i.obs}</i></p>`}).join('')||'<p class="small muted">Nenhuma intervenção concluída no período.</p>'}
+ <h4 class="mt">4. Limites de interpretação</h4><p class="small muted">Índices internos não equivalem à nota ENAMED. Avaliações diferentes usam itens diferentes; variações pequenas (&lt; 5 pts) podem refletir diferença de prova, não de aprendizagem. Melhora após intervenção não demonstra causalidade.</p>
+ <p class="tiny muted mt">Exportação: aplicação ${av} · ${fmt(ALUNOS.length)} estudantes · hash sha256 demo:9f3a1c…</p>`,
+ `<button class="btn" onclick="closeModal()">Fechar</button><button class="btn" onclick="toast('Exportação CSV aluno × item iniciada (simulada).','ok');audit('Exportou relatório executivo ${av}')">⬇ Exportar CSV (aluno × item)</button><button class="btn primary" onclick="toast('PDF do relatório gerado (simulado).','ok');audit('Gerou relatório executivo ${av}')">Gerar PDF</button>`,'wide')}
+
+/* ── 1b. RÉGUA ENAMED — 3 ETAPAS ───────────────────────── */
+PAGES.regua=function(){const etapas=[{e:'1ª etapa',q:'final do 4º semestre',foco:'Ciclo básico / teoria',turma:'T4A'},{e:'2ª etapa',q:'final do 8º semestre (antes do internato)',foco:'Ciclo clínico · somativa pré-internato (DCN 2025, art. 36)',turma:'T8A'},{e:'3ª etapa',q:'12º semestre',foco:'Conhecimento aplicado · proficiência',turma:'T12A'}];
+ return `<div class="ph"><div class="t"><div class="eyebrow">Preparação longitudinal</div><h1>Régua ENAMED em três etapas</h1><small>Visão do curso organizada pelas etapas previstas no PLV 14/2026 (aprovado pelo Congresso em 15/10/2026, <b>pendente de sanção</b> em 19/10/2026) e pela avaliação somativa pré-internato exigida pelas novas DCN (Res. CNE/CES 3/2025). Os pesos e a nota mínima ainda dependem de regulamentação.</small></div></div>
+ <div class="callout warn mb"><span>⚠</span><div><b>Estado regulatório (verificado em 19/10/2026).</b> MP 1.370/2026 em vigor desde 19/06/2026; projeto de conversão aprovado, sem sanção publicada. A régua abaixo é uma leitura de produto, não uma obrigação já regulamentada em todos os detalhes.</div></div>
+ <div class="grid g3 mb">${etapas.map((et,i)=>{const t=TURMA[et.turma];const m=turmaAvg(t.id,'A5');const cps=compsForPer(t.per);const crit=cps.filter(c=>{const r=turmaCompAvg(t.id,c.id,'A5');return r&&r.m<55});return `<div class="card"><div class="eyebrow">${et.e}</div><h3>${et.q}</h3><p class="small muted">${et.foco}</p><div class="row mt" style="gap:16px">${ring(m,i===1?'#FF6B6B':'#00C2A8',78)}<div><div class="small muted">Turma de referência</div><b>${t.nome}</b><div class="small muted mt8">${cps.length} competências avaliáveis · ${crit.length} críticas</div></div></div><div class="mt">${crit.slice(0,3).map(c=>`<span class="tag" style="color:#FF6B6B">${c.nome}</span>`).join('')||'<span class="tag">sem competência crítica</span>'}</div><button class="btn sm mt" onclick="go('acad',{turma:'${t.id}'})">Abrir turma</button></div>`}).join('')}</div>
+ <div class="card"><div class="ch"><h3>Como a plataforma apoia cada etapa</h3></div><table class="tb"><tr><th>Etapa</th><th>Diagnóstico</th><th>Preparação</th><th>Verificação</th><th>Evidência para a instituição</th></tr>
+ <tr><td>1ª (4º sem.)</td><td>Diagnóstico de entrada + teste de progresso interno</td><td>Trilhas por competência básica (SC, MFC, fisiologia aplicada)</td><td>Prova ordinária com matriz alinhada</td><td>Cobertura e lacunas precoces por turma</td></tr>
+ <tr><td>2ª (8º sem.)</td><td>Simulado institucional 100 itens (formato Inep)</td><td>Intervenções por competência + listas dirigidas</td><td>Somativa pré-internato (DCN art. 36, parágrafo único)</td><td>Plano de ação individualizado (DCN art. 37 §1º) documentado</td></tr>
+ <tr><td>3ª (12º sem.)</td><td>Simulados periódicos + análise por área/contexto</td><td>Plano de estudo até a prova, reteste</td><td>Simulado final e prontidão por competência</td><td>Histórico longitudinal por concluinte, exportável</td></tr></table>
+ <p class="note mt">O que a plataforma não faz: não prevê nota ENAMED individual nem garante proficiência. Ela organiza evidências e ações. Qualquer estimativa de prontidão exigiria calibração com resultados reais (roadmap P2).</p></div>`};
+
+/* ── 2. ACADÊMICO: TURMAS & COMPETÊNCIAS ───────────────── */
+PAGES.acad=function(){const p=state.params;if(p.turma)return turmaView(p.turma,p);const av=state.filters.aval;
+ return `<div class="ph"><div class="t"><div class="eyebrow">Coordenação do curso</div><h1>Turmas & competências</h1><small>Dados <b>agregados por turma</b>. A visão individual só aparece ao abrir um estudante, com registro de acesso.</small></div><div class="actions">${avalSel("setFilter('aval',this.value)")}</div></div>
+ <div class="card"><table class="tb"><tr><th>Turma</th><th>Campus</th><th class="num">Estudantes</th><th class="num">Participação</th><th class="num">Índice</th><th>Tendência</th><th class="num">Críticas</th><th class="num">Em acompanhamento</th><th></th></tr>
+ ${TURMAS.map(t=>{const m=turmaAvg(t.id,av);const part=participacao(t.id,av);const cps=compsForPer(t.per);const crit=cps.filter(c=>{const r=turmaCompAvg(t.id,c.id,av);return r&&r.m<55}).length;const vals=AVALS.map(a=>turmaAvg(t.id,a.id)).filter(x=>x!=null);return `<tr class="click" onclick="go('acad',{turma:'${t.id}'})"><td><b>${t.nome}</b><span class="sub">${t.id} · ${cps.length} competências avaliáveis</span></td><td class="small">${t.campus}</td><td class="num">${t.n}</td><td class="num">${pct(part.pct)}</td><td class="num"><b style="color:${m>=70?'#22C55E':m>=55?'#F5A623':'#FF6B6B'}">${m!=null?Math.round(m):'—'}</b></td><td>${spark(vals)}</td><td class="num">${crit?`<span class="badge b-crit">${crit}</span>`:'<span class="badge b-ok">0</span>'}</td><td class="num">${alunosAtencao(t.id).length}</td><td><button class="btn xs">Abrir →</button></td></tr>`}).join('')}</table></div>
+ <div class="grid g2 mt"><div class="card"><div class="ch"><h3>Competências — média institucional (${AVAL[av].mes}/26)</h3></div>${COMPS.map(c=>({c,r:agg(ALUNOS,av,c.id)})).filter(x=>x.r).sort((a,b)=>a.r.m-b.r.m).map(x=>`<div onclick="go('prog',{comp:'${x.c.id}'})" style="cursor:pointer">${barRow(x.c.nome,x.r.m)}</div>`).join('')}</div>
+ <div class="card"><div class="ch"><h3>Por contexto de atuação</h3><span class="hint">Matriz de Referência · 6 contextos</span></div>${svgBars(CONTEXTOS.map(cx=>{const cs=COMPS.filter(c=>c.ctx===cx);let t=0,n=0;cs.forEach(c=>{const r=agg(ALUNOS,av,c.id);if(r){t+=r.m*r.n;n+=r.n}});return {lbl:cx,v:n?t/n:0,color:n?(t/n>=70?'#22C55E':t/n>=55?'#F5A623':'#FF6B6B'):'#333'}}),{h:200,ref:60})}<p class="note">Linha tracejada: referência interna 60. Contextos com poucos itens têm maior incerteza.</p></div></div>`};
+function turmaView(tid,p){const t=TURMA[tid];const av=state.filters.aval;const al=turmaAlunos(tid);const cps=compsForPer(t.per);const tab=p.tab||'comp';const sel=p.comp;
+ const compRows=cps.map(c=>({c,r:turmaCompAvg(tid,c.id,av),hist:AVALS.map(a=>{const r=turmaCompAvg(tid,c.id,a.id);return r?r.m:null})})).filter(x=>x.r).sort((a,b)=>a.r.m-b.r.m);
+ const m=turmaAvg(tid,av);const part=participacao(tid,av);const att=alunosAtencao(tid);
+ let body='';
+ if(tab==='comp'){body=`<div class="grid g-3-2"><div class="card"><div class="ch"><h3>Competências na ${AVAL[av].nome}</h3><span class="hint">ordenadas por prioridade</span></div><table class="tb"><tr><th>Competência</th><th>Área</th><th class="num">Média</th><th class="num">Itens/aluno</th><th>Status</th><th>Tendência</th><th></th></tr>${compRows.map(x=>`<tr class="click ${sel===x.c.id?'':''}" style="${sel===x.c.id?'outline:1px solid var(--pulso)':''}" onclick="go('acad',{turma:'${tid}',comp:'${x.c.id}'})"><td><b>${x.c.nome}</b><span class="sub">${x.c.ctx}</span></td><td><span class="badge b-mute" style="color:${AREA[x.c.area].cor}">${x.c.area}</span></td><td class="num"><b>${Math.round(x.r.m)}</b></td><td class="num">${Math.max(3,Math.round(AVAL[av].itens/cps.length))}</td><td>${badgeStatus(statusOf(x.r.m))}</td><td>${spark(x.hist.filter(v=>v!=null),x.r.m<55?'#FF6B6B':'#00C2A8')}</td><td><button class="btn xs">detalhar</button></td></tr>`).join('')}</table></div>
+ <div>${sel?compDetail(tid,sel):`<div class="card"><div class="empty"><b>Selecione uma competência</b>para ver objetivos educacionais, distribuição e grupos que precisam de apoio.</div></div>`}</div></div>`}
+ else if(tab==='alunos'){const rows=al.map(a=>({a,m:alunoAvg(a,av),hist:AVALS.map(v=>alunoAvg(a,v.id))})).sort((x,y)=>(x.m??999)-(y.m??999));
+  body=`<div class="card"><div class="callout warn mb"><span>🔒</span><div><b>Dados individuais.</b> Este nível mostra estudantes nominalmente. Acesso restrito a coordenação, tutores e docentes da turma; cada abertura de perfil é registrada em auditoria. Não há ranking público entre estudantes.</div></div>
+  <table class="tb"><tr><th>Estudante</th><th class="num">Índice (${AVAL[av].mes})</th><th>Evolução</th><th class="num">Engajamento</th><th>Sinal</th><th></th></tr>${rows.map(x=>{const fl=att.find(z=>z.a.id===x.a.id);return `<tr class="click" onclick="openAluno('${x.a.id}')"><td><b>${x.a.nome}</b><span class="sub">${x.a.id}</span></td><td class="num">${x.m!=null?Math.round(x.m):'<span class="muted">ausente</span>'}</td><td>${spark(x.hist.filter(v=>v!=null),'#64B5E8')}</td><td class="num">${Math.round(x.a.engaj)}%</td><td>${fl?(fl.queda?'<span class="badge b-warn">queda &gt; 10</span>':'<span class="badge b-crit">&lt; 55</span>'):'<span class="badge b-ok">—</span>'}</td><td><button class="btn xs">perfil</button></td></tr>`}).join('')}</table></div>`}
+ else if(tab==='avals'){body=`<div class="card"><table class="tb"><tr><th>Avaliação</th><th>Tipo</th><th>Data</th><th class="num">Itens</th><th class="num">Participação</th><th class="num">Média</th><th>Competências</th><th></th></tr>${AVALS.map(a=>{const pt=participacao(tid,a.id);const mm=turmaAvg(tid,a.id);return `<tr><td><b>${a.nome}</b></td><td><span class="badge b-info">${a.tipo}</span></td><td class="mono small">${a.data}</td><td class="num">${a.itens}</td><td class="num">${pt.p}/${pt.n}</td><td class="num">${mm!=null?Math.round(mm):'—'}</td><td class="small muted">${cps.length} competências</td><td><button class="btn xs" onclick="setFilter('aval','${a.id}')">usar como referência</button></td></tr>`}).join('')}</table><p class="note mt">Cada avaliação tem caderno fixo versionado; a matriz aluno × item × alternativa é exportável (roadmap P0.5).</p></div>`}
+ return `<div class="ph"><div class="t"><div class="eyebrow"><a href="#" onclick="event.preventDefault();go('acad')">Turmas</a> › ${t.id}</div><h1>${t.nome}</h1><small>${t.campus} · ${t.n} estudantes · ${cps.length} competências avaliáveis até o ${t.per}º período</small></div><div class="actions">${avalSel(`state.filters.aval=this.value;go('acad',{turma:'${tid}',tab:'${tab}',comp:'${sel||''}'})`)}<button class="btn" onclick="newInterv('${tid}','${sel||''}')">+ Intervenção</button><button class="btn" onclick="novaProva('${tid}')">+ Prova para a turma</button></div></div>
+ <div class="grid g4 mb"><div class="card kpi accent"><div class="lbl">Índice da turma</div><div class="val">${m!=null?Math.round(m):'—'}</div><div class="delta">${AVAL[av].nome}</div></div><div class="card kpi"><div class="lbl">Participação</div><div class="val">${pct(part.pct)}</div><div class="delta">${part.p} de ${part.n} presentes</div></div><div class="card kpi ${compRows.filter(x=>x.r.m<55).length?'danger':''}"><div class="lbl">Competências críticas</div><div class="val">${compRows.filter(x=>x.r.m<55).length}</div><div class="delta">${compRows.filter(x=>x.r.m>=55&&x.r.m<70).length} em atenção</div></div><div class="card kpi warn click" onclick="go('acad',{turma:'${tid}',tab:'alunos'})"><div class="lbl">Em acompanhamento</div><div class="val">${att.length}</div><div class="delta">${INTERV.filter(i=>i.turma===tid&&i.status!=='cancelada').length} intervenção(ões) na turma</div></div></div>
+ <div class="tabs"><button class="${tab==='comp'?'on':''}" onclick="go('acad',{turma:'${tid}',tab:'comp',comp:'${sel||''}'})">Competências (agregado)</button><button class="${tab==='alunos'?'on':''}" onclick="go('acad',{turma:'${tid}',tab:'alunos'})">Estudantes (individual) 🔒</button><button class="${tab==='avals'?'on':''}" onclick="go('acad',{turma:'${tid}',tab:'avals'})">Avaliações aplicadas</button></div>${body}`}
+function compDetail(tid,cid){const c=COMP[cid];const av=state.filters.aval;const al=turmaAlunos(tid);const r=turmaCompAvg(tid,cid,av);
+ const dist=[0,0,0,0];al.forEach(a=>{const x=RES[a.id][av]&&RES[a.id][av][cid];if(!x)return;dist[x.s<40?0:x.s<55?1:x.s<70?2:3]++});
+ const objs=objFor(cid);const objScores=objs.map((o,i)=>clamp(r.m+[-9,2,7][i]+rndn(0,0),5,99));
+ const hist=AVALS.map(a=>{const q=turmaCompAvg(tid,cid,a.id);return {y:q?q.m:null,lbl:a.mes}});
+ const cmp=TURMAS.filter(t=>t.per===TURMA[tid].per&&t.id!==tid);const intervs=INTERV.filter(i=>i.turma===tid&&i.comp===cid);
+ return `<div class="card"><div class="ch"><div><div class="eyebrow">${c.id} · ${AREA[c.area].nome} · ${c.ctx}</div><h3>${c.nome}</h3></div>${badgeStatus(statusOf(r.m))}</div>
+ <div class="row sb mb"><div><div class="score">${Math.round(r.m)}</div><div class="xs muted">média da turma · ${r.n} estudantes</div></div><div class="xs muted" style="max-width:200px">Introduzida no ${c.per[0]}º período; retomada no(s) ${c.per.slice(1).join('º, ')}º. ${cmp.length?`Turma paralela (${cmp[0].id}): ${Math.round(turmaCompAvg(cmp[0].id,cid,av).m)}.`:''}</div></div>
+ ${svgLine([{name:tid,color:'#FF6B6B',pts:hist}].concat(cmp.length?[{name:cmp[0].id,color:'#64B5E8',dash:true,pts:AVALS.map(a=>{const q=turmaCompAvg(cmp[0].id,cid,a.id);return {y:q?q.m:null,lbl:a.mes}})}]:[]),{h:150,ref:55,refLbl:'limiar crítico 55',band:intervs.length&&intervs[0].status==='concluida'?[2,3]:null,bandLbl:intervs.length?intervs[0].id:''})}
+ <h4 class="mt mb8">Distribuição dos estudantes</h4><div class="row" style="gap:6px">${['< 40','40–54','55–69','≥ 70'].map((l,i)=>`<div style="flex:1;text-align:center;padding:8px 4px;border-radius:8px;background:${['#c43636','#a63d3d','#8a6a12','#0d8f7c'][i]}22;border:1px solid ${['#c43636','#a63d3d','#8a6a12','#0d8f7c'][i]}66"><div class="score" style="font-size:18px">${dist[i]}</div><div class="tiny muted">${l}</div></div>`).join('')}</div>
+ <h4 class="mt mb8">Objetivos educacionais (onde está a dificuldade)</h4>${objs.map((o,i)=>barRow(o,objScores[i])).join('')}
+ <h4 class="mt mb8">Evidências que sustentam o diagnóstico</h4><ul class="small muted" style="padding-left:16px"><li>${AVALS.filter(a=>turmaCompAvg(tid,cid,a.id)).length} avaliações com itens desta competência (${AVALS.filter(a=>turmaCompAvg(tid,cid,a.id)).map(a=>a.mes).join(', ')})</li><li>${dist[0]+dist[1]} estudantes abaixo de 55 na avaliação selecionada</li><li>Itens de maior erro: ${QUESTOES.filter(q=>q.comp===cid&&q.status==='publicada').slice(0,2).map(q=>`<a href="#" onclick="event.preventDefault();openQuestao('${q.id}')">${q.id}</a>`).join(', ')||'—'}</li></ul>
+ <div class="row mt">${intervs.length?`<button class="btn sm" onclick="openInterv('${intervs[0].id}')">Ver intervenção ${intervs[0].id}</button>`:`<button class="btn sm primary" onclick="newInterv('${tid}','${cid}')">+ Criar intervenção</button>`}<button class="btn sm" onclick="go('prog',{comp:'${cid}'})">Trilha longitudinal</button><button class="btn sm" onclick="go('acad',{turma:'${tid}',tab:'alunos'})">Estudantes 🔒</button></div></div>`}
+function openAluno(aid_){const a=ALUNOS.find(x=>x.id===aid_);if(!a)return;const t=TURMA[a.turma];const cps=compsForPer(t.per);audit('Abriu perfil individual de '+a.id+' ('+t.id+')');
+ const last=[...AVALS].reverse().find(v=>RES[a.id][v.id]);const comps=cps.map(c=>{const x=RES[a.id][last.id][c.id];return {c,s:x?x.s:null}}).filter(x=>x.s!=null).sort((p,q)=>p.s-q.s);
+ openModal(`Estudante · ${a.nome}`,`<div class="callout warn mb"><span>🔒</span><div>Visão <b>individual</b> (acesso registrado em auditoria). Use para orientar, não para classificar.</div></div>
+ <div class="grid g-1-2"><div><div class="kv"><dt>Matrícula</dt><dd class="mono">${a.id}</dd><dt>Turma</dt><dd>${t.nome}</dd><dt>Campus</dt><dd>${t.campus}</dd><dt>Tutor(a)</dt><dd>Profa. Juliana Mendonça</dd><dt>Engajamento</dt><dd>${Math.round(a.engaj)}% das atividades</dd></div><div class="mt">${ring(alunoAvg(a,last.id),'#64B5E8',80)}<div class="xs muted">índice na ${last.nome}</div></div></div>
+ <div>${svgLine([{name:'estudante',color:'#64B5E8',pts:AVALS.map(v=>({y:alunoAvg(a,v.id),lbl:v.mes}))},{name:'turma',color:'#94A3B8',dash:true,pts:AVALS.map(v=>({y:turmaAvg(t.id,v.id),lbl:v.mes}))}],{h:140})}<div class="legend"><span><i style="background:#64B5E8"></i>estudante</span><span><i style="background:#94A3B8"></i>turma (tracejado)</span></div>
+ <h4 class="mt mb8">Competências — ${last.nome}</h4>${comps.slice(0,6).map(x=>barRow(x.c.nome,x.s)).join('')}</div></div>
+ <h4 class="mt mb8">Registro de acompanhamento</h4><div class="tl"><div class="ev ok"><div class="d">2026-08-14</div><div class="t">Participou da oficina I-01 (4/4 encontros)</div></div><div class="ev warn"><div class="d">2026-06-20</div><div class="t">Sinalizado: C10 abaixo de 45 no simulado</div><div class="x">Tutoria agendada · meta acordada: lista de 40 itens até 10/07</div></div></div>`,
+ `<button class="btn" onclick="closeModal()">Fechar</button><button class="btn" onclick="toast('Orientação registrada no histórico do estudante.','ok');audit('Registrou orientação para ${a.id}')">+ Registrar orientação</button><button class="btn primary" onclick="closeModal();setRoleSilent('aluno');go('aluno',{id:'${a.id}'})">Ver como o estudante vê</button>`,'wide')}
+
+/* ── 3. AVALIAÇÃO PROGRAMÁTICA ─────────────────────────── */
+PAGES.prog=function(){const p=state.params;const cid=p.comp||'C10';const c=COMP[cid];
+ // mapa currículo × competência
+ const pers=[2,4,6,8,10,12];
+ const map=`<div class="heat" style="grid-template-columns:230px repeat(${pers.length},1fr)"><div></div>${pers.map(x=>`<div class="ht">${x}º per.</div>`).join('')}${COMPS.map(cc=>`<div class="hl" style="cursor:pointer;${cc.id===cid?'color:#00C2A8':''}" onclick="go('prog',{comp:'${cc.id}'})" title="${cc.nome}">${cc.id} · ${cc.nome.length>24?cc.nome.slice(0,23)+'…':cc.nome}</div>`+pers.map(x=>{const t=TURMAS.find(tt=>tt.per===x);const planned=cc.per.includes(x);const r=t?turmaCompAvg(t.id,cc.id,'A5'):null;const v=r?r.m:null;const col=!planned&&v==null?'var(--abismo-surface)':v==null?'var(--heat-empty)':heatColor(v);return `<div class="hc" style="background:${col};${planned?'border-color:rgba(255,255,255,.25)':''}" title="${cc.nome} · ${x}º: ${planned?'previsto no currículo':'não previsto'}${v!=null?' · média '+Math.round(v):''}" onclick="go('prog',{comp:'${cc.id}'})">${v!=null?Math.round(v):(planned?'•':'')}</div>`}).join('')).join('')}</div>`;
+ // trilha longitudinal da competência: turmas de períodos diferentes como proxy de coorte (transversal) + evolução intra-turma
+ const trail=TURMAS.filter(t=>compsForPer(t.per).some(x=>x.id===cid)).map(t=>({t,hist:AVALS.map(a=>{const r=turmaCompAvg(t.id,cid,a.id);return r?r.m:null})}));
+ const intervs=INTERV.filter(i=>i.comp===cid);
+ return `<div class="ph"><div class="t"><div class="eyebrow">Acompanhamento longitudinal · DCN 2025 art. 36</div><h1>Avaliação programática</h1><small>Conecta as avaliações do curso a competências e objetivos educacionais para enxergar dificuldades que uma prova isolada esconde. Cada avaliação é um ponto de baixo impacto; decisões de alto impacto usam o conjunto.</small></div><div class="actions"><select class="sel" onchange="go('prog',{comp:this.value})">${COMPS.map(x=>`<option value="${x.id}" ${x.id===cid?'selected':''}>${x.id} · ${x.nome}</option>`).join('')}</select><button class="btn" onclick="planoAcomp('${cid}')">Plano de acompanhamento</button></div></div>
+ <div class="card mb"><div class="ch"><h3>Mapa currículo × competência (média na Avaliação de progresso · out)</h3><span class="hint">• = previsto no PPC sem avaliação ainda</span></div>${map}<p class="note mt8">Leitura transversal: cada coluna é uma turma diferente em outubro/2026. Leitura longitudinal real (mesma coorte ao longo dos anos) acumula a partir do 2º ano de uso.</p></div>
+ <div class="grid g-2-1"><div class="card"><div class="ch"><div><div class="eyebrow">${c.id} · ${AREA[c.area].nome} · ${c.ctx}</div><h3>${c.nome}</h3></div></div>
+ ${svgLine(trail.map((x,i)=>({name:x.t.nome,color:['#F5A623','#64B5E8','#FF6B6B','#D96AA7','#6B5CE7','#00C2A8'][i%6],pts:x.hist.map((y,j)=>({y,lbl:AVALS[j].mes}))})),{h:220,ref:55,refLbl:'limiar crítico'})}
+ <div class="legend mt8">${trail.map((x,i)=>`<span><i style="background:${['#F5A623','#64B5E8','#FF6B6B','#D96AA7','#6B5CE7','#00C2A8'][i%6]}"></i>${x.t.nome}</span>`).join('')}</div>
+ <h4 class="mt mb8">Leitura programática</h4>${cid==='C10'?`<p class="small">A dificuldade em <b>transtornos mentais comuns na APS</b> aparece nas duas turmas do 8º período desde o diagnóstico de fevereiro (44 e 47) e persiste no simulado de junho. A competência é introduzida no 4º período (onde o 4º A hoje está em ${Math.round(turmaCompAvg('T4A','C10','A5').m)}) e retomada no 6º e 8º — o padrão sugere lacuna de formação, não de uma prova específica. Após a oficina I-01 (jul–ago), o 8º A subiu para ${Math.round(turmaCompAvg('T8A','C10','A4').m)} em agosto e ${Math.round(turmaCompAvg('T8A','C10','A5').m)} em outubro; o 8º B, sem intervenção, permaneceu em ${Math.round(turmaCompAvg('T8B','C10','A5').m)}.</p><div class="callout info mt8"><span>ⓘ</span><div>A comparação 8º A × 8º B é observacional. Diferenças de docente, campus e composição de turma podem explicar parte do resultado. Serve para decidir o próximo passo, não para provar causalidade.</div></div>`:`<p class="small muted">Trilha gerada a partir dos dados simulados. Selecione C10 para ver o caso narrativo completo da demonstração.</p>`}
+ </div>
+ <div><div class="card mb"><div class="ch"><h3>Objetivos educacionais ligados</h3></div>${objFor(cid).map(o=>`<div class="small" style="padding:6px 0;border-bottom:1px solid var(--border-subtle)">• ${o}</div>`).join('')}<p class="note mt8">Itens do banco mapeados a esta competência: <b>${QUESTOES.filter(q=>q.comp===cid).length}</b> na amostra (${QUESTOES.filter(q=>q.comp===cid&&q.status==='publicada').length} publicados).</p></div>
+ <div class="card"><div class="ch"><h3>Intervenções nesta competência</h3></div>${intervs.length?intervs.map(i=>`<div class="alert-item" onclick="openInterv('${i.id}')"><span class="badge ${INTERV_STATUS[i.status][1]}">${INTERV_STATUS[i.status][0]}</span><div><div class="ttl">${i.titulo}</div><div class="ds">${TURMA[i.turma].nome} · ${i.inicio}${i.adesao!=null?' · adesão '+i.adesao+'%':''}</div></div></div>`).join(''):'<div class="empty small">Nenhuma intervenção registrada.</div>'}<button class="btn sm mt" onclick="newInterv('','${cid}')">+ Nova intervenção</button></div></div></div>`};
+function planoAcomp(cid){const c=COMP[cid];openModal('Plano de acompanhamento · '+c.nome,`<p class="small muted mb">Modelo de plano programático: pontos de avaliação de baixo impacto, feedback obrigatório e decisão de alto impacto ao final (DCN 2025, art. 36–37).</p>
+ <div class="tl"><div class="ev ok"><div class="d">fev · 4º período</div><div class="t">Diagnóstico de entrada (itens C10)</div><div class="x">Feedback individual automático por objetivo educacional</div></div><div class="ev ok"><div class="d">abr–ago</div><div class="t">Provas ordinárias com matriz alinhada</div><div class="x">Mínimo de 8 itens da competência por prova para leitura confiável</div></div><div class="ev warn"><div class="d">jun</div><div class="t">Simulado institucional → sinal de lacuna</div><div class="x">Gatilho: média da turma &lt; 55 em duas avaliações consecutivas</div></div><div class="ev"><div class="d">jul–ago</div><div class="t">Intervenção + plano individual para estudantes sinalizados (art. 37 §1º)</div></div><div class="ev"><div class="d">out</div><div class="t">Reteste embutido na avaliação de progresso</div><div class="x">Compara antes/depois e registra limites de interpretação</div></div><div class="ev mute"><div class="d">dez · 8º período</div><div class="t">Somativa abrangente pré-internato</div><div class="x">Decisão de alto impacto baseada no conjunto de evidências, não em uma prova</div></div></div>`,
+ `<button class="btn" onclick="closeModal()">Fechar</button><button class="btn primary" onclick="closeModal();toast('Plano de acompanhamento salvo para ${c.id} (simulado).','ok');audit('Salvou plano de acompanhamento ${c.id}')">Salvar plano</button>`)}
+
+/* ── 4. INTERVENÇÕES ───────────────────────────────────── */
+PAGES.interv=function(){const f=state.params.f||'';const list=INTERV.filter(i=>!f||i.status===f);
+ return `<div class="ph"><div class="t"><div class="eyebrow">Da informação à ação</div><h1>Intervenções pedagógicas</h1><small>Cada intervenção liga uma lacuna (turma × competência) a um responsável, atividades, adesão e um reteste. O resultado volta para a visão executiva.</small></div><div class="actions"><button class="btn primary" onclick="newInterv()">+ Nova intervenção</button></div></div>
+ <div class="filters"><div class="chips">${[['','Todas'],['planejada','Planejadas'],['em_andamento','Em andamento'],['concluida','Concluídas']].map(([k,l])=>`<button class="chip ${f===k?'on':''}" onclick="go('interv',{f:'${k}'})">${l} (${INTERV.filter(i=>!k||i.status===k).length})</button>`).join('')}</div></div>
+ ${list.length?`<div class="grid g2">${list.map(i=>{const pre=i.pre?turmaCompAvg(i.turma,i.comp,i.pre):null,pos=i.pos?turmaCompAvg(i.turma,i.comp,i.pos):null;return `<div class="card" style="cursor:pointer" onclick="openInterv('${i.id}')"><div class="ch"><div><div class="eyebrow">${i.id} · ${TURMA[i.turma].nome}</div><h3>${i.titulo}</h3></div><span class="badge ${INTERV_STATUS[i.status][1]}">${INTERV_STATUS[i.status][0]}</span></div><div class="small muted">${COMP[i.comp].nome} · ${i.tipo}<br>Resp.: ${DOCENTES.find(d=>d.id===i.resp).nome} · ${i.inicio}${i.fim?' → '+i.fim:''}</div><div class="row mt" style="gap:18px"><div><div class="xs muted">Adesão</div><div class="score" style="font-size:18px">${i.adesao!=null?i.adesao+'%':'—'}</div></div><div><div class="xs muted">Antes (${i.pre?AVAL[i.pre].mes:'—'})</div><div class="score" style="font-size:18px">${pre?Math.round(pre.m):'—'}</div></div><div><div class="xs muted">Depois (${i.pos?AVAL[i.pos].mes:'—'})</div><div class="score" style="font-size:18px;color:${pos&&pre&&pos.m>pre.m?'#22C55E':'#fff'}">${pos?Math.round(pos.m):'—'}</div></div><div style="flex:1"><div class="xs muted">Progresso</div><div class="bar mt8"><i class="${i.status==='concluida'?'ok':''}" style="width:${i.status==='concluida'?100:i.status==='em_andamento'?55:10}%"></i></div></div></div></div>`}).join('')}</div>`:`<div class="empty"><b>Nenhuma intervenção neste filtro</b>Crie uma a partir de uma lacuna identificada em Turmas &amp; competências.</div>`}`};
+function openInterv(id){const i=INTERV.find(x=>x.id===id);if(!i)return;const pre=i.pre?turmaCompAvg(i.turma,i.comp,i.pre):null,pos=i.pos?turmaCompAvg(i.turma,i.comp,i.pos):null;const cmp=TURMAS.find(t=>t.per===TURMA[i.turma].per&&t.id!==i.turma);
+ openModal(i.id+' · '+i.titulo,`<div class="grid g-1-2"><div><div class="kv"><dt>Status</dt><dd><span class="badge ${INTERV_STATUS[i.status][1]}">${INTERV_STATUS[i.status][0]}</span></dd><dt>Turma</dt><dd>${TURMA[i.turma].nome}</dd><dt>Competência</dt><dd>${COMP[i.comp].nome}</dd><dt>Tipo</dt><dd>${i.tipo}</dd><dt>Responsável</dt><dd>${DOCENTES.find(d=>d.id===i.resp).nome}</dd><dt>Período</dt><dd>${i.inicio}${i.fim?' → '+i.fim:''}</dd><dt>Adesão</dt><dd>${i.adesao!=null?i.adesao+'%':'—'}</dd><dt>Reteste</dt><dd>${i.pos?AVAL[i.pos].nome:'<span class="muted">a definir</span>'}</dd></div>
+ <h4 class="mt mb8">Atividades</h4>${i.atividades.map(a=>`<label class="chk"><input type="checkbox" ${i.status==='concluida'?'checked':''} onchange="toast('Atividade marcada (simulado).')"> ${a}</label>`).join('')}</div>
+ <div>${pre?svgLine([{name:i.turma,color:'#FF6B6B',pts:AVALS.map(a=>{const r=turmaCompAvg(i.turma,i.comp,a.id);return {y:r?r.m:null,lbl:a.mes}})}].concat(cmp?[{name:cmp.id,color:'#64B5E8',dash:true,pts:AVALS.map(a=>{const r=turmaCompAvg(cmp.id,i.comp,a.id);return {y:r?r.m:null,lbl:a.mes}})}]:[]),{h:170,ref:55,band:i.status==='concluida'?[AVALS.findIndex(a=>a.id===i.pre),AVALS.findIndex(a=>a.id===i.pos)]:null,bandLbl:'intervenção'}):'<div class="empty small">Sem avaliação de referência ainda.</div>'}
+ <div class="legend"><span><i style="background:#FF6B6B"></i>${TURMA[i.turma].nome}</span>${cmp?`<span><i style="background:#64B5E8"></i>${cmp.nome} (sem intervenção)</span>`:''}</div>
+ <div class="row mt" style="gap:18px"><div><div class="xs muted">Antes</div><div class="score">${pre?Math.round(pre.m):'—'}</div></div><div><div class="xs muted">Depois</div><div class="score" style="color:#22C55E">${pos?Math.round(pos.m):'—'}</div></div><div><div class="xs muted">Δ</div><div class="score">${pre&&pos?(pos.m-pre.m>0?'+':'')+Math.round(pos.m-pre.m):'—'}</div></div></div>
+ <div class="callout info mt"><span>ⓘ</span><div class="small">${i.obs}</div></div></div></div>`,
+ `<button class="btn" onclick="closeModal()">Fechar</button>${i.status==='planejada'?`<button class="btn" onclick="setIntervStatus('${i.id}','em_andamento')">▶ Iniciar</button>`:''}${i.status==='em_andamento'?`<button class="btn" onclick="setIntervStatus('${i.id}','concluida')">✓ Concluir</button>`:''}<button class="btn" onclick="closeModal();go('acad',{turma:'${i.turma}',comp:'${i.comp}'})">Abrir turma</button><button class="btn primary" onclick="toast('Reteste vinculado à próxima avaliação da turma (simulado).','ok');audit('Vinculou reteste à ${i.id}')">Vincular reteste</button>`,'wide')}
+function setIntervStatus(id,st){const i=INTERV.find(x=>x.id===id);i.status=st;if(st==='concluida'&&i.adesao==null)i.adesao=70;persist();audit(`Alterou ${id} para ${st}`);closeModal();toast(`${id} agora está <b>${INTERV_STATUS[st][0].toLowerCase()}</b>.`,'ok');rerender()}
+function newInterv(tid,cid){const tsel=tid||'T8B',csel=cid||'C10';
+ openModal('Nova intervenção pedagógica',`<div class="steps"><div class="st on"><span class="n">1</span>Lacuna</div><div class="sep"></div><div class="st"><span class="n">2</span>Ação</div><div class="sep"></div><div class="st"><span class="n">3</span>Verificação</div></div>
+ <div class="grid g2"><div class="fld"><label>Turma</label><select id="ni-turma">${TURMAS.map(t=>`<option value="${t.id}" ${t.id===tsel?'selected':''}>${t.nome}</option>`).join('')}</select></div><div class="fld"><label>Competência (lacuna)</label><select id="ni-comp">${COMPS.map(c=>`<option value="${c.id}" ${c.id===csel?'selected':''}>${c.id} · ${c.nome}</option>`).join('')}</select></div></div>
+ <div class="callout crit mb" id="ni-ctx"><span>!</span><div>${(()=>{const r=turmaCompAvg(tsel,csel,state.filters.aval);return r?`Média atual da turma nesta competência: <b>${Math.round(r.m)}</b> (${AVAL[state.filters.aval].nome}). ${alunosAtencao(tsel).length} estudantes sinalizados.`:'Sem dados para esta combinação.'})()}</div></div>
+ <div class="fld"><label>Título</label><input id="ni-titulo" value="Tutoria dirigida: ${COMP[csel].nome}"></div>
+ <div class="grid g2"><div class="fld"><label>Tipo de ação</label><select id="ni-tipo"><option>Lista dirigida de questões (plataforma)</option><option>Oficina de casos clínicos</option><option>Tutoria individual</option><option>Aula de reforço</option><option>Preceptoria em cenário de prática</option></select></div><div class="fld"><label>Responsável</label><select id="ni-resp">${DOCENTES.map(d=>`<option value="${d.id}" ${d.area===COMP[csel].area?'selected':''}>${d.nome} — ${d.papel}</option>`).join('')}</select></div></div>
+ <div class="grid g2"><div class="fld"><label>Início</label><input type="date" id="ni-ini" value="2026-10-26"></div><div class="fld"><label>Término previsto</label><input type="date" id="ni-fim" value="2026-11-27"></div></div>
+ <div class="fld"><label>Conteúdo vinculado (seleção assistida do banco)</label><div class="pill-row">${QUESTOES.filter(q=>q.comp===csel&&q.status==='publicada').slice(0,5).map(q=>`<span class="tag" style="color:#00C2A8">${q.id} · ${q.tema}</span>`).join('')}<span class="tag">+ ${Math.max(0,QUESTOES.filter(q=>q.comp===csel&&q.status==='publicada').length-5)} itens</span></div></div>
+ <div class="fld"><label>Verificação (reteste)</label><select id="ni-pos"><option>Embutir 8 itens da competência na próxima prova ordinária</option><option>Avaliação de progresso de dezembro</option><option>Lista de reteste específica (20 itens)</option></select></div>
+ <div class="fld"><label>Estudantes</label><label class="chk"><input type="radio" name="ni-alvo" checked> Toda a turma (atividade coletiva)</label><label class="chk"><input type="radio" name="ni-alvo"> Apenas estudantes sinalizados (plano individual · DCN art. 37 §1º)</label></div>`,
+ `<button class="btn" onclick="closeModal()">Cancelar</button><button class="btn primary" onclick="saveInterv()">Criar intervenção</button>`)}
+function saveInterv(){const g=id=>document.getElementById(id).value;const id='I-'+String(INTERV.length+1).padStart(2,'0');const i={id,titulo:g('ni-titulo'),turma:g('ni-turma'),comp:g('ni-comp'),resp:g('ni-resp'),tipo:g('ni-tipo'),inicio:g('ni-ini'),fim:g('ni-fim'),status:'planejada',adesao:null,pre:state.filters.aval,pos:null,obs:'Criada na demonstração. Reteste: '+g('ni-pos'),atividades:[g('ni-tipo'),'Lista dirigida vinculada à competência','Reteste: '+g('ni-pos')],novo:true};
+ INTERV.unshift(i);state.created.interv++;persist();audit(`Criou intervenção ${id} (${i.turma} · ${i.comp})`);closeModal();toast(`<b>${id}</b> criada. O responsável recebe a tarefa; os estudantes veem a lista dirigida em "Minha jornada".`,'ok');go('interv')}
+
+/* ── 4b. ACOMPANHAMENTO INDIVIDUAL (tutor) ─────────────── */
+PAGES.tutor=function(){const rows=TURMAS.flatMap(t=>alunosAtencao(t.id).map(x=>({...x,t})));
+ return `<div class="ph"><div class="t"><div class="eyebrow">Tutoria acadêmica</div><h1>Acompanhamento individual</h1><small>Lista de estudantes sinalizados por regra explícita (média &lt; 55 na última avaliação ou queda &gt; 10 pts). Sinal acadêmico, não diagnóstico.</small></div><div class="actions"><button class="btn" onclick="toast('Regra de sinalização aberta para edição (simulado).')">⚙ Regra de sinalização</button></div></div>
+ <div class="grid g4 mb"><div class="card kpi warn"><div class="lbl">Sinalizados</div><div class="val">${rows.length}</div></div><div class="card kpi"><div class="lbl">Com plano individual</div><div class="val">${Math.round(rows.length*.6)}</div><div class="delta">${Math.round(60)}% · meta 100%</div></div><div class="card kpi"><div class="lbl">Orientações registradas (30 d)</div><div class="val">38</div></div><div class="card kpi accent"><div class="lbl">Saíram do sinal após plano</div><div class="val">11</div><div class="delta">desde ago/26</div></div></div>
+ <div class="card"><table class="tb"><tr><th>Estudante</th><th>Turma</th><th class="num">Última média</th><th class="num">Anterior</th><th>Motivo</th><th>Plano</th><th></th></tr>${rows.map(x=>`<tr class="click" onclick="openAluno('${x.a.id}')"><td><b>${x.a.nome}</b><span class="sub">${x.a.id}</span></td><td class="small">${x.t.nome}</td><td class="num">${Math.round(x.last)}</td><td class="num muted">${x.prev!=null?Math.round(x.prev):'—'}</td><td>${x.queda?'<span class="badge b-warn">queda &gt; 10 pts</span>':'<span class="badge b-crit">média &lt; 55</span>'}</td><td>${hsh(x.a.id)>.4?'<span class="badge b-teal">ativo</span>':'<span class="badge b-mute">pendente</span>'}</td><td><button class="btn xs">abrir 🔒</button></td></tr>`).join('')}</table></div>`};
+
+/* ── 5. PROVAS & AVALIAÇÕES ────────────────────────────── */
+PAGES.prova=function(){const p=state.params;if(p.id)return provaView(p.id);
+ return `<div class="ph"><div class="t"><div class="eyebrow">Gestão de avaliações</div><h1>Provas & avaliações</h1><small>Da matriz de avaliação à correção: provas ordinárias, simulados institucionais e avaliações de progresso com caderno fixo versionado, revisão e resultados por competência.</small></div><div class="actions"><button class="btn" onclick="toast('Importação de prova própria (PDF/DOCX) abre o Motor A com a instituição como titular.','ok')">⬆ Importar prova própria</button><button class="btn primary" onclick="novaProva()">+ Nova avaliação</button></div></div>
+ <div class="grid g4 mb"><div class="card kpi"><div class="lbl">Avaliações em 2026</div><div class="val">${PROVAS.length+3}</div></div><div class="card kpi warn"><div class="lbl">Aguardando revisão</div><div class="val">${PROVAS.filter(x=>x.status==='em_revisao').length}</div></div><div class="card kpi accent"><div class="lbl">Itens aplicados no ano</div><div class="val">${fmt(PROVAS.filter(x=>x.status==='aplicada').reduce((s,x)=>s+x.itens*x.turma.split(',').length,0)+940)}</div></div><div class="card kpi"><div class="lbl">Tempo médio de montagem</div><div class="val">1,8<small> h</small></div><div class="delta">vs. ~3 semanas no processo manual relatado</div></div></div>
+ <div class="card"><table class="tb"><tr><th>Avaliação</th><th>Turmas</th><th class="num">Itens</th><th class="num">Versões</th><th>Data</th><th>Autor</th><th>Status</th><th></th></tr>${PROVAS.map(x=>`<tr class="click" onclick="go('prova',{id:'${x.id}'})"><td><b>${x.titulo}</b><span class="sub">${x.id} · ${x.comps.length} competências</span></td><td class="small">${x.turma.split(',').map(t=>TURMA[t]?TURMA[t].nome.split(' ·')[0]:t).join(', ')}</td><td class="num">${x.itens}</td><td class="num">${x.versoes}</td><td class="mono small">${x.data}</td><td class="small">${x.autor}</td><td><span class="badge ${PROVA_STATUS[x.status][1]}">${PROVA_STATUS[x.status][0]}</span></td><td><button class="btn xs">abrir</button></td></tr>`).join('')}</table></div>
+ <div class="grid g2 mt"><div class="card"><div class="ch"><h3>Formatos suportados nesta versão</h3></div><table class="tb"><tr><th>Formato</th><th>Status no produto</th><th>Justificativa</th></tr><tr><td>Objetiva (4 alternativas, padrão Inep)</td><td><span class="badge b-ok">v1</span></td><td class="small muted">Base do ENAMED e das provas ordinárias; correção automática e psicometria.</td></tr><tr><td>Discursiva com rubrica</td><td><span class="badge b-warn">fase 2</span></td><td class="small muted">Útil para somativa pré-internato; exige correção humana e calibração.</td></tr><tr><td>OSCE / estações práticas (checklist)</td><td><span class="badge b-info">fase 3 · validar</span></td><td class="small muted">Alta relevância na DCN (domínio psicomotor), alta complexidade operacional.</td></tr><tr><td>Mini-CEX / portfólio</td><td><span class="badge b-mute">fora do escopo inicial</span></td><td class="small muted">Registro longitudinal possível via integração, não via produção própria.</td></tr></table></div>
+ <div class="card"><div class="ch"><h3>O problema que resolve</h3></div><p class="small">Na reunião de 12/10, um médico relatou uma escola cujas provas semestrais têm 18 questões porque os docentes não conseguem produzir mais. A plataforma troca a produção artesanal por <b>matriz + banco curado + seleção assistida + revisão docente</b>, mantendo a autoria pedagógica na instituição.</p><div class="stat-list mt"><div class="si"><span>Itens por prova (relato)</span><b>18 → 80–100</b></div><div class="si"><span>Produção docente necessária</span><b>revisão, não criação do zero</b></div><div class="si"><span>Cobertura da matriz por prova</span><b>garantida pela cota</b></div></div></div></div>`};
+function provaView(id){const x=PROVAS.find(p=>p.id===id);if(!x)return '<div class="empty">Prova não encontrada</div>';const turmas=x.turma.split(',');const qs=QUESTOES.filter(q=>x.comps.includes(q.comp)&&q.status==='publicada').slice(0,Math.min(14,x.itens));
+ const areaDist=AREAS.map(a=>({lbl:a.id,v:Math.round(x.itens*(({CM:.25,CG:.15,GO:.14,PED:.14,MFC:.1,SM:.08,SC:.14})[a.id])),color:a.cor}));
+ let results='';if(x.status==='aplicada'&&x.aval){const av=x.aval;results=`<div class="grid g2 mt"><div class="card"><div class="ch"><h3>Resultado por competência</h3><span class="hint">${AVAL[av].nome}</span></div>${x.comps.map(c=>{let t=0,n=0;turmas.forEach(tid=>{const r=turmaCompAvg(tid,c,av);if(r){t+=r.m*r.n;n+=r.n}});return n?barRow(COMP[c].nome,t/n):''}).join('')}</div>
+ <div class="card"><div class="ch"><h3>Análise de itens (TCT)</h3><span class="hint">n = ${turmas.reduce((s,t)=>s+participacao(t,av).p,0)} respondentes</span></div><table class="tb"><tr><th>Item</th><th class="num">p (facilidade)</th><th class="num">Discrim.</th><th>Sinal</th></tr>${qs.slice(0,8).map(q=>`<tr class="click" onclick="openQuestao('${q.id}')"><td class="mono small">${q.id}</td><td class="num">${q.p!=null?q.p.toFixed(2):'—'}</td><td class="num">${q.disc!=null?q.disc.toFixed(2):'—'}</td><td>${q.flags.length?q.flags.map(f=>`<span class="badge b-warn">${f}</span>`).join(' '):'<span class="badge b-ok">ok</span>'}</td></tr>`).join('')}</table><p class="note mt8">Índices de Teoria Clássica dos Testes; discriminação = correlação ponto-bisserial. Com n &lt; 100 respondentes, sinais são indicativos e não levam à retirada automática do item.</p></div></div>`}
+ return `<div class="ph"><div class="t"><div class="eyebrow"><a href="#" onclick="event.preventDefault();go('prova')">Provas</a> › ${x.id}</div><h1>${x.titulo}</h1><small>${turmas.map(t=>TURMA[t]?TURMA[t].nome:t).join(' · ')} · ${x.itens} itens · ${x.versoes} versão(ões) · ${x.data} · autor: ${x.autor}</small></div><div class="actions"><span class="badge ${PROVA_STATUS[x.status][1]}">${PROVA_STATUS[x.status][0]}</span>${x.status==='em_revisao'?`<button class="btn" onclick="provaRevisao('${x.id}')">Revisar itens</button><button class="btn primary" onclick="setProvaStatus('${x.id}','aprovada')">✓ Aprovar</button>`:''}${x.status==='aprovada'?`<button class="btn primary" onclick="setProvaStatus('${x.id}','publicada')">Publicar para as turmas</button>`:''}${x.status==='rascunho'?`<button class="btn primary" onclick="setProvaStatus('${x.id}','em_revisao')">Enviar para revisão</button>`:''}${x.status==='publicada'?`<button class="btn" onclick="toast('Caderno PDF + folha de respostas + gabarito separado gerados (simulado).','ok')">⬇ Caderno / gabarito</button>`:''}${x.status==='aplicada'?`<button class="btn" onclick="toast('Exportação aluno × item × alternativa gerada (CSV + dicionário + hash).','ok');audit('Exportou matriz de respostas ${x.id}')">⬇ Exportar aluno × item</button>`:''}</div></div>
+ <div class="grid g-2-1"><div class="card"><div class="ch"><h3>Matriz de avaliação</h3><span class="hint">distribuição por área · cotas</span></div>${svgBars(areaDist,{h:150,max:Math.max(...areaDist.map(a=>a.v))+6,fmt:v=>v})}<div class="pill-row mt8">${x.comps.map(c=>`<span class="tag">${COMP[c].id} ${COMP[c].nome}</span>`).join('')}</div></div>
+ <div class="card"><div class="ch"><h3>Fluxo</h3></div><div class="tl"><div class="ev ok"><div class="d">etapa 1</div><div class="t">Matriz definida</div></div><div class="ev ${['em_revisao','aprovada','publicada','aplicada'].includes(x.status)?'ok':'mute'}"><div class="d">etapa 2</div><div class="t">Itens selecionados (${x.itens})</div></div><div class="ev ${['aprovada','publicada','aplicada'].includes(x.status)?'ok':x.status==='em_revisao'?'warn':'mute'}"><div class="d">etapa 3</div><div class="t">Revisão docente / NDE</div></div><div class="ev ${['publicada','aplicada'].includes(x.status)?'ok':'mute'}"><div class="d">etapa 4</div><div class="t">Publicação (caderno fixo, ${x.versoes} versão)</div></div><div class="ev ${x.status==='aplicada'?'ok':'mute'}"><div class="d">etapa 5</div><div class="t">Aplicação, correção e análise</div></div></div></div></div>
+ <div class="card mt"><div class="ch"><h3>Itens do caderno (amostra)</h3><span class="hint">${qs.length} de ${x.itens} exibidos · versão ${x.versoes}</span></div><table class="tb"><tr><th>#</th><th>Item</th><th>Área</th><th>Competência</th><th>Origem</th><th>Dific.</th><th></th></tr>${qs.map((q,i)=>`<tr class="click" onclick="openQuestao('${q.id}')"><td class="mono">${i+1}</td><td><b class="mono">${q.id}</b><span class="sub">${q.tema}</span></td><td><span class="badge b-mute" style="color:${AREA[q.area].cor}">${q.area}</span></td><td class="small">${COMP[q.comp].nome}</td><td class="small muted">${ORIGEM[q.origem].nome}</td><td><span class="badge b-mute">${q.dif}</span></td><td><button class="btn xs" onclick="event.stopPropagation();toast('Item substituído por equivalente (mesma competência/dificuldade) — simulado.','ok')">substituir</button></td></tr>`).join('')}</table></div>${results}`}
+function setProvaStatus(id,st){const x=PROVAS.find(p=>p.id===id);x.status=st;persist();audit(`Prova ${id}: ${st}`);toast(`${id} → <b>${PROVA_STATUS[st][0]}</b>.${st==='publicada'?' Os estudantes das turmas veem a avaliação na agenda.':''}`,'ok');rerender()}
+function provaRevisao(id){openModal('Revisão de itens · '+id,`<p class="small muted mb">Cada revisor marca itens com problema; comentários ficam no histórico da questão (não da prova).</p>${QUESTOES.filter(q=>q.status==='publicada').slice(0,5).map(q=>`<div class="card flat mb8"><div class="row sb"><b class="mono">${q.id}</b><span class="small muted">${q.tema} · ${COMP[q.comp].nome}</span></div><p class="small mt8">${q.enun}</p><div class="row mt8"><button class="btn xs" onclick="toast('Item ${q.id} aprovado na revisão.','ok')">✓ OK</button><button class="btn xs" onclick="toast('Comentário registrado para o autor de ${q.id}.','warn')">✎ Comentar</button><button class="btn xs danger" onclick="toast('${q.id} sinalizado para substituição.','crit')">⚠ Substituir</button></div></div>`).join('')}`,`<button class="btn" onclick="closeModal()">Fechar</button><button class="btn primary" onclick="closeModal();setProvaStatus('${id}','aprovada')">Concluir revisão e aprovar</button>`,'wide')}
+// Wizard de nova prova
+const NP={step:1,titulo:'',turma:'T8B',tipo:'Prova ordinária',itens:80,comps:['C01','C02','C10','C12'],dif:{facil:25,media:50,alta:25},versoes:2,sel:[]};
+function novaProva(tid){NP.step=1;NP.turma=tid||'T8B';NP.titulo='Prova ordinária · 3º bimestre · '+TURMA[NP.turma].nome;NP.sel=[];renderNP()}
+function renderNP(){const s=NP.step;const steps=['Matriz','Seleção','Revisão','Publicação'];const head=`<div class="steps">${steps.map((l,i)=>`<div class="st ${s===i+1?'on':s>i+1?'done':''}" onclick="NP.step=${i+1};renderNP()"><span class="n">${s>i+1?'✓':i+1}</span>${l}</div>${i<3?'<div class="sep"></div>':''}`).join('')}</div>`;
+ let body='',foot='';
+ if(s===1){const cps=compsForPer(TURMA[NP.turma].per);body=`<div class="grid g2"><div class="fld"><label>Título</label><input id="np-t" value="${NP.titulo}"></div><div class="fld"><label>Turma</label><select id="np-turma" onchange="NP.turma=this.value;NP.comps=[];renderNP()">${TURMAS.map(t=>`<option value="${t.id}" ${t.id===NP.turma?'selected':''}>${t.nome}</option>`).join('')}</select></div></div>
+ <div class="grid g3"><div class="fld"><label>Tipo</label><select id="np-tipo"><option>Prova ordinária</option><option>Simulado ENAMED institucional</option><option>Avaliação de progresso</option><option>Somativa pré-internato</option><option>Lista de reteste (intervenção)</option></select></div><div class="fld"><label>Nº de itens</label><input type="number" id="np-n" value="${NP.itens}" onchange="NP.itens=+this.value"></div><div class="fld"><label>Versões (embaralhamento)</label><select id="np-v" onchange="NP.versoes=+this.value"><option ${NP.versoes===1?'selected':''}>1</option><option ${NP.versoes===2?'selected':''}>2</option><option ${NP.versoes===4?'selected':''}>4</option></select></div></div>
+ <div class="fld"><label>Competências avaliadas (${NP.comps.length} selecionadas) — sugestão: lacunas da turma pré-marcadas</label><div class="chips">${cps.map(c=>{const r=turmaCompAvg(NP.turma,c.id,state.filters.aval);const weak=r&&r.m<55;if(NP.comps.length===0&&weak)NP.comps.push(c.id);return `<button class="chip ${NP.comps.includes(c.id)?'on':''}" onclick="toggleNPComp('${c.id}')">${c.id} ${c.nome.length>28?c.nome.slice(0,27)+'…':c.nome}${weak?' <span style="color:#FF6B6B">●</span>':''}</button>`}).join('')}</div></div>
+ <div class="grid g3"><div class="fld"><label>Fácil (%)</label><input type="number" id="np-f" value="${NP.dif.facil}" onchange="NP.dif.facil=+this.value"></div><div class="fld"><label>Média (%)</label><input type="number" value="${NP.dif.media}" onchange="NP.dif.media=+this.value"></div><div class="fld"><label>Alta (%)</label><input type="number" value="${NP.dif.alta}" onchange="NP.dif.alta=+this.value"></div></div>
+ <div class="callout teal"><span>✓</span><div class="small">Cota automática: itens distribuídos proporcionalmente entre as competências marcadas, respeitando a distribuição por área da Matriz de Referência quando o tipo for simulado.</div></div>`;
+ foot=`<button class="btn" onclick="closeModal()">Cancelar</button><button class="btn primary" onclick="NP.titulo=document.getElementById('np-t').value;NP.tipo=document.getElementById('np-tipo').value;if(!NP.comps.length){toast('Selecione ao menos uma competência.','warn');return}NP.step=2;autoSelect();renderNP()">Selecionar itens →</button>`}
+ if(s===2){const pool=QUESTOES.filter(q=>NP.comps.includes(q.comp)&&q.status==='publicada');body=`<div class="row sb mb"><div class="small muted">${NP.sel.length} de ${NP.itens} itens selecionados · banco elegível: ${pool.length} publicados nestas competências (amostra do protótipo; banco completo ≈ ${fmt(Math.round(BANK.porStatus.publicada*NP.comps.length/COMPS.length))})</div><div class="row"><button class="btn sm" onclick="autoSelect();renderNP()">⟳ Seleção assistida</button><button class="btn sm" onclick="NP.sel=[];renderNP()">limpar</button></div></div>
+ <div class="bar mb"><i style="width:${Math.min(100,100*NP.sel.length/NP.itens)}%"></i></div>
+ <table class="tb"><tr><th></th><th>Item</th><th>Competência</th><th>Origem</th><th>Dific.</th><th class="num">p</th><th class="num">usos</th></tr>${pool.map(q=>`<tr><td><input type="checkbox" ${NP.sel.includes(q.id)?'checked':''} onchange="toggleSel('${q.id}')"></td><td><b class="mono small">${q.id}</b><span class="sub">${q.tema}${q.placeholder?' · <i>item demonstrativo</i>':''}</span></td><td class="small">${COMP[q.comp].nome}</td><td class="small muted">${ORIGEM[q.origem].nome.split(' (')[0]}</td><td><span class="badge b-mute">${q.dif}</span></td><td class="num">${q.p!=null?q.p.toFixed(2):'—'}</td><td class="num">${q.usos}</td></tr>`).join('')}</table>
+ <p class="note mt8">A seleção assistida equilibra competência, dificuldade e evita itens já usados pela turma nos últimos 12 meses. ${NP.sel.length<NP.itens?`Faltam ${NP.itens-NP.sel.length} itens: no banco completo seriam preenchidos automaticamente; aqui a amostra é limitada.`:''}</p>`;
+ foot=`<button class="btn" onclick="NP.step=1;renderNP()">← Matriz</button><button class="btn primary" onclick="NP.step=3;renderNP()">Revisar →</button>`}
+ if(s===3){body=`<div class="grid g2"><div><div class="kv"><dt>Título</dt><dd>${NP.titulo}</dd><dt>Turma</dt><dd>${TURMA[NP.turma].nome}</dd><dt>Tipo</dt><dd>${NP.tipo}</dd><dt>Itens</dt><dd>${NP.itens} (${NP.sel.length} selecionados na amostra)</dd><dt>Versões</dt><dd>${NP.versoes}</dd><dt>Competências</dt><dd>${NP.comps.join(', ')}</dd><dt>Dificuldade</dt><dd>${NP.dif.facil}/${NP.dif.media}/${NP.dif.alta}</dd></div></div><div><h4 class="mb8">Revisores</h4>${DOCENTES.filter(d=>NP.comps.some(c=>COMP[c].area===d.area)).map(d=>`<label class="chk"><input type="checkbox" checked> ${d.nome} <span class="muted xs">· ${AREA[d.area].nome}</span></label>`).join('')}<div class="fld mt"><label>Prazo de revisão</label><input type="date" value="2026-11-02"></div></div></div>
+ <div class="callout info mt"><span>ⓘ</span><div class="small">Checagens automáticas: nenhum item repetido na turma nos últimos 12 meses · cobertura de todas as competências marcadas · gabarito e comentário presentes em 100% · 2 itens com origem IA já aprovados por revisor humano.</div></div>`;
+ foot=`<button class="btn" onclick="NP.step=2;renderNP()">← Seleção</button><button class="btn primary" onclick="NP.step=4;renderNP()">Enviar para revisão →</button>`}
+ if(s===4){body=`<div class="empty" style="border-style:solid;border-color:rgba(0,194,168,.4)"><b>Pronta para publicar</b>Após a aprovação dos revisores, o caderno é congelado (versão 1), gerado em ${NP.versoes} versão(ões) embaralhada(s) e disponibilizado às turmas na data definida.</div><div class="grid g2 mt"><div class="fld"><label>Data de aplicação</label><input type="date" id="np-data" value="2026-11-16"></div><div class="fld"><label>Modalidade</label><select><option>Presencial com folha de respostas (leitura óptica)</option><option>Online na plataforma (navegador seguro)</option><option>Híbrida</option></select></div></div>`;
+ foot=`<button class="btn" onclick="NP.step=3;renderNP()">← Revisão</button><button class="btn primary" onclick="saveProva()">Criar e enviar para revisão</button>`}
+ openModal('Nova avaliação — '+steps[s-1],head+body,foot,'wide')}
+function toggleNPComp(c){const i=NP.comps.indexOf(c);if(i>=0)NP.comps.splice(i,1);else NP.comps.push(c);renderNP()}
+function toggleSel(q){const i=NP.sel.indexOf(q);if(i>=0)NP.sel.splice(i,1);else NP.sel.push(q);renderNP()}
+function autoSelect(){const pool=QUESTOES.filter(q=>NP.comps.includes(q.comp)&&q.status==='publicada');NP.sel=pool.slice(0,NP.itens).map(q=>q.id)}
+function saveProva(){const id='P-2026-'+(11+state.created.provas);const x={id,titulo:NP.titulo,turma:NP.turma,itens:NP.itens,status:'em_revisao',data:document.getElementById('np-data').value,autor:userLbl(),versoes:NP.versoes,comps:[...NP.comps],aval:null,novo:true};PROVAS.unshift(x);state.created.provas++;persist();audit(`Criou avaliação ${id} (${NP.turma}, ${NP.itens} itens)`);closeModal();toast(`<b>${id}</b> criada e enviada aos revisores. Prazo: 02/11.`,'ok');go('prova',{id})}
+
+/* ── 6. BANCO DE QUESTÕES ──────────────────────────────── */
+PAGES.qbank=function(){const tab=state.params.tab||'visao';
+ const tabs=`<div class="tabs">${[['visao','Visão geral & cobertura'],['pipeline','Pipeline editorial'],['itens','Explorar itens'],['motores','Motores de produção'],['simulador','Simulador de capacidade'],['qualidade','Qualidade & governança']].map(([k,l])=>`<button class="${tab===k?'on':''}" onclick="go('qbank',{tab:'${k}'})">${l}</button>`).join('')}</div>`;
+ const F={visao:qbVisao,pipeline:qbPipeline,itens:qbItens,motores:qbMotores,simulador:qbSimulador,qualidade:qbQualidade};
+ return `<div class="ph"><div class="t"><div class="eyebrow">Infraestrutura de conteúdo</div><h1>Banco de questões</h1><small>Criação, curadoria, classificação, uso e atualização contínua. <b>Uma questão só conta como disponível quando está classificada, revisada, com direitos registrados e aprovada.</b></small></div><div class="actions"><button class="btn" onclick="toast('Importação de lote (PDF/JSON) enviada ao Motor A — 0 itens até triagem.','ok')">⬆ Importar lote</button><button class="btn primary" onclick="novaQuestao()">+ Nova questão</button></div></div>${tabs}${F[tab]()}`};
+function qbVisao(){const pub=BANK.porStatus.publicada;const tot=BANK.total;const emRev=BANK.porStatus.rev_tecnica+BANK.porStatus.rev_pedagogica;
+ // cobertura por área × contexto (hipótese: distribuição)
+ const cov=AREAS.map(a=>CONTEXTOS.map(cx=>{const comps=COMPS.filter(c=>c.area===a.id&&c.ctx===cx);return comps.length?Math.round(BANK.porArea[a.id]*0.79*(0.28+hsh(a.id+cx)*0.5)/Math.max(1,COMPS.filter(c=>c.area===a.id).length)):Math.round(BANK.porArea[a.id]*0.05*hsh(cx+a.id))}));
+ return `<div class="grid g5 mb"><div class="card kpi accent"><div class="lbl">Disponíveis (publicadas)</div><div class="val">${fmt(pub)}</div><div class="delta">${pct(100*pub/tot)} do acervo total de ${fmt(tot)}</div></div><div class="card kpi warn click" onclick="go('qbank',{tab:'pipeline'})"><div class="lbl">Em revisão</div><div class="val">${fmt(emRev)}</div><div class="delta">tempo médio 4,6 dias</div></div><div class="card kpi"><div class="lbl">Produção últimas 4 sem.</div><div class="val">${fmt(BANK.semanal.slice(-4).reduce((a,b)=>a+b,0))}</div><div class="delta up">▲ ritmo ≈ ${fmt(Math.round(BANK.semanal.slice(-4).reduce((a,b)=>a+b,0)*13/12))}/mês</div></div><div class="card kpi danger click" onclick="go('qbank',{tab:'qualidade'})"><div class="lbl">Contestadas / em atualização</div><div class="val">${BANK.porStatus.contestada}<small> / ${BANK.porStatus.atualizacao}</small></div></div><div class="card kpi"><div class="lbl">Taxa de aprovação editorial</div><div class="val">76<small>%</small></div><div class="delta">média ponderada dos motores</div></div></div>
+ <div class="grid g-2-1 mb"><div class="card"><div class="ch"><h3>Cobertura: área × contexto de atuação (itens publicados)</h3><span class="hint">lacunas em vermelho</span></div><div class="heat" style="grid-template-columns:170px repeat(6,1fr)"><div></div>${CONTEXTOS.map(c=>`<div class="ht">${c}</div>`).join('')}${AREAS.map((a,i)=>`<div class="hl">${a.nome}</div>`+cov[i].map((v,j)=>{const target=COMPS.some(c=>c.area===a.id&&c.ctx===CONTEXTOS[j])?300:40;const col=v>=target?'#0d8f7c':v>=target*.6?'#8a6a12':'#a63d3d';return `<div class="hc" style="background:${col}" title="${a.nome} × ${CONTEXTOS[j]}: ${v} itens (meta ${target})" onclick="go('qbank',{tab:'itens',area:'${a.id}'})">${fmt(v)}</div>`}).join('')).join('')}</div><p class="note mt8">Meta por célula = 300 itens quando a combinação área × contexto tem competência na matriz; 40 para combinações periféricas. Metas são hipóteses editoriais ajustáveis.</p></div>
+ <div class="card"><div class="ch"><h3>Por origem</h3></div><div class="row" style="gap:16px">${donut(ORIGENS.map((o,i)=>({lbl:o.nome,v:BANK.porOrigem[o.id],color:['#0077B6','#6B5CE7','#F5A623','#00C2A8','#22C55E'][i]})),130)}<div class="stat-list" style="flex:1">${ORIGENS.map((o,i)=>`<div class="si"><span><i class="dot" style="background:${['#0077B6','#6B5CE7','#F5A623','#00C2A8','#22C55E'][i]}"></i> ${o.nome.split(' (')[0]}</span><b>${fmt(BANK.porOrigem[o.id])}</b></div>`).join('')}</div></div><div class="callout warn mt"><span>⚠</span><div class="small">Itens de origem IA só entram em provas e simulados após revisão técnica e pedagógica humana. Hoje: ${fmt(Math.round(BANK.porOrigem.ia*.61))} dos ${fmt(BANK.porOrigem.ia)} gerados estão publicados.</div></div></div></div>
+ <div class="grid g2"><div class="card"><div class="ch"><h3>Por área de formação</h3><span class="hint">publicadas · meta de proporção da Matriz</span></div>${AREAS.map(a=>barRow(a.nome,100*BANK.porArea[a.id]/Math.max(...Object.values(BANK.porArea)),'  '+fmt(BANK.porArea[a.id]))).join('')}</div><div class="card"><div class="ch"><h3>Produção semanal (itens aprovados)</h3></div>${svgBars(BANK.semanal.map((v,i)=>({lbl:'S'+(i+1),v,color:'#00C2A8'})),{h:160,max:200,ref:150})}<p class="note">Referência tracejada: 150/semana ≈ 600/mês (hipótese da reunião de 12/10).</p></div></div>`}
+function qbPipeline(){const cols=['rascunho','triagem','classificada','rev_tecnica','rev_pedagogica','aprovada','publicada'];
+ return `<div class="callout info mb"><span>ⓘ</span><div class="small"><b>Ciclo de vida:</b> fonte/produção → extração ou geração → estruturação → deduplicação → proveniência → classificação → revisão técnica → revisão pedagógica → gabarito/justificativa → aprovação → publicação → monitoramento → atualização/retirada. Nem toda questão percorre o mesmo caminho: itens oficiais podem pular a revisão pedagógica integral (amostral); itens de IA nunca pulam etapa.</div></div>
+ <div class="pipe">${cols.map(c=>{const its=QUESTOES.filter(q=>q.status===c);return `<div class="col"><h4>${STATUS_LBL[c]}<span class="kanban-count">${its.length}<span class="muted xs"> · ${fmt(BANK.porStatus[c])}</span></span></h4>${its.slice(0,6).map(q=>`<div class="it" onclick="openQuestao('${q.id}')"><b class="mono">${q.id}</b> · ${q.tema}<div class="m"><span style="color:${AREA[q.area].cor}">${q.area}</span><span>${ORIGEM[q.origem].motor}</span><span>${q.dif}</span>${q.origem==='ia'?'<span style="color:#A99EF5">IA</span>':''}</div></div>`).join('')}${its.length>6?`<div class="xs muted" style="text-align:center">+ ${its.length-6} na amostra</div>`:''}${!its.length?'<div class="empty small" style="padding:14px">vazio</div>':''}</div>`}).join('')}</div>
+ <div class="grid g3 mt"><div class="card"><div class="ch"><h3>Minha fila de revisão</h3><span class="hint">${userLbl()}</span></div>${QUESTOES.filter(q=>q.status==='rev_tecnica'||q.status==='rev_pedagogica').slice(0,5).map(q=>`<div class="alert-item" onclick="openQuestao('${q.id}')"><span class="badge b-warn">${STATUS_LBL[q.status]}</span><div><div class="ttl mono">${q.id}</div><div class="ds">${q.tema} · ${AREA[q.area].nome} · prazo 3 d</div></div></div>`).join('')}</div><div class="card"><div class="ch"><h3>Tempo médio por etapa</h3></div>${[['Triagem/dedup',0.6],['Classificação',0.9],['Revisão técnica',2.4],['Revisão pedagógica',1.7],['Aprovação',0.5]].map(([l,v])=>barRow(l,v*20,'  '+v+' d')).join('')}</div><div class="card"><div class="ch"><h3>Gargalos</h3></div><div class="callout warn"><span>!</span><div class="small">Revisão técnica concentra 62% do tempo. Sugestão: ampliar revisores em Clínica Médica (fila de 118 itens) e priorizar as lacunas da cobertura.</div></div><button class="btn sm mt" onclick="toast('Convite enviado a 2 revisores (simulado).','ok')">+ Convidar revisor</button></div></div>`}
+function qbItens(){const p=state.params;const fa=p.area||'',fo=p.origem||'',fs=p.status||'',fq=p.q||'';let list=QUESTOES.filter(q=>(!fa||q.area===fa)&&(!fo||q.origem===fo)&&(!fs||q.status===fs)&&(!fq||q.tema.toLowerCase().includes(fq.toLowerCase())||q.id.toLowerCase().includes(fq.toLowerCase())||COMP[q.comp].nome.toLowerCase().includes(fq.toLowerCase())));
+ const F=(k,v)=>`go('qbank',Object.assign({},state.params,{tab:'itens',${k}:${v}}))`;
+ return `<div class="filters"><input class="sel" placeholder="Buscar por tema, competência, ID…" value="${fq}" onkeydown="if(event.key==='Enter')${F('q','this.value')}"><select class="sel" onchange="${F('area','this.value')}"><option value="">Todas as áreas</option>${AREAS.map(a=>`<option value="${a.id}" ${fa===a.id?'selected':''}>${a.nome}</option>`).join('')}</select><select class="sel" onchange="${F('origem','this.value')}"><option value="">Todas as origens</option>${ORIGENS.map(o=>`<option value="${o.id}" ${fo===o.id?'selected':''}>${o.nome}</option>`).join('')}</select><select class="sel" onchange="${F('status','this.value')}"><option value="">Todos os status</option>${STATUS.map(s=>`<option value="${s}" ${fs===s?'selected':''}>${STATUS_LBL[s]}</option>`).join('')}</select><span class="small muted">${list.length} itens (amostra de ${QUESTOES.length}; acervo completo ${fmt(BANK.total)})</span>${(fa||fo||fs||fq)?`<button class="btn xs" onclick="go('qbank',{tab:'itens'})">limpar</button>`:''}</div>
+ ${list.length?`<div class="card"><table class="tb"><tr><th>ID</th><th>Tema</th><th>Área</th><th>Competência · contexto</th><th>Origem</th><th>Dific.</th><th>Status</th><th class="num">p</th><th class="num">disc.</th><th class="num">usos</th><th>v</th></tr>${list.map(q=>`<tr class="click" onclick="openQuestao('${q.id}')"><td class="mono">${q.id}</td><td>${q.tema}${q.placeholder?'<span class="sub">item demonstrativo</span>':'<span class="sub">autoral · demo</span>'}</td><td><span class="badge b-mute" style="color:${AREA[q.area].cor}">${q.area}</span></td><td class="small">${COMP[q.comp].nome}<span class="sub">${q.ctx}</span></td><td class="small muted">${ORIGEM[q.origem].nome.split(' (')[0]}</td><td><span class="badge b-mute">${q.dif}</span></td><td><span class="badge ${['publicada','aprovada'].includes(q.status)?'b-ok':q.status==='contestada'?'b-crit':['arquivada'].includes(q.status)?'b-mute':'b-warn'}">${STATUS_LBL[q.status]}</span></td><td class="num">${q.p!=null?q.p.toFixed(2):'—'}</td><td class="num">${q.disc!=null?q.disc.toFixed(2):'—'}</td><td class="num">${q.usos}</td><td class="mono small">v${q.versao}</td></tr>`).join('')}</table></div>`:`<div class="empty"><b>Nenhum item com esses filtros</b>Ajuste os filtros ou crie uma questão nova para esta lacuna.<br><button class="btn sm mt" onclick="novaQuestao()">+ Nova questão</button></div>`}`}
+function openQuestao(id){const q=Q[id];if(!q)return;const next={rascunho:'triagem',triagem:'classificada',classificada:'rev_tecnica',rev_tecnica:'rev_pedagogica',rev_pedagogica:'aprovada',aprovada:'publicada',contestada:'atualizacao',atualizacao:'rev_tecnica'}[q.status];
+ openModal(`${q.id} · ${q.tema}`,`<div class="row sb mb"><div class="pill-row"><span class="badge b-mute" style="color:${AREA[q.area].cor}">${AREA[q.area].nome}</span><span class="badge b-info">${COMP[q.comp].id} ${COMP[q.comp].nome}</span><span class="badge b-mute">${q.ctx}</span><span class="badge b-mute">${q.dif}</span><span class="badge ${q.origem==='ia'?'b-indigo':'b-teal'}">${ORIGEM[q.origem].nome}</span></div><span class="badge ${['publicada','aprovada'].includes(q.status)?'b-ok':q.status==='contestada'?'b-crit':'b-warn'}">${STATUS_LBL[q.status]} · v${q.versao}</span></div>
+ <div class="grid g-2-1"><div><div class="card flat"><p style="font-size:14px">${q.enun}</p><div class="mt">${q.alts.map((a,i)=>`<div class="q-opt ${i===q.gab?'ok':''}"><span class="l">${'ABCD'[i]}</span><span>${a}${i===q.gab?' <span class="badge b-ok">gabarito</span>':''}</span></div>`).join('')}</div><h4 class="mt mb8">Comentário / justificativa</h4><p class="small">${q.com}</p><p class="xs muted mt8">Referência: ${q.ref}</p></div>
+ ${q.placeholder?'<div class="callout warn mt"><span>⚠</span><div class="small">Item demonstrativo gerado para popular o protótipo. Não é uma questão real.</div></div>':''}</div>
+ <div><h4 class="mb8">Proveniência & direitos</h4><div class="kv"><dt>Fonte</dt><dd>${q.fonte}</dd><dt>Licença</dt><dd>${q.licenca}</dd><dt>Autor</dt><dd>${q.autor}</dd><dt>Criada</dt><dd class="mono">${q.criadaEm}</dd><dt>Revisor</dt><dd>${q.revisor||'<span class="muted">pendente</span>'}</dd><dt>Revisada</dt><dd class="mono">${q.revisadaEm||'—'}</dd><dt>Motor</dt><dd>${ORIGEM[q.origem].motor} · ${ENGINES.find(e=>e.id===ORIGEM[q.origem].motor).nome}</dd></div>
+ <h4 class="mt mb8">Desempenho (agregado)</h4>${q.p!=null?`<div class="stat-list"><div class="si"><span>Usos</span><b>${fmt(q.usos)}</b></div><div class="si"><span>p (facilidade)</span><b>${q.p.toFixed(2)}</b></div><div class="si"><span>Discriminação</span><b>${q.disc.toFixed(2)}</b></div><div class="si"><span>Contestações</span><b>${q.contest}</b></div></div>${q.flags.length?`<div class="callout warn mt8"><span>!</span><div class="small">Sinais: ${q.flags.join(', ')}. Amostra ${q.usos<200?'pequena — sinal indicativo':'suficiente para decisão editorial'}.</div></div>`:''}`:'<p class="small muted">Sem respostas registradas (item não publicado).</p>'}
+ <h4 class="mt mb8">Histórico</h4><div class="tl"><div class="ev ok"><div class="d">${q.revisadaEm||q.criadaEm}</div><div class="t">${q.revisor?'Revisão: '+q.revisor:'Criação'}</div></div>${q.versao>1?`<div class="ev"><div class="d">2026-10-17</div><div class="t">v${q.versao}: atualização por diretriz</div></div>`:''}<div class="ev mute"><div class="d">${q.criadaEm}</div><div class="t">Ingestão / criação (${q.autor})</div></div></div></div></div>`,
+ `<button class="btn" onclick="closeModal()">Fechar</button><button class="btn" onclick="toast('Comentário editorial registrado em ${q.id}.','ok');audit('Comentou ${q.id}')">✎ Comentar</button>${q.status==='publicada'?`<button class="btn danger" onclick="setQStatus('${q.id}','contestada')">⚑ Contestar</button><button class="btn" onclick="setQStatus('${q.id}','atualizacao')">↻ Marcar para atualização</button>`:''}${next&&q.status!=='publicada'?`<button class="btn primary" onclick="setQStatus('${q.id}','${next}')">→ ${STATUS_LBL[next]}</button>`:''}${['rev_tecnica','rev_pedagogica'].includes(q.status)?`<button class="btn danger" onclick="setQStatus('${q.id}','arquivada')">✕ Rejeitar</button>`:''}`,'wide')}
+function setQStatus(id,st){const q=Q[id];const old=q.status;q.status=st;if(st==='publicada'&&!q.revisor)q.revisor=userLbl();if(['aprovada','publicada'].includes(st))q.revisadaEm=new Date().toISOString().slice(0,10);if(st==='atualizacao')q.versao++;persist();audit(`${id}: ${STATUS_LBL[old]} → ${STATUS_LBL[st]}`);closeModal();toast(`<b>${id}</b> movida para <b>${STATUS_LBL[st]}</b>.`,st==='arquivada'||st==='contestada'?'warn':'ok');rerender()}
+function novaQuestao(){openModal('Nova questão',`<div class="tabs"><button class="on" id="nq-t1" onclick="nqMode('manual')">Autoral (docente)</button><button id="nq-t2" onclick="nqMode('ia')">Assistida por IA (Motor B)</button></div>
+ <div id="nq-body">${nqManual()}</div>`,`<button class="btn" onclick="closeModal()">Cancelar</button><button class="btn primary" onclick="saveQuestao()">Salvar como rascunho</button>`,'wide')}
+function nqManual(){return `<div class="grid g3"><div class="fld"><label>Área</label><select id="nq-area">${AREAS.map(a=>`<option value="${a.id}">${a.nome}</option>`).join('')}</select></div><div class="fld"><label>Competência</label><select id="nq-comp">${COMPS.map(c=>`<option value="${c.id}">${c.id} · ${c.nome}</option>`).join('')}</select></div><div class="fld"><label>Dificuldade pretendida</label><select id="nq-dif">${DIFIC.map(d=>`<option>${d}</option>`).join('')}</select></div></div>
+ <div class="fld"><label>Tema</label><input id="nq-tema" placeholder="ex.: Depressão na APS"></div><div class="fld"><label>Enunciado (caso clínico)</label><textarea id="nq-enun" placeholder="Descreva o caso e a pergunta…"></textarea></div>
+ <div class="grid g2">${'ABCD'.split('').map(l=>`<div class="fld"><label>Alternativa ${l}</label><input id="nq-${l}"></div>`).join('')}</div>
+ <div class="grid g2"><div class="fld"><label>Gabarito</label><select id="nq-gab"><option>A</option><option>B</option><option>C</option><option>D</option></select></div><div class="fld"><label>Referência</label><input id="nq-ref" placeholder="Diretriz / consenso / livro-texto (obrigatório)"></div></div>
+ <div class="fld"><label>Justificativa</label><textarea id="nq-com"></textarea></div><p class="note">Titularidade: instituição (cláusula contratual). O item fica privado à instituição até que o autor autorize compartilhamento com o banco MedPleni.</p>`}
+function nqMode(m){document.getElementById('nq-t1').className=m==='manual'?'on':'';document.getElementById('nq-t2').className=m==='ia'?'on':'';document.getElementById('nq-body').innerHTML=m==='manual'?nqManual():`<div class="grid g4"><div class="fld"><label>Área</label><select id="nq-area">${AREAS.map(a=>`<option value="${a.id}" ${a.id==='SM'?'selected':''}>${a.nome}</option>`).join('')}</select></div><div class="fld"><label>Competência</label><select id="nq-comp">${COMPS.map(c=>`<option value="${c.id}" ${c.id==='C10'?'selected':''}>${c.id} · ${c.nome}</option>`).join('')}</select></div><div class="fld"><label>Contexto</label><select>${CONTEXTOS.map(c=>`<option>${c}</option>`).join('')}</select></div><div class="fld"><label>Dificuldade</label><select id="nq-dif">${DIFIC.map(d=>`<option ${d==='media'?'selected':''}>${d}</option>`).join('')}</select></div></div>
+ <div class="fld"><label>Objetivo educacional</label><select>${objFor('C10').map(o=>`<option>${o}</option>`).join('')}</select></div>
+ <button class="btn primary" onclick="iaGerar()">✦ Gerar rascunho</button><div id="ia-out" class="mt"></div>
+ <div class="callout warn mt"><span>⚠</span><div class="small"><b>Controle:</b> o rascunho gerado nunca é publicado sem revisão técnica e pedagógica humana. O modelo recebe a matriz e referências; a saída é verificada contra diretrizes e passa por detecção de duplicidade (similaridade &gt; 0,85 bloqueia).</div></div>`}
+function iaGerar(){const o=document.getElementById('ia-out');o.innerHTML='<div class="callout info"><span>⏳</span><div>Gerando com base na matriz (simulado)…</div></div>';setTimeout(()=>{const s=QSEED[0];o.innerHTML=`<div class="card flat"><div class="row sb mb8"><span class="badge b-indigo">rascunho IA · requer revisão</span><span class="xs muted">similaridade máx. com acervo: 0,41 ✓ · referência verificada: 2/2 ✓</span></div><p class="small"><b>Enunciado:</b> ${s.enun}</p><div class="mt8">${s.alts.map((a,i)=>`<div class="q-opt ${i===s.gab?'ok':''}"><span class="l">${'ABCD'[i]}</span><span>${a}</span></div>`).join('')}</div><p class="small mt8"><b>Justificativa:</b> ${s.com}</p><p class="xs muted">Metadados propostos: SM · C10 · Atenção Primária · média · conteúdo "terapêutica" · tema "Depressão"</p><div class="row mt8"><button class="btn sm" onclick="toast('Variante gerada (simulado).')">⟳ Gerar variante</button><button class="btn sm" onclick="toast('Alternativa D reescrita para reduzir ambiguidade (simulado).')">✎ Ajustar distrator</button></div></div><input type="hidden" id="nq-tema" value="Depressão"><input type="hidden" id="nq-enun" value="${s.enun.replace(/"/g,'&quot;')}">`},900)}
+function saveQuestao(){const g=id=>{const e=document.getElementById(id);return e?e.value:''};const area=g('nq-area')||'SM',comp=g('nq-comp')||'C10';const tema=g('nq-tema')||'Novo item';const isIA=document.getElementById('nq-t2').className==='on';
+ const q=mkQ({area,tema,comp,ctx:COMP[comp].ctx,dif:g('nq-dif')||'media',enun:g('nq-enun')||'(enunciado em elaboração)',alts:[g('nq-A')||'Alternativa A',g('nq-B')||'Alternativa B',g('nq-C')||'Alternativa C',g('nq-D')||'Alternativa D'],gab:'ABCD'.indexOf(g('nq-gab')||'A'),com:g('nq-com')||'(justificativa em elaboração)'},{origem:isIA?'ia':'inst',status:'rascunho',criadaEm:new Date().toISOString().slice(0,10),autor:isIA?'Motor B (IA) · solicitado por '+userLbl():userLbl(),ref:g('nq-ref')||'(referência pendente)'});q.novo=true;Q[q.id]=q;state.created.questoes++;persist();audit(`Criou ${q.id} (${isIA?'IA':'autoral'})`);closeModal();toast(`<b>${q.id}</b> salva como rascunho e enviada à triagem.`,'ok');go('qbank',{tab:'pipeline'})}
+function qbMotores(){return `<div class="grid g3">${ENGINES.map(e=>`<div class="engine"><h4><span>Motor ${e.id} — ${e.nome}</span></h4><p>${e.desc}</p><div class="stat-list mt8">${e.mes?`<div class="si"><span>Meta mensal</span><b>${e.mes} itens</b></div><div class="si"><span>Aprovação editorial</span><b>${e.aprov}%</b></div>`:''}<div class="si"><span>Custo médio/item (hipótese)</span><b>R$ ${e.custo}</b></div><div class="si"><span>Tempo de revisão</span><b>${e.rev} d</b></div></div><p class="xs mt8"><b>Revisão humana:</b> ${e.humano}</p><button class="btn sm mt8" onclick="motorDetail('${e.id}')">Abrir fluxo</button></div>`).join('')}</div>
+ <div class="card mt"><div class="ch"><h3>Direitos de uso por fonte</h3><span class="hint">registro obrigatório na ingestão</span></div><table class="tb"><tr><th>Fonte</th><th>Disponibilidade</th><th>Direitos / risco</th><th>Revisão exigida</th><th>Escala</th></tr>
+ <tr><td>Provas públicas anteriores</td><td>Alta (últimos 5–6 anos úteis)</td><td class="small">Enunciado público; comentários, imagens e traduções de terceiros <b>não</b> são livres. Registrar banca, ano, URL e parecer jurídico por fonte.</td><td class="small">Classificação + revisão amostral; comentário sempre autoral</td><td><span class="badge b-ok">alta</span></td></tr>
+ <tr><td>Produção por especialistas</td><td>Depende de contratação</td><td class="small">Cessão de direitos em contrato; crédito ao autor.</td><td class="small">Revisão cruzada</td><td><span class="badge b-warn">média · custo</span></td></tr>
+ <tr><td>Inéditas assistidas por IA</td><td>Alta</td><td class="small">Titularidade MedPleni; risco de erro clínico e de similaridade com itens existentes.</td><td class="small">Técnica + pedagógica (100%)</td><td><span class="badge b-ok">alta</span></td></tr>
+ <tr><td>Internacionais adaptadas</td><td>Média</td><td class="small">Exige licença; tradução literal não basta (unidades, protocolos, SUS).</td><td class="small">Adequação ao contexto BR (100%)</td><td><span class="badge b-warn">média</span></td></tr>
+ <tr><td>Autorais da instituição</td><td>Depende da escola</td><td class="small">Titularidade da instituição; uso no banco comum só com autorização.</td><td class="small">Classificação + revisão técnica</td><td><span class="badge b-info">cresce com clientes</span></td></tr>
+ <tr><td>Conteúdo licenciado de terceiros</td><td>A investigar</td><td class="small">Custo e exclusividade a negociar.</td><td class="small">Classificação</td><td><span class="badge b-mute">a validar</span></td></tr></table></div>`}
+function motorDetail(id){const e=ENGINES.find(x=>x.id===id);const flows={A:['Fonte autorizada registrada (banca, ano, licença)','Importação do PDF/HTML','Extração de texto, imagens e tabelas','Segmentação em itens + alternativas','Deduplicação (hash + similaridade)','Classificação assistida (área, tema, competência, contexto)','Revisão técnica amostral · comentário autoral','Publicação'],B:['Matriz: área, competência, contexto, dificuldade, objetivo','Geração de caso, enunciado, alternativas, gabarito, justificativa, referências','Verificação de referências e similaridade','Classificação automática (metadados)','Revisão técnica (médico)','Revisão pedagógica (docente)','Aprovação e publicação'],C:['Fonte licenciada','Triagem de pertinência clínica','Tradução assistida','Adaptação (unidades, nomes, protocolos, contexto SUS)','Revisão de adequação por especialista BR','Classificação e proveniência','Publicação'],D:['Meta por área/competência atribuída ao autor','Produção no editor com checklist','Revisão cruzada por par','Ajustes e aprovação','Remuneração por item aprovado','Publicação'],E:['Coleta de respostas agregadas (n mínimo 100)','Cálculo de p, discriminação, distratores','Sinalização automática (limiares)','Decisão editorial: manter / revisar / retirar','Registro da justificativa'],F:['Calendário de revisão por área (12–24 meses)','Monitor de mudanças de diretrizes','Fila de atualização','Nova versão com diff e justificativa','Retirada de itens obsoletos (mantém histórico)']};
+ openModal(`Motor ${e.id} — ${e.nome}`,`<p class="small muted mb">${e.desc}</p><div class="tl">${flows[id].map((s,i)=>`<div class="ev ${i<flows[id].length-1?'ok':''}"><div class="d">etapa ${i+1}</div><div class="t">${s}</div></div>`).join('')}</div><div class="callout info"><span>ⓘ</span><div class="small">Revisão humana: ${e.humano}. Aprovação editorial histórica (hipótese): ${e.aprov||'n/a'}%.</div></div>`,`<button class="btn" onclick="closeModal()">Fechar</button><button class="btn primary" onclick="closeModal();toast('Lote de ${e.id} iniciado (simulado): itens aparecem em Triagem.','ok');audit('Iniciou lote do Motor ${e.id}')">▶ Iniciar lote</button>`)}
+const SIM={base:12480,meses:12,A:120,B:250,C:80,D:150,aA:91,aB:58,aC:74,aD:86,rev:4.6,revisores:6,capRev:55};
+function qbSimulador(){const brutos=SIM.A+SIM.B+SIM.C+SIM.D;const liq=Math.round(SIM.A*SIM.aA/100+SIM.B*SIM.aB/100+SIM.C*SIM.aC/100+SIM.D*SIM.aD/100);const capacidade=SIM.revisores*SIM.capRev;const gargalo=brutos>capacidade;const efetivo=Math.min(liq,Math.round(capacidade*liq/brutos));const custo=SIM.A*18+SIM.B*34+SIM.C*41+SIM.D*95;const custoItem=efetivo?Math.round(custo/efetivo):0;
+ const serie=[];let acc=SIM.base;for(let m=0;m<=SIM.meses;m++){serie.push({y:acc,lbl:'M'+m});acc+=efetivo}
+ const inp=(k,l,step)=>`<div class="fld"><label>${l}</label><input type="number" step="${step||1}" value="${SIM[k]}" onchange="SIM.${k}=+this.value;go('qbank',{tab:'simulador'})"></div>`;
+ return `<div class="callout warn mb"><span>⚠</span><div class="small"><b>Cenário ilustrativo.</b> Valores iniciais vêm das hipóteses da reunião de 12/10 (≥ 12.000 iniciais, ~600/mês). Custos por item são estimativas a validar com os médicos parceiros (a transcrição registra que nunca contrataram produção paga).</div></div>
+ <div class="grid g-1-2"><div class="card"><div class="ch"><h3>Parâmetros</h3><button class="btn xs" onclick="Object.assign(SIM,{base:12480,meses:12,A:120,B:250,C:80,D:150,aA:91,aB:58,aC:74,aD:86,revisores:6,capRev:55});go('qbank',{tab:'simulador'})">↺</button></div>${inp('base','Acervo publicado inicial')}${inp('meses','Horizonte (meses)')}<h4 class="mb8">Produção bruta mensal por motor</h4><div class="grid g2">${inp('A','Motor A')}${inp('B','Motor B (IA)')}${inp('C','Motor C')}${inp('D','Motor D')}</div><h4 class="mb8">Aprovação editorial (%)</h4><div class="grid g2">${inp('aA','A')}${inp('aB','B')}${inp('aC','C')}${inp('aD','D')}</div><h4 class="mb8">Capacidade de revisão</h4><div class="grid g2">${inp('revisores','Revisores ativos')}${inp('capRev','Itens/revisor/mês')}</div></div>
+ <div><div class="grid g4 mb"><div class="card kpi"><div class="lbl">Brutos/mês</div><div class="val">${fmt(brutos)}</div></div><div class="card kpi accent"><div class="lbl">Aprovados/mês</div><div class="val">${fmt(efetivo)}</div><div class="delta">${gargalo?'<span style="color:#F5A623">limitado pela revisão</span>':'taxa combinada '+Math.round(100*liq/brutos)+'%'}</div></div><div class="card kpi ${gargalo?'danger':''}"><div class="lbl">Capacidade de revisão</div><div class="val">${fmt(capacidade)}</div><div class="delta">${gargalo?'▼ déficit de '+fmt(brutos-capacidade)+'/mês':'folga de '+fmt(capacidade-brutos)}</div></div><div class="card kpi"><div class="lbl">Custo/item aprovado</div><div class="val">R$ ${custoItem}</div><div class="delta">R$ ${fmt(custo)}/mês (hipótese)</div></div></div>
+ <div class="card"><div class="ch"><h3>Projeção do acervo publicado</h3><span class="hint">${fmt(SIM.base)} → ${fmt(serie[serie.length-1].y)} em ${SIM.meses} meses</span></div>${svgLine([{name:'acervo',color:'#00C2A8',pts:serie}],{h:200,min:Math.floor(SIM.base/1000)*1000,max:Math.ceil(serie[serie.length-1].y/1000)*1000+1000})}<p class="note">Quantidade ≠ qualidade: o gráfico conta apenas itens que passaram por todo o pipeline. ${gargalo?'<b>O gargalo é a revisão humana</b>: aumentar a geração por IA sem revisores não aumenta o acervo útil.':''}</p></div></div></div>`}
+function qbQualidade(){const flagged=QUESTOES.filter(q=>q.flags.length||q.status==='contestada'||q.status==='atualizacao');
+ return `<div class="grid g3 mb"><div class="card kpi danger"><div class="lbl">Itens sinalizados (Motor E)</div><div class="val">${flagged.length}<small> na amostra</small></div><div class="delta">acervo: ${BANK.porStatus.contestada+BANK.porStatus.atualizacao+212}</div></div><div class="card kpi warn"><div class="lbl">Revisão por diretriz vencida</div><div class="val">318</div><div class="delta">itens com &gt; 24 meses sem revisão</div></div><div class="card kpi accent"><div class="lbl">Contestações resolvidas (30 d)</div><div class="val">27<small> / 31</small></div><div class="delta">tempo médio 3,1 d</div></div></div>
+ <div class="grid g-2-1"><div class="card"><div class="ch"><h3>Fila de qualidade</h3><span class="hint">regras: p &gt; 0,90 · p &lt; 0,25 · disc &lt; 0,15 · ≥ 3 contestações · n ≥ 100</span></div><table class="tb"><tr><th>Item</th><th>Área</th><th>Sinal</th><th class="num">p</th><th class="num">disc.</th><th class="num">n</th><th>Status</th><th></th></tr>${flagged.map(q=>`<tr class="click" onclick="openQuestao('${q.id}')"><td class="mono">${q.id}</td><td><span class="badge b-mute" style="color:${AREA[q.area].cor}">${q.area}</span></td><td>${q.flags.map(f=>`<span class="badge b-warn">${f}</span>`).join(' ')}${q.status==='contestada'?`<span class="badge b-crit">${q.contest} contestações</span>`:''}${q.status==='atualizacao'?'<span class="badge b-info">diretriz</span>':''}</td><td class="num">${q.p!=null?q.p.toFixed(2):'—'}</td><td class="num">${q.disc!=null?q.disc.toFixed(2):'—'}</td><td class="num">${q.usos}</td><td class="small">${STATUS_LBL[q.status]}</td><td><button class="btn xs">decidir</button></td></tr>`).join('')}</table><p class="note mt8">Sinais estatísticos não retiram itens automaticamente: a decisão é editorial e registrada. Amostras pequenas, perfil dos respondentes e contexto de aplicação (treino vs. prova) limitam a interpretação.</p></div>
+ <div><div class="card mb"><div class="ch"><h3>Governança editorial (Motor F)</h3></div><div class="stat-list"><div class="si"><span>Comitê editorial</span><b>2 médicos parceiros + 1 editor</b></div><div class="si"><span>Ciclo de revisão por área</span><b>12–24 meses</b></div><div class="si"><span>Versões com diff e justificativa</span><b>obrigatório</b></div><div class="si"><span>Retirada mantém histórico</span><b>sim</b></div><div class="si"><span>Monitor de diretrizes</span><b>ativo (SBC, MS, SBP…)</b></div></div></div>
+ <div class="card"><div class="ch"><h3>Política para itens de IA</h3></div><ul class="small" style="padding-left:16px"><li>Nunca publicar sem revisão técnica + pedagógica humana.</li><li>Referências verificáveis obrigatórias.</li><li>Similaridade &gt; 0,85 com item existente bloqueia.</li><li>Rótulo de origem visível ao docente; invisível ao estudante na prova.</li><li>Auditoria de qualidade trimestral por amostragem.</li></ul></div></div></div>`}
+
+/* ── 7. ESPAÇO DO DOCENTE ──────────────────────────────── */
+PAGES.docente=function(){const d=DOCENTES[0];const minhasTurmas=['T4A','T6A','T8A','T8B'];const av=state.filters.aval;const fila=QUESTOES.filter(q=>q.area===d.area&&['rev_tecnica','rev_pedagogica'].includes(q.status));
+ return `<div class="ph"><div class="t"><div class="eyebrow">${d.papel}</div><h1>Olá, ${d.nome.split(' ')[2]}</h1><small>O que precisa da sua atenção hoje. Nada aqui é burocracia extra: cada tarefa nasce de uma lacuna, uma prova ou uma revisão.</small></div><div class="actions">${avalSel("setFilter('aval',this.value)")}<button class="btn" onclick="novaQuestao()">+ Questão</button><button class="btn primary" onclick="novaProva('T8A')">+ Avaliação</button></div></div>
+ <div class="grid g4 mb"><div class="card kpi warn click" onclick="go('qbank',{tab:'pipeline'})"><div class="lbl">Itens para revisar</div><div class="val">${fila.length}</div><div class="delta">${AREA[d.area].nome}</div></div><div class="card kpi click" onclick="go('prova')"><div class="lbl">Provas aguardando você</div><div class="val">${PROVAS.filter(p=>p.status==='em_revisao').length}</div></div><div class="card kpi accent click" onclick="go('interv')"><div class="lbl">Intervenções sob sua responsabilidade</div><div class="val">${INTERV.filter(i=>i.resp===d.id&&i.status!=='concluida').length}</div></div><div class="card kpi"><div class="lbl">Questões suas aprovadas (ano)</div><div class="val">46</div><div class="delta">taxa de aprovação 89%</div></div></div>
+ <div class="grid g-2-1"><div class="card"><div class="ch"><h3>Minhas turmas — competências de ${AREA[d.area].nome}</h3><span class="hint">${AVAL[av].nome}</span></div><table class="tb"><tr><th>Turma</th>${COMPS.filter(c=>c.area===d.area).map(c=>`<th>${c.id} ${c.nome.split(' ').slice(0,3).join(' ')}</th>`).join('')}<th></th></tr>${minhasTurmas.map(t=>`<tr><td><b>${TURMA[t].nome}</b></td>${COMPS.filter(c=>c.area===d.area).map(c=>{const r=turmaCompAvg(t,c.id,av);return `<td>${r?`<span class="badge b-${statusOf(r.m)}">${Math.round(r.m)}</span>`:'<span class="muted">—</span>'}</td>`}).join('')}<td><button class="btn xs" onclick="go('acad',{turma:'${t}'})">abrir</button></td></tr>`).join('')}</table>
+ <div class="callout teal mt"><span>✦</span><div class="small"><b>Sugestão baseada nos dados:</b> 8º B está em ${Math.round(turmaCompAvg('T8B','C10',av).m)} em C10 enquanto o 8º A, após a oficina I-01, está em ${Math.round(turmaCompAvg('T8A','C10',av).m)}. Replicar a oficina no 8º B leva ~2 cliques. <button class="btn xs" onclick="newInterv('T8B','C10')">Replicar intervenção</button></div></div></div>
+ <div><div class="card mb"><div class="ch"><h3>Fila de revisão</h3><button class="btn xs" onclick="go('qbank',{tab:'pipeline'})">ver tudo</button></div>${fila.slice(0,4).map(q=>`<div class="alert-item" onclick="openQuestao('${q.id}')"><span class="badge b-warn">${q.origem==='ia'?'IA':'autoral'}</span><div><div class="ttl mono">${q.id}</div><div class="ds">${q.tema} · ${STATUS_LBL[q.status]}</div></div></div>`).join('')||'<div class="empty small">Fila vazia</div>'}</div>
+ <div class="card"><div class="ch"><h3>Explicações mais consultadas pelos estudantes</h3></div>${QUESTOES.filter(q=>q.area===d.area&&q.status==='publicada').slice(0,4).map(q=>`<div class="small" style="padding:6px 0;border-bottom:1px solid var(--border-subtle)"><a href="#" onclick="event.preventDefault();openQuestao('${q.id}')" class="mono">${q.id}</a> · ${q.tema} <span class="muted xs">· ${fmt(q.usos)} usos</span></div>`).join('')}</div></div></div>`};
+
+/* ── 8. ESTUDANTE ──────────────────────────────────────── */
+let STU={answered:{},plan:{}};
+PAGES.aluno=function(){const a=ALUNOS.find(x=>x.id===(state.params.id||'AL0102'))||ALUNOS[0];const t=TURMA[a.turma];const cps=compsForPer(t.per);const last=[...AVALS].reverse().find(v=>RES[a.id][v.id]);
+ const comps=cps.map(c=>{const x=RES[a.id][last.id][c.id];return {c,s:x?x.s:null,hist:AVALS.map(v=>RES[a.id][v.id]&&RES[a.id][v.id][c.id]?RES[a.id][v.id][c.id].s:null)}}).filter(x=>x.s!=null).sort((p,q)=>p.s-q.s);
+ const weak=comps.slice(0,3);const strong=comps.slice(-2);const myInterv=INTERV.filter(i=>i.turma===a.turma&&i.status!=='cancelada');
+ const tab=state.params.tab||'home';
+ const tabs=`<div class="tabs">${[['home','Início'],['comp','Minhas competências'],['avals','Minhas avaliações'],['praticar','Praticar'],['plano','Meu plano']].map(([k,l])=>`<button class="${tab===k?'on':''}" onclick="go('aluno',{id:'${a.id}',tab:'${k}'})">${l}</button>`).join('')}</div>`;
+ let body='';
+ if(tab==='home')body=`<div class="grid g-2-1"><div><div class="card mb"><div class="row sb"><div><div class="eyebrow">Próximo passo</div><h3>Transtornos mentais comuns na APS</h3><p class="small muted">Você acertou ${weak[0].s}% dos itens desta competência na ${last.nome}. É a sua maior oportunidade de ganho antes da somativa pré-internato. A lista abaixo foi montada a partir dos objetivos onde você mais errou.</p></div>${ring(weak[0].s,'#F5A623',78)}</div><div class="row mt"><button class="btn primary" onclick="go('aluno',{id:'${a.id}',tab:'praticar'})">▶ Lista dirigida (20 itens · ~35 min)</button><button class="btn" onclick="go('aluno',{id:'${a.id}',tab:'comp'})">Ver minhas competências</button></div></div>
+ <div class="card"><div class="ch"><h3>Sua evolução</h3><span class="hint">índice interno · não é nota ENAMED</span></div>${svgLine([{name:'você',color:'#00C2A8',pts:AVALS.map(v=>({y:alunoAvg(a,v.id),lbl:v.mes}))},{name:'sua turma',color:'#94A3B8',dash:true,pts:AVALS.map(v=>({y:turmaAvg(t.id,v.id),lbl:v.mes}))}],{h:170})}<div class="legend"><span><i style="background:#00C2A8"></i>você</span><span><i style="background:#94A3B8"></i>média da turma (referência, não ranking)</span></div></div></div>
+ <div><div class="card mb"><div class="ch"><h3>Agenda</h3></div><div class="tl">${PROVAS.filter(p=>p.turma.includes(a.turma)&&['publicada','aprovada','em_revisao'].includes(p.status)).map(p=>`<div class="ev"><div class="d">${p.data}</div><div class="t">${p.titulo}</div><div class="x">${p.itens} itens</div></div>`).join('')}${myInterv.map(i=>`<div class="ev ${i.status==='concluida'?'ok':'warn'}"><div class="d">${i.inicio}</div><div class="t">${i.titulo}</div><div class="x">${i.tipo}</div></div>`).join('')}<div class="ev mute"><div class="d">2026-12-14</div><div class="t">Somativa pré-internato</div></div></div></div>
+ <div class="card"><div class="ch"><h3>Pontos fortes</h3></div>${strong.map(x=>barRow(x.c.nome,x.s)).join('')}<p class="note mt8">Mantenha com revisões espaçadas; o sistema reinsere itens dessas competências a cada 3 semanas.</p></div></div></div>`;
+ if(tab==='comp')body=`<div class="card"><div class="ch"><h3>Competências — ${last.nome}</h3><span class="hint">ordenadas pela maior oportunidade de ganho</span></div><table class="tb"><tr><th>Competência</th><th>Área · contexto</th><th class="num">Você</th><th>Evolução</th><th>Status</th><th>Ação sugerida</th></tr>${comps.map(x=>`<tr><td><b>${x.c.nome}</b></td><td class="small muted">${AREA[x.c.area].nome} · ${x.c.ctx}</td><td class="num"><b>${x.s}</b></td><td>${spark(x.hist.filter(v=>v!=null),x.s<55?'#FF6B6B':'#00C2A8')}</td><td>${x.s>=70?'<span class="badge b-ok">consolidada</span>':x.s>=55?'<span class="badge b-warn">em construção</span>':'<span class="badge b-crit">prioridade</span>'}</td><td>${x.s<55?`<button class="btn xs primary" onclick="go('aluno',{id:'${a.id}',tab:'praticar',comp:'${x.c.id}'})">lista dirigida</button>`:x.s<70?`<button class="btn xs" onclick="toast('Revisão de 10 itens adicionada ao plano.','ok')">+ revisão</button>`:'<span class="xs muted">revisão espaçada automática</span>'}</td></tr>`).join('')}</table><p class="note mt8">Os percentuais mostram acertos nos itens de cada competência; com poucos itens, uma única questão muda muito o número. Use como bússola, não como veredito.</p></div>`;
+ if(tab==='avals')body=`<div class="card"><table class="tb"><tr><th>Avaliação</th><th>Data</th><th class="num">Itens</th><th class="num">Seu índice</th><th class="num">Turma</th><th></th></tr>${AVALS.map(v=>{const m=alunoAvg(a,v.id);return `<tr><td><b>${v.nome}</b></td><td class="mono small">${v.data}</td><td class="num">${v.itens}</td><td class="num">${m!=null?Math.round(m):'<span class="muted">não realizada</span>'}</td><td class="num muted">${Math.round(turmaAvg(t.id,v.id))}</td><td>${m!=null?`<button class="btn xs" onclick="revisarAval('${a.id}','${v.id}')">revisar erros</button>`:''}</td></tr>`}).join('')}</table><p class="note mt8">"Revisar erros" abre a prova em modo leitura: sem cronômetro, com a sua alternativa, o gabarito e o comentário. Nunca altera a nota.</p></div>`;
+ if(tab==='praticar'){const cid=state.params.comp||weak[0].c.id;const qs=QUESTOES.filter(q=>q.comp===cid&&q.status==='publicada'&&!q.placeholder).concat(QUESTOES.filter(q=>q.comp===cid&&q.status==='publicada'&&q.placeholder)).slice(0,5);const idx=state.params.i||0;const q=qs[idx];
+  if(!q)body='<div class="empty"><b>Sem itens publicados para esta competência</b>Volte em breve — o banco é atualizado semanalmente.</div>';
+  else{const ans=STU.answered[q.id];body=`<div class="grid g-2-1"><div class="card"><div class="row sb mb"><div><div class="eyebrow">Lista dirigida · ${COMP[cid].nome}</div><h3>Item ${idx+1} de ${qs.length}</h3></div><span class="badge b-mute">${q.dif}</span></div><div class="bar thin mb"><i style="width:${100*(idx)/qs.length}%"></i></div><p style="font-size:14.5px;line-height:1.6">${q.enun}</p><div class="mt">${q.alts.map((al,i)=>`<div class="q-opt ${ans==null?'':i===q.gab?'ok':i===ans?'bad':''}" onclick="${ans==null?`answer('${q.id}',${i})`:''}"><span class="l">${'ABCD'[i]}</span><span>${al}</span></div>`).join('')}</div>
+  ${ans!=null?`<div class="callout ${ans===q.gab?'ok':'crit'} mt"><span>${ans===q.gab?'✓':'✕'}</span><div><b>${ans===q.gab?'Correto.':'Não foi dessa vez.'}</b> ${q.com}<div class="xs muted mt8">Referência: ${q.ref}</div></div></div><div class="row mt"><button class="btn" onclick="toast('Flashcard criado a partir deste item (vinculado à competência).','ok')">+ Flashcard</button><button class="btn" onclick="toast('Dúvida enviada ao Preceptor IA com o contexto do item (simulado).')">Perguntar ao Preceptor</button><button class="btn primary" onclick="go('aluno',{id:'${a.id}',tab:'praticar',comp:'${cid}',i:${idx+1<qs.length?idx+1:0}})">${idx+1<qs.length?'Próximo →':'Concluir lista'}</button></div>`:`<div class="row sb mt"><span class="xs muted">Confiança na resposta: <select class="sel" style="padding:3px 6px"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select></span><span class="xs muted">sem cronômetro neste modo</span></div>`}</div>
+  <div><div class="card mb"><div class="ch"><h3>Por que esta lista</h3></div><p class="small">Seus erros na ${last.nome} se concentraram em: <b>${objFor(cid)[0]}</b>. Esta lista mistura itens desse objetivo com dois outros da mesma competência para evitar memorização de padrão.</p></div><div class="card"><div class="ch"><h3>Sessão</h3></div><div class="stat-list"><div class="si"><span>Respondidos</span><b>${Object.keys(STU.answered).length}</b></div><div class="si"><span>Acertos</span><b>${Object.entries(STU.answered).filter(([id,v])=>Q[id]&&Q[id].gab===v).length}</b></div><div class="si"><span>Competência</span><b>${cid}</b></div></div></div></div></div>`}}
+ if(tab==='plano')body=`<div class="grid g-2-1"><div class="card"><div class="ch"><h3>Plano até a somativa pré-internato (14/12)</h3><span class="hint">8 semanas · 6 h/semana</span></div>${[['Sem 1–2','TMC na APS (C10) — lista dirigida 40 itens + revisão de casos','prioridade'],['Sem 3','Epidemiologia (C12) — cálculos e vigilância','atenção'],['Sem 4–5','Urgências clínicas (C02) — sepse, SCA, ácido-base','atenção'],['Sem 6','Revisão espaçada: pontos fortes','manutenção'],['Sem 7','Simulado de 60 itens (todas as competências)','verificação'],['Sem 8','Revisão dos erros do simulado','verificação']].map(([w,x,k])=>`<div class="alert-item"><span class="badge ${k==='prioridade'?'b-crit':k==='atenção'?'b-warn':k==='verificação'?'b-info':'b-ok'}">${w}</span><div><div class="ttl">${x}</div><div class="ds">${k}</div></div><label class="chk" style="margin-left:auto"><input type="checkbox" onchange="toast('Progresso salvo no seu plano.')"></label></div>`).join('')}<div class="row mt"><button class="btn" onclick="toast('Plano reajustado: blocos redistribuídos após atraso (simulado).','ok')">⟳ Reajustar após atraso</button><button class="btn" onclick="toast('Metas enviadas à sua tutora para acordo (simulado).','ok')">Compartilhar com tutora</button></div></div>
+ <div><div class="card mb"><div class="ch"><h3>Metas acordadas</h3></div><div class="stat-list"><div class="si"><span>C10 ≥ 60 na próxima prova</span><b>em andamento</b></div><div class="si"><span>Lista dirigida concluída até 10/11</span><b>60%</b></div><div class="si"><span>Encontro com tutora</span><b>28/10</b></div></div></div><div class="card"><div class="callout teal"><span>✦</span><div class="small">O plano é seu. A instituição vê adesão agregada da turma e, com sua tutora, o seu progresso — não há ranking entre colegas.</div></div></div></div></div>`;
+ return `<div class="ph"><div class="t"><div class="eyebrow">${t.nome} · ${INST.sigla}</div><h1>Olá, ${a.nome.split(' ')[0]}</h1><small>Seu mapa de aprendizagem: onde você está, o que vem a seguir e por quê.</small></div><div class="actions"><span class="badge b-teal">${last.nome}: ${Math.round(alunoAvg(a,last.id))}</span></div></div>${tabs}${body}`};
+function answer(qid,i){STU.answered[qid]=i;rerender()}
+function revisarAval(aid_,avId){const a=ALUNOS.find(x=>x.id===aid_);const r=RES[a.id][avId];const qs=QUESTOES.filter(q=>q.status==='publicada'&&!q.placeholder).slice(0,4);
+ openModal('Revisão · '+AVAL[avId].nome+' (modo leitura)',`<div class="callout info mb"><span>ⓘ</span><div class="small">Sem cronômetro. Sua alternativa, o gabarito e o comentário. A nota não muda.</div></div>${qs.map((q,i)=>{const mine=i%3===0?q.gab:(q.gab+1)%4;return `<div class="card flat mb8"><div class="row sb"><b class="mono">${q.id}</b><span class="badge ${mine===q.gab?'b-ok':'b-crit'}">${mine===q.gab?'acerto':'erro'}</span></div><p class="small mt8">${q.enun}</p>${q.alts.map((al,j)=>`<div class="q-opt ${j===q.gab?'ok':j===mine?'bad':''}" style="padding:6px 10px;font-size:12.5px"><span class="l">${'ABCD'[j]}</span>${al}</div>`).join('')}<p class="xs muted">${q.com}</p></div>`}).join('')}`,`<button class="btn" onclick="closeModal()">Fechar</button><button class="btn primary" onclick="closeModal();toast('Flashcards criados para os 2 erros (vinculados a C10 e C12).','ok')">Criar flashcards dos erros</button>`,'wide')}
+
+/* ── 9. GOVERNANÇA & TI ────────────────────────────────── */
+PAGES.admin=function(){const tab=state.params.tab||'estrutura';
+ const tabs=`<div class="tabs">${[['estrutura','Estrutura acadêmica'],['usuarios','Usuários & papéis'],['perm','Permissões'],['dados','Dados, LGPD & exportação'],['integra','Integrações'],['audit','Auditoria']].map(([k,l])=>`<button class="${tab===k?'on':''}" onclick="go('admin',{tab:'${k}'})">${l}</button>`).join('')}</div>`;
+ let body='';
+ if(tab==='estrutura')body=`<div class="grid g-2-1"><div class="card"><div class="ch"><h3>${INST.nome}</h3><span class="badge b-teal">${INST.contrato}</span></div><div class="kv"><dt>Sigla</dt><dd>${INST.sigla}</dd><dt>Campi</dt><dd>${INST.campi.join(' · ')}</dd><dt>Curso</dt><dd>Medicina (12 períodos)</dd><dt>Turmas ativas</dt><dd>${TURMAS.length}</dd><dt>Estudantes vinculados</dt><dd>${fmt(INST.alunos)}</dd><dt>Docentes/coord.</dt><dd>${DOCENTES.length+3}</dd><dt>Período letivo</dt><dd>2026.2</dd></div><h4 class="mt mb8">Turmas</h4><table class="tb"><tr><th>ID</th><th>Nome</th><th>Período</th><th>Campus</th><th class="num">Matrículas</th><th></th></tr>${TURMAS.map(t=>`<tr><td class="mono">${t.id}</td><td>${t.nome}</td><td>${t.per}º</td><td>${t.campus}</td><td class="num">${t.n}</td><td><button class="btn xs" onclick="toast('Edição de turma (simulada).')">editar</button></td></tr>`).join('')}</table></div>
+ <div><div class="card mb"><div class="ch"><h3>Importar matrículas</h3></div><p class="small muted">CSV com matrícula, nome, e-mail, turma. Convites enviados em lote; estudante aceita e define senha.</p><div class="empty small mt8" style="padding:18px">Arraste um CSV ou <a href="#" onclick="event.preventDefault();toast('41 registros validados · 0 erros · convites enfileirados (simulado).','ok');audit('Importou matrículas via CSV')">selecione um arquivo</a></div></div><div class="card"><div class="ch"><h3>Implantação (checklist)</h3></div>${[['Estrutura acadêmica cadastrada',true],['Matrículas importadas (6 turmas)',true],['Docentes convidados (7/10)',false],['Matriz de competências revisada pelo NDE',true],['Diagnóstico de entrada aplicado',true],['Integração SIS (opcional)',false]].map(([l,ok])=>`<label class="chk"><input type="checkbox" ${ok?'checked':''} onchange="toast('Checklist atualizado.')"> ${l}</label>`).join('')}</div></div></div>`;
+ if(tab==='usuarios')body=`<div class="card"><div class="ch"><h3>Usuários</h3><button class="btn sm" onclick="toast('Convite enviado (simulado).','ok')">+ Convidar</button></div><table class="tb"><tr><th>Nome</th><th>Papel</th><th>Escopo</th><th>Status</th><th>Último acesso</th><th></th></tr>${Object.entries(USERS).map(([k,u])=>`<tr><td><b>${u.nome}</b></td><td><span class="badge b-info">${ROLE_LABEL[k]}</span></td><td class="small muted">${k==='aluno'?'próprios dados':k==='docente'?'turmas e área atribuídas':k==='tutor'?'estudantes atribuídos':k==='editor'?'banco MedPleni (sem dados pessoais de estudantes)':'instituição'}</td><td><span class="badge b-ok">ativo</span></td><td class="mono small">2026-10-1${Math.floor(hsh(k)*9)}</td><td><button class="btn xs" onclick="toast('Edição de papel (simulada).')">editar</button></td></tr>`).join('')}</table><p class="note mt8">Princípio do menor privilégio: o editor da MedPleni não acessa dados pessoais de estudantes; a instituição não acessa dados de outras instituições (isolamento por tenant + RLS no roadmap P0.4).</p></div>`;
+ if(tab==='perm'){const R=['dirigente','coordenador','docente','tutor','aluno','admin'];const M=[['Ver indicadores agregados',['y','y','p','p','n','y']],['Ver dados individuais de estudantes',['n','y','p','p','n','n']],['Criar/editar intervenções',['n','y','y','y','n','n']],['Montar e aprovar provas',['n','y','y','n','n','n']],['Criar/revisar questões',['n','y','y','n','n','n']],['Ver gabaritos antes da aplicação',['n','p','p','n','n','n']],['Exportar matriz aluno × item',['y','y','n','n','n','y']],['Gerir usuários e papéis',['n','n','n','n','n','y']],['Ver trilha de auditoria',['y','n','n','n','n','y']],['Ver próprio desempenho e plano',['—','—','—','—','y','—']]];
+  body=`<div class="card"><div class="ch"><h3>Matriz de permissões (simulada na interface)</h3><span class="hint">y = sim · p = parcial (escopo atribuído) · n = não</span></div><div class="perm"><div class="h">Capacidade</div>${R.map(r=>`<div class="h">${ROLE_LABEL[r].split(' (')[0]}</div>`).join('')}${M.map(([l,v])=>`<div>${l}</div>${v.map(x=>`<div class="${x==='y'?'y':x==='p'?'p':'n'}">${x==='y'?'●':x==='p'?'◐':x==='n'?'○':'●'}</div>`).join('')}`).join('')}</div><div class="callout warn mt"><span>⚠</span><div class="small">Controles visuais não são segurança. Em produção, as permissões são aplicadas no banco (RLS por instituição e papel) e em cada endpoint, com testes automatizados.</div></div></div>`}
+ if(tab==='dados')body=`<div class="grid g2"><div class="card"><div class="ch"><h3>LGPD & privacidade</h3></div><div class="stat-list"><div class="si"><span>Base legal</span><b>execução de contrato + legítimo interesse educacional</b></div><div class="si"><span>Controlador / operador</span><b>instituição / MedPleni</b></div><div class="si"><span>Isolamento entre instituições</span><b>tenant + RLS</b></div><div class="si"><span>Retenção após desligamento</span><b>24 meses (configurável)</b></div><div class="si"><span>Exclusão a pedido</span><b>fluxo com registro</b></div><div class="si"><span>Dados usados para melhoria do banco</span><b>apenas agregados e anonimizados</b></div><div class="si"><span>Indicadores individuais</span><b>nunca expostos publicamente</b></div></div><button class="btn sm mt" onclick="toast('Relatório de impacto (RIPD) gerado — modelo (simulado).','ok')">Gerar RIPD (modelo)</button></div>
+ <div class="card"><div class="ch"><h3>Exportação auditável</h3></div><p class="small muted">Qualquer indicador da plataforma deve ser reproduzível fora dela. A exportação inclui os 6 blocos do pacote mínimo: coorte, aplicação/tentativa, questão/currículo, alternativa marcada (com mapa de embaralhamento), gabarito/correção e adicionais (tempo, confiança).</p><div class="row mt"><select class="sel">${AVALS.map(a=>`<option>${a.nome}</option>`).join('')}</select><button class="btn primary" onclick="toast('CSV + dicionário de dados + hash sha256 gerados (simulado).','ok');audit('Exportação auditável solicitada')">⬇ Exportar</button></div><div class="mt small"><b>Segurança das avaliações:</b> gabaritos cifrados até a publicação; caderno fixo versionado; logs de acesso ao gabarito; versões embaralhadas por sala.</div></div></div>`;
+ if(tab==='integra')body=`<div class="grid g3">${[['Sistema acadêmico (Lyceum / TOTVS / RM)','Importação de matrículas e turmas; exportação de notas','planejado'],['LMS (Moodle / Canvas) — LTI 1.3','Abrir avaliações e listas dentro do LMS','planejado'],['SSO (Google Workspace / Microsoft)','Login institucional','piloto'],['Leitura óptica de folhas de resposta','Correção de provas presenciais','piloto'],['API de dados (somente leitura)','BI próprio da instituição','planejado'],['Webhooks','Eventos: prova publicada, resultado disponível','planejado']].map(([n,d,s])=>`<div class="card"><h4>${n}</h4><p class="small muted mt8">${d}</p><span class="badge ${s==='piloto'?'b-teal':'b-mute'}">${s}</span></div>`).join('')}</div><p class="note mt">Nenhum concorrente de preparação ENAMED pesquisado documenta integração com sistema acadêmico; é uma lacuna de mercado, mas depende de validação com a TI das instituições.</p>`;
+ if(tab==='audit')body=`<div class="card"><div class="ch"><h3>Trilha de auditoria</h3><span class="hint">ações relevantes · imutável</span></div><table class="tb"><tr><th>Quando</th><th>Quem</th><th>Ação</th></tr>${AUDIT.slice(0,25).map(x=>`<tr><td class="mono small">${x.t}</td><td class="small">${x.u}</td><td class="small">${x.a}</td></tr>`).join('')}</table></div>`;
+ return `<div class="ph"><div class="t"><div class="eyebrow">Administração institucional</div><h1>Governança & TI</h1><small>Estrutura, acessos, dados e integrações. Implantação guiada; suporte MedPleni durante o piloto.</small></div></div>${tabs}${body}`};
+
+/* ═══════════════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════════════ */
+document.getElementById('roleSel').innerHTML=Object.keys(ROLE_LABEL).map(r=>`<option value="${r}">${ROLE_LABEL[r]}</option>`).join('');
+window.addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(h&&PAGES[h]&&h!==state.page)go(h)});
+applyTheme(curTheme());setRoleSilent('dirigente');go(location.hash.slice(1)&&PAGES[location.hash.slice(1)]?location.hash.slice(1):'exec');
+window.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();document.getElementById('drawer').classList.remove('open')}});
+</script>
+</body>
+</html>

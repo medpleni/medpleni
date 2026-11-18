@@ -152,7 +152,7 @@ export default function B2BShell({ context, children }: B2BShellProps) {
           id: "configuracoes",
           label: "Configurações",
           href: "/instituicao/configuracoes",
-          status: "in_progress",
+          status: "ready",
           icon: (
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="3" />
@@ -160,6 +160,21 @@ export default function B2BShell({ context, children }: B2BShellProps) {
             </svg>
           ),
         },
+        ...(isMedPleniAdmin
+          ? [
+              {
+                id: "admin-global",
+                label: "Admin MedPleni",
+                href: "/instituicao/admin",
+                status: "ready" as const,
+                icon: (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  </svg>
+                ),
+              },
+            ]
+          : []),
       ];
     }
 
