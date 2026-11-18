@@ -108,14 +108,26 @@ export interface IndividualAccessLog {
   created_at: string;
 }
 
+export interface AvailableInstitution {
+  id: string;
+  name: string;
+  slug: string;
+  initials: string;
+  role: B2BRole;
+}
+
 /**
  * Contexto resolvido do usuário na instituição para renderização do layout e permissões
  */
 export interface B2BUserContext {
   userId: string;
+  userEmail: string;
+  userName: string;
+  isMedPleniAdmin: boolean;
   institution: Institution;
   member: InstitutionMember;
   role: B2BRole;
+  availableInstitutions: AvailableInstitution[];
   scopedCourseIds: string[]; // Vazio = sem restrição específica (ou todos)
   scopedClassGroupIds: string[]; // Vazio = sem restrição específica (ou todos)
 }

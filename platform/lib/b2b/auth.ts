@@ -125,8 +125,23 @@ export async function getB2BUserContext(targetSlug?: string): Promise<B2BUserCon
     return null;
   }
 
-  // 1. Busca todas as instituições em que o usuário é membro ativo
-  const { data: memberships, error: memError } = await supabase
+  // 1. Verifica se o usuário é Administrador MedPleni
+  const userEmail = (user.email || "").toLowerCase();
+  const { data: userProfile } = await supabase
+    .from("profiles")
+    .select("role, full_name")
+    .eq("id", user.id)
+    .single();
+
+  const isMedPleniAdmin =
+    userEmail === "mario.nascimentolopes@gmail.com" ||
+    userProfile?.role === "superadmin" ||
+    userProfile?.role === "admin";
+
+  const userName = userProfile?.full_name || user.user_metadata?.full_name || "Usuário MedPleni";
+
+  // 2. Busca todas as instituições em que o usuário é membro ativo
+  const { data: memberships } = await supabase
     .from("institution_members")
     .select(`
       id,
@@ -154,11 +169,59 @@ export async function getB2BUserContext(targetSlug?: string): Promise<B2BUserCon
     .eq("user_id", user.id)
     .eq("is_active", true);
 
-  if (memError || !memberships || memberships.length === 0) {
+  // 3. Fallback inteligente para Administrador MedPleni sem vínculo cadastrado
+  if ((!memberships || memberships.length === 0) && isMedPleniAdmin) {
+    const { data: allInsts } = await supabase
+      .from("institutions")
+      .select("*")
+      .eq("is_active", true)
+      .order("is_demo", { ascending: false });
+
+    if (!allInsts || allInsts.length === 0) {
+      return null;
+    }
+
+    const cookieStore = await cookies();
+    const cookieSlug = cookieStore.get(ACTIVE_INSTITUTION_COOKIE)?.value;
+    const activeSlug = targetSlug || cookieSlug;
+
+    const chosenInst = allInsts.find((i) => i.slug === activeSlug) || allInsts[0];
+
+    const availableInstitutions = allInsts.map((i) => ({
+      id: i.id,
+      name: i.name,
+      slug: i.slug,
+      initials: i.initials,
+      role: "dirigente" as B2BRole,
+    }));
+
+    return {
+      userId: user.id,
+      userEmail,
+      userName,
+      isMedPleniAdmin: true,
+      institution: chosenInst as Institution,
+      member: {
+        id: "admin-virtual-member",
+        institution_id: chosenInst.id,
+        user_id: user.id,
+        role: "dirigente",
+        is_active: true,
+        created_at: chosenInst.created_at,
+        updated_at: chosenInst.updated_at,
+      },
+      role: "dirigente",
+      availableInstitutions,
+      scopedCourseIds: [],
+      scopedClassGroupIds: [],
+    };
+  }
+
+  if (!memberships || memberships.length === 0) {
     return null;
   }
 
-  // 2. Determina a instituição ativa (por parâmetro, cookie ou primeira disponível)
+  // 4. Determina a instituição ativa (por parâmetro, cookie ou primeira disponível)
   const cookieStore = await cookies();
   const cookieSlug = cookieStore.get(ACTIVE_INSTITUTION_COOKIE)?.value;
   const activeSlug = targetSlug || cookieSlug;
@@ -182,7 +245,18 @@ export async function getB2BUserContext(targetSlug?: string): Promise<B2BUserCon
     updated_at: activeMembership.updated_at,
   };
 
-  // 3. Busca os escopos específicos atribuídos a este membro
+  // 5. Lista todas as instituições disponíveis para o seletor
+  const availableInstitutions = memberships
+    .filter((m: any) => Boolean(m.institutions))
+    .map((m: any) => ({
+      id: m.institutions.id,
+      name: m.institutions.name,
+      slug: m.institutions.slug,
+      initials: m.institutions.initials,
+      role: m.role as B2BRole,
+    }));
+
+  // 6. Busca os escopos específicos atribuídos a este membro
   const { data: scopes } = await supabase
     .from("member_scopes")
     .select("course_id, class_group_id")
@@ -198,9 +272,13 @@ export async function getB2BUserContext(targetSlug?: string): Promise<B2BUserCon
 
   return {
     userId: user.id,
+    userEmail,
+    userName,
+    isMedPleniAdmin,
     institution,
     member,
     role: member.role,
+    availableInstitutions,
     scopedCourseIds,
     scopedClassGroupIds,
   };

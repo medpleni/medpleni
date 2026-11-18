@@ -6,6 +6,69 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-18 · P02 · Área /instituicao, Navegação por Papel e Componentes-Padrão B2B
+
+### O que foi feito
+
+- **Layout e Guarda de Acesso (`app/instituicao/layout.tsx` e `B2BShell.tsx`):**
+  - Implementada a guarda de servidor `requireB2BMember()`: usuários que não possuem vínculo institucional são redirecionados de forma transparente para `/dashboard` (B2C), sem qualquer vazamento ou quebra.
+  - Sidebar responsiva (desktop fixa de 240px; gaveta mobile/drawer com backdrop em telas menores).
+  - Topbar institucional com nome da faculdade, sigla, seletor de instituições com Server Action (`switchActiveInstitution`), indicador da Régua 60 e alternância de tema claro/escuro integrado aos tokens CSS existentes.
+  - **Menu Seletivo por Papel:**
+    - *Dirigente e Coordenador:* Visão geral, Turmas, Acompanhamento, Provas, Banco de questões, Avaliação longitudinal, Intervenções, Professores, Relatórios e Configurações.
+    - *Docente:* Início, Minhas turmas, Provas e Banco de questões.
+    - *Aluno:* Início, Minhas avaliações, Praticar e Minha evolução.
+    - *Regra de itens em construção:* Itens em desenvolvimento aparecem com badge "Em breve" apenas para Admin MedPleni e permanecem ocultos para os demais usuários.
+- **Componentes-Padrão (`components/b2b/`):**
+  - `PageHeader`: cabeçalho limpo com título, subtítulo e ações.
+  - `FiltersBar`: filtros de período/etapa, turma, prova e intervalo de datas persistidos em query params na URL com transição suave.
+  - `IndicatorFootnote`: rodapé padronizado obrigatório para rastreabilidade (*Base · Período · Fonte*).
+  - `EmptyState`: componente elegante para ausência de registros sem números fictícios.
+  - `ScoreBand` e `ScoreBandLegend`: classificação nas 4 faixas aprovadas pelos médicos (≤ 50%, 51–60% Zona de Decisão, 61–70% Proficiente, ≥ 71% Excelente) com suporte à régua configurável.
+  - `DataTable`: tabela ordenável por colunas, paginação, busca e exportação instantânea para CSV com download UTF-8 BOM.
+  - `IndividualDataNotice`: banner LGPD discreto com disparo automático de auditoria para `POST /api/b2b/audit-access`.
+- **Página Inicial (`app/instituicao/page.tsx`):**
+  - Construída seguindo estritamente a regra dos **no máximo 5 blocos principais** por tela.
+- **Testes Unitários:**
+  - Adicionada suite `components/b2b/__tests__/components.test.ts`. Total de **22/22 testes passando**.
+- **Validação:**
+  - Build de produção do Next.js gerou todas as 44 rotas com sucesso em 8.4s.
+
+### Arquivos criados / alterados
+
+- `platform/app/instituicao/layout.tsx` (criado)
+- `platform/app/instituicao/page.tsx` (criado)
+- `platform/app/instituicao/components/B2BShell.tsx` (criado)
+- `platform/app/api/b2b/audit-access/route.ts` (criado)
+- `platform/lib/b2b/actions.ts` (criado)
+- `platform/components/b2b/PageHeader.tsx` (criado)
+- `platform/components/b2b/FiltersBar.tsx` (criado)
+- `platform/components/b2b/IndicatorFootnote.tsx` (criado)
+- `platform/components/b2b/EmptyState.tsx` (criado)
+- `platform/components/b2b/ScoreBand.tsx` (criado)
+- `platform/components/b2b/DataTable.tsx` (criado)
+- `platform/components/b2b/IndividualDataNotice.tsx` (criado)
+- `platform/components/b2b/index.ts` (criado)
+- `platform/components/b2b/__tests__/components.test.ts` (criado)
+- `platform/lib/b2b/types.ts` (atualizado com `AvailableInstitution` e contexto enriquecido)
+- `platform/lib/b2b/auth.ts` (atualizado com fallback para superadmin MedPleni e lista de faculdades)
+- `docs/b2b/DIARIO.md` (atualizado)
+
+### SQL a rodar
+
+Nenhum SQL novo nesta etapa (utiliza as tabelas do P01).
+
+### Como testar
+
+1. Testes automatizados: `cd platform && npm test` (22/22 testes passando).
+2. Teste manual de navegação:
+   - Acessar `/instituicao` logado com usuário da demo (`dirigente@fadep-demo.medpleni.com`, `coord.clinico@fadep-demo.medpleni.com`, `docente1@fadep-demo.medpleni.com` ou `aluno.08p.01@fadep-demo.medpleni.com`).
+   - Verificar se o menu seletivo corresponde ao papel do usuário logado.
+   - Alternar tema claro e escuro no topo.
+   - Testar o DataTable e o download do arquivo CSV.
+
+---
+
 ## 2026-11-18 · P01 · Base Multi-Instituição, Escopos, Matrículas, RLS e Vitest
 
 ### O que foi feito
@@ -25,31 +88,6 @@ Formato de cada entrada:
   - `platform/supabase/b2b/002_seed_demo_down.sql`: script cirúrgico de limpeza e remoção de todo o seed demo sem afetar dados do B2C.
 - **Documentação de RLS:**
   - Criado `docs/b2b/TESTE-RLS.md` com roteiro de 6 cenários de consultas simulando JWTs de diferentes personas para validação prática no Supabase SQL Editor.
-
-### Arquivos criados / alterados
-
-- `platform/supabase/b2b/001_instituicoes.sql` (criado)
-- `platform/supabase/b2b/002_seed_demo.sql` (criado)
-- `platform/supabase/b2b/002_seed_demo_down.sql` (criado)
-- `platform/lib/b2b/types.ts` (criado)
-- `platform/lib/b2b/auth.ts` (criado)
-- `platform/lib/b2b/__tests__/auth.test.ts` (criado)
-- `platform/vitest.config.mjs` (criado)
-- `platform/package.json` (atualizado com vitest, vite e script `"test"`)
-- `docs/b2b/TESTE-RLS.md` (criado)
-- `docs/b2b/DIARIO.md` (atualizado)
-
-### SQL a rodar
-
-1. `platform/supabase/b2b/001_instituicoes.sql` (criar as tabelas e políticas RLS)
-2. `platform/supabase/b2b/002_seed_demo.sql` (popular a faculdade demo com 240 alunos para desenvolvimento)
-3. (*Opcional para remoção*) `platform/supabase/b2b/002_seed_demo_down.sql`
-
-### Como testar
-
-- Testes unitários de regras puras: `cd platform && npm test` (16/16 testes aprovados)
-- Verificação de tipos TypeScript: `cd platform && npx tsc --noEmit`
-- Testes práticos de RLS: executar as consultas do arquivo `docs/b2b/TESTE-RLS.md` no SQL Editor do Supabase.
 
 ---
 
