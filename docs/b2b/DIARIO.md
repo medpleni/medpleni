@@ -6,6 +6,90 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-18 · P06 · Importação de Questões, Staging, Conferência Lado a Lado e Processamento de 1.000+ Questões
+
+### O que foi feito
+
+- **Schema da Área de Preparação / Staging (`005_importacao_staging.sql`):**
+  - Tabela `question_staging_batches`: controle de lotes de importação, contadores em tempo real (total, prontas com gabarito, pendentes de chave, duplicatas, importadas), suporte a importação de prova inteira (`is_full_exam`), e métricas de acurácia da IA (`ai_accuracy_stats` com taxa de concordância/calibragem).
+  - Tabela `question_staging_items`: guarda o `original_raw_text` integral para permitir a conferência humana lado a lado (original × extraído), alternativas estruturadas A-E, gabarito, justificativa, eixos sugeridos pela IA vs eixos confirmados pelo humano, e status individual (`ready`, `pending_key`, `duplicate_warning`, `imported`, `discarded`).
+  - Índices de performance e políticas de RLS garantindo que apenas membros autorizados (`dirigente`, `coordenador`, `docente`) da instituição proprietária visualizem os itens em preparação.
+- **Modelos Oficiais de Arquivo para Download:**
+  - Publicados modelos oficiais em `platform/public/templates/b2b/`:
+    - `modelo_importacao_questoes.docx` (DOCX formatado com tags canônicas)
+    - `modelo_importacao_questoes.xlsx` (Planilha XLSX estruturada)
+    - `modelo_importacao_questoes.csv` (CSV com UTF-8 BOM)
+  - Endpoint de download seguro com headers apropriados em `/api/b2b/templates/download?type=docx|xlsx|csv`.
+- **Motores de Extração, Detecção e Classificação (`lib/b2b/importer/`):**
+  - `text-parsers.ts`: descompressão pura de arquivos ZIP/DOCX/XLSX (`word/document.xml`), segmentação de blocos com regex para provas médicas e vestibulares de residência, parsing robusto de enunciados, alternativas A-E, gabaritos e comentários. Se o gabarito não constar no arquivo, o item é automaticamente sinalizado como `pending_key`.
+  - `duplicate-detector.ts`: cálculo de similaridade de enunciado via 3-grams Jaccard e normalização fonética/acentual contra o acervo existente. Se a similaridade for $\ge 75\%$, emite aviso de duplicata na tela com snippet comparativo.
+  - `ai-classifier.ts` (PR-05): inferência assistida por IA sugerindo Grande Área, Cenário, Tema, Competência e Dificuldade (`facil`, `media`, `dificil`) com justificativa curta. **Regra inegociável da ESPEC atendida:** a sugestão da IA nunca é gravada como confirmada diretamente; o humano sempre precisa confirmar ou alterar.
+  - `staging-actions.ts`: Server Actions para upload e staging, consulta do lote, correção manual de itens, confirmação de itens aptos e submissão em lote para a Fila de Revisão.
+  - **Regra de publicação:** nenhuma questão entra como `published` direto. Ao submeter o lote, os itens são gravados com `b2b_visibility = 'institution_private'` e `b2b_status = 'in_review'` para conferência pedagógica formal.
+  - **Importação de prova inteira (PR-15):** quando o usuário marca a opção de prova completa, cria-se adicionalmente o rascunho de prova (`simulations` com `is_published = false`) mantendo a ordem exata das questões no arquivo.
+- **Interface Completa em `/instituicao/banco/importar` (`ImportarClient.tsx`):**
+  - Respeito rigoroso à regra de no máximo 5 blocos visuais por tela.
+  - **Bloco 1:** Topo com atalho de volta ao banco e botões de download dos modelos (DOCX, XLSX, CSV).
+  - **Bloco 2 (Etapa 1):** Upload de arquivos (DOCX, PDF com texto, XLSX, CSV), toggle de prova inteira com título opcional e atalho para auditoria do lote do Drive.
+  - **Bloco 3 (Etapa 2):** Painel do lote em staging com cartões KPI (Total, Prontas, Gabarito Pendente, Duplicatas), filtros por status e indicador da taxa de concordância da IA.
+  - **Bloco 4 (Etapas 3 & 4):** Painel de conferência lado a lado:
+    - *Coluna Esquerda:* Trecho bruto original do arquivo (somente leitura).
+    - *Coluna Direita:* Campos estruturados editáveis, seletor visual de gabarito A-E, justificativa, e caixa de validação da classificação da IA (Área, Cenário e Dificuldade com justificativa curta).
+    - Avisos destacados para itens com gabarito ausente e itens duplicados.
+  - **Bloco 5:** Rodapé padronizado B2B (`IndicatorFootnote`).
+- **Validação com o Arquivo Real do Drive (Lote de 1.000+ Questões):**
+  - Desenvolvido e executado o benchmark `batch-runner.py` sobre o arquivo real fornecido pelo usuário: `/Users/katiacili/Downloads/Questões MedPleni-20261118T223918Z-1-001.zip`.
+  - **Resultado do processamento real:**
+    - Total de questões processadas: **1.270 questões**
+    - Prontas com gabarito identificado: **847 questões**
+    - Pendentes de gabarito: **386 questões**
+    - Duplicatas/reaproveitamentos identificados: **37 questões**
+    - Erros: **0**
+    - Tempo total de processamento: **0.99 segundos** (1.270 questões/segundo)
+    - Relatório completo persistido em `platform/public/templates/b2b/relatorio_lote_1000.json`.
+- **Qualidade e Testes:**
+  - Suite de testes unitários `lib/b2b/__tests__/importer.test.ts` adicionada com 10 testes cobrindo parsing, detecção de duplicatas, ausência de gabarito e classificação assistida (PR-05).
+  - Vitest executado: **55/55 testes passando**.
+  - TypeScript compilado com **0 erros** (`npx tsc --noEmit`).
+  - ESLint verificado com **0 erros**.
+  - Next.js build gerou todas as 49 rotas da aplicação perfeitamente.
+
+### Arquivos criados / alterados
+
+- `platform/supabase/b2b/005_importacao_staging.sql` (criado)
+- `platform/public/templates/b2b/modelo_importacao_questoes.docx` (criado)
+- `platform/public/templates/b2b/modelo_importacao_questoes.xlsx` (criado)
+- `platform/public/templates/b2b/modelo_importacao_questoes.csv` (criado)
+- `platform/public/templates/b2b/relatorio_lote_1000.json` (criado)
+- `platform/app/api/b2b/templates/download/route.ts` (criado)
+- `platform/lib/b2b/importer/importer-types.ts` (criado)
+- `platform/lib/b2b/importer/text-parsers.ts` (criado)
+- `platform/lib/b2b/importer/duplicate-detector.ts` (criado)
+- `platform/lib/b2b/importer/ai-classifier.ts` (criado)
+- `platform/lib/b2b/importer/staging-actions.ts` (criado)
+- `platform/lib/b2b/importer/batch-runner.py` (criado)
+- `platform/lib/b2b/__tests__/importer.test.ts` (criado)
+- `platform/app/instituicao/banco/importar/page.tsx` (criado)
+- `platform/app/instituicao/banco/importar/ImportarClient.tsx` (criado)
+- `platform/app/instituicao/banco/BancoClient.tsx` (atualizado com atalho de importação)
+- `docs/b2b/DIARIO.md` (atualizado)
+
+### SQL a rodar
+
+Arquivo: `platform/supabase/b2b/005_importacao_staging.sql` (100% aditivo e idempotente).
+
+### Como testar
+
+1. **Testes automatizados:** `cd platform && npm test` (55/55 testes passando).
+2. **Build de produção:** `cd platform && npm run build` (49 rotas geradas).
+3. **Download de modelos:** Acessar `/instituicao/banco/importar` e baixar os modelos DOCX, XLSX e CSV.
+4. **Envio de arquivo teste:** Enviar um DOCX ou CSV e verificar a transição para a tela de staging com conferência lado a lado.
+5. **Ajuste e Gabarito:** Selecionar uma alternativa correta, alterar a classificação assistida por IA e salvar a conferência.
+6. **Submissão para Revisão:** Submeter o lote e conferir que as questões entraram com status `in_review` na Fila de Revisão de `/instituicao/banco` (nenhuma publicada direto).
+7. **Processamento do Lote de 1.000+ Questões:** Executar `python3 platform/lib/b2b/importer/batch-runner.py "/Users/katiacili/Downloads/Questões MedPleni-20261118T223918Z-1-001.zip" 1000` para conferir o processamento instantâneo das 1.270 questões reais do Drive.
+
+---
+
 ## 2026-11-18 · P05 · Banco de Questões Institucional, Fichas Técnicas e Fila de Revisão
 
 ### O que foi feito

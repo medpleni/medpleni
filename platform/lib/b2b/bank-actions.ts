@@ -10,6 +10,8 @@ import type {
   BankOverviewStats,
   QuestionDifficulty,
   QuestionReviewItem,
+  QuestionVisibility,
+  QuestionStatus,
 } from "./bank-types";
 
 /**
@@ -312,7 +314,7 @@ export async function getQuestionFullDetails(questionId: string): Promise<B2BQue
     };
   }
 
-  const rawOptions = ((q as Record<string, unknown>).question_options as { letter: string; text: string; is_correct: boolean }[] || []);
+  const rawOptions = ((q as Record<string, unknown>).question_options as { letter: "A" | "B" | "C" | "D" | "E"; text: string; is_correct: boolean }[] || []);
   const options = rawOptions.sort((a, b) =>
     a.letter.localeCompare(b.letter)
   );

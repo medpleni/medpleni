@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { PageHeader, EmptyState, IndicatorFootnote } from "@/components/b2b";
 import type {
@@ -259,6 +260,12 @@ export default function BancoClient({
           subtitle={`Acervo oficial MedPleni e questões privativas de ${context.institution.name}`}
         />
         <div className="flex items-center gap-2">
+          <Link
+            href="/instituicao/banco/importar"
+            className="px-3.5 py-1.5 border border-border rounded-lg hover:bg-muted text-xs font-semibold text-foreground transition-colors shadow-xs"
+          >
+            📥 Importar Arquivo
+          </Link>
           <button
             onClick={() => setActiveTab("nova_questao")}
             className="px-3.5 py-1.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 text-xs font-semibold shadow-xs"

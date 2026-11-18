@@ -1,0 +1,45 @@
+{
+  "status": "success",
+  "zip_path": "/Users/katiacili/Downloads/Questões MedPleni-20261118T223918Z-1-001.zip",
+  "elapsed_seconds": 0.99,
+  "total_processed": 1270,
+  "ready_items": 847,
+  "pending_items": 386,
+  "duplicate_items": 37,
+  "error_items": 0,
+  "files_analyzed": 23,
+  "sample_files": [
+    {
+      "file": "ABEM_2025_Questoes_Clinica_Medica.docx",
+      "questions": 20
+    },
+    {
+      "file": "ENAMED_2025_Questoes_Clinica_Medica.docx",
+      "questions": 21
+    },
+    {
+      "file": "Revalida_2026_1_Questoes_Cirurgia.docx",
+      "questions": 15
+    },
+    {
+      "file": "AMP_2025_Prova_Geral_Questoes_Cirurgia.docx",
+      "questions": 20
+    },
+    {
+      "file": "ENADE_2023_Questoes_Clinica_Medica.docx",
+      "questions": 9
+    },
+    {
+      "file": "Revalida_2025_1_Questoes_Cirurgia.docx",
+      "questions": 15
+    },
+    {
+      "file": "Simulado_Geral_Enamed_2026_Questoes_Clinica_Medica.docx",
+      "questions": 17
+    },
+    {
+      "file": "Revalida_2024_2_Questoes_Cirurgia.docx",
+      "questions": 18
+    }
+  ]
+}
