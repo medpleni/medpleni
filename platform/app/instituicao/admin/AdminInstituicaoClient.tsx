@@ -82,15 +82,23 @@ export default function AdminInstituicaoClient({ context, institutions }: Props)
           title="Administração Global MedPleni (B2B)"
           subtitle="Implantação de novas faculdades contratantes, gestão de planos e acesso de suporte auditado"
         />
-        <button
-          onClick={() => {
-            setFormError(null);
-            setCreateModalOpen(true);
-          }}
-          className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 text-xs font-semibold self-start sm:self-auto shadow-xs"
-        >
-          + Nova Instituição
-        </button>
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <button
+            onClick={() => router.push("/instituicao/admin/classificacao")}
+            className="px-3 py-2 border border-border bg-card hover:bg-muted text-foreground rounded-lg text-xs font-semibold shadow-xs"
+          >
+            Taxonomia Médica (4 Eixos) →
+          </button>
+          <button
+            onClick={() => {
+              setFormError(null);
+              setCreateModalOpen(true);
+            }}
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 text-xs font-semibold shadow-xs"
+          >
+            + Nova Instituição
+          </button>
+        </div>
       </div>
 
       {/* Tabela de Instituições */}

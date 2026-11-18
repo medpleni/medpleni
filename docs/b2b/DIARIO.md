@@ -6,6 +6,71 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-18 · P04 · Classificação: Área, Cenário, Tema, Competência
+
+### O que foi feito
+
+- **Schema de Taxonomia Canônica (`003_taxonomia.sql`):**
+  - `tax_areas`: 7 grandes áreas do INEP com ordem, cores oficiais, código e flexibilidade multi-etapa (`etapa_2_3` e `etapa_1_ciclo_basico` quando o INEP publicar a 1ª etapa).
+  - `tax_cenarios`: ambientes de prática médica (vazio inicialmente, aguardando arquivo do Dr. Filipe).
+  - `tax_temas`: temas com hierarquia de até 2 níveis (tema pai / subtema) vinculados à área correspondente.
+  - `tax_competencias`: matriz de competências e habilidades clínicas.
+  - `tax_area_legacy_mapping`: tabela de mapeamento de-para não destrutiva que preserva intactas as colunas antigas `questions.area` e `questions.subarea`.
+  - `question_classification`: classificação canônica vinculando a questão aos 4 eixos, dificuldade normalizada (`facil`, `media`, `dificil`) e proveniência da sugestão (`humano` ou `ia`).
+  - Procedimento de migração retroativa em SQL que classifica automaticamente todo o acervo legado existente e função `get_unmapped_questions_report()` para diagnóstico de cobertura.
+- **Ponto Único de Leitura e Tipagem:**
+  - `platform/lib/b2b/taxonomy-types.ts`: tipagem TypeScript completa dos 4 eixos.
+  - `platform/lib/b2b/taxonomy-csv.ts`: funções puras de parse e exportação CSV com suporte a UTF-8 BOM.
+  - `platform/lib/b2b/taxonomy.ts`: camada de acesso autoritativo (`getCanonicalAreas`, `getCenarios`, `getTemas`, `getCompetencias`, `getTaxonomyBundle`, `getTaxonomyMigrationReport`).
+  - `platform/lib/b2b/taxonomy-actions.ts`: Server Actions para CRUD das 4 listas, importação CSV idempotente e mapeamento rápido de áreas órfãs.
+- **Área Administrativa de Classificação (`/instituicao/admin/classificacao`):**
+  - Gestão e edição das 4 listas taxonômicas com atalhos de importação e exportação CSV.
+  - Painel de Cobertura e Diagnóstico com contadores de questões migradas, percentual de cobertura e tabela de textos legados com botão de mapeamento imediato.
+  - Atalho de navegação adicionado em `/instituicao/admin`.
+- **Registro de Ocorrências Legadas no B2C (não refatoradas agora para não quebrar o B2C):**
+  - `platform/lib/types.ts`: superset de 16 especialidades antigas (mantido).
+  - `platform/lib/supabase/diagnostic.ts`: lista de 5 áreas legadas (mantido).
+  - `platform/lib/supabase/prediction.ts`: 7 áreas (mantido).
+  - `platform/app/questoes/page.tsx`: 7 áreas (mantido).
+  - `platform/app/simulados/page.tsx`: listas de 5 e 6 áreas (mantido).
+  - `platform/app/cronograma/page.tsx`: lista de 5 áreas (mantido).
+  - `platform/app/flashcards/page.tsx`: lista de 5 áreas (mantido).
+  - `platform/app/aulas/page.tsx`: lista de 5 áreas (mantido).
+  - *Todas as telas novas do B2B consomem exclusivamente `lib/b2b/taxonomy.ts`.*
+- **Garantia de Qualidade e Testes:**
+  - Suite `lib/b2b/__tests__/taxonomy.test.ts` adicionada. Total de **33/33 testes passando**.
+  - `npx tsc --noEmit` compilado com 0 erros.
+  - Build de produção do Next.js gerou todas as 45 rotas sem warnings nem erros.
+
+### Arquivos criados / alterados
+
+- `platform/supabase/b2b/003_taxonomia.sql` (criado)
+- `platform/lib/b2b/taxonomy-types.ts` (criado)
+- `platform/lib/b2b/taxonomy-csv.ts` (criado)
+- `platform/lib/b2b/taxonomy.ts` (criado)
+- `platform/lib/b2b/taxonomy-actions.ts` (criado)
+- `platform/lib/b2b/__tests__/taxonomy.test.ts` (criado)
+- `platform/app/instituicao/admin/classificacao/page.tsx` (criado)
+- `platform/app/instituicao/admin/classificacao/ClassificacaoClient.tsx` (criado)
+- `platform/app/instituicao/admin/AdminInstituicaoClient.tsx` (atualizado com atalho para taxonomia)
+- `docs/b2b/DIARIO.md` (atualizado)
+
+### SQL a rodar
+
+Arquivo: `platform/supabase/b2b/003_taxonomia.sql` (aditivo e idempotente).
+
+### Como testar
+
+1. **Testes automatizados:** `cd platform && npm test` (33/33 testes passando).
+2. **Build de produção:** `cd platform && npm run build` (45 rotas geradas com sucesso).
+3. **Classificação e Taxonomia:**
+   - Acessar `/instituicao/admin/classificacao` com usuário superadmin/admin MedPleni.
+   - Navegar entre as 4 abas (Áreas, Cenários, Temas, Competências).
+   - Testar a exportação de CSV das Áreas.
+   - Verificar a aba "Relatório de Questões" para auditar a cobertura e o mapeamento de-para.
+
+---
+
 ## 2026-11-18 · P03 · Configurações Institucionais (GO-01), Importação CSV, Convites e Admin MedPleni
 
 ### O que foi feito
