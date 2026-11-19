@@ -137,10 +137,37 @@ export default function B2BShell({ context, children }: B2BShellProps) {
           ),
         },
         {
+          id: "turmas-provas",
+          label: "Turmas × Provas",
+          href: "/instituicao/turmas-provas",
+          status: "ready",
+          icon: (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <line x1="3" y1="9" x2="21" y2="9" />
+              <line x1="3" y1="15" x2="21" y2="15" />
+              <line x1="9" y1="3" x2="9" y2="21" />
+              <line x1="15" y1="3" x2="15" y2="21" />
+            </svg>
+          ),
+        },
+        {
+          id: "cobertura-matriz",
+          label: "Cobertura da matriz",
+          href: "/instituicao/cobertura-matriz",
+          status: "ready",
+          icon: (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
+              <path d="M22 12A10 10 0 0 0 12 2v10z" />
+            </svg>
+          ),
+        },
+        {
           id: "relatorios",
           label: "Relatórios",
           href: "/instituicao/relatorios",
-          status: "in_progress",
+          status: "ready",
           icon: (
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />

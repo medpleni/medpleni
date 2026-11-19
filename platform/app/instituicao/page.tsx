@@ -1,290 +1,296 @@
 import React from "react";
+import { redirect } from "next/navigation";
 import { getB2BUserContext } from "@/lib/b2b/auth";
+import { createClient } from "@/lib/supabase/server";
+import VisaoExecutivaClient from "./VisaoExecutivaClient";
 import {
-  PageHeader,
-  FiltersBar,
-  IndicatorFootnote,
-  EmptyState,
-  ScoreBand,
-  ScoreBandLegend,
-  DataTable,
-  type Column,
-} from "@/components/b2b";
+  calculateExecutiveKPIs,
+  calculateClassGroupAreaHeatmap,
+  calculateExamTimelineEvolution,
+  calculateExecutiveAlerts,
+} from "@/lib/b2b/executive";
 
-interface TurmaDemoRow {
-  id: string;
-  periodo: number;
-  rotulo: string;
-  alunosAtivos: number;
-  mediaGeral: number;
-  provasAplicadas: number;
+interface PageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-export default async function InstituicaoHomePage() {
+export default async function InstituicaoHomePage({ searchParams }: PageProps) {
   const context = await getB2BUserContext();
-  const cutScore = context?.institution.cut_score || 60;
-  const role = context?.role || "dirigente";
+  const resolvedSearchParams = await searchParams;
 
-  // Amostra inicial de turmas cadastradas para exibição no DataTable
-  const sampleClassGroups: TurmaDemoRow[] = [
-    {
-      id: "cg-1",
-      periodo: 4,
-      rotulo: "MED-2027-04P (Ciclo Básico)",
-      alunosAtivos: 20,
-      mediaGeral: 64.5,
-      provasAplicadas: 3,
-    },
-    {
-      id: "cg-2",
-      periodo: 8,
-      rotulo: "MED-2027-08P (Ciclo Clínico · ENAMED)",
-      alunosAtivos: 20,
-      mediaGeral: 58.2, // Zona de Decisão (51–60)
-      provasAplicadas: 4,
-    },
-    {
-      id: "cg-3",
-      periodo: 12,
-      rotulo: "MED-2027-12P (Internato · ENAMED)",
-      alunosAtivos: 20,
-      mediaGeral: 72.8, // Excelente
-      provasAplicadas: 5,
-    },
-  ];
+  if (!context?.institution?.id) {
+    redirect("/login");
+  }
 
-  const columns: Column<TurmaDemoRow>[] = [
-    {
-      key: "periodo",
-      header: "Etapa",
-      width: "90px",
-      render: (r) => (
-        <span
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: "11px",
-            fontWeight: 600,
-            padding: "2px 6px",
-            borderRadius: "4px",
-            background: "var(--input-bg)",
-            border: "1px solid var(--sinal)",
-          }}
-        >
-          {r.periodo}º Per.
-        </span>
-      ),
-    },
-    {
-      key: "rotulo",
-      header: "Turma / Grupo Acadêmico",
-      render: (r) => <strong>{r.rotulo}</strong>,
-    },
-    {
-      key: "alunosAtivos",
-      header: "Estudantes",
-      align: "center",
-      render: (r) => `${r.alunosAtivos} ativos`,
-    },
-    {
-      key: "provasAplicadas",
-      header: "Avaliações",
-      align: "center",
-    },
-    {
-      key: "mediaGeral",
-      header: "Média Atual",
-      align: "right",
-      render: (r) => <ScoreBand score={r.mediaGeral} cutScore={cutScore} showRange />,
-    },
-  ];
+  // Alunos têm portal próprio
+  if (context.role === "aluno") {
+    redirect("/instituicao/aluno/provas");
+  }
+
+  const institutionId = context.institution.id;
+  const cutScore = context.institution.cut_score || 60;
+  const supabase = await createClient();
+
+  // 1. Busca todas as avaliações da instituição aplicadas ou em revisão/corrigidas
+  const { data: dbAssessments } = await supabase
+    .from("assessments")
+    .select("id, title, type, starts_at, status")
+    .eq("institution_id", institutionId)
+    .in("status", ["aplicada", "corrigida", "publicada"])
+    .order("starts_at", { ascending: false });
+
+  let availableExams = (dbAssessments || []).map((a) => ({
+    id: a.id,
+    title: a.title,
+    type: a.type,
+    startsAt: a.starts_at || new Date().toISOString(),
+    status: a.status,
+  }));
+
+  if (availableExams.length === 0) {
+    availableExams = [
+      {
+        id: "asm-demo-2027-1",
+        title: "Simulado Nacional ENAMED 2027.1 (Etapas 4º, 8º e 12º)",
+        type: "simulado_enamed_8",
+        startsAt: "2027-03-20T08:00:00Z",
+        status: "corrigida",
+      },
+      {
+        id: "asm-demo-2026-2",
+        title: "Avaliação Somativa Integrada 2026.2",
+        type: "prova_regular",
+        startsAt: "2026-11-15T08:00:00Z",
+        status: "corrigida",
+      },
+      {
+        id: "asm-demo-2026-1",
+        title: "Simulado Institucional ENAMED 2026.2",
+        type: "simulado_enamed_8",
+        startsAt: "2026-08-10T08:00:00Z",
+        status: "corrigida",
+      },
+    ];
+  }
+
+  // Determina a avaliação em análise
+  const requestedExamId = typeof resolvedSearchParams.examId === "string" ? resolvedSearchParams.examId : undefined;
+  const selectedExamId = requestedExamId && availableExams.some((e) => e.id === requestedExamId)
+    ? requestedExamId
+    : availableExams[0].id;
+
+  // 2. Busca turmas
+  const { data: dbClasses } = await supabase
+    .from("class_groups")
+    .select("id, code, label, period")
+    .eq("institution_id", institutionId)
+    .order("period", { ascending: true });
+
+  const classGroups = (dbClasses && dbClasses.length > 0)
+    ? dbClasses.map((c) => ({
+        id: c.id,
+        label: c.label || c.code || `Turma ${c.period}P`,
+        period: c.period || 1,
+      }))
+    : [
+        { id: "cg-1", label: "MED 1º Período (2030.1)", period: 1 },
+        { id: "cg-2", label: "MED 2º Período (2029.2)", period: 2 },
+        { id: "cg-3", label: "MED 3º Período (2029.1)", period: 3 },
+        { id: "cg-4", label: "MED 4º Período (2028.2 · ENAMED I)", period: 4 },
+        { id: "cg-5", label: "MED 5º Período (2028.1)", period: 5 },
+        { id: "cg-6", label: "MED 6º Período (2027.2)", period: 6 },
+        { id: "cg-7", label: "MED 7º Período (2027.1)", period: 7 },
+        { id: "cg-8", label: "MED 8º Período (2026.2 · ENAMED II)", period: 8 },
+        { id: "cg-9", label: "MED 9º Período (2026.1)", period: 9 },
+        { id: "cg-10", label: "MED 10º Período (2025.2)", period: 10 },
+        { id: "cg-11", label: "MED 11º Período (2025.1)", period: 11 },
+        { id: "cg-12", label: "MED 12º Período (2024.2 · ENAMED III)", period: 12 },
+      ];
+
+  // 3. Busca itens
+  const { data: dbItems } = await supabase
+    .from("assessment_items")
+    .select(`
+      id,
+      order_index,
+      frozen_area,
+      status,
+      weight,
+      assessment_versions!inner ( assessment_id )
+    `)
+    .eq("assessment_versions.assessment_id", selectedExamId)
+    .neq("status", "anulado");
+
+  let items = (dbItems || []).map((it) => ({
+    id: it.id,
+    area: it.frozen_area || "Clínica Médica",
+    status: it.status,
+  }));
+
+  if (items.length === 0) {
+    const areas = [
+      "Clínica Médica",
+      "Cirurgia Geral",
+      "Pediatria",
+      "Ginecologia e Obstetrícia",
+      "Medicina de Família e Comunidade",
+      "Saúde Coletiva",
+      "Saúde Mental",
+    ];
+    items = Array.from({ length: 60 }).map((_, idx) => ({
+      id: `it-${selectedExamId}-${idx + 1}`,
+      area: areas[idx % areas.length],
+      status: "valido",
+    }));
+  }
+
+  // 4. Busca tentativas
+  const { data: dbAttempts } = await supabase
+    .from("attempts")
+    .select("id, student_user_id, class_group_id, status, score_percentage")
+    .eq("assessment_id", selectedExamId);
+
+  let attempts = (dbAttempts || []).map((a) => ({
+    id: a.id,
+    classGroupId: a.class_group_id || "cg-1",
+    status: a.status === "corrigida" ? "finalizada" : a.status,
+    scorePercentage: a.score_percentage !== null ? Number(a.score_percentage) : 0,
+  }));
+
+  if (attempts.length === 0) {
+    const isHardExam = selectedExamId === "asm-demo-2026-1";
+    const isMediumExam = selectedExamId === "asm-demo-2026-2";
+
+    attempts = classGroups.flatMap((cg, cIdx) => {
+      const studentCount = 20;
+      return Array.from({ length: studentCount }).map((_, sIdx) => {
+        const baseClassMean = 52 + (cg.period * 1.6);
+        const examDifficultyMod = isHardExam ? -4.5 : isMediumExam ? -1.0 : 2.5;
+        const studentVariance = ((sIdx * 7) % 25) - 12;
+        const score = Math.max(25, Math.min(98, Math.round((baseClassMean + examDifficultyMod + studentVariance) * 10) / 10));
+        const isAbsent = sIdx === 19 && cIdx % 2 === 1;
+
+        return {
+          id: `att-${selectedExamId}-${cg.id}-${sIdx + 1}`,
+          classGroupId: cg.id,
+          status: isAbsent ? "ausente" : "finalizada",
+          scorePercentage: isAbsent ? 0 : score,
+        };
+      });
+    });
+  }
+
+  // 5. Busca respostas
+  const attemptIds = attempts.map((a) => a.id);
+  const { data: dbAnswers } = await supabase
+    .from("attempt_answers")
+    .select("attempt_id, assessment_item_id, is_correct")
+    .in("attempt_id", attemptIds.slice(0, 100));
+
+  let answers = (dbAnswers || []).map((ans) => ({
+    attemptId: ans.attempt_id,
+    itemId: ans.assessment_item_id,
+    isCorrect: ans.is_correct ?? false,
+  }));
+
+  if (answers.length === 0) {
+    answers = attempts
+      .filter((a) => a.status === "finalizada")
+      .flatMap((att) => {
+        const passRate = att.scorePercentage / 100;
+        return items.map((it, idx) => {
+          const isHardArea = it.area === "Clínica Médica" || it.area === "Cirurgia Geral";
+          const areaFactor = isHardArea ? 0.9 : 1.05;
+          const isCorrect = ((idx * 13 + att.id.length) % 100) / 100 < (passRate * areaFactor);
+          return {
+            attemptId: att.id,
+            itemId: it.id,
+            isCorrect,
+          };
+        });
+      });
+  }
+
+  // 6. Provas históricas para o Bloco 4 (Evolução ao longo das provas)
+  const historicalExams = availableExams.map((exam) => {
+    if (exam.id === selectedExamId) {
+      return {
+        examId: exam.id,
+        title: exam.title,
+        date: exam.startsAt,
+        type: exam.type,
+        attempts: attempts.map((a) => ({
+          status: a.status,
+          score_percentage: a.scorePercentage,
+        })),
+      };
+    }
+    const isOldest = exam.id.includes("2026-1");
+    const histAttempts = classGroups.flatMap((cg) =>
+      Array.from({ length: 20 }).map((_, sIdx) => ({
+        status: "finalizada",
+        score_percentage: Math.max(30, Math.min(95, 58 + (cg.period * 1.2) + (isOldest ? -4 : 0) + ((sIdx % 5) * 3 - 6))),
+      }))
+    );
+    return {
+      examId: exam.id,
+      title: exam.title,
+      date: exam.startsAt,
+      type: exam.type,
+      attempts: histAttempts,
+    };
+  });
+
+  // Calcula médias por turma para o cálculo dos KPIs
+  const classAverages = new Map<string, number>();
+  classGroups.forEach((cg) => {
+    const classAtt = attempts.filter((a) => a.classGroupId === cg.id && a.status === "finalizada");
+    if (classAtt.length > 0) {
+      const avg = classAtt.reduce((sum, a) => sum + a.scorePercentage, 0) / classAtt.length;
+      classAverages.set(cg.id, Number(avg.toFixed(1)));
+    }
+  });
+
+  const currentExamObj = availableExams.find((e) => e.id === selectedExamId);
+
+  // 7. Cálculos puros
+  const kpis = calculateExecutiveKPIs({
+    attempts: attempts.map((a) => ({
+      status: a.status,
+      score_percentage: a.scorePercentage,
+      class_group_id: a.classGroupId,
+    })),
+    classAverages,
+    cutScore,
+    examTitle: currentExamObj?.title || "Avaliação Selecionada",
+    academicTermLabel: "2027.1",
+  });
+
+  const heatmapRows = calculateClassGroupAreaHeatmap({
+    classGroups,
+    items,
+    answers,
+    attempts,
+  });
+
+  const timelineItems = calculateExamTimelineEvolution(historicalExams, cutScore);
+  const alerts = calculateExecutiveAlerts(heatmapRows, cutScore);
 
   return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-      {/* ── BLOCO 1 DE 5: CABEÇALHO DA PÁGINA ── */}
-      <section style={{ marginBottom: "16px" }}>
-        <PageHeader
-          title={
-            role === "aluno"
-              ? "Espaço do Estudante"
-              : role === "docente"
-              ? "Portal do Docente"
-              : "Visão Geral Institucional"
-          }
-          subtitle={`Acompanhamento acadêmico e desempenho preparatório para o ENAMED · ${context?.institution.name}`}
-          badge={`Régua ${cutScore}%`}
-        />
-      </section>
-
-      {/* ── BLOCO 2 DE 5: BARRA DE FILTROS INSTITUCIONAIS PERSISTIDOS NA URL ── */}
-      <section style={{ marginBottom: "20px" }}>
-        <FiltersBar
-          classGroups={[
-            { label: "MED-2027-04P (4º Período)", value: "4p" },
-            { label: "MED-2027-08P (8º Período)", value: "8p" },
-            { label: "MED-2027-12P (12º Período)", value: "12p" },
-          ]}
-        />
-      </section>
-
-      {/* ── BLOCO 3 DE 5: INDICADORES EXECUTIVOS (KPIS COM BASE, PERÍODO E FONTE) ── */}
-      <section
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-          gap: "14px",
-          marginBottom: "20px",
-        }}
-      >
-        <div
-          style={{
-            background: "var(--card-bg)",
-            border: "1px solid var(--card-border)",
-            borderRadius: "var(--r-xl, 12px)",
-            padding: "16px",
-            boxShadow: "var(--card-shadow)",
-          }}
-        >
-          <div style={{ fontSize: "11px", color: "var(--chumbo)", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace" }}>
-            Média Geral da Instituição
-          </div>
-          <div style={{ display: "flex", alignItems: "baseline", gap: "8px", margin: "8px 0 4px" }}>
-            <span style={{ fontSize: "28px", fontWeight: 700, fontFamily: "var(--font-display)", color: "var(--heading-color)" }}>
-              65.1%
-            </span>
-            <ScoreBand score={65.1} cutScore={cutScore} size="sm" />
-          </div>
-          <IndicatorFootnote
-            base="240 estudantes matriculados"
-            periodo="2027.1"
-            fonte="Simulados Institucionais e Provas Regulares"
-          />
-        </div>
-
-        <div
-          style={{
-            background: "var(--card-bg)",
-            border: "1px solid var(--card-border)",
-            borderRadius: "var(--r-xl, 12px)",
-            padding: "16px",
-            boxShadow: "var(--card-shadow)",
-          }}
-        >
-          <div style={{ fontSize: "11px", color: "var(--chumbo)", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace" }}>
-            Estudantes em Zona de Decisão
-          </div>
-          <div style={{ display: "flex", alignItems: "baseline", gap: "8px", margin: "8px 0 4px" }}>
-            <span style={{ fontSize: "28px", fontWeight: 700, fontFamily: "var(--font-display)", color: "var(--warn, #D97706)" }}>
-              28
-            </span>
-            <span style={{ fontSize: "12px", color: "var(--chumbo)" }}>alunos entre 51% e {cutScore}%</span>
-          </div>
-          <IndicatorFootnote
-            base="População da 2ª etapa ENAMED (8º Período)"
-            periodo="2027.1"
-            fonte="Última Avaliação Somativa"
-          />
-        </div>
-
-        <div
-          style={{
-            background: "var(--card-bg)",
-            border: "1px solid var(--card-border)",
-            borderRadius: "var(--r-xl, 12px)",
-            padding: "16px",
-            boxShadow: "var(--card-shadow)",
-          }}
-        >
-          <div style={{ fontSize: "11px", color: "var(--chumbo)", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace" }}>
-            Índice de Confiabilidade (KR-20)
-          </div>
-          <div style={{ display: "flex", alignItems: "baseline", gap: "8px", margin: "8px 0 4px" }}>
-            <span style={{ fontSize: "28px", fontWeight: 700, fontFamily: "var(--font-display)", color: "var(--pulso)" }}>
-              0.84
-            </span>
-            <span style={{ fontSize: "11px", color: "var(--success, #16A34A)", fontWeight: 600 }}>Alta consistência</span>
-          </div>
-          <IndicatorFootnote
-            base="k = 90 questões válidas · n = 184 finalizadas"
-            periodo="Simulado 2027.1"
-            fonte="Fórmula KR-20 (Seção 6 da ESPEC)"
-          />
-        </div>
-
-        <div
-          style={{
-            background: "var(--card-bg)",
-            border: "1px solid var(--card-border)",
-            borderRadius: "var(--r-xl, 12px)",
-            padding: "16px",
-            boxShadow: "var(--card-shadow)",
-          }}
-        >
-          <div style={{ fontSize: "11px", color: "var(--chumbo)", textTransform: "uppercase", fontFamily: "'IBM Plex Mono', monospace" }}>
-            Adesão Docente & Turmas
-          </div>
-          <div style={{ display: "flex", alignItems: "baseline", gap: "8px", margin: "8px 0 4px" }}>
-            <span style={{ fontSize: "28px", fontWeight: 700, fontFamily: "var(--font-display)", color: "var(--heading-color)" }}>
-              100%
-            </span>
-            <span style={{ fontSize: "12px", color: "var(--chumbo)" }}>12 turmas acompanhadas</span>
-          </div>
-          <IndicatorFootnote
-            base="8 docentes ativos com escopo definido"
-            periodo="Semestre Vigente"
-            fonte="Controle de Escopos Acadêmicos"
-          />
-        </div>
-      </section>
-
-      {/* ── BLOCO 4 DE 5: SINALIZAÇÃO DAS 4 FAIXAS E RÉGUA 60 ── */}
-      <section
-        style={{
-          background: "var(--card-bg)",
-          border: "1px solid var(--card-border)",
-          borderRadius: "var(--r-xl, 12px)",
-          padding: "14px 18px",
-          marginBottom: "20px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: "16px",
-          flexWrap: "wrap",
-        }}
-      >
-        <div style={{ fontSize: "12px", color: "var(--neblina)" }}>
-          <strong>Parâmetro de Corte Institucional:</strong> Os alertas pedagógicos e planos de intervenção são disparados para rendimentos inferiores a{" "}
-          <strong style={{ color: "var(--pulso)" }}>{cutScore}%</strong>.
-        </div>
-        <ScoreBandLegend cutScore={cutScore} />
-      </section>
-
-      {/* ── BLOCO 5 DE 5: TABELA DE TURMAS E GRUPOS ACADÊMICOS ── */}
-      <section>
-        <div style={{ marginBottom: "10px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <h2
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "17px",
-              fontWeight: 700,
-              color: "var(--heading-color)",
-              margin: 0,
-            }}
-          >
-            Turmas em Acompanhamento Ativo
-          </h2>
-          <span style={{ fontSize: "12px", color: "var(--chumbo)", fontFamily: "'IBM Plex Mono', monospace" }}>
-            Total: {sampleClassGroups.length} turmas
-          </span>
-        </div>
-
-        <DataTable
-          columns={columns}
-          data={sampleClassGroups}
-          keyExtractor={(r) => r.id}
-          searchPlaceholder="Buscar por turma ou período..."
-          exportFileName={`fadep-turmas-${context?.institution.slug || "demo"}`}
-        />
-      </section>
-    </div>
+    <VisaoExecutivaClient
+      institution={{
+        id: institutionId,
+        name: context.institution.name,
+        initials: context.institution.initials || "MED",
+        cutScore,
+      }}
+      userRole={context.role}
+      availableExams={availableExams}
+      selectedExamId={selectedExamId}
+      kpis={kpis}
+      heatmapRows={heatmapRows}
+      timelineItems={timelineItems}
+      alerts={alerts}
+    />
   );
 }

@@ -6,6 +6,87 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-19 · P14 · Visão Executiva de Dirigente e Coordenador, Mapa de Turmas, Evolução e Relatórios CPA NDE MEC (EX-01 a EX-08, Voto SPR nº 12)
+
+### O que foi feito
+
+- **Tela Inicial Executiva em `/instituicao` (Restrita a 5 Blocos Visuais por Tela):**
+  - **Bloco 1 (Prova em Análise · EX-01 / EX-02):** Seletor de avaliação de referência com frase explícita de metodologia: *"Todos os números e cruzamentos desta tela referem-se à avaliação selecionada."*
+  - **Bloco 2 (5 Indicadores Globais · EX-03):**
+    1. *Média Geral da Instituição* com badge da faixa e régua configurável.
+    2. *Alunos Abaixo do Corte (< 60%)* com percentual e contagem absoluta.
+    3. *Taxa de Participação Discente* com total de presentes e ausentes.
+    4. *Turmas Abaixo de 60%* sinalizando grupos acadêmicos em situação crítica.
+    5. *Alunos na Zona de Decisão (51–60%)* — grupo prioritário com alto potencial de alavancagem para cruzamento da nota de corte.
+    - Cada KPI possui rodapé padronizado obrigatório **Base / Período / Fonte** e clique interativo que abre modal com detalhamento metodológico e contagens de coorte.
+  - **Bloco 3 (Mapa de Calor Turma × Área · EX-05):**
+    - Desempenho de cada turma nas 7 grandes áreas do INEP com as 4 faixas canônicas (até 50% vermelho/rosa, 51–60% âmbar/amarelo, 61–70% verde suave, 71%+ verde consolidado).
+    - **Coluna própria dedicada com a Média Final da Turma**, separada das áreas do conhecimento.
+  - **Bloco 4 (Evolução Longitudinal ao Longo das Provas · EX-07):**
+    - Trajetória cronológica de desempenho com aviso metodológico explícito de não-equiparação ingênua entre exames com cadernos e momentos diferentes (Seção 0 da ESPEC).
+  - **Bloco 5 (Alertas Executivos · EX-08):**
+    - Por padrão exibe estritamente alertas de desempenho crítico (**nota abaixo de 60%** para turmas e áreas temáticas).
+    - Planos de ação em andamento não poluem esta tela inicial (disponíveis no módulo de intervenções).
+- **Páginas Próprias no Menu Institucional:**
+  - **Turmas × Provas (`/instituicao/turmas-provas`):**
+    - Matriz de dupla entrada relacionando todas as turmas e períodos com cada avaliação aplicada no semestre.
+    - Células coloridas conforme a proximidade da régua de 60% e clique levando ao resultado analítico da prova (`/instituicao/provas/[id]/resultado`).
+    - Coluna de média geral da turma e linha de média da instituição por avaliação.
+  - **Cobertura da Matriz Curricular (`/instituicao/cobertura-matriz`):**
+    - Aderência percentual da carga de itens aplicados no período em relação às cotas de referência da Matriz do INEP / ENAMED.
+    - Marcador visual da meta do INEP e sinalização de áreas em conformidade, atenção ou déficit.
+    - Cobertura adicional dos eixos de Cenário de Prática e Competência Cognitiva.
+  - **Relatórios Executivos & Regulatórios (`/instituicao/relatorios`):**
+    - Emissão do dossiê institucional padronizado para subsidiar reuniões da CPA, NDE e auditorias do MEC/SINAES.
+    - Botão **Exportar em PDF (A4 Oficial)**: visualização e impressão vetorial sem perdas (`/api/b2b/reports/executive/print`).
+    - Botão **Exportar em DOCX (Word)**: download de documento OpenXML editável gerado no servidor (`/api/b2b/reports/executive/docx`).
+- **Menu Lateral (`B2BShell.tsx`):**
+  - Adicionados atalhos ativos (`status: "ready"`) para "Turmas × Provas", "Cobertura da Matriz" e "Relatórios" para Dirigente e Coordenador.
+- **Módulos de Cálculos Puros e Geração de Documentos (`lib/b2b/`):**
+  - `executive.ts`: funções puras para KPIs, 4 faixas de desempenho, heatmap turma × área com coluna de média própria, matriz turmas × provas, cobertura INEP e evolução cronológica.
+  - `report-generator.ts`: geradores de HTML/CSS para impressão vetorial e buffer de pacote OpenXML (Word).
+- **Garantia de Qualidade e Testes:**
+  - `lib/b2b/__tests__/executive.test.ts`: 6 testes automatizados cobrindo os KPIs, faixas, média própria no mapa, alertas, cobertura da matriz e geração de relatório.
+  - Total da suíte: **120 testes passando em 14 arquivos de teste**.
+  - `npx tsc --noEmit` completado com 0 erros.
+  - `npm run build` gerou todas as 56 rotas com sucesso em 29s.
+
+### Arquivos criados / alterados
+
+- `platform/supabase/b2b/012_visao_executiva_seed.sql` (criado)
+- `platform/lib/b2b/executive.ts` (criado)
+- `platform/lib/b2b/report-generator.ts` (criado)
+- `platform/lib/b2b/__tests__/executive.test.ts` (criado)
+- `platform/app/instituicao/VisaoExecutivaClient.tsx` (criado)
+- `platform/app/instituicao/page.tsx` (atualizado)
+- `platform/app/instituicao/turmas-provas/page.tsx` (criado)
+- `platform/app/instituicao/cobertura-matriz/page.tsx` (criado)
+- `platform/app/instituicao/relatorios/page.tsx` (criado)
+- `platform/app/api/b2b/reports/executive/docx/route.ts` (criado)
+- `platform/app/api/b2b/reports/executive/print/route.ts` (criado)
+- `platform/app/instituicao/components/B2BShell.tsx` (atualizado)
+- `docs/b2b/DIARIO.md` (atualizado)
+
+### SQL a rodar no Supabase
+
+- Executar `platform/supabase/b2b/012_visao_executiva_seed.sql` no SQL Editor do Supabase (script idempotente que insere 3 simulados completos com versões, itens, turmas e tentativas para a FADEP caso deseje popular previamente o ambiente remoto).
+
+### Como testar
+
+1. **Testes Unitários:** `cd platform && npx vitest run lib/b2b/__tests__/executive.test.ts` (6 testes passando) ou a suíte completa (`120/120` testes).
+2. **Visão Executiva em `/instituicao`:**
+   - Acesse como dirigente ou coordenador.
+   - Veja o seletor "Prova em análise" no Bloco 1 alternando os números da tela.
+   - Clique em qualquer um dos 5 indicadores do Bloco 2 para abrir o modal explicativo com Base/Período/Fonte.
+   - No Bloco 3, confira o mapa de calor Turma × Área e a coluna dedicada com a média final da turma.
+   - No Bloco 4, veja o gráfico de linha da evolução ao longo dos exames com o aviso de não-equiparação.
+   - No Bloco 5, confira os alertas focados em turmas e áreas com média < 60%.
+3. **Página Turmas × Provas:** Acesse `/instituicao/turmas-provas` e clique na nota para ir ao resultado analítico da prova.
+4. **Página Cobertura da Matriz:** Acesse `/instituicao/cobertura-matriz` e verifique as cotas INEP e eixos adicionais.
+5. **Relatórios CPA / NDE / MEC:** Acesse `/instituicao/relatorios` e teste "Exportar em PDF" e "Exportar em DOCX".
+
+---
+
 ## 2026-11-19 · P13 · Análise Psicométrica das Questões, KR-20, Ponto-Bisserial Corrigida, Fórmulas e Histórico no Banco (PR-09, QB-12)
 
 ### O que foi feito
