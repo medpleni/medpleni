@@ -62,8 +62,7 @@ USING (
     JOIN public.member_scopes ms ON ms.member_id = im.id
     WHERE im.user_id = auth.uid()
       AND im.institution_id = longitudinal_action_plans.institution_id
-      AND ms.scope_type = 'class_group'
-      AND ms.scope_id = longitudinal_action_plans.class_group_id
+      AND ms.class_group_id = longitudinal_action_plans.class_group_id
   ))
 );
 
