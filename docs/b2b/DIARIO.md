@@ -6,6 +6,83 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-19 · P15 · Gestão de Turmas, Alunos, Dispersão 4 Quadrantes e Perfil Longitudinal (TC-01 a TC-08, Pedidos Dr. Filipe)
+
+### O que foi feito
+
+- **Lista de Turmas (`/instituicao/turmas` · TC-01):**
+  - Tabela completa de turmas cadastradas com Etapa/Período, Turma, Estudantes ativos, Participação média (%), Média geral com ScoreBand em relação à Régua 60, Tendência calculada cronologicamente (↗ Subindo, ↘ Caindo, → Estável) e contagem em destaque de alunos abaixo de 60.
+  - Filtro automático de escopo: Docentes enxergam apenas turmas sob sua docência direta (`member_scopes`); Dirigentes e Coordenadores enxergam todas as turmas.
+  - Botão de alternância no topo para a **Dispersão Institucional (TC-08)** cobrindo todos os estudantes com seletor de etapa.
+- **Detalhe da Turma em 4 Abas (`/instituicao/turmas/[id]`):**
+  - **Cabeçalho com Botões de Ação (TC-08):**
+    - `+ Nova Prova para a Turma`: atalho direto pré-selecionando a turma no assistente de montagem.
+    - `+ Nova Intervenção`: atalho para criação de intervenção focada nas lacunas da turma.
+  - **Aba A · Áreas & Cenários (TC-02 / TC-03 agregado):**
+    - Desempenho agregado da turma nas 7 grandes áreas do INEP (Clínica Médica, Cirurgia Geral, Pediatria, Ginecologia e Obstetrícia, MFC, Saúde Coletiva, Saúde Mental).
+    - Desempenho nos cenários de prática clínica (Ambulatório, Pronto-Socorro, Enfermaria, UBS).
+    - Barras de progresso com marcador vertical na Régua 60. Sem nomes de alunos (estritamente agregado).
+  - **Aba B · Dispersão da Turma em 4 Quadrantes (TC-03):**
+    - Gráfico cartesiano vetorial com Eixo Y = Nota Média (%) e Eixo X alternável entre **Questões de Treino respondidas (B2C)** e **Simulados feitos (B2B)**.
+    - Linha tracejada horizontal no corte (60%) e divisor vertical na **mediana do Eixo X**.
+    - Quatro quadrantes rotulados com contagens dinâmicas:
+      1. *Treina e performa* (alto treino, nota ≥ 60%)
+      2. *Performa com pouco treino* (baixo treino, nota ≥ 60%)
+      3. *Treina e não sobe* (alto treino, nota < 60%)
+      4. *Pouco treino e abaixo* (baixo treino, nota < 60%)
+    - **Destaque visual para a Zona de Decisão:** alunos com média entre 51% e 60% recebem anel dourado e cor âmbar.
+    - Alunos sem nota (ausentes ou sem provas) ficam fora do gráfico, com banner de contagem informando o total não plotado.
+    - Se o aluno não realizou treino no B2C, o eixo exibe 0 com aviso no tooltip e no perfil: *"Sem histórico de treino na plataforma"* (nunca estimado).
+    - Clique no ponto abre o Perfil do Estudante.
+  - **Aba C · Estudantes (TC-05):**
+    - Tabela individual com Nome, RA, Nota média, Questões de treino, Simulados realizados e Faixa de rendimento.
+    - Protegida pelo aviso discreto de privacidade (`IndividualDataNotice` / LGPD) e registro automático em `individual_access_log`.
+    - Regra de acesso estrita: visível para dirigente, coordenador e professor da própria turma.
+  - **Aba D · Avaliações Aplicadas (TC-07):**
+    - Lista de exames realizados pela turma com data, modalidade e presentes.
+    - **Média da Turma** e, ao lado, o **Total Geral da Prova** (média de todas as turmas que fizeram a avaliação), conforme pedido explícito do Dr. Filipe no Voto TC-07. Link direto para o laudo de resultado.
+- **Perfil do Aluno e Dispersão Individual (TC-06):**
+  - Modal com aviso metodológico explícito solicitado pelo Dr. Filipe: *"Os números exibidos representam a nota percentual do aluno (0 a 100%)."*
+  - Comparativo da nota do aluno vs. média da turma em cada prova ao longo do tempo com diferencial (ex: `+5.2%`).
+  - Desempenho desagregado pelas 7 áreas médicas.
+  - **Dispersão Individual (Trajetória Conectada):** gráfico onde cada prova é plotada e ligada por uma linha cronológica orientada, permitindo diagnosticar de relance se o estudante está em ascensão ou queda.
+- **Dispersão Institucional (TC-08):**
+  - Mesma matriz cartesiana de 4 quadrantes para toda a instituição, com filtro por período do curso.
+- **Garantia de Qualidade e Testes:**
+  - `lib/b2b/__tests__/class-groups.test.ts`: 5 testes unitários validando médias, tendências, agregação por área/cenário, cálculo da mediana, separação de alunos sem nota, contagem nos 4 quadrantes e trajetória cronológica do aluno.
+  - Total da suíte: **125/125 testes passando em 15 arquivos de teste**.
+  - `npx tsc --noEmit` completado com **0 erros**.
+  - `npm run build` gerou todas as **57 rotas** da plataforma com sucesso.
+
+### Arquivos criados / alterados
+
+- `platform/lib/b2b/class-groups.ts` (criado)
+- `platform/lib/b2b/__tests__/class-groups.test.ts` (criado)
+- `platform/app/instituicao/turmas/page.tsx` (criado)
+- `platform/app/instituicao/turmas/TurmasClient.tsx` (criado)
+- `platform/app/instituicao/turmas/[id]/page.tsx` (criado)
+- `platform/app/instituicao/turmas/[id]/TurmaDetalheClient.tsx` (criado)
+- `platform/app/instituicao/components/B2BShell.tsx` (atualizado menu para Turmas "ready")
+- `docs/b2b/DIARIO.md` (atualizado)
+
+### SQL a rodar no Supabase
+
+- Nenhum SQL novo necessário nesta etapa (utiliza `class_groups`, `enrollments`, `attempts`, `attempt_answers` e `user_answers`).
+
+### Como testar
+
+1. **Testes Unitários:** `cd platform && npx vitest run lib/b2b/__tests__/class-groups.test.ts` (5 testes passando) ou suíte total (`125/125`).
+2. **Lista de Turmas:** Acesse `/instituicao/turmas` como dirigente ou coordenador. Verifique as 12 turmas, médias, tendências e alunos < 60.
+3. **Dispersão Institucional:** No topo de `/instituicao/turmas`, clique em "Dispersão Institucional (TC-08)", alterne entre "Questões de Treino" e "Simulados Feitos", e filtre por etapa.
+4. **Detalhes da Turma:** Clique em "Ver Detalhes" de qualquer turma (ex: `/instituicao/turmas/77777777-7777-7777-7777-777777777708`):
+   - Confira os botões `+ Nova Prova para a Turma` e `+ Nova Intervenção` no cabeçalho.
+   - Na aba **Áreas & Cenários**, veja as 7 áreas do INEP e cenários clínicos com barras e marcador da Régua 60.
+   - Na aba **Dispersão da Turma**, veja os 4 quadrantes rotulados, a mediana no eixo X, o corte no 60 e o destaque âmbar nos alunos da Zona de Decisão (51–60%).
+   - Na aba **Estudantes**, veja o aviso LGPD e clique em qualquer estudante para abrir o **Perfil do Aluno** (TC-06) com notas vs. turma, áreas e trajetória conectada.
+   - Na aba **Avaliações Aplicadas**, confira a Média da Turma e o Total Geral da Prova lado a lado.
+
+---
+
 ## 2026-11-19 · P14 · Visão Executiva de Dirigente e Coordenador, Mapa de Turmas, Evolução e Relatórios CPA NDE MEC (EX-01 a EX-08, Voto SPR nº 12)
 
 ### O que foi feito

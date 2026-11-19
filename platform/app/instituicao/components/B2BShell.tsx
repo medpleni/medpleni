@@ -52,7 +52,7 @@ export default function B2BShell({ context, children }: B2BShellProps) {
           id: "turmas",
           label: "Turmas",
           href: "/instituicao/turmas",
-          status: "in_progress",
+          status: "ready",
           icon: (
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
@@ -224,7 +224,7 @@ export default function B2BShell({ context, children }: B2BShellProps) {
           id: "turmas",
           label: "Minhas turmas",
           href: "/instituicao/turmas",
-          status: "in_progress",
+          status: "ready",
           icon: (
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
