@@ -19,6 +19,8 @@ import {
   getFeatureAIExplanation,
   AIExplanation,
 } from "./ai-explainer";
+import ManualTesteView from "./ManualTesteView";
+import { MANUAL_TESTE_MODULES } from "./manual-teste-data";
 
 // ── Metadados dos 13 Módulos B2B ──────────────────────────────────────
 export const MODULOS_META: Record<
@@ -278,12 +280,17 @@ export default function CentralAprovacoesPage() {
   const { user, profile, loading: authLoading, signOut } = useUser();
 
   const [activeTab, setActiveTab] = useState<
-    "features" | "screens" | "overview" | "todo" | "prototype" | "access"
-  >("features");
+    "manual_teste" | "features" | "screens" | "overview" | "todo" | "prototype" | "access"
+  >("manual_teste");
 
   // Perfil ativo para simulação de voto/comentário
   const [activePartnerId, setActivePartnerId] = useState<string>("mario");
   const currentPartner = PARTNERS.find((p) => p.id === activePartnerId) || PARTNERS[0];
+
+  // Respostas e anotações do Manual de Teste B2B (65 itens) por sócio
+  const [manualTestAnswers, setManualTestAnswers] = useState<
+    Record<string, Record<string, { v?: string; c?: string }>>
+  >({});
 
   // Estados com persistência local
   const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
@@ -475,6 +482,7 @@ export default function CentralAprovacoesPage() {
         }
         if (savedData.tasks && savedData.tasks.length > 0) setTasks(savedData.tasks);
         if (savedData.invitedEmails && savedData.invitedEmails.length > 0) setInvitedEmails(savedData.invitedEmails);
+        if (savedData.manualTestAnswers) setManualTestAnswers(savedData.manualTestAnswers);
         if (savedData.featuresList && savedData.featuresList.length > 0) {
           const mergedFeatures = RAW_FEATURES.map((rf) => {
             const found = savedData.featuresList.find((x: any) => x.id === rf.id);
@@ -524,6 +532,7 @@ export default function CentralAprovacoesPage() {
     newTasks = tasks,
     newFeatures = featuresList,
     newEmails = invitedEmails,
+    newManualAnswers = manualTestAnswers,
     actionDesc?: string
   ) => {
     // 1. Cache local no navegador
@@ -535,6 +544,7 @@ export default function CentralAprovacoesPage() {
           tasks: newTasks,
           featuresList: newFeatures,
           invitedEmails: newEmails,
+          manualTestAnswers: newManualAnswers,
           updatedAt: new Date().toISOString(),
         })
       );
@@ -552,6 +562,7 @@ export default function CentralAprovacoesPage() {
         tasks: newTasks,
         featuresList: newFeatures,
         invitedEmails: newEmails,
+        manualTestAnswers: newManualAnswers,
         lastAction: actionDesc || `Voto registrado por ${currentPartner.name}`,
       }),
     })
@@ -564,6 +575,24 @@ export default function CentralAprovacoesPage() {
       .catch((err) => {
         console.warn("Aviso ao persistir no banco central:", err);
       });
+  };
+
+  const handleSyncManualAnswers = (answers: Record<string, { v?: string; c?: string }>) => {
+    setManualTestAnswers((prev) => {
+      const updated = {
+        ...prev,
+        [activePartnerId]: answers,
+      };
+      saveData(
+        screens,
+        tasks,
+        featuresList,
+        invitedEmails,
+        updated,
+        `Avaliação do manual de teste atualizada por ${currentPartner.name}`
+      );
+      return updated;
+    });
   };
 
   // ── Ações de Validação das 96 Features ───────────────────────────────
@@ -1447,6 +1476,11 @@ export default function CentralAprovacoesPage() {
         >
           {[
             {
+              id: "manual_teste",
+              label: "🧪 Manual de Teste B2B (65 Itens)",
+              badge: `${Object.values(manualTestAnswers[activePartnerId] || {}).filter((a) => a && (a.v || (a.c && a.c.trim().length > 0))).length}/65`,
+            },
+            {
               id: "features",
               label: "🚀 Validação Funcional (96 Features)",
               badge: `${validatedFeaturesCount}/${totalFeaturesCount}`,
@@ -1513,6 +1547,17 @@ export default function CentralAprovacoesPage() {
 
       {/* ── Conteúdo Central ─────────────────────────────────────────── */}
       <main style={{ maxWidth: "1440px", margin: "0 auto", padding: "28px 24px 80px" }}>
+        {/* ═══════════════════════════════════════════════════════════════
+            ABA 0: MANUAL DE TESTE B2B (65 ITENS EM 18 MÓDULOS)
+            ═══════════════════════════════════════════════════════════════ */}
+        {activeTab === "manual_teste" && (
+          <ManualTesteView
+            currentPartner={currentPartner}
+            onSyncAnswers={handleSyncManualAnswers}
+            initialAnswers={manualTestAnswers[activePartnerId] || {}}
+          />
+        )}
+
         {/* ═══════════════════════════════════════════════════════════════
             ABA 1: VALIDAÇÃO FUNCIONAL (MINI-DASHBOARD & MÓDULOS B2B)
             ═══════════════════════════════════════════════════════════════ */}
