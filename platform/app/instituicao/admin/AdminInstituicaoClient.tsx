@@ -76,7 +76,7 @@ export default function AdminInstituicaoClient({ context, institutions }: Props)
   };
 
   return (
-    <div className="space-y-6">
+    <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "8px 0 40px" }} className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <PageHeader
           title="Administração Global MedPleni (B2B)"
@@ -85,13 +85,33 @@ export default function AdminInstituicaoClient({ context, institutions }: Props)
         <div className="flex items-center gap-2 self-start sm:self-auto">
           <button
             onClick={() => router.push("/instituicao/admin/motor")}
-            className="px-3 py-2 border border-border bg-card hover:bg-muted text-foreground rounded-lg text-xs font-semibold shadow-xs"
+            style={{
+              padding: "8px 14px",
+              fontSize: "12px",
+              fontWeight: 600,
+              borderRadius: "8px",
+              border: "1px solid var(--card-border)",
+              background: "var(--card-bg)",
+              color: "var(--heading-color)",
+              cursor: "pointer",
+              boxShadow: "var(--card-shadow)",
+            }}
           >
             Motor IA (Piloto) →
           </button>
           <button
             onClick={() => router.push("/instituicao/admin/classificacao")}
-            className="px-3 py-2 border border-border bg-card hover:bg-muted text-foreground rounded-lg text-xs font-semibold shadow-xs"
+            style={{
+              padding: "8px 14px",
+              fontSize: "12px",
+              fontWeight: 600,
+              borderRadius: "8px",
+              border: "1px solid var(--card-border)",
+              background: "var(--card-bg)",
+              color: "var(--heading-color)",
+              cursor: "pointer",
+              boxShadow: "var(--card-shadow)",
+            }}
           >
             Taxonomia Médica (4 Eixos) →
           </button>
@@ -100,7 +120,17 @@ export default function AdminInstituicaoClient({ context, institutions }: Props)
               setFormError(null);
               setCreateModalOpen(true);
             }}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 text-xs font-semibold shadow-xs"
+            style={{
+              padding: "8px 16px",
+              fontSize: "12px",
+              fontWeight: 600,
+              borderRadius: "8px",
+              border: "none",
+              background: "var(--pulso)",
+              color: "#FFFFFF",
+              cursor: "pointer",
+              boxShadow: "0 2px 4px rgba(0, 194, 168, 0.25)",
+            }}
           >
             + Nova Instituição
           </button>
@@ -108,7 +138,15 @@ export default function AdminInstituicaoClient({ context, institutions }: Props)
       </div>
 
       {/* Tabela de Instituições */}
-      <div className="bg-card border border-border rounded-xl p-5 shadow-xs">
+      <div
+        style={{
+          background: "var(--card-bg)",
+          border: "1px solid var(--card-border)",
+          borderRadius: "12px",
+          padding: "20px",
+          boxShadow: "var(--card-shadow)",
+        }}
+      >
         <div className="mb-4">
           <h3 className="font-semibold text-foreground text-base">Instituições de Ensino Cadastradas</h3>
           <p className="text-xs text-muted-foreground">

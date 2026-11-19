@@ -18,167 +18,226 @@ export function ReguaEnamedClient({ overview, userRole = "coordenador" }: ReguaE
   const cutScore = overview.cutScore;
 
   return (
-    <div className="space-y-6">
+    <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "8px 0 40px" }} className="space-y-6">
       {/* Cabeçalho do Módulo */}
-      <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary mb-2">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
-              </svg>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          flexWrap: "wrap",
+          gap: "16px",
+          paddingBottom: "16px",
+          borderBottom: "1px solid var(--card-border)",
+        }}
+      >
+        <div>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
+            <span
+              style={{
+                fontSize: "11px",
+                fontWeight: 600,
+                padding: "3px 10px",
+                borderRadius: "9999px",
+                background: "var(--pulso-dim)",
+                color: "var(--pulso)",
+                textTransform: "uppercase",
+                letterSpacing: "0.04em",
+              }}
+            >
               Módulo Central de Posicionamento Institucional
-            </div>
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
-              Régua ENAMED
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Acompanhamento integrado dos marcos avaliativos do Exame Nacional (4º, 8º e 12º períodos),
-              diagnóstico de turmas em preparação, simulados aplicados e intervenções em curso.
-            </p>
+            </span>
           </div>
-
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setShowRegulatoryModal(true)}
-              className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-medium border border-border rounded-lg bg-card hover:bg-muted transition text-foreground"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-                <line x1="16" y1="13" x2="8" y2="13" />
-                <line x1="16" y1="17" x2="8" y2="17" />
-              </svg>
-              Marco Regulatório Oficial
-            </button>
-            <Link
-              href="/instituicao/provas/nova"
-              className="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition shadow-sm"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-              Montar Simulado ENAMED
-            </Link>
-          </div>
+          <h1 style={{ fontSize: "22px", fontWeight: 700, margin: "0 0 4px", color: "var(--heading-color)" }}>
+            Régua ENAMED
+          </h1>
+          <p style={{ margin: 0, fontSize: "13px", color: "var(--chumbo)", maxWidth: "800px" }}>
+            Acompanhamento integrado dos marcos avaliativos do Exame Nacional (4º, 8º e 12º períodos),
+            diagnóstico de turmas em preparação, simulados aplicados e intervenções em curso.
+          </p>
         </div>
 
-        {/* Régua Visual dos 3 Marcos */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-          {([1, 2, 3] as const).map((stageNum) => {
-            const stage = overview.stages[stageNum];
-            const isSelected = selectedStage === stageNum;
-            const avg = stage.overallAveragePercentage;
-            const isPassing = avg >= cutScore;
-
-            return (
-              <button
-                key={stageNum}
-                onClick={() => setSelectedStage(stageNum)}
-                className={`text-left p-4 rounded-xl border transition relative ${
-                  isSelected
-                    ? "border-primary bg-primary/5 ring-2 ring-primary/20 shadow-sm"
-                    : "border-border bg-card hover:border-primary/40 hover:bg-muted/40"
-                }`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-bold uppercase tracking-wider text-primary">
-                    {stage.regulatory.title}
-                  </span>
-                  <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
-                    {stage.periodsIncluded.map((p) => `${p}ºP`).join(", ")}
-                  </span>
-                </div>
-
-                <div className="text-sm font-semibold text-foreground">
-                  {stage.regulatory.stageName}
-                </div>
-
-                <div className="mt-3 flex items-baseline justify-between">
-                  <div>
-                    <span className="text-2xl font-bold text-foreground">
-                      {avg > 0 ? `${avg}%` : "—"}
-                    </span>
-                    <span className="text-xs text-muted-foreground ml-1">aproveitamento médio</span>
-                  </div>
-                  {avg > 0 && (
-                    <span
-                      className={`text-xs font-semibold px-2 py-0.5 rounded ${
-                        isPassing
-                          ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                          : "bg-amber-500/10 text-amber-600 dark:text-amber-400"
-                      }`}
-                    >
-                      {isPassing ? `≥ ${cutScore}% (meta)` : `< ${cutScore}% (atenção)`}
-                    </span>
-                  )}
-                </div>
-
-                {/* Sub-indicadores rápidos */}
-                <div className="mt-3 pt-3 border-t border-border grid grid-cols-3 gap-2 text-center text-xs">
-                  <div>
-                    <div className="font-semibold text-foreground">{stage.assessments.length}</div>
-                    <div className="text-[10px] text-muted-foreground">Simulados</div>
-                  </div>
-                  <div>
-                    <div className="font-semibold text-foreground">{stage.classes.length}</div>
-                    <div className="text-[10px] text-muted-foreground">Turmas</div>
-                  </div>
-                  <div>
-                    <div className="font-semibold text-amber-600 dark:text-amber-400">
-                      {stage.totalStudentsBelowCutScore}
-                    </div>
-                    <div className="text-[10px] text-muted-foreground">&lt; {cutScore}%</div>
-                  </div>
-                </div>
-              </button>
-            );
-          })}
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <button
+            onClick={() => setShowRegulatoryModal(true)}
+            style={{
+              padding: "8px 14px",
+              fontSize: "12px",
+              fontWeight: 600,
+              borderRadius: "8px",
+              border: "1px solid var(--card-border)",
+              background: "var(--card-bg)",
+              color: "var(--heading-color)",
+              cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              boxShadow: "var(--card-shadow)",
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+            </svg>
+            Marco Regulatório Oficial
+          </button>
+          <Link
+            href="/instituicao/provas/nova"
+            style={{
+              padding: "8px 16px",
+              fontSize: "12px",
+              fontWeight: 600,
+              borderRadius: "8px",
+              background: "var(--pulso)",
+              color: "#FFFFFF",
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              boxShadow: "0 2px 4px rgba(0, 194, 168, 0.25)",
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Montar Simulado ENAMED
+          </Link>
         </div>
       </div>
 
+      {/* Régua Visual dos 3 Marcos */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "16px" }}>
+        {([1, 2, 3] as const).map((stageNum) => {
+          const stage = overview.stages[stageNum];
+          const isSelected = selectedStage === stageNum;
+          const avg = stage.overallAveragePercentage;
+          const isPassing = avg >= cutScore;
+
+          return (
+            <button
+              key={stageNum}
+              onClick={() => setSelectedStage(stageNum)}
+              style={{
+                textAlign: "left",
+                padding: "20px",
+                borderRadius: "12px",
+                border: isSelected ? "2px solid var(--pulso)" : "1px solid var(--card-border)",
+                background: isSelected ? "var(--pulso-dim)" : "var(--card-bg)",
+                boxShadow: "var(--card-shadow)",
+                cursor: "pointer",
+                transition: "all 0.15s ease",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
+                <span style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--pulso)" }}>
+                  {stage.regulatory.title}
+                </span>
+                <span style={{ fontSize: "11px", fontWeight: 500, padding: "2px 8px", borderRadius: "9999px", background: "var(--input-bg)", color: "var(--chumbo)", border: "1px solid var(--sinal)" }}>
+                  {stage.periodsIncluded.map((p) => `${p}ºP`).join(", ")}
+                </span>
+              </div>
+
+              <div style={{ fontSize: "14px", fontWeight: 700, color: "var(--heading-color)", marginBottom: "12px" }}>
+                {stage.regulatory.stageName}
+              </div>
+
+              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between" }}>
+                <div>
+                  <span style={{ fontSize: "28px", fontWeight: 800, color: "var(--heading-color)" }}>
+                    {avg > 0 ? `${avg}%` : "—"}
+                  </span>
+                  <span style={{ fontSize: "11px", color: "var(--chumbo)", marginLeft: "6px" }}>aproveitamento médio</span>
+                </div>
+                {avg > 0 && (
+                  <span
+                    style={{
+                      fontSize: "11px",
+                      fontWeight: 600,
+                      padding: "3px 8px",
+                      borderRadius: "6px",
+                      background: isPassing ? "rgba(34, 197, 94, 0.12)" : "rgba(245, 166, 35, 0.12)",
+                      color: isPassing ? "#16A34A" : "#D97706",
+                    }}
+                  >
+                    {isPassing ? `≥ ${cutScore}% (meta)` : `< ${cutScore}% (atenção)`}
+                  </span>
+                )}
+              </div>
+
+              {/* Sub-indicadores rápidos */}
+              <div style={{ marginTop: "14px", paddingTop: "12px", borderTop: "1px solid var(--card-border)", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px", textAlign: "center" }}>
+                <div>
+                  <div style={{ fontSize: "13px", fontWeight: 700, color: "var(--heading-color)" }}>{stage.assessments.length}</div>
+                  <div style={{ fontSize: "10px", color: "var(--chumbo)" }}>Simulados</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: "13px", fontWeight: 700, color: "var(--heading-color)" }}>{stage.classes.length}</div>
+                  <div style={{ fontSize: "10px", color: "var(--chumbo)" }}>Turmas</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: "13px", fontWeight: 700, color: "#D97706" }}>
+                    {stage.totalStudentsBelowCutScore}
+                  </div>
+                  <div style={{ fontSize: "10px", color: "var(--chumbo)" }}>&lt; {cutScore}%</div>
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
       {/* Alerta Institucional da 1ª Etapa (INEP) */}
       {stageData.hasSpecialNotice && stageData.specialNoticeText && (
-        <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 flex items-start gap-3">
-          <div className="text-amber-600 dark:text-amber-400 mt-0.5 shrink-0">
+        <div
+          style={{
+            background: "rgba(245, 158, 11, 0.08)",
+            border: "1px solid rgba(245, 158, 11, 0.25)",
+            borderRadius: "12px",
+            padding: "16px 20px",
+            display: "flex",
+            alignItems: "flex-start",
+            gap: "12px",
+          }}
+        >
+          <div style={{ color: "#D97706", marginTop: "2px", flexShrink: 0 }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
               <line x1="12" y1="9" x2="12" y2="13" />
               <line x1="12" y1="17" x2="12.01" y2="17" />
             </svg>
           </div>
-          <div className="text-xs text-amber-900 dark:text-amber-200">
-            <p className="font-semibold mb-0.5">Nota Técnica sobre a Matriz da 1ª Etapa (INEP):</p>
-            <p>{stageData.specialNoticeText}</p>
+          <div style={{ fontSize: "12px", color: "#B45309", lineHeight: 1.6 }}>
+            <strong style={{ display: "block", marginBottom: "2px", color: "#92400E" }}>Nota Técnica sobre a Matriz da 1ª Etapa (INEP):</strong>
+            {stageData.specialNoticeText}
           </div>
         </div>
       )}
 
       {/* Grid de 4 KPIs da Etapa Selecionada */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "14px" }}>
         {/* KPI 1: Simulados da Etapa */}
-        <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
-          <div className="flex items-center justify-between text-muted-foreground mb-2">
-            <span className="text-xs font-medium uppercase tracking-wider">Simulados Aplicados</span>
+        <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: "12px", padding: "16px 20px", boxShadow: "var(--card-shadow)" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", color: "var(--chumbo)", marginBottom: "6px" }}>
+            <span style={{ fontSize: "11px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>Simulados Aplicados</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
               <polyline points="14 2 14 8 20 8" />
             </svg>
           </div>
-          <div className="text-2xl font-bold text-foreground">
+          <div style={{ fontSize: "24px", fontWeight: 800, color: "var(--heading-color)" }}>
             {stageData.assessments.length}
           </div>
-          <p className="text-xs text-muted-foreground mt-1">
+          <p style={{ margin: "4px 0 0", fontSize: "11px", color: "var(--chumbo)" }}>
             {stageData.assessments.reduce((sum, a) => sum + a.participantsCount, 0)} participações computadas
           </p>
         </div>
 
         {/* KPI 2: Turmas na Rota */}
-        <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
-          <div className="flex items-center justify-between text-muted-foreground mb-2">
-            <span className="text-xs font-medium uppercase tracking-wider">Turmas na Rota</span>
+        <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: "12px", padding: "16px 20px", boxShadow: "var(--card-shadow)" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", color: "var(--chumbo)", marginBottom: "6px" }}>
+            <span style={{ fontSize: "11px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>Turmas na Rota</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
               <circle cx="9" cy="7" r="4" />
@@ -186,44 +245,44 @@ export function ReguaEnamedClient({ overview, userRole = "coordenador" }: ReguaE
               <path d="M16 3.13a4 4 0 0 1 0 7.75" />
             </svg>
           </div>
-          <div className="text-2xl font-bold text-foreground">
+          <div style={{ fontSize: "24px", fontWeight: 800, color: "var(--heading-color)" }}>
             {stageData.classes.length} turmas
           </div>
-          <p className="text-xs text-muted-foreground mt-1">
+          <p style={{ margin: "4px 0 0", fontSize: "11px", color: "var(--chumbo)" }}>
             {stageData.totalStudentsEnrolled} alunos matriculados nos períodos {stageData.periodsIncluded.join(", ")}
           </p>
         </div>
 
         {/* KPI 3: Alunos em Atenção / Zona de Decisão */}
-        <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
-          <div className="flex items-center justify-between text-muted-foreground mb-2">
-            <span className="text-xs font-medium uppercase tracking-wider">Alunos &lt; {cutScore}%</span>
+        <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: "12px", padding: "16px 20px", boxShadow: "var(--card-shadow)" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", color: "var(--chumbo)", marginBottom: "6px" }}>
+            <span style={{ fontSize: "11px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>Alunos &lt; {cutScore}%</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="12" cy="12" r="10" />
               <line x1="12" y1="8" x2="12" y2="12" />
               <line x1="12" y1="16" x2="12.01" y2="16" />
             </svg>
           </div>
-          <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">
+          <div style={{ fontSize: "24px", fontWeight: 800, color: "#D97706" }}>
             {stageData.totalStudentsBelowCutScore}
           </div>
-          <p className="text-xs text-muted-foreground mt-1">
+          <p style={{ margin: "4px 0 0", fontSize: "11px", color: "var(--chumbo)" }}>
             {stageData.totalStudentsInDecisionZone} na zona de decisão (51% a {cutScore}%)
           </p>
         </div>
 
         {/* KPI 4: Intervenções Ativas */}
-        <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
-          <div className="flex items-center justify-between text-muted-foreground mb-2">
-            <span className="text-xs font-medium uppercase tracking-wider">Intervenções em Curso</span>
+        <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: "12px", padding: "16px 20px", boxShadow: "var(--card-shadow)" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", color: "var(--chumbo)", marginBottom: "6px" }}>
+            <span style={{ fontSize: "11px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em" }}>Intervenções em Curso</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
             </svg>
           </div>
-          <div className="text-2xl font-bold text-foreground">
+          <div style={{ fontSize: "24px", fontWeight: 800, color: "var(--pulso)" }}>
             {stageData.interventions.length}
           </div>
-          <p className="text-xs text-muted-foreground mt-1">
+          <p style={{ margin: "4px 0 0", fontSize: "11px", color: "var(--chumbo)" }}>
             {stageData.interventions.filter((i) => i.actionType === "exercise_list").length} listas ·{" "}
             {stageData.interventions.filter((i) => i.actionType === "pre_post_lecture").length} pré/pós-aula
           </p>
@@ -235,19 +294,27 @@ export function ReguaEnamedClient({ overview, userRole = "coordenador" }: ReguaE
         {/* Coluna 1 & 2: Simulados Aplicados e Turmas */}
         <div className="lg:col-span-2 space-y-6">
           {/* Seção 1: Simulados da Etapa */}
-          <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
+          <div
+            style={{
+              background: "var(--card-bg)",
+              border: "1px solid var(--card-border)",
+              borderRadius: "12px",
+              boxShadow: "var(--card-shadow)",
+              overflow: "hidden",
+            }}
+          >
+            <div style={{ padding: "16px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid var(--card-border)" }}>
               <div>
-                <h2 className="text-base font-semibold text-foreground">
+                <h2 style={{ fontSize: "15px", fontWeight: 700, margin: "0 0 2px", color: "var(--heading-color)" }}>
                   Simulados da {stageData.regulatory.title}
                 </h2>
-                <p className="text-xs text-muted-foreground">
+                <p style={{ margin: 0, fontSize: "12px", color: "var(--chumbo)" }}>
                   Provas simuladas de formato oficial aplicadas às turmas preparatórias
                 </p>
               </div>
               <Link
                 href="/instituicao/provas"
-                className="text-xs text-primary hover:underline font-medium inline-flex items-center gap-1"
+                style={{ fontSize: "12px", color: "var(--pulso)", fontWeight: 600, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "4px" }}
               >
                 Ver todas as provas
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -257,47 +324,51 @@ export function ReguaEnamedClient({ overview, userRole = "coordenador" }: ReguaE
             </div>
 
             {stageData.assessments.length === 0 ? (
-              <div className="text-center py-8 text-xs text-muted-foreground border border-dashed border-border rounded-lg">
+              <div style={{ padding: "32px", textAlign: "center", fontSize: "12px", color: "var(--chumbo)" }}>
                 Nenhum simulado cadastrado exclusivamente para esta etapa até o momento.
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-muted/50 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border">
-                    <tr>
-                      <th className="py-2.5 px-3">Título do Simulado</th>
-                      <th className="py-2.5 px-3">Modalidade</th>
-                      <th className="py-2.5 px-3">Data</th>
-                      <th className="py-2.5 px-3 text-center">Participantes</th>
-                      <th className="py-2.5 px-3 text-right">Aproveitamento Médio</th>
+              <div style={{ overflowX: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12px", textAlign: "left" }}>
+                  <thead>
+                    <tr style={{ background: "var(--table-header-bg, #F8FAFC)", borderBottom: "1px solid var(--card-border)" }}>
+                      <th style={{ padding: "12px 16px", fontWeight: 600, color: "var(--heading-color)" }}>Título do Simulado</th>
+                      <th style={{ padding: "12px 16px", fontWeight: 600, color: "var(--heading-color)" }}>Modalidade</th>
+                      <th style={{ padding: "12px 16px", fontWeight: 600, color: "var(--heading-color)" }}>Data</th>
+                      <th style={{ padding: "12px 16px", fontWeight: 600, color: "var(--heading-color)", textAlign: "center" }}>Participantes</th>
+                      <th style={{ padding: "12px 16px", fontWeight: 600, color: "var(--heading-color)", textAlign: "right" }}>Aproveitamento Médio</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-border">
+                  <tbody>
                     {stageData.assessments.map((a) => {
                       const isPassing = a.averageScorePercentage >= cutScore;
                       return (
-                        <tr key={a.id} className="hover:bg-muted/30">
-                          <td className="py-3 px-3 font-medium text-foreground">
-                            <Link href={`/instituicao/provas/${a.id}/resultado`} className="hover:text-primary">
+                        <tr key={a.id} style={{ borderBottom: "1px solid var(--card-border)" }}>
+                          <td style={{ padding: "12px 16px", fontWeight: 600 }}>
+                            <Link href={`/instituicao/provas/${a.id}/resultado`} style={{ color: "var(--heading-color)", textDecoration: "none" }}>
                               {a.title}
                             </Link>
                           </td>
-                          <td className="py-3 px-3 text-muted-foreground capitalize">
+                          <td style={{ padding: "12px 16px", color: "var(--chumbo)", textTransform: "capitalize" }}>
                             {a.modality.replace("_", " ")}
                           </td>
-                          <td className="py-3 px-3 text-muted-foreground">
+                          <td style={{ padding: "12px 16px", color: "var(--chumbo)" }}>
                             {a.examDate}
                           </td>
-                          <td className="py-3 px-3 text-center font-medium text-foreground">
+                          <td style={{ padding: "12px 16px", textAlign: "center", fontWeight: 600, color: "var(--heading-color)" }}>
                             {a.participantsCount}
                           </td>
-                          <td className="py-3 px-3 text-right">
+                          <td style={{ padding: "12px 16px", textAlign: "right" }}>
                             <span
-                              className={`font-semibold px-2 py-0.5 rounded text-xs ${
-                                isPassing
-                                  ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                                  : "bg-amber-500/10 text-amber-600 dark:text-amber-400"
-                              }`}
+                              style={{
+                                display: "inline-block",
+                                padding: "3px 8px",
+                                borderRadius: "6px",
+                                fontSize: "11px",
+                                fontWeight: 700,
+                                background: isPassing ? "rgba(34, 197, 94, 0.12)" : "rgba(245, 166, 35, 0.12)",
+                                color: isPassing ? "#16A34A" : "#D97706",
+                              }}
                             >
                               {a.averageScorePercentage > 0 ? `${a.averageScorePercentage}%` : "—"}
                             </span>
@@ -312,19 +383,27 @@ export function ReguaEnamedClient({ overview, userRole = "coordenador" }: ReguaE
           </div>
 
           {/* Seção 2: Turmas Chegando à Etapa */}
-          <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
-            <div className="flex items-center justify-between mb-4">
+          <div
+            style={{
+              background: "var(--card-bg)",
+              border: "1px solid var(--card-border)",
+              borderRadius: "12px",
+              boxShadow: "var(--card-shadow)",
+              overflow: "hidden",
+            }}
+          >
+            <div style={{ padding: "16px 20px", display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid var(--card-border)" }}>
               <div>
-                <h2 className="text-base font-semibold text-foreground">
+                <h2 style={{ fontSize: "15px", fontWeight: 700, margin: "0 0 2px", color: "var(--heading-color)" }}>
                   Turmas na Rota de Preparação
                 </h2>
-                <p className="text-xs text-muted-foreground">
+                <p style={{ margin: 0, fontSize: "12px", color: "var(--chumbo)" }}>
                   Desempenho consolidado das coortes que prestarão a {stageData.regulatory.title}
                 </p>
               </div>
               <Link
                 href="/instituicao/turmas"
-                className="text-xs text-primary hover:underline font-medium inline-flex items-center gap-1"
+                style={{ fontSize: "12px", color: "var(--pulso)", fontWeight: 600, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "4px" }}
               >
                 Gerenciar turmas
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -333,47 +412,51 @@ export function ReguaEnamedClient({ overview, userRole = "coordenador" }: ReguaE
               </Link>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-muted/50 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-border">
-                  <tr>
-                    <th className="py-2.5 px-3">Turma</th>
-                    <th className="py-2.5 px-3 text-center">Período</th>
-                    <th className="py-2.5 px-3 text-center">Alunos</th>
-                    <th className="py-2.5 px-3 text-center">Abaixo de {cutScore}%</th>
-                    <th className="py-2.5 px-3 text-center">Zona Decisão (51–{cutScore}%)</th>
-                    <th className="py-2.5 px-3 text-right">Média da Turma</th>
+            <div style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12px", textAlign: "left" }}>
+                <thead>
+                  <tr style={{ background: "var(--table-header-bg, #F8FAFC)", borderBottom: "1px solid var(--card-border)" }}>
+                    <th style={{ padding: "12px 16px", fontWeight: 600, color: "var(--heading-color)" }}>Turma</th>
+                    <th style={{ padding: "12px 16px", fontWeight: 600, color: "var(--heading-color)", textAlign: "center" }}>Período</th>
+                    <th style={{ padding: "12px 16px", fontWeight: 600, color: "var(--heading-color)", textAlign: "center" }}>Alunos</th>
+                    <th style={{ padding: "12px 16px", fontWeight: 600, color: "var(--heading-color)", textAlign: "center" }}>Abaixo de {cutScore}%</th>
+                    <th style={{ padding: "12px 16px", fontWeight: 600, color: "var(--heading-color)", textAlign: "center" }}>Zona Decisão (51–{cutScore}%)</th>
+                    <th style={{ padding: "12px 16px", fontWeight: 600, color: "var(--heading-color)", textAlign: "right" }}>Média da Turma</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-border">
+                <tbody>
                   {stageData.classes.map((cls) => {
                     const isPassing = cls.averageScorePercentage >= cutScore;
                     return (
-                      <tr key={cls.id} className="hover:bg-muted/30">
-                        <td className="py-3 px-3 font-medium text-foreground">
-                          <Link href={`/instituicao/turmas/${cls.id}`} className="hover:text-primary">
+                      <tr key={cls.id} style={{ borderBottom: "1px solid var(--card-border)" }}>
+                        <td style={{ padding: "12px 16px", fontWeight: 600 }}>
+                          <Link href={`/instituicao/turmas/${cls.id}`} style={{ color: "var(--heading-color)", textDecoration: "none" }}>
                             {cls.name}
                           </Link>
                         </td>
-                        <td className="py-3 px-3 text-center text-muted-foreground font-mono">
+                        <td style={{ padding: "12px 16px", textAlign: "center", color: "var(--chumbo)" }}>
                           {cls.period}ºP
                         </td>
-                        <td className="py-3 px-3 text-center text-muted-foreground">
+                        <td style={{ padding: "12px 16px", textAlign: "center", color: "var(--chumbo)" }}>
                           {cls.studentsCount}
                         </td>
-                        <td className="py-3 px-3 text-center font-medium text-amber-600 dark:text-amber-400">
+                        <td style={{ padding: "12px 16px", textAlign: "center", fontWeight: 600, color: "#D97706" }}>
                           {cls.studentsBelowCutScore}
                         </td>
-                        <td className="py-3 px-3 text-center font-medium text-muted-foreground">
+                        <td style={{ padding: "12px 16px", textAlign: "center", color: "var(--chumbo)" }}>
                           {cls.studentsInDecisionZone}
                         </td>
-                        <td className="py-3 px-3 text-right">
+                        <td style={{ padding: "12px 16px", textAlign: "right" }}>
                           <span
-                            className={`font-semibold px-2 py-0.5 rounded text-xs ${
-                              isPassing
-                                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                                : "bg-amber-500/10 text-amber-600 dark:text-amber-400"
-                            }`}
+                            style={{
+                              display: "inline-block",
+                              padding: "3px 8px",
+                              borderRadius: "6px",
+                              fontSize: "11px",
+                              fontWeight: 700,
+                              background: isPassing ? "rgba(34, 197, 94, 0.12)" : "rgba(245, 166, 35, 0.12)",
+                              color: isPassing ? "#16A34A" : "#D97706",
+                            }}
                           >
                             {cls.averageScorePercentage > 0 ? `${cls.averageScorePercentage}%` : "—"}
                           </span>
@@ -390,48 +473,60 @@ export function ReguaEnamedClient({ overview, userRole = "coordenador" }: ReguaE
         {/* Coluna 3: Intervenções Ativas & Eixos Temáticos */}
         <div className="space-y-6">
           {/* Intervenções em Curso */}
-          <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-base font-semibold text-foreground">Intervenções em Curso</h2>
+          <div
+            style={{
+              background: "var(--card-bg)",
+              border: "1px solid var(--card-border)",
+              borderRadius: "12px",
+              boxShadow: "var(--card-shadow)",
+              padding: "20px",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "4px" }}>
+              <h2 style={{ fontSize: "15px", fontWeight: 700, margin: 0, color: "var(--heading-color)" }}>Intervenções em Curso</h2>
               <Link
                 href="/instituicao/intervencoes"
-                className="text-xs text-primary hover:underline font-medium"
+                style={{ fontSize: "12px", color: "var(--pulso)", fontWeight: 600, textDecoration: "none" }}
               >
                 Ver todas
               </Link>
             </div>
-            <p className="text-xs text-muted-foreground mb-4">
+            <p style={{ margin: "0 0 16px", fontSize: "12px", color: "var(--chumbo)" }}>
               Ações corretivas de nivelamento ativas para as turmas desta etapa
             </p>
 
             {stageData.interventions.length === 0 ? (
-              <div className="text-center py-6 text-xs text-muted-foreground border border-dashed border-border rounded-lg">
+              <div style={{ padding: "24px", textAlign: "center", fontSize: "12px", color: "var(--chumbo)", border: "1px dashed var(--sinal)", borderRadius: "8px" }}>
                 Nenhuma intervenção ativa para as turmas desta etapa.
               </div>
             ) : (
-              <div className="space-y-3">
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                 {stageData.interventions.map((inv) => (
-                  <div key={inv.id} className="p-3 border border-border rounded-lg bg-muted/20">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-semibold text-foreground line-clamp-1">
+                  <div key={inv.id} style={{ padding: "12px", border: "1px solid var(--card-border)", borderRadius: "8px", background: "var(--input-bg)" }}>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "4px" }}>
+                      <span style={{ fontSize: "12px", fontWeight: 700, color: "var(--heading-color)" }}>
                         {inv.title}
                       </span>
-                      <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
+                      <span style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", padding: "2px 6px", borderRadius: "4px", background: "var(--pulso-dim)", color: "var(--pulso)" }}>
                         {inv.actionType === "exercise_list" ? "Lista" : "Pré/Pós"}
                       </span>
                     </div>
-                    <div className="text-[11px] text-muted-foreground mb-2">
+                    <div style={{ fontSize: "11px", color: "var(--chumbo)", marginBottom: "8px" }}>
                       {inv.classGroupName}
                     </div>
 
-                    <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="text-muted-foreground">Adesão:</span>
-                      <span className="font-semibold text-foreground">{inv.adherencePercentage}%</span>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "11px", marginBottom: "4px" }}>
+                      <span style={{ color: "var(--chumbo)" }}>Adesão:</span>
+                      <span style={{ fontWeight: 700, color: "var(--heading-color)" }}>{inv.adherencePercentage}%</span>
                     </div>
-                    <div className="w-full bg-muted rounded-full h-1.5 overflow-hidden">
+                    <div style={{ width: "100%", background: "var(--sinal)", borderRadius: "9999px", height: "6px", overflow: "hidden" }}>
                       <div
-                        className="bg-primary h-1.5 rounded-full"
-                        style={{ width: `${Math.min(100, inv.adherencePercentage)}%` }}
+                        style={{
+                          background: "var(--pulso)",
+                          height: "6px",
+                          borderRadius: "9999px",
+                          width: `${Math.min(100, inv.adherencePercentage)}%`,
+                        }}
                       />
                     </div>
                   </div>
@@ -441,15 +536,23 @@ export function ReguaEnamedClient({ overview, userRole = "coordenador" }: ReguaE
           </div>
 
           {/* Eixos Prioritários da Etapa */}
-          <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
-            <h2 className="text-base font-semibold text-foreground mb-1">Eixos Estruturantes</h2>
-            <p className="text-xs text-muted-foreground mb-3">
+          <div
+            style={{
+              background: "var(--card-bg)",
+              border: "1px solid var(--card-border)",
+              borderRadius: "12px",
+              boxShadow: "var(--card-shadow)",
+              padding: "20px",
+            }}
+          >
+            <h2 style={{ fontSize: "15px", fontWeight: 700, margin: "0 0 2px", color: "var(--heading-color)" }}>Eixos Estruturantes</h2>
+            <p style={{ margin: "0 0 14px", fontSize: "12px", color: "var(--chumbo)" }}>
               Grandes áreas de foco formativo para a {stageData.regulatory.title}
             </p>
-            <ul className="space-y-2">
+            <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "8px" }}>
               {stageData.regulatory.focusAreas.map((area, idx) => (
-                <li key={idx} className="flex items-center gap-2 text-xs text-foreground">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                <li key={idx} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", color: "var(--heading-color)" }}>
+                  <div style={{ width: "6px", height: "6px", borderRadius: "9999px", background: "var(--pulso)", flexShrink: 0 }} />
                   <span>{area}</span>
                 </li>
               ))}
@@ -459,16 +562,31 @@ export function ReguaEnamedClient({ overview, userRole = "coordenador" }: ReguaE
       </div>
 
       {/* Rodapé Padronizado Base / Período / Fonte */}
-      <div className="bg-card border border-border rounded-xl p-4 text-xs text-muted-foreground flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm">
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+      <div
+        style={{
+          background: "var(--card-bg)",
+          border: "1px solid var(--card-border)",
+          borderRadius: "12px",
+          padding: "14px 18px",
+          fontSize: "11px",
+          color: "var(--chumbo)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "8px",
+          boxShadow: "var(--card-shadow)",
+        }}
+      >
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px" }}>
           <span>{stageData.footerMetadata.baseText}</span>
-          <span className="hidden sm:inline">·</span>
+          <span>·</span>
           <span>{stageData.footerMetadata.periodText}</span>
-          <span className="hidden sm:inline">·</span>
+          <span>·</span>
           <span>{stageData.footerMetadata.sourceText}</span>
         </div>
-        <div className="text-[11px] text-muted-foreground">
-          Régua de corte configurada: <strong>{cutScore}%</strong>
+        <div>
+          Régua de corte configurada: <strong style={{ color: "var(--pulso)" }}>{cutScore}%</strong>
         </div>
       </div>
 

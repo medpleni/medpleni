@@ -56,35 +56,72 @@ export default function VisaoExecutivaClient({
   };
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto pb-12">
+    <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "8px 0 40px" }} className="space-y-6">
       {/* ─── BLOCO 1: SELETOR 'PROVA EM ANÁLISE' E IDENTIDADE (EX-01 / EX-02) ─── */}
-      <div className="bg-card border border-border rounded-xl p-5 shadow-xs">
+      <div
+        style={{
+          background: "var(--card-bg)",
+          border: "1px solid var(--card-border)",
+          borderRadius: "12px",
+          boxShadow: "var(--card-shadow)",
+          padding: "20px",
+        }}
+      >
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-              <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-primary/10 text-primary uppercase tracking-wider">
+              <span
+                style={{
+                  fontSize: "11px",
+                  fontWeight: 600,
+                  padding: "3px 8px",
+                  borderRadius: "6px",
+                  background: "var(--pulso-dim)",
+                  color: "var(--pulso)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.04em",
+                }}
+              >
                 Painel do {userRole === "dirigente" ? "Dirigente Geral" : "Coordenador de Curso"}
               </span>
-              <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-muted text-muted-foreground uppercase tracking-wider">
+              <span
+                style={{
+                  fontSize: "11px",
+                  fontWeight: 600,
+                  padding: "3px 8px",
+                  borderRadius: "6px",
+                  background: "var(--input-bg)",
+                  border: "1px solid var(--sinal)",
+                  color: "var(--chumbo)",
+                }}
+              >
                 {institution.initials}
               </span>
-              <span className="text-[11px] font-medium text-muted-foreground">
+              <span style={{ fontSize: "12px", fontWeight: 600, color: "var(--chumbo)" }}>
                 Régua de Corte: {institution.cutScore}%
               </span>
             </div>
-            <h1 className="text-xl font-bold text-foreground tracking-tight">
+            <h1 style={{ fontSize: "22px", fontWeight: 700, margin: "0 0 4px", color: "var(--heading-color)" }}>
               Visão Executiva de Aprendizagem
             </h1>
-            <p className="text-xs text-muted-foreground mt-0.5 max-w-2xl">
+            <p style={{ margin: 0, fontSize: "13px", color: "var(--chumbo)" }}>
               Acompanhamento central de proficiência acadêmica, matrizes por área e conformidade CPA/NDE.
             </p>
           </div>
 
           {/* Seletor "Prova em análise" com explicação direta */}
-          <div className="bg-muted/30 border border-border rounded-lg p-3 min-w-[280px] md:max-w-md">
-            <label className="text-[11px] font-bold text-foreground flex items-center justify-between">
+          <div
+            style={{
+              background: "var(--input-bg)",
+              border: "1px solid var(--sinal)",
+              borderRadius: "10px",
+              padding: "12px 14px",
+              minWidth: "280px",
+            }}
+          >
+            <label style={{ fontSize: "11px", fontWeight: 700, color: "var(--heading-color)", display: "flex", justifyContent: "space-between" }}>
               <span>Prova em análise:</span>
-              <span className="text-[10px] font-normal text-muted-foreground">
+              <span style={{ fontSize: "10px", fontWeight: 500, color: "var(--chumbo)" }}>
                 {availableExams.length} avaliação(ões)
               </span>
             </label>
@@ -92,7 +129,18 @@ export default function VisaoExecutivaClient({
             <select
               value={selectedExamId}
               onChange={(e) => handleSelectExam(e.target.value)}
-              className="w-full text-xs rounded-md border border-border bg-background px-2.5 py-1.5 text-foreground mt-1.5 font-medium focus:ring-1 focus:ring-primary focus:outline-hidden"
+              style={{
+                width: "100%",
+                fontSize: "12px",
+                borderRadius: "6px",
+                border: "1px solid var(--sinal)",
+                background: "var(--card-bg)",
+                padding: "6px 10px",
+                color: "var(--heading-color)",
+                marginTop: "6px",
+                fontWeight: 500,
+                outline: "none",
+              }}
             >
               {availableExams.map((ex) => (
                 <option key={ex.id} value={ex.id}>
@@ -101,32 +149,32 @@ export default function VisaoExecutivaClient({
               ))}
             </select>
 
-            <div className="text-[10px] text-muted-foreground mt-1 flex items-center gap-1 leading-tight">
-              <span className="text-primary font-bold">ℹ</span>
+            <div style={{ fontSize: "11px", color: "var(--chumbo)", marginTop: "6px", display: "flex", alignItems: "center", gap: "4px" }}>
+              <span style={{ color: "var(--pulso)", fontWeight: 700 }}>ℹ</span>
               <span>Todos os números e mapas desta tela referem-se à prova escolhida.</span>
             </div>
           </div>
         </div>
 
         {/* Atalhos Rápidos para Páginas do Menu */}
-        <div className="mt-4 pt-3 border-t border-border flex items-center justify-between flex-wrap gap-2 text-xs">
-          <div className="flex items-center gap-2">
-            <span className="text-muted-foreground font-medium text-[11px]">Navegação rápida:</span>
+        <div style={{ marginTop: "16px", paddingTop: "12px", borderTop: "1px solid var(--sinal)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "8px", fontSize: "12px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <span style={{ color: "var(--chumbo)", fontWeight: 500, fontSize: "11px" }}>Navegação rápida:</span>
             <Link
               href="/instituicao/turmas-provas"
-              className="px-2.5 py-1 rounded-md bg-muted hover:bg-muted/80 text-foreground font-medium text-[11px] transition-colors"
+              style={{ padding: "4px 10px", borderRadius: "6px", background: "var(--input-bg)", border: "1px solid var(--sinal)", color: "var(--heading-color)", fontWeight: 500, fontSize: "11px", textDecoration: "none" }}
             >
               Matriz Turmas × Provas
             </Link>
             <Link
               href="/instituicao/cobertura-matriz"
-              className="px-2.5 py-1 rounded-md bg-muted hover:bg-muted/80 text-foreground font-medium text-[11px] transition-colors"
+              style={{ padding: "4px 10px", borderRadius: "6px", background: "var(--input-bg)", border: "1px solid var(--sinal)", color: "var(--heading-color)", fontWeight: 500, fontSize: "11px", textDecoration: "none" }}
             >
               Cobertura da Matriz
             </Link>
             <Link
               href="/instituicao/relatorios"
-              className="px-2.5 py-1 rounded-md bg-muted hover:bg-muted/80 text-foreground font-medium text-[11px] transition-colors"
+              style={{ padding: "4px 10px", borderRadius: "6px", background: "var(--input-bg)", border: "1px solid var(--sinal)", color: "var(--heading-color)", fontWeight: 500, fontSize: "11px", textDecoration: "none" }}
             >
               Relatórios (CPA / NDE / MEC)
             </Link>
@@ -134,7 +182,7 @@ export default function VisaoExecutivaClient({
 
           <Link
             href={`/instituicao/provas/${selectedExamId}/resultado`}
-            className="text-primary hover:underline font-semibold text-[11px] flex items-center gap-1"
+            style={{ color: "var(--pulso)", fontWeight: 600, fontSize: "12px", textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}
           >
             Abrir resultado completo da prova ➔
           </Link>
@@ -142,130 +190,196 @@ export default function VisaoExecutivaClient({
       </div>
 
       {/* ─── BLOCO 2: CINCO INDICADORES EXECUTIVOS COM CLIQUE E RODAPÉ (EX-03) ─── */}
-      <div className="bg-card border border-border rounded-xl p-5 shadow-xs">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-bold text-foreground uppercase tracking-wider">
+      <div
+        style={{
+          background: "var(--card-bg)",
+          border: "1px solid var(--card-border)",
+          borderRadius: "12px",
+          boxShadow: "var(--card-shadow)",
+          padding: "20px",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "14px" }}>
+          <h2 style={{ fontSize: "14px", fontWeight: 700, color: "var(--heading-color)", margin: 0, textTransform: "uppercase", letterSpacing: "0.04em" }}>
             Indicadores Globais da Prova em Análise
           </h2>
-          <span className="text-[11px] text-muted-foreground">Clique em um indicador para detalhes</span>
+          <span style={{ fontSize: "11px", color: "var(--chumbo)" }}>Clique em um indicador para detalhes</span>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           {/* Card 1: Nota Média da Instituição */}
           <button
             onClick={() => setActiveKpiModal("media")}
-            className="p-3.5 rounded-lg border border-border bg-muted/20 hover:bg-muted/40 transition-colors text-left flex flex-col justify-between group"
+            style={{
+              padding: "14px",
+              borderRadius: "10px",
+              border: "1px solid var(--sinal)",
+              background: "var(--input-bg)",
+              textAlign: "left",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              cursor: "pointer",
+            }}
           >
             <div>
-              <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider group-hover:text-primary transition-colors">
+              <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--chumbo)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
                 Nota Média da Instituição
               </div>
-              <div className="text-2xl font-black text-foreground mt-1">
+              <div style={{ fontSize: "24px", fontWeight: 800, color: "var(--heading-color)", marginTop: "4px" }}>
                 {kpis.institutionMeanScore}%
               </div>
             </div>
-            <div className="text-[10px] text-muted-foreground mt-2 flex items-center justify-between">
+            <div style={{ fontSize: "11px", color: "var(--chumbo)", marginTop: "8px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <span>{kpis.institutionMeanScore >= institution.cutScore ? "✓ Acima da régua 60" : "⚠ Abaixo do corte"}</span>
-              <span className="text-primary font-mono text-xs">→</span>
+              <span style={{ color: "var(--pulso)", fontWeight: 700 }}>→</span>
             </div>
           </button>
 
           {/* Card 2: Alunos Abaixo de 60 */}
           <button
             onClick={() => setActiveKpiModal("abaixo_60")}
-            className="p-3.5 rounded-lg border border-border bg-muted/20 hover:bg-muted/40 transition-colors text-left flex flex-col justify-between group"
+            style={{
+              padding: "14px",
+              borderRadius: "10px",
+              border: "1px solid rgba(239, 68, 68, 0.25)",
+              background: "rgba(239, 68, 68, 0.05)",
+              textAlign: "left",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              cursor: "pointer",
+            }}
           >
             <div>
-              <div className="text-[10px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider">
+              <div style={{ fontSize: "11px", fontWeight: 700, color: "#DC2626", textTransform: "uppercase", letterSpacing: "0.04em" }}>
                 Alunos Abaixo de 60%
               </div>
-              <div className="text-2xl font-black text-rose-600 dark:text-rose-400 mt-1">
+              <div style={{ fontSize: "24px", fontWeight: 800, color: "#DC2626", marginTop: "4px" }}>
                 {kpis.studentsBelowCutPercentage}%
               </div>
             </div>
-            <div className="text-[10px] text-muted-foreground mt-2 flex items-center justify-between">
+            <div style={{ fontSize: "11px", color: "var(--chumbo)", marginTop: "8px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <span>{kpis.studentsBelowCutCount} de {kpis.totalPresent} presentes</span>
-              <span className="text-primary font-mono text-xs">→</span>
+              <span style={{ color: "#DC2626", fontWeight: 700 }}>→</span>
             </div>
           </button>
 
           {/* Card 3: Participação */}
           <button
             onClick={() => setActiveKpiModal("participacao")}
-            className="p-3.5 rounded-lg border border-border bg-muted/20 hover:bg-muted/40 transition-colors text-left flex flex-col justify-between group"
+            style={{
+              padding: "14px",
+              borderRadius: "10px",
+              border: "1px solid var(--sinal)",
+              background: "var(--input-bg)",
+              textAlign: "left",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              cursor: "pointer",
+            }}
           >
             <div>
-              <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider group-hover:text-primary transition-colors">
+              <div style={{ fontSize: "11px", fontWeight: 700, color: "var(--chumbo)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
                 Taxa de Participação
               </div>
-              <div className="text-2xl font-black text-foreground mt-1">
+              <div style={{ fontSize: "24px", fontWeight: 800, color: "var(--heading-color)", marginTop: "4px" }}>
                 {kpis.participationRate}%
               </div>
             </div>
-            <div className="text-[10px] text-muted-foreground mt-2 flex items-center justify-between">
+            <div style={{ fontSize: "11px", color: "var(--chumbo)", marginTop: "8px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <span>{kpis.totalPresent} presentes ({kpis.totalAbsent} ausentes)</span>
-              <span className="text-primary font-mono text-xs">→</span>
+              <span style={{ color: "var(--pulso)", fontWeight: 700 }}>→</span>
             </div>
           </button>
 
           {/* Card 4: Turmas Abaixo de 60 */}
           <button
             onClick={() => setActiveKpiModal("turmas_60")}
-            className="p-3.5 rounded-lg border border-border bg-muted/20 hover:bg-muted/40 transition-colors text-left flex flex-col justify-between group"
+            style={{
+              padding: "14px",
+              borderRadius: "10px",
+              border: "1px solid rgba(245, 158, 11, 0.25)",
+              background: "rgba(245, 158, 11, 0.05)",
+              textAlign: "left",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              cursor: "pointer",
+            }}
           >
             <div>
-              <div className="text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider">
+              <div style={{ fontSize: "11px", fontWeight: 700, color: "#D97706", textTransform: "uppercase", letterSpacing: "0.04em" }}>
                 Turmas Abaixo de 60%
               </div>
-              <div className="text-2xl font-black text-foreground mt-1">
-                {kpis.classesBelowCutCount} <span className="text-xs font-normal text-muted-foreground">de {kpis.totalClasses}</span>
+              <div style={{ fontSize: "24px", fontWeight: 800, color: "var(--heading-color)", marginTop: "4px" }}>
+                {kpis.classesBelowCutCount} <span style={{ fontSize: "13px", fontWeight: 400, color: "var(--chumbo)" }}>de {kpis.totalClasses}</span>
               </div>
             </div>
-            <div className="text-[10px] text-muted-foreground mt-2 flex items-center justify-between">
+            <div style={{ fontSize: "11px", color: "var(--chumbo)", marginTop: "8px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <span>{kpis.classesBelowCutCount === 0 ? "Nenhuma turma crítica" : "Requer atenção do NDE"}</span>
-              <span className="text-primary font-mono text-xs">→</span>
+              <span style={{ color: "#D97706", fontWeight: 700 }}>→</span>
             </div>
           </button>
 
-          {/* Card 5: Zona de Decisão (51–60%) - Dr. Filipe */}
+          {/* Card 5: Zona de Decisão (51–60%) */}
           <button
             onClick={() => setActiveKpiModal("zona_decisao")}
-            className="p-3.5 rounded-lg border border-border bg-muted/20 hover:bg-muted/40 transition-colors text-left flex flex-col justify-between group"
+            style={{
+              padding: "14px",
+              borderRadius: "10px",
+              border: "1px solid rgba(245, 158, 11, 0.25)",
+              background: "rgba(245, 158, 11, 0.05)",
+              textAlign: "left",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              cursor: "pointer",
+            }}
           >
             <div>
-              <div className="text-[10px] font-bold text-amber-700 dark:text-amber-300 uppercase tracking-wider">
+              <div style={{ fontSize: "11px", fontWeight: 700, color: "#D97706", textTransform: "uppercase", letterSpacing: "0.04em" }}>
                 Zona de Decisão (51–60%)
               </div>
-              <div className="text-2xl font-black text-amber-700 dark:text-amber-300 mt-1">
+              <div style={{ fontSize: "24px", fontWeight: 800, color: "#D97706", marginTop: "4px" }}>
                 {kpis.decisionZonePercentage}%
               </div>
             </div>
-            <div className="text-[10px] text-muted-foreground mt-2 flex items-center justify-between">
+            <div style={{ fontSize: "11px", color: "var(--chumbo)", marginTop: "8px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <span>{kpis.decisionZoneCount} alunos limítrofes</span>
-              <span className="text-primary font-mono text-xs">→</span>
+              <span style={{ color: "#D97706", fontWeight: 700 }}>→</span>
             </div>
           </button>
         </div>
 
         {/* Rodapé Padronizado Base / Período / Fonte */}
-        <div className="mt-3.5 pt-2.5 border-t border-border flex items-center justify-between text-[11px] text-muted-foreground flex-wrap gap-2">
+        <div style={{ marginTop: "14px", paddingTop: "10px", borderTop: "1px solid var(--sinal)", display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "11px", color: "var(--chumbo)", flexWrap: "wrap", gap: "8px" }}>
           <div>
             <span><strong>Base:</strong> {kpis.footnote.base}</span> • <span><strong>Período:</strong> {kpis.footnote.period}</span> • <span><strong>Fonte:</strong> {kpis.footnote.source}</span>
           </div>
-          <span className="text-[10px] font-medium text-emerald-700 dark:text-emerald-400">
+          <span style={{ fontSize: "11px", fontWeight: 600, color: "#16A34A" }}>
             ✓ Dados auditados em tempo real
           </span>
         </div>
       </div>
 
       {/* ─── BLOCO 3: MAPA TURMA × ÁREA COM COLUNA DE MÉDIA FINAL (EX-05) ─── */}
-      <div className="bg-card border border-border rounded-xl p-5 shadow-xs">
+      <div
+        style={{
+          background: "var(--card-bg)",
+          border: "1px solid var(--card-border)",
+          borderRadius: "12px",
+          boxShadow: "var(--card-shadow)",
+          padding: "20px",
+        }}
+      >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div>
-            <h2 className="text-sm font-bold text-foreground uppercase tracking-wider">
+            <h2 style={{ fontSize: "14px", fontWeight: 700, color: "var(--heading-color)", margin: "0 0 4px", textTransform: "uppercase", letterSpacing: "0.04em" }}>
               Mapa de Calor: Turmas × Grandes Áreas Médicas
             </h2>
-            <p className="text-xs text-muted-foreground">
+            <p style={{ margin: 0, fontSize: "12px", color: "var(--chumbo)" }}>
               Desempenho por área com a média final da turma em coluna própria. Régua de referência institucional em 60%.
             </p>
           </div>
@@ -281,13 +395,13 @@ export default function VisaoExecutivaClient({
         </div>
 
         {heatmapRows.length > 0 ? (
-          <div className="border border-border rounded-lg overflow-x-auto">
-            <table className="w-full text-xs text-left">
-              <thead className="bg-muted/60 text-muted-foreground font-semibold border-b border-border">
+          <div style={{ border: "1px solid var(--card-border)", borderRadius: "8px", overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12px", textAlign: "left" }}>
+              <thead style={{ background: "var(--table-header-bg, #F8FAFC)", borderBottom: "1px solid var(--card-border)", color: "var(--heading-color)", fontWeight: 600 }}>
                 <tr>
                   <th className="py-2.5 px-3">Turma / Período</th>
                   <th className="py-2.5 px-3 text-center">Alunos</th>
-                  <th className="py-2.5 px-3 text-center bg-muted/90 font-bold border-l border-r border-border">
+                  <th className="py-2.5 px-3 text-center font-bold" style={{ borderLeft: "1px solid var(--card-border)", borderRight: "1px solid var(--card-border)" }}>
                     Média Final da Turma
                   </th>
                   {areas.map((ar) => (
@@ -297,22 +411,22 @@ export default function VisaoExecutivaClient({
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border">
+              <tbody>
                 {heatmapRows.map((row) => {
                   const finalBand = SCORE_BANDS[row.classScoreBand];
 
                   return (
-                    <tr key={row.classGroupId} className="hover:bg-muted/20 transition-colors">
+                    <tr key={row.classGroupId} style={{ borderBottom: "1px solid var(--card-border)" }}>
                       <td className="py-2.5 px-3">
-                        <span className="font-bold text-foreground block">{row.classGroupLabel}</span>
-                        <span className="text-[10px] text-muted-foreground">{row.period}º Período</span>
+                        <span style={{ fontWeight: 700, color: "var(--heading-color)", display: "block" }}>{row.classGroupLabel}</span>
+                        <span style={{ fontSize: "10px", color: "var(--chumbo)" }}>{row.period}º Período</span>
                       </td>
-                      <td className="py-2.5 px-3 text-center text-muted-foreground font-mono">
+                      <td className="py-2.5 px-3 text-center font-mono" style={{ color: "var(--chumbo)" }}>
                         {row.totalStudents}
                       </td>
 
                       {/* Coluna Própria: Média Final da Turma */}
-                      <td className="py-2.5 px-3 text-center border-l border-r border-border">
+                      <td className="py-2.5 px-3 text-center" style={{ borderLeft: "1px solid var(--card-border)", borderRight: "1px solid var(--card-border)" }}>
                         <span className={`inline-block px-2.5 py-1 rounded font-bold text-xs border ${finalBand.badgeClass}`}>
                           {row.classAverageScore}%
                         </span>
@@ -339,81 +453,103 @@ export default function VisaoExecutivaClient({
             </table>
           </div>
         ) : (
-          <div className="p-8 text-center text-xs text-muted-foreground border border-dashed border-border rounded-lg">
+          <div style={{ padding: "32px", textAlign: "center", fontSize: "12px", color: "var(--chumbo)", border: "1px dashed var(--sinal)", borderRadius: "8px" }}>
             Nenhuma turma avaliada na prova selecionada.
           </div>
         )}
       </div>
 
       {/* ─── BLOCO 4: EVOLUÇÃO TEMPORAL AO LONGO DAS PROVAS COM AVISO (EX-07) ─── */}
-      <div className="bg-card border border-border rounded-xl p-5 shadow-xs">
+      <div
+        style={{
+          background: "var(--card-bg)",
+          border: "1px solid var(--card-border)",
+          borderRadius: "12px",
+          boxShadow: "var(--card-shadow)",
+          padding: "20px",
+        }}
+      >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
           <div>
-            <h2 className="text-sm font-bold text-foreground uppercase tracking-wider">
+            <h2 style={{ fontSize: "14px", fontWeight: 700, color: "var(--heading-color)", margin: "0 0 4px", textTransform: "uppercase", letterSpacing: "0.04em" }}>
               Acompanhamento Longitudinal das Provas
             </h2>
-            <p className="text-xs text-muted-foreground">
+            <p style={{ margin: 0, fontSize: "12px", color: "var(--chumbo)" }}>
               Trajetória de desempenho institucional ao longo do calendário acadêmico.
             </p>
           </div>
-
           <Link
             href="/instituicao/turmas-provas"
-            className="text-xs text-primary hover:underline font-semibold"
+            style={{ color: "var(--pulso)", fontWeight: 600, fontSize: "11px", textDecoration: "none" }}
           >
             Ver matriz completa Turmas × Provas ➔
           </Link>
         </div>
 
-        {/* Aviso de Não Equiparação Obrigatório */}
-        <div className="p-3 rounded-lg bg-amber-50/70 border border-amber-200 text-amber-900 text-xs dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-200 mb-4 flex items-start gap-2">
-          <span className="font-bold text-base shrink-0">⚠️</span>
-          <div className="leading-relaxed">
+        {/* Aviso Metodológico Explícito (EX-07) */}
+        <div style={{ padding: "10px 14px", borderRadius: "8px", background: "rgba(245, 158, 11, 0.08)", border: "1px solid rgba(245, 158, 11, 0.25)", fontSize: "11px", color: "#B45309", marginBottom: "16px", display: "flex", alignItems: "flex-start", gap: "8px" }}>
+          <span>⚠</span>
+          <div>
             <strong>Aviso Metodológico de Interpretação:</strong> Avaliações diferentes possuem graus de dificuldade distintos e não utilizam a mesma régua métrica estrita. As variações indicam tendências pedagógicas institucionais, e não deslocamentos lineares diretos.
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-          {timelineItems.map((ex, idx) => (
+        {/* Timeline Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {timelineItems.map((item, idx) => (
             <div
-              key={ex.examId}
-              className={`p-4 rounded-lg border transition-colors ${
-                ex.examId === selectedExamId
-                  ? "border-primary bg-primary/5 shadow-xs"
-                  : "border-border bg-card hover:bg-muted/20"
-              }`}
+              key={item.examId}
+              style={{
+                padding: "16px",
+                borderRadius: "10px",
+                border: item.examId === selectedExamId ? "1.5px solid var(--pulso)" : "1px solid var(--sinal)",
+                background: item.examId === selectedExamId ? "var(--pulso-dim)" : "var(--input-bg)",
+                transition: "all 0.15s ease",
+              }}
             >
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
+                <span style={{ fontSize: "10px", fontWeight: 700, color: "var(--chumbo)", textTransform: "uppercase" }}>
                   Avaliação {idx + 1}
                 </span>
-                <span className="text-[10px] text-muted-foreground font-mono">
-                  {new Date(ex.date).toLocaleDateString("pt-BR")}
+                <span style={{ fontSize: "11px", color: "var(--chumbo)" }}>
+                  {item.date ? new Date(item.date).toLocaleDateString("pt-BR") : "Data não definida"}
                 </span>
               </div>
-
-              <h3 className="font-bold text-xs text-foreground truncate" title={ex.title}>
-                {ex.title}
-              </h3>
-
-              <div className="mt-3 flex items-baseline justify-between pt-2 border-t border-border">
+              <div style={{ fontWeight: 700, fontSize: "13px", color: "var(--heading-color)", marginBottom: "8px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={item.title}>
+                {item.title}
+              </div>
+              <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", borderTop: "1px solid var(--sinal)", paddingTop: "8px" }}>
                 <div>
-                  <div className="text-[10px] text-muted-foreground">Média Institucional</div>
-                  <div className="text-xl font-black text-foreground">{ex.institutionMeanScore}%</div>
+                  <span style={{ fontSize: "20px", fontWeight: 800, color: "var(--heading-color)" }}>
+                    {item.institutionMeanScore}%
+                  </span>
+                  <span style={{ fontSize: "10px", color: "var(--chumbo)", display: "block" }}>
+                    Média Institucional
+                  </span>
                 </div>
-                <div className="text-right">
-                  <div className="text-[10px] text-muted-foreground">% Abaixo de 60</div>
-                  <div className="text-xs font-bold text-rose-600 dark:text-rose-400">{ex.rateBelowCut}%</div>
+                <div style={{ textAlign: "right" }}>
+                  <span style={{ fontSize: "12px", fontWeight: 700, color: "#DC2626" }}>
+                    {item.rateBelowCut}%
+                  </span>
+                  <span style={{ fontSize: "10px", color: "var(--chumbo)", display: "block" }}>
+                    % Abaixo de 60
+                  </span>
                 </div>
               </div>
-
-              <div className="mt-3 pt-2 border-t border-border/60 flex items-center justify-between text-[10px]">
-                <span className="text-muted-foreground">{ex.totalEvaluated} alunos avaliados</span>
+              <div style={{ marginTop: "10px", paddingTop: "8px", borderTop: "1px solid var(--sinal)", display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "11px" }}>
+                <span style={{ color: "var(--chumbo)" }}>{item.totalEvaluated} alunos</span>
                 <button
-                  onClick={() => handleSelectExam(ex.examId)}
-                  className="text-primary hover:underline font-semibold"
+                  onClick={() => handleSelectExam(item.examId)}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "var(--pulso)",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    padding: 0,
+                  }}
                 >
-                  {ex.examId === selectedExamId ? "✓ Em análise" : "Analisar ➔"}
+                  {item.examId === selectedExamId ? "✓ Em análise" : "Analisar ➔"}
                 </button>
               </div>
             </div>
@@ -422,49 +558,75 @@ export default function VisaoExecutivaClient({
       </div>
 
       {/* ─── BLOCO 5: ALERTAS PADRÃO (APENAS NOTA ABAIXO DE 60) (EX-08) ─── */}
-      <div className="bg-card border border-border rounded-xl p-5 shadow-xs">
-        <div className="flex items-center justify-between mb-3">
+      <div
+        style={{
+          background: "var(--card-bg)",
+          border: "1px solid var(--card-border)",
+          borderRadius: "12px",
+          boxShadow: "var(--card-shadow)",
+          padding: "20px",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "14px" }}>
           <div>
-            <h2 className="text-sm font-bold text-foreground uppercase tracking-wider">
+            <h2 style={{ fontSize: "14px", fontWeight: 700, color: "var(--heading-color)", margin: "0 0 4px", textTransform: "uppercase", letterSpacing: "0.04em" }}>
               Painel de Alertas Pedagógicos
             </h2>
-            <p className="text-xs text-muted-foreground">
+            <p style={{ margin: 0, fontSize: "12px", color: "var(--chumbo)" }}>
               Por padrão institucional, são sinalizadas turmas e áreas com rendimento abaixo da régua de 60%.
             </p>
           </div>
-          <span className="text-[11px] font-semibold text-muted-foreground">
+          <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--chumbo)" }}>
             {alerts.length} alerta(s) ativo(s)
           </span>
         </div>
 
         {alerts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "12px" }}>
             {alerts.map((al) => (
               <div
                 key={al.id}
-                className={`p-3 rounded-lg border text-xs flex items-start gap-3 ${
-                  al.severity === "critical"
-                    ? "bg-rose-50/70 border-rose-200 text-rose-900 dark:bg-rose-950/30 dark:border-rose-800 dark:text-rose-200"
-                    : "bg-amber-50/70 border-amber-200 text-amber-900 dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-200"
-                }`}
+                style={{
+                  padding: "14px 16px",
+                  borderRadius: "10px",
+                  border: al.severity === "critical" ? "1px solid rgba(220, 38, 38, 0.25)" : "1px solid rgba(217, 119, 6, 0.25)",
+                  background: al.severity === "critical" ? "rgba(220, 38, 38, 0.05)" : "rgba(217, 119, 6, 0.05)",
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: "12px",
+                }}
               >
-                <span className="shrink-0 mt-0.5 text-xs font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border">
+                <span
+                  style={{
+                    fontSize: "10px",
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                    padding: "2px 8px",
+                    borderRadius: "9999px",
+                    background: al.severity === "critical" ? "#DC2626" : "#D97706",
+                    color: "#FFFFFF",
+                    whiteSpace: "nowrap",
+                  }}
+                >
                   {al.severity === "critical" ? "Crítico" : "Atenção"}
                 </span>
-                <div className="flex-1">
-                  <div className="font-bold flex items-center justify-between">
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontWeight: 700, fontSize: "13px", color: "var(--heading-color)" }}>
                     <span>{al.title}</span>
-                    <span className="font-mono text-[11px]">{al.value}%</span>
+                    <span style={{ fontFamily: "monospace", fontSize: "12px" }}>{al.value}%</span>
                   </div>
-                  <p className="mt-1 text-[11px] leading-relaxed opacity-90">{al.description}</p>
+                  <p style={{ margin: "4px 0 0", fontSize: "12px", color: "var(--chumbo)", lineHeight: 1.5 }}>
+                    {al.description}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="p-4 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2 dark:bg-emerald-950/30 dark:border-emerald-800 dark:text-emerald-300">
-            <span>✓</span>
-            <span className="font-medium">
+          <div style={{ padding: "16px", borderRadius: "8px", background: "rgba(22, 163, 74, 0.08)", border: "1px solid rgba(22, 163, 74, 0.25)", color: "#16A34A", fontSize: "12px", display: "flex", alignItems: "center", gap: "8px" }}>
+            <span style={{ fontWeight: 700 }}>✓</span>
+            <span>
               Nenhuma turma ou grande área apresentou média inferior a 60% nesta prova. Todos os indicadores atendem à meta institucional.
             </span>
           </div>
@@ -473,10 +635,10 @@ export default function VisaoExecutivaClient({
 
       {/* ─── MODAL DE DETALHAMENTO DE KPI SOB CLIQUE ─── */}
       {activeKpiModal && (
-        <div className="fixed inset-0 bg-background/80 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-card border border-border rounded-xl max-w-md w-full p-5 shadow-xl space-y-4">
-            <div className="flex items-center justify-between border-b border-border pb-3">
-              <h3 className="font-bold text-sm text-foreground">
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "16px", zIndex: 50 }}>
+          <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: "12px", maxWidth: "480px", width: "100%", padding: "24px", boxShadow: "0 20px 25px -5px rgba(0,0,0,0.2)" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid var(--card-border)", paddingBottom: "12px", marginBottom: "16px" }}>
+              <h3 style={{ fontSize: "15px", fontWeight: 700, color: "var(--heading-color)", margin: 0 }}>
                 {activeKpiModal === "media" && "Detalhamento da Nota Média"}
                 {activeKpiModal === "abaixo_60" && "Alunos Abaixo do Corte (< 60%)"}
                 {activeKpiModal === "participacao" && "Detalhamento de Participação"}
@@ -485,13 +647,13 @@ export default function VisaoExecutivaClient({
               </h3>
               <button
                 onClick={() => setActiveKpiModal(null)}
-                className="text-muted-foreground hover:text-foreground text-sm font-bold"
+                style={{ background: "none", border: "none", color: "var(--chumbo)", cursor: "pointer", fontSize: "16px", fontWeight: 700 }}
               >
                 ✕
               </button>
             </div>
 
-            <div className="text-xs text-muted-foreground space-y-2">
+            <div style={{ fontSize: "13px", color: "var(--chumbo)", lineHeight: 1.6, marginBottom: "20px" }}>
               {activeKpiModal === "media" && (
                 <p>
                   A média geral da instituição foi calculada considerando todos os <strong>{kpis.totalPresent} estudantes finalizados</strong> na avaliação <em>{kpis.footnote.base}</em>, totalizando <strong>{kpis.institutionMeanScore}%</strong>.
@@ -519,16 +681,25 @@ export default function VisaoExecutivaClient({
               )}
             </div>
 
-            <div className="flex items-center justify-between border-t border-border pt-3">
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid var(--card-border)", paddingTop: "14px" }}>
               <Link
                 href={`/instituicao/provas/${selectedExamId}/resultado`}
-                className="text-xs text-primary hover:underline font-semibold"
+                style={{ fontSize: "12px", color: "var(--pulso)", fontWeight: 600, textDecoration: "none" }}
               >
                 Ver na página da prova ➔
               </Link>
               <button
                 onClick={() => setActiveKpiModal(null)}
-                className="px-4 py-1.5 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
+                style={{
+                  padding: "8px 16px",
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  borderRadius: "8px",
+                  background: "var(--pulso)",
+                  color: "#FFFFFF",
+                  border: "none",
+                  cursor: "pointer",
+                }}
               >
                 Fechar
               </button>

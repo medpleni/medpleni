@@ -1,5 +1,27 @@
 @import "tailwindcss";
 
+@theme {
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+}
+
 /* ─────────────────────────────────────────────
    MedPleni — Design Tokens & Dynamic Theme System
    Suporte completo a Dark Mode e Light Mode
@@ -56,6 +78,20 @@
   --r-xl:            14px;
   --r-full:          9999px;
 
+  /* ── Compatibilidade Tailwind & Shadcn (Dark) ── */
+  --card:            #131B2C;
+  --card-foreground: #E2E8F0;
+  --border:          rgba(90, 125, 175, 0.25);
+  --input:           rgba(90, 125, 175, 0.3);
+  --ring:            #00C2A8;
+  --background:      #0A0E18;
+  --foreground:      #E2E8F0;
+  --primary:         #00C2A8;
+  --primary-foreground: #0A0E18;
+  --muted:           #0C1220;
+  --muted-foreground: #94A3B8;
+  --table-header-bg: #101626;
+
   color-scheme: dark;
 }
 
@@ -83,6 +119,20 @@
   --input-bg:        #F8FAFC;
   --input-border:    #CBD5E1;
   --pill-bg:         #EDF2F7;
+
+  /* ── Compatibilidade Tailwind & Shadcn (Light) ── */
+  --card:            #FFFFFF;
+  --card-foreground: #0F172A;
+  --border:          #E2E8F0;
+  --input:           #CBD5E1;
+  --ring:            #008F7C;
+  --background:      #F4F7FB;
+  --foreground:      #0F172A;
+  --primary:         #008F7C;
+  --primary-foreground: #FFFFFF;
+  --muted:           #F8FAFC;
+  --muted-foreground: #64748B;
+  --table-header-bg: #F8FAFC;
 
   /* ── Marca & Sistema Light (Ajustados para Contraste) ── */
   --pulso:           #008F7C;   /* Teal aprofundado para legibilidade em fundo claro */

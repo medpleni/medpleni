@@ -342,15 +342,15 @@ export default function ConfiguracoesClient({
   };
 
   return (
-    <div className="space-y-6">
+    <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "8px 0 40px" }} className="space-y-6">
       {/* Bloco 1: Cabeçalho da Página */}
       <PageHeader
         title="Configurações e Implantação"
         subtitle={`Gestão cadastral, estrutura acadêmica e parâmetros operacionais de ${context.institution.name}`}
       />
 
-      {/* Bloco 2: Navegação por Abas (Máximo 5 seções) */}
-      <div className="border-b border-border flex items-center gap-2 overflow-x-auto pb-1 text-sm font-medium">
+      {/* Bloco 2: Navegação por Abas Limpa e Moderna */}
+      <div style={{ display: "flex", gap: "24px", borderBottom: "1px solid var(--card-border)", marginBottom: "20px", overflowX: "auto" }}>
         {[
           { key: "estrutura", label: "Estrutura Acadêmica" },
           { key: "matriculas", label: "Importação de Matrículas (CSV)" },
@@ -361,11 +361,20 @@ export default function ConfiguracoesClient({
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key as TabKey)}
-            className={`px-4 py-2 rounded-t-lg transition-colors whitespace-nowrap ${
-              activeTab === tab.key
-                ? "bg-card border-t border-x border-border text-primary font-semibold shadow-xs"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-            }`}
+            style={{
+              padding: "10px 4px",
+              fontSize: "13px",
+              fontWeight: activeTab === tab.key ? 700 : 500,
+              color: activeTab === tab.key ? "var(--pulso)" : "var(--chumbo)",
+              borderBottom: activeTab === tab.key ? "2px solid var(--pulso)" : "2px solid transparent",
+              background: "transparent",
+              borderTop: "none",
+              borderLeft: "none",
+              borderRight: "none",
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+              transition: "all 0.15s ease",
+            }}
           >
             {tab.label}
           </button>

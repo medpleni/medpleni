@@ -133,31 +133,64 @@ export default function ProntidaoClient({
   );
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto pb-12">
+    <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "8px 0 40px" }} className="space-y-6">
       {/* ── 1. CABEÇALHO DO MÓDULO ── */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-5 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          flexWrap: "wrap",
+          gap: "16px",
+          paddingBottom: "16px",
+          borderBottom: "1px solid var(--card-border)",
+        }}
+      >
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+            <h1 style={{ fontSize: "22px", fontWeight: 700, margin: 0, color: "var(--heading-color)" }}>
               Indicador de Prontidão Acadêmica
             </h1>
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-teal-50 text-teal-800 dark:bg-teal-900/40 dark:text-teal-300 font-semibold border border-teal-200 dark:border-teal-800">
+            <span
+              style={{
+                fontSize: "10px",
+                fontWeight: 700,
+                padding: "2px 8px",
+                borderRadius: "9999px",
+                background: "var(--pulso-dim)",
+                color: "var(--pulso)",
+                textTransform: "uppercase",
+              }}
+            >
               Metodologia por Regras (Dr. Filipe)
             </span>
           </div>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-            {institutionName} · Critérios transparentes de esforço e desempenho acordados pela instituição
+          <p style={{ margin: 0, fontSize: "13px", color: "var(--chumbo)" }}>
+            {institutionName} · Critérios transparentes de esforço e desempenho acordados pela instituição.
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           {isAuthorized && (
             <button
               onClick={() => {
                 setTempConfig(config);
                 setIsConfigModalOpen(true);
               }}
-              className="px-3.5 py-2 rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-700 text-teal-700 dark:text-teal-300 font-medium text-xs transition-colors flex items-center gap-1.5 shadow-sm"
+              style={{
+                padding: "8px 14px",
+                fontSize: "12px",
+                fontWeight: 600,
+                borderRadius: "8px",
+                border: "1px solid var(--card-border)",
+                background: "var(--card-bg)",
+                color: "var(--heading-color)",
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                boxShadow: "var(--card-shadow)",
+              }}
             >
               <span>⚙️</span> Configurar Regras e Metas
             </button>
@@ -166,7 +199,21 @@ export default function ProntidaoClient({
             <button
               onClick={handleCreateSnapshot}
               disabled={isPendingSnapshot}
-              className="px-3.5 py-2 rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-medium text-xs transition-colors flex items-center gap-1.5 shadow-sm disabled:opacity-50"
+              style={{
+                padding: "8px 16px",
+                fontSize: "12px",
+                fontWeight: 600,
+                borderRadius: "8px",
+                border: "none",
+                background: "var(--pulso)",
+                color: "#FFFFFF",
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                boxShadow: "0 2px 4px rgba(0, 194, 168, 0.25)",
+                opacity: isPendingSnapshot ? 0.6 : 1,
+              }}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
