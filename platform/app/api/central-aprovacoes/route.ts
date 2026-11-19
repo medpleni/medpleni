@@ -104,13 +104,14 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { screens, tasks, featuresList, invitedEmails, lastAction } = body;
+    const { screens, tasks, featuresList, invitedEmails, manualTestAnswers, lastAction } = body;
 
     const payload = {
       screens: screens || [],
       tasks: tasks || [],
       featuresList: featuresList || [],
       invitedEmails: invitedEmails || [],
+      manualTestAnswers: manualTestAnswers || {},
       lastAction: lastAction || null,
       updatedAt: new Date().toISOString(),
     };
