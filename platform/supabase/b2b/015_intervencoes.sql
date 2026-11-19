@@ -115,8 +115,9 @@ USING (
   (student_user_id = auth.uid()) OR
   (class_group_id IS NOT NULL AND EXISTS (
     SELECT 1 FROM public.enrollments e
-    WHERE e.user_id = auth.uid()
-      AND e.institution_id = interventions.institution_id
+    JOIN public.institution_members im ON im.id = e.member_id
+    WHERE im.user_id = auth.uid()
+      AND im.institution_id = interventions.institution_id
       AND e.class_group_id = interventions.class_group_id
   ))
 );

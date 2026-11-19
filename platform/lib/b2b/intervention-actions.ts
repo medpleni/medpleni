@@ -89,21 +89,24 @@ export async function createInterventionAction(params: {
   if (params.classGroupId && intervention?.id) {
     const { data: enrollments } = await supabase
       .from("enrollments")
-      .select("user_id")
-      .eq("institution_id", context.institution.id)
+      .select("member_id, institution_members!inner(user_id)")
       .eq("class_group_id", params.classGroupId)
-      .eq("status", "ativo");
+      .eq("status", "active");
 
     if (enrollments && enrollments.length > 0) {
-      const adherenceRows = enrollments.map((e) => ({
-        intervention_id: intervention.id,
-        student_user_id: e.user_id,
-        status: "pendente",
-        questions_completed: 0,
-        questions_target: params.practiceListQuestionsCount || 20,
-      }));
+      const adherenceRows = enrollments
+        .map((e: any) => ({
+          intervention_id: intervention.id,
+          student_user_id: e.institution_members?.user_id,
+          status: "pendente",
+          questions_completed: 0,
+          questions_target: params.practiceListQuestionsCount || 20,
+        }))
+        .filter((r) => Boolean(r.student_user_id));
 
-      await supabase.from("intervention_adherences").insert(adherenceRows);
+      if (adherenceRows.length > 0) {
+        await supabase.from("intervention_adherences").insert(adherenceRows);
+      }
     }
   }
 
