@@ -101,10 +101,10 @@ export default function B2BShell({ context, children }: B2BShellProps) {
           ),
         },
         {
-          id: "avaliacao-longitudinal",
+          id: "longitudinal",
           label: "Avaliação longitudinal",
-          href: "/instituicao/avaliacao-longitudinal",
-          status: "in_progress",
+          href: "/instituicao/longitudinal",
+          status: "ready",
           icon: (
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="20" x2="18" y2="10" />

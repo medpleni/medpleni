@@ -6,6 +6,73 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-19 · P17 · Avaliação Longitudinal: Matriz Currículo × Eixo, Trilha Longitudinal, Marcos ENAMED e Planos de Acompanhamento (AP-01 a AP-04, DCN art. 36-37)
+
+### O que foi feito
+
+- **Terminologia Estrita e Repúdio a "Avaliação Programática" (AP-01):**
+  - O módulo foi nomeado e configurado exclusivamente como **"Avaliação longitudinal"** em `/instituicao/longitudinal`.
+  - O termo "programática" foi verificado e não aparece em nenhuma interface, rótulo ou componente do módulo.
+- **Matriz Currículo × Eixo (AP-02):**
+  - Tabela com os 12 períodos do curso médico nas colunas (P1 a P12) e os eixos nas linhas (7 grandes áreas do INEP, alternável para Cenários de Prática, Temas e Competências).
+  - Cada célula exibe o aproveitamento médio percentual, quantidade de itens avaliados e badge de cor da Régua 60:
+    - `< 51%` (Vermelho/Rosa - Crítico)
+    - `51–60%` (Âmbar com anel - Zona de Decisão)
+    - `61–70%` (Verde suave - Adequado)
+    - `≥ 71%` (Verde pleno - Consolidado)
+  - Coluna dedicada com a **Média Geral da Linha** ponderada.
+  - **Avisos de Interpretação:** ponto âmbar discreto no canto superior da célula sinalizando quando a célula é sustentada por menos de 5 questões (`poucas_questoes`) ou apenas 1 avaliação (`poucas_provas`).
+  - **Marcos das Três Etapas do ENAMED:** colunas do 4º (Ciclo Básico), 8º (Ciclo Clínico) e 12º períodos (Internato) com destaque visual azul, cabeçalho rotulado e cards explicativos no topo.
+  - Clique na célula abre modal com detalhamento estatístico e atalhos diretos para explorar na Trilha Longitudinal ou abrir Plano de Acompanhamento para a turma daquele período.
+- **Trilha Longitudinal por Eixo (AP-03):**
+  - Seletor do item do eixo com visualização da evolução contínua da coorte ao longo dos 12 períodos.
+  - Linha tracejada horizontal no corte (60%) e marcadores coloridos conforme a faixa de desempenho.
+  - **Comparativo entre turmas paralelas no mesmo período:** diagnóstico de consistência institucional nos marcos intermediários do ENAMED (P4, P8, P12).
+- **Planos de Acompanhamento e Reteste (AP-04 / DCN art. 36–37 / Régua 60):**
+  - Instrumento formal para registrar ações combinadas para turmas ou estudantes abaixo da nota de corte (60%).
+  - Campos estruturados: público-alvo (turma ou aluno), eixo, ação formativa pactuada, responsável, data do acordo, prazo, avaliação futura de verificação (reteste) e nota inicial.
+  - **Linha do Tempo Visual (Timeline):** histórico cronológico com indicador de ganho pós-intervenção (ex: `47.5% → 68.0% (+20.5%)`) e badge de status de recuperação (`Recuperado (≥ 60%)` ou `Verificado (Abaixo de 60%)`).
+  - Modal para Dirigentes e Coordenadores atualizarem o status e registrarem a nota de reteste.
+- **Persistência no Banco (`014_longitudinal.sql`):**
+  - Tabela `longitudinal_action_plans` com RLS para Dirigente, Coordenador e Docente (escopo de turma).
+  - Seed de demonstração com dois casos reais pactuados e retestados na FADEP.
+- **Rodapé Padronizado:** Base / Período / Fonte em todas as abas e modais.
+
+### Arquivos criados/alterados
+
+- `platform/supabase/b2b/014_longitudinal.sql` (criado)
+- `platform/lib/b2b/longitudinal.ts` (criado - funções puras da matriz, marcos ENAMED, trilha e timeline)
+- `platform/lib/b2b/__tests__/longitudinal.test.ts` (criado - 6 testes unitários com 100% de aprovação)
+- `platform/lib/b2b/longitudinal-actions.ts` (criado - Server Actions para criação e atualização de planos)
+- `platform/app/instituicao/longitudinal/LongitudinalClient.tsx` (criado)
+- `platform/app/instituicao/longitudinal/page.tsx` (criado)
+- `platform/app/instituicao/avaliacao-longitudinal/page.tsx` (criado - redirect preventivo)
+- `platform/app/instituicao/components/B2BShell.tsx` (atualizado para link `/instituicao/longitudinal` com status `ready`)
+- `docs/b2b/DIARIO.md` (atualizado)
+
+### SQL a rodar no Supabase
+
+- Executar `platform/supabase/b2b/014_longitudinal.sql` no SQL Editor do Supabase (cria a tabela `longitudinal_action_plans`, índices, RLS e seed de demonstração idempotente).
+
+### Como testar
+
+1. **Testes Unitários:** `cd platform && npx vitest run lib/b2b/__tests__/longitudinal.test.ts` (6 testes passando) ou a suíte completa (137 testes passando em 17 arquivos).
+2. **Avaliação Longitudinal em `/instituicao/longitudinal`:**
+   - Acesse como dirigente ou coordenador.
+   - Na aba **Matriz Currículo × Eixo**:
+     - Alterne entre Áreas (7 INEP), Cenários de Prática, Temas e Competências.
+     - Observe os 12 períodos e o destaque nos marcos ENAMED P4, P8 e P12.
+     - Clique em qualquer célula da matriz para abrir o modal de detalhes do período e ver o aviso de interpretação quando aplicável.
+   - Na aba **Trilha Longitudinal**:
+     - Selecione uma área (ex: "Clínica Médica" ou "Ginecologia e Obstetrícia").
+     - Confira a trajetória da coorte e o comparativo entre turmas paralelas nos marcos ENAMED.
+   - Na aba **Planos de Acompanhamento**:
+     - Visualize a linha do tempo cronológica com notas antes/depois e ganho percentual.
+     - Clique em `+ Novo Plano de Acompanhamento` para criar um plano para uma turma ou aluno.
+     - Clique em `Atualizar` num plano para lançar a nota de reteste e observar a marcação de recuperação na timeline.
+
+---
+
 ## 2026-11-19 · P16 · Acompanhamento Acadêmico: Quem Precisa de Atenção, Zona de Decisão, Alertas Coletivos, Meta Semanal e Resumo da Semana (SPR nº 1, 2, 3, 4, 5 e 7; EX-04, TU-02)
 
 ### O que foi feito
