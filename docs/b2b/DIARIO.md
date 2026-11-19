@@ -6,6 +6,64 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-19 · P16 · Acompanhamento Acadêmico: Quem Precisa de Atenção, Zona de Decisão, Alertas Coletivos, Meta Semanal e Resumo da Semana (SPR nº 1, 2, 3, 4, 5 e 7; EX-04, TU-02)
+
+### O que foi feito
+
+- **Quem precisa de você agora (Voto SPR nº 1):**
+  - Lista priorizada de estudantes em risco com badges descritivos (`Nota < 60%`, `Zona de Decisão (51-60%)`, `Sem Acesso há N dias`, `Queda de Ritmo`, `Simulado Pendente`).
+  - Regra de ordenação exibida explicitamente no topo da tela:
+    1. Gravidade do motivo (`nota_abaixo_60` > `zona_decisao` > `sem_acesso` > `queda_ritmo` > `simulado_pendente`);
+    2. Menor nota média;
+    3. Mais dias sem acesso;
+    - Alunos marcados como "tratados" vão automaticamente para o final da fila com visual atenuado.
+  - Alertas inativos não geram badges (apenas "nota abaixo de 60" e "zona de decisão" são perenes).
+- **Zona de Decisão (51 a 60%) (EX-04 / TU-02):**
+  - Painel dedicado para alunos com rendimento na faixa limítrofe de corte (51% a 60%).
+  - Filtro por turma e atalho para criar intervenção pedagógica em lote para o grupo.
+- **Configuração de Alertas e Alerta Coletivo de Turma (Voto SPR nº 2):**
+  - Alerta de "Nota abaixo de 60" ligado por padrão. Alertas de engajamento (*sem login*, *sem questões*, *queda de ritmo*, *simulado pendente*) vêm desligados por padrão, com controles e limiares ajustáveis por Dirigente/Coordenador.
+  - **Agrupamento Inteligente de Turma:** quando $\ge 50\%$ dos alunos de uma mesma turma compartilham um alerta, os alertas individuais são recolhidos e consolidados em um **Alerta de Turma**, evitando poluição visual e orientando intervenção coletiva.
+  - Modal individual de anotação de acompanhamento pedagógico e toggle para marcar como "tratado", persistidos na tabela `student_alert_treatments`.
+- **Meta Semanal de Questões (Voto SPR nº 4):**
+  - Desligada por padrão; quando ativada, exibe a grade Aluno × Semana com 4 status visuais: `Cumpriu (>= meta)`, `Parcial`, `Não Cumpriu` e `Inativo`.
+  - Ordenação prioritária por semanas consecutivas sem cumprir a meta.
+- **Resumo da Semana & Resumo da Avaliação (Votos SPR nº 5 e 7):**
+  - Gerador determinístico de texto baseado em regras (sem IA generativa nesta versão), pronto para copiar e colar em WhatsApp ou e-mail.
+  - Alternância entre "Resumo da Semana" e "Resumo da Avaliação de Referência".
+  - **Privacidade por Padrão:** nomes dos alunos vêm ocultados por padrão (ex: `14 alunos na zona de decisão`), com checkbox explícito e auditado para quem desejar incluir os nomes no texto.
+- **Rodapé Padronizado:** Base / Período / Fonte presente em todos os blocos e indicadores.
+- **Papel Tutor:** Não existe no sistema conforme especificação — todas as ações pertencem estritamente a Coordenador e Dirigente, com visão restrita aos docentes quando aplicável.
+
+### Arquivos criados/alterados
+
+- `platform/supabase/b2b/013_acompanhamento.sql` (criado)
+- `platform/lib/b2b/monitoring.ts` (criado - funções puras de priorização, agregação de turma, cálculo de meta semanal e resumo)
+- `platform/lib/b2b/__tests__/monitoring.test.ts` (criado - 6 testes unitários cobrindo todas as regras e aceites)
+- `platform/lib/b2b/monitoring-actions.ts` (criado - Server Actions para anotação e limites)
+- `platform/app/instituicao/acompanhamento/AcompanhamentoClient.tsx` (criado)
+- `platform/app/instituicao/acompanhamento/page.tsx` (criado)
+- `platform/app/instituicao/components/B2BShell.tsx` (atualizado para status `ready`)
+- `docs/b2b/DIARIO.md` (atualizado)
+
+### SQL a rodar no Supabase
+
+- Executar `platform/supabase/b2b/013_acompanhamento.sql` para criar a tabela `student_alert_treatments` e suas políticas de RLS.
+
+### Como testar
+
+1. **Testes Unitários:** `cd platform && npx vitest run lib/b2b/__tests__/monitoring.test.ts` (6 testes passando) ou a suíte completa (131 testes passando em 16 arquivos).
+2. **Acompanhamento Acadêmico em `/instituicao/acompanhamento`:**
+   - Acesse como dirigente ou coordenador.
+   - Na aba **Quem precisa de você agora**, confira os alunos ordenados pela regra descrita no topo.
+   - Clique em **Registrar Anotação** para anotar e marcar como tratado.
+   - Na aba **Zona de Decisão**, filtre por turma e veja o atalho para intervenção.
+   - Na aba **Configuração de Alertas**, alterne limites ou ligue os alertas de engajamento para ver a lista recalcular em tempo real.
+   - Na aba **Meta Semanal**, ative a meta e visualize a grade Aluno × Semana ordenada por semanas sem cumprimento.
+   - Na aba **Resumo da Semana**, teste os botões de cópia (com nomes ocultados por padrão e com toggle para incluir nomes).
+
+---
+
 ## 2026-11-19 · P15 · Gestão de Turmas, Alunos, Dispersão 4 Quadrantes e Perfil Longitudinal (TC-01 a TC-08, Pedidos Dr. Filipe)
 
 ### O que foi feito
