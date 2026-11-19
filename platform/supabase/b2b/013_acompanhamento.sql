@@ -23,6 +23,7 @@ ON public.student_alert_treatments(institution_id, student_user_id);
 -- RLS
 ALTER TABLE public.student_alert_treatments ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Dirigente e Coordenador gerenciam tratamentos de alertas" ON public.student_alert_treatments;
 CREATE POLICY "Dirigente e Coordenador gerenciam tratamentos de alertas"
 ON public.student_alert_treatments
 FOR ALL
@@ -36,6 +37,7 @@ WITH CHECK (
   public.has_role(institution_id, ARRAY['dirigente', 'coordenador'])
 );
 
+DROP POLICY IF EXISTS "Docente visualiza tratamentos de alunos sob seu escopo" ON public.student_alert_treatments;
 CREATE POLICY "Docente visualiza tratamentos de alunos sob seu escopo"
 ON public.student_alert_treatments
 FOR SELECT
