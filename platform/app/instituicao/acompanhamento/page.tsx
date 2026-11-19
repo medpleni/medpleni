@@ -8,6 +8,12 @@ import {
   type AlertConfig,
   type SummaryTextGenerationParams,
 } from "@/lib/b2b/monitoring";
+import {
+  DEFAULT_ATYPICAL_CONFIG,
+  classifyBatchSessions,
+  type AtypicalDetectionConfig,
+  type SessionMetricsInput,
+} from "@/lib/b2b/atypical";
 
 export default async function AcompanhamentoPage() {
   const context = await getB2BUserContext();
@@ -18,7 +24,7 @@ export default async function AcompanhamentoPage() {
 
   // Alunos têm portal próprio
   if (context.role === "aluno") {
-    redirect("/instituicao/aluno/provas");
+    redirect("/instituicao/aluno");
   }
 
   const institution = context.institution;
@@ -233,6 +239,86 @@ export default async function AcompanhamentoPage() {
     highlightClass: { name: "MED 12º Período", evolution: "+3.8% na média somativa" },
   };
 
+  // 9. Configuração e Sessões Atípicas (Voto SPR nº 9 / ESPEC-B2B 4.10)
+  const atypicalConfig: AtypicalDetectionConfig = {
+    ...DEFAULT_ATYPICAL_CONFIG,
+    ...((instSettings as any)?.atypical_config || {}),
+  };
+
+  const excludedSessionIds: string[] = Array.isArray((instSettings as any)?.atypical_excluded_sessions)
+    ? (instSettings as any).atypical_excluded_sessions
+    : [];
+
+  // Gera sessões sintéticas/reais representativas para os alunos da instituição
+  const rawSessions: SessionMetricsInput[] = students.slice(0, 16).map((st, idx) => {
+    const isExcluded = excludedSessionIds.includes(`sess-demo-${idx}`);
+
+    // Cria padrões variados:
+    // idx 0, 4 -> Chute (tempo médio ~10s, acerto ~20%, 25 questões)
+    // idx 1, 5 -> Consulta Externa (tempo médio ~19s, stdDev ~0.8s, acerto 96%, 25 questões)
+    // idx 2, 6 -> Refazendo (tempo médio ~45s, 80% repetidas, acerto 90%, 30 questões)
+    // idx 3 -> Não classificada (< 20 questões)
+    // Demais -> Típico (tempo médio ~55s, acerto normal ~65%, 30 questões)
+    let responses = [];
+
+    if (idx === 0 || idx === 4) {
+      // Padrão Chute
+      responses = Array.from({ length: 25 }, (_, q) => ({
+        questionId: `q-${idx}-${q}`,
+        timeSpentSeconds: 8 + (q % 4), // média ~10s
+        isCorrect: q < 5, // 20%
+        wasPreviouslyAnswered: false,
+      }));
+    } else if (idx === 1 || idx === 5) {
+      // Padrão Consulta Externa
+      responses = Array.from({ length: 25 }, (_, q) => ({
+        questionId: `q-${idx}-${q}`,
+        timeSpentSeconds: 19 + (q % 2), // 19s ou 20s (stdDev ~0.5s)
+        isCorrect: q < 24, // 96%
+        wasPreviouslyAnswered: false,
+      }));
+    } else if (idx === 2 || idx === 6) {
+      // Padrão Refazendo
+      responses = Array.from({ length: 30 }, (_, q) => ({
+        questionId: `q-${idx}-${q}`,
+        timeSpentSeconds: 42 + (q % 10),
+        isCorrect: q < 27, // 90%
+        wasPreviouslyAnswered: q < 24, // 80% repetidas
+      }));
+    } else if (idx === 3) {
+      // Menos de 20 questões
+      responses = Array.from({ length: 14 }, (_, q) => ({
+        questionId: `q-${idx}-${q}`,
+        timeSpentSeconds: 35,
+        isCorrect: q < 7,
+        wasPreviouslyAnswered: false,
+      }));
+    } else {
+      // Padrão Típico
+      responses = Array.from({ length: 30 }, (_, q) => ({
+        questionId: `q-${idx}-${q}`,
+        timeSpentSeconds: 45 + (q % 25), // média ~55s
+        isCorrect: q % 3 !== 0, // ~67%
+        wasPreviouslyAnswered: q % 5 === 0, // 20%
+      }));
+    }
+
+    return {
+      sessionId: `sess-demo-${idx}`,
+      studentUserId: st.studentUserId,
+      studentName: st.studentName,
+      classGroupId: st.classGroupId,
+      classGroupLabel: st.classGroupLabel,
+      sessionType: idx % 2 === 0 ? "pratica" : "prova_online",
+      startedAt: new Date(Date.now() - (idx * 86400000 * 2)).toISOString(),
+      completedAt: new Date(Date.now() - (idx * 86400000 * 2) + 1800000).toISOString(),
+      responses,
+      isExcludedFromMetrics: isExcluded,
+    };
+  });
+
+  const { classified: atypicalSessions } = classifyBatchSessions(rawSessions, atypicalConfig);
+
   return (
     <AcompanhamentoClient
       institution={{
@@ -246,6 +332,8 @@ export default async function AcompanhamentoPage() {
       classes={classes}
       summaryParams={summaryParams}
       examsList={examsList}
+      atypicalSessions={atypicalSessions}
+      atypicalConfig={atypicalConfig}
     />
   );
 }

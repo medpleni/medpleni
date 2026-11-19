@@ -235,6 +235,7 @@ export async function updateInstitutionParams(
     };
     weekly_target_enabled?: boolean;
     weekly_target_questions?: number;
+    atypical_config?: any;
   }
 ) {
   const actor = await getAuthorizedActor(["dirigente"]);
@@ -257,6 +258,7 @@ export async function updateInstitutionParams(
       enabled: Boolean(params.weekly_target_enabled),
       questions: params.weekly_target_questions || 50,
     },
+    ...(params.atypical_config ? { atypical_config: params.atypical_config } : {}),
   };
 
   const { error } = await supabase

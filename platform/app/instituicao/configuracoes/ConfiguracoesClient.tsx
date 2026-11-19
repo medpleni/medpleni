@@ -128,6 +128,33 @@ export default function ConfiguracoesClient({
   const [weeklyTargetQuestions, setWeeklyTargetQuestions] = useState(
     (settings as any).weekly_target?.questions || 50
   );
+
+  // Parâmetros de Sessões Atípicas (Voto SPR nº 9 / Seção 4.10)
+  const initialAtypical = (settings as any).atypical_config || {};
+  const [atypicalMinQuestions, setAtypicalMinQuestions] = useState(
+    initialAtypical.minQuestionsThreshold ?? 20
+  );
+  const [atypicalChuteMaxSeconds, setAtypicalChuteMaxSeconds] = useState(
+    initialAtypical.chute?.maxAverageSeconds ?? 15
+  );
+  const [atypicalChuteMaxAccuracy, setAtypicalChuteMaxAccuracy] = useState(
+    initialAtypical.chute?.maxAccuracyPercentage ?? 30
+  );
+  const [atypicalRefazendoMinRatio, setAtypicalRefazendoMinRatio] = useState(
+    initialAtypical.refazendo?.minRepeatedRatio ?? 0.7
+  );
+  const [atypicalRefazendoMinAccuracy, setAtypicalRefazendoMinAccuracy] = useState(
+    initialAtypical.refazendo?.minAccuracyPercentage ?? 85
+  );
+  const [atypicalConsultaMinAccuracy, setAtypicalConsultaMinAccuracy] = useState(
+    initialAtypical.consultaExterna?.minAccuracyPercentage ?? 90
+  );
+  const [atypicalConsultaMaxSeconds, setAtypicalConsultaMaxSeconds] = useState(
+    initialAtypical.consultaExterna?.maxAverageSeconds ?? 25
+  );
+  const [atypicalConsultaMaxStdDev, setAtypicalConsultaMaxStdDev] = useState(
+    initialAtypical.consultaExterna?.maxStdDevSeconds ?? 8.0
+  );
   const [paramFeedback, setParamFeedback] = useState<string | null>(null);
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -289,6 +316,22 @@ export default function ConfiguracoesClient({
           alerts,
           weekly_target_enabled: weeklyTargetEnabled,
           weekly_target_questions: Number(weeklyTargetQuestions),
+          atypical_config: {
+            minQuestionsThreshold: Number(atypicalMinQuestions),
+            chute: {
+              maxAverageSeconds: Number(atypicalChuteMaxSeconds),
+              maxAccuracyPercentage: Number(atypicalChuteMaxAccuracy),
+            },
+            refazendo: {
+              minRepeatedRatio: Number(atypicalRefazendoMinRatio),
+              minAccuracyPercentage: Number(atypicalRefazendoMinAccuracy),
+            },
+            consultaExterna: {
+              minAccuracyPercentage: Number(atypicalConsultaMinAccuracy),
+              maxAverageSeconds: Number(atypicalConsultaMaxSeconds),
+              maxStdDevSeconds: Number(atypicalConsultaMaxStdDev),
+            },
+          },
         });
         setParamFeedback("Parâmetros da instituição salvos com sucesso.");
         setTimeout(() => setParamFeedback(null), 3000);
@@ -957,6 +1000,135 @@ export default function ConfiguracoesClient({
                   <span className="text-xs text-muted-foreground">questões recomendadas por semana</span>
                 </div>
               )}
+            </div>
+
+            <hr className="border-border" />
+
+            {/* Parâmetros de Detecção de Sessões Atípicas (Voto SPR nº 9 / Seção 4.10) */}
+            <div className="space-y-4">
+              <div>
+                <h4 className="text-xs font-semibold uppercase text-muted-foreground tracking-wider">
+                  Detecção de Sessões Atípicas (Voto SPR nº 9 / Gestão Acadêmica)
+                </h4>
+                <p className="text-[11px] text-muted-foreground mt-0.5">
+                  Limiares matemáticos configuráveis para sinalização pedagógica de padrões incomuns de resposta.
+                  Sessões abaixo de 20 questões não são classificadas.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+                {/* Mínimo de questões */}
+                <div className="space-y-1">
+                  <label className="text-[11px] font-medium text-foreground">
+                    Mínimo de Questões / Sessão
+                  </label>
+                  <input
+                    type="number"
+                    min="5"
+                    max="100"
+                    value={atypicalMinQuestions}
+                    onChange={(e) => setAtypicalMinQuestions(Number(e.target.value))}
+                    disabled={!canManageRoles}
+                    className="w-full px-2.5 py-1.5 border border-border rounded-lg bg-background text-xs text-foreground"
+                  />
+                  <span className="text-[10px] text-muted-foreground block">Padrão: 20 questões</span>
+                </div>
+
+                {/* Chute */}
+                <div className="p-3 rounded-lg border border-border bg-muted/20 space-y-2">
+                  <span className="text-[11px] font-bold text-amber-700 dark:text-amber-400 block">
+                    1. Padrão Chute
+                  </span>
+                  <div>
+                    <label className="text-[10px] text-muted-foreground">Tempo Máx (s):</label>
+                    <input
+                      type="number"
+                      value={atypicalChuteMaxSeconds}
+                      onChange={(e) => setAtypicalChuteMaxSeconds(Number(e.target.value))}
+                      disabled={!canManageRoles}
+                      className="w-full px-2 py-1 border border-border rounded bg-background text-xs text-foreground mt-0.5"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-muted-foreground">Acerto Máx (%):</label>
+                    <input
+                      type="number"
+                      value={atypicalChuteMaxAccuracy}
+                      onChange={(e) => setAtypicalChuteMaxAccuracy(Number(e.target.value))}
+                      disabled={!canManageRoles}
+                      className="w-full px-2 py-1 border border-border rounded bg-background text-xs text-foreground mt-0.5"
+                    />
+                  </div>
+                </div>
+
+                {/* Refazendo */}
+                <div className="p-3 rounded-lg border border-border bg-muted/20 space-y-2">
+                  <span className="text-[11px] font-bold text-purple-700 dark:text-purple-400 block">
+                    2. Padrão Refazendo
+                  </span>
+                  <div>
+                    <label className="text-[10px] text-muted-foreground">Proporção Repetidas (0-1):</label>
+                    <input
+                      type="number"
+                      step="0.05"
+                      min="0"
+                      max="1"
+                      value={atypicalRefazendoMinRatio}
+                      onChange={(e) => setAtypicalRefazendoMinRatio(Number(e.target.value))}
+                      disabled={!canManageRoles}
+                      className="w-full px-2 py-1 border border-border rounded bg-background text-xs text-foreground mt-0.5"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-muted-foreground">Acerto Mínimo (%):</label>
+                    <input
+                      type="number"
+                      value={atypicalRefazendoMinAccuracy}
+                      onChange={(e) => setAtypicalRefazendoMinAccuracy(Number(e.target.value))}
+                      disabled={!canManageRoles}
+                      className="w-full px-2 py-1 border border-border rounded bg-background text-xs text-foreground mt-0.5"
+                    />
+                  </div>
+                </div>
+
+                {/* Consulta Externa */}
+                <div className="p-3 rounded-lg border border-border bg-muted/20 space-y-2">
+                  <span className="text-[11px] font-bold text-blue-700 dark:text-blue-400 block">
+                    3. Consulta Externa
+                  </span>
+                  <div>
+                    <label className="text-[10px] text-muted-foreground">Acerto Mínimo (%):</label>
+                    <input
+                      type="number"
+                      value={atypicalConsultaMinAccuracy}
+                      onChange={(e) => setAtypicalConsultaMinAccuracy(Number(e.target.value))}
+                      disabled={!canManageRoles}
+                      className="w-full px-2 py-1 border border-border rounded bg-background text-xs text-foreground mt-0.5"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-muted-foreground">Tempo Máx (s):</label>
+                    <input
+                      type="number"
+                      value={atypicalConsultaMaxSeconds}
+                      onChange={(e) => setAtypicalConsultaMaxSeconds(Number(e.target.value))}
+                      disabled={!canManageRoles}
+                      className="w-full px-2 py-1 border border-border rounded bg-background text-xs text-foreground mt-0.5"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-muted-foreground">Desvio Padrão Máx (s):</label>
+                    <input
+                      type="number"
+                      step="0.5"
+                      value={atypicalConsultaMaxStdDev}
+                      onChange={(e) => setAtypicalConsultaMaxStdDev(Number(e.target.value))}
+                      disabled={!canManageRoles}
+                      className="w-full px-2 py-1 border border-border rounded bg-background text-xs text-foreground mt-0.5"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
 
             {paramFeedback && (

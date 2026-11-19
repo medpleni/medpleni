@@ -19,6 +19,9 @@ import {
   updateAlertConfigAction,
 } from "@/lib/b2b/monitoring-actions";
 import { IndicatorFootnote } from "@/components/b2b";
+import type { ClassifiedSession, AtypicalDetectionConfig } from "@/lib/b2b/atypical";
+import { DEFAULT_ATYPICAL_CONFIG } from "@/lib/b2b/atypical";
+import AtypicalSessionsView from "./AtypicalSessionsView";
 
 interface RawStudentInput {
   studentUserId: string;
@@ -48,6 +51,8 @@ interface AcompanhamentoClientProps {
   classes: Array<{ id: string; label: string; period: number }>;
   summaryParams: SummaryTextGenerationParams;
   examsList: Array<{ id: string; title: string; date: string }>;
+  atypicalSessions?: ClassifiedSession[];
+  atypicalConfig?: AtypicalDetectionConfig;
 }
 
 export default function AcompanhamentoClient({
@@ -58,8 +63,12 @@ export default function AcompanhamentoClient({
   classes,
   summaryParams,
   examsList,
+  atypicalSessions = [],
+  atypicalConfig = DEFAULT_ATYPICAL_CONFIG,
 }: AcompanhamentoClientProps) {
-  const [activeTab, setActiveTab] = useState<"atencao" | "zona_decisao" | "alertas_config" | "meta_semanal" | "resumo_semana">("atencao");
+  const [activeTab, setActiveTab] = useState<
+    "atencao" | "zona_decisao" | "alertas_config" | "meta_semanal" | "resumo_semana" | "sessoes_atipicas"
+  >("atencao");
   const [config, setConfig] = useState<AlertConfig>(initialConfig);
   const [isPending, startTransition] = useTransition();
 
@@ -348,6 +357,24 @@ export default function AcompanhamentoClient({
         >
           Configuração de Alertas
         </button>
+
+        {(userRole === "dirigente" || userRole === "coordenador") && (
+          <button
+            onClick={() => setActiveTab("sessoes_atipicas")}
+            style={{
+              padding: "10px 4px",
+              fontSize: "13px",
+              fontWeight: activeTab === "sessoes_atipicas" ? 700 : 500,
+              color: activeTab === "sessoes_atipicas" ? "var(--pulso, #0284C7)" : "var(--chumbo)",
+              borderBottom: activeTab === "sessoes_atipicas" ? "2px solid var(--pulso, #0284C7)" : "2px solid transparent",
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+            }}
+          >
+            Sessões Atípicas {atypicalSessions.length > 0 ? `(${atypicalSessions.length})` : ""}
+          </button>
+        )}
       </div>
 
       {/* ── ABA 1: QUEM PRECISA DE VOCÊ AGORA (VOTO SPR Nº 1) ── */}
@@ -1270,6 +1297,16 @@ export default function AcompanhamentoClient({
             {summaryText}
           </div>
         </div>
+      )}
+
+      {/* ── ABA 6: SESSÕES ATÍPICAS (VOTO SPR Nº 9 / ESPEC-B2B 4.10) ── */}
+      {activeTab === "sessoes_atipicas" && (
+        <AtypicalSessionsView
+          sessions={atypicalSessions}
+          config={atypicalConfig}
+          classes={classes}
+          userRole={userRole}
+        />
       )}
 
       {/* MODAL DE ANOTAÇÃO PEDAGÓGICA POR ALUNO */}

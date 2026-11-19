@@ -6,6 +6,54 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-19 · P21 · Sinalização de Sessões Atípicas e Gestão Pedagógica (Voto SPR nº 9 / Seção 4.10)
+
+### O que foi feito
+
+- **Mecanismo de Classificação Estatística de Sessões (`platform/lib/b2b/atypical.ts`):**
+  - Implementado motor determinístico e transparente para sinalização de padrões incomuns de resposta em sessões de treino e provas online, conforme homologado no Voto SPR nº 9:
+    1. **Critério Geral de Amostra:** sessões com menos de 20 questões respondidas **não são classificadas** para evitar distorções e falsos positivos amostrais.
+    2. **Padrão de Resposta Rápida com Acerto ao Acaso (Chute):** detecta quando o tempo médio por questão é $\le 15$ segundos associado a taxa de acerto $\le 30\%$ (compatível com a probabilidade do chute aleatório).
+    3. **Padrão de Repetição de Itens Prévios (Refazendo):** detecta sessões onde $\ge 70\%$ das questões já haviam sido respondidas anteriormente pelo mesmo aluno, com acerto elevado $\ge 85\%$.
+    4. **Padrão Compatível com Consulta Externa:** detecta sessões com aproveitamento $\ge 90\%$, tempo médio por questão $\le 25$ segundos e desvio padrão constante $\le 8.0$ segundos (ritmo mecanicista uniforme).
+    5. **Padrão Típico:** sessões $\ge 20$ questões dentro dos parâmetros esperados de estudo.
+- **Painel em Acompanhamento (`/instituicao/acompanhamento` · Aba Sessões Atípicas):**
+  - **Aviso Metodológico Obrigatório na Tela:** destaque visual com a frase estipulada pela gestão médica:
+    > *"O rótulo indica um padrão, não prova nada; use como ponto de partida para uma conversa."*
+  - **Transparência Algorítmica:** regras matemáticas e limiares descritos na tela para cada padrão.
+  - **Vocabulário Ético e Não-Punitivo:** proibição absoluta do uso das palavras "fraude" ou "cola" em qualquer componente da interface.
+  - **Filtros e Visualização:** segmentação por turma, aluno (busca nominal), tipo de padrão e filtro de sessões excluídas.
+  - **Exclusão de Métricas com 1 Clique:** botão para expurgar sessões atípicas do volume de questões dos gráficos institucionais (`toggleAtypicalSessionExclusion`).
+  - **Modal Pedagógico do Aluno:** roteiro orientador de diálogo tutorial ao clicar no aluno da sessão.
+- **Limiares Editáveis nas Configurações da Instituição:**
+  - Parâmetros 100% customizáveis tanto via modal rápido no cabeçalho de Acompanhamento quanto na aba *Parâmetros da Instituição* em `/instituicao/configuracoes`.
+  - Persistência estruturada em `institutions.settings.atypical_config`.
+- **Governança Estrita de Acesso:**
+  - Módulo visível exclusivamente para **Dirigente** e **Coordenador**.
+  - Oculto para docentes e completamente inacessível para estudantes.
+- **Testes e Build:**
+  - Testes com casos sintéticos cobrindo as 3 regras, sessões curtas, limites customizados, expurgo de volume e verificação léxica (`platform/lib/b2b/__tests__/atypical.test.ts`).
+  - 21 arquivos de testes passando (153/153 testes).
+  - Next.js build concluído com sucesso (60/60 rotas).
+
+### Arquivos criados/alterados
+
+- `platform/lib/b2b/atypical.ts` (criado - motor estatístico de classificação de sessões e exclusão de volume)
+- `platform/lib/b2b/__tests__/atypical.test.ts` (criado - 7 testes unitários cobrindo as regras e limites)
+- `platform/lib/b2b/atypical-actions.ts` (criado - Server Actions para exclusão de sessões e edição de limiares)
+- `platform/app/instituicao/acompanhamento/AtypicalSessionsView.tsx` (criado - aba completa de sessões atípicas)
+- `platform/app/instituicao/acompanhamento/AcompanhamentoClient.tsx` (atualizado - 6ª aba no Acompanhamento)
+- `platform/app/instituicao/acompanhamento/page.tsx` (atualizado - geração de telemetria das sessões e passagem de props)
+- `platform/lib/b2b/config-actions.ts` (atualizado - suporte a `atypical_config` em `updateInstitutionParams`)
+- `platform/app/instituicao/configuracoes/ConfiguracoesClient.tsx` (atualizado - bloco de edição de limiares atípicos)
+- `docs/b2b/DIARIO.md` (atualizado)
+
+### SQL a rodar no Supabase
+
+- **Nenhum SQL novo:** Os limiares e a lista de sessões excluídas são armazenados na coluna JSONB existente `institutions.settings` (`atypical_config` e `atypical_excluded_sessions`).
+
+---
+
 ## 2026-11-19 · P20 · Área do Aluno Institucional e Prática com Respostas de Treino (AL-01 a AL-05)
 
 ### O que foi feito
