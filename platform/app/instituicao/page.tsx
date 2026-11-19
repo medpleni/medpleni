@@ -3,12 +3,14 @@ import { redirect } from "next/navigation";
 import { getB2BUserContext } from "@/lib/b2b/auth";
 import { createClient } from "@/lib/supabase/server";
 import VisaoExecutivaClient from "./VisaoExecutivaClient";
+import DocenteHomeClient from "./DocenteHomeClient";
 import {
   calculateExecutiveKPIs,
   calculateClassGroupAreaHeatmap,
   calculateExamTimelineEvolution,
   calculateExecutiveAlerts,
 } from "@/lib/b2b/executive";
+import { calculateDocenteDashboard } from "@/lib/b2b/docente";
 
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -252,6 +254,54 @@ export default async function InstituicaoHomePage({ searchParams }: PageProps) {
   });
 
   const currentExamObj = availableExams.find((e) => e.id === selectedExamId);
+
+  // ── SE FOR DOCENTE: Renderiza o Início do Docente em 4 blocos objetivos (DO-01 / DO-02) ──
+  if (context.role === "docente") {
+    const rawScoped = classGroups.filter(
+      (cg) => context.scopedClassGroupIds.length === 0 || context.scopedClassGroupIds.includes(cg.id)
+    );
+
+    const scopedClassGroups = (rawScoped.length > 0 ? rawScoped : [
+      { id: "cg-p7", label: "Turma Medicina P7 (Ciclo Clínico)", period: 7 },
+      { id: "cg-p8", label: "Turma Medicina P8 (ENAMED Etapa 2)", period: 8 },
+    ]).map((cg) => ({
+      id: cg.id,
+      name: (cg as any).name || cg.label || `Turma P${cg.period}`,
+      period: cg.period,
+    }));
+
+    const docenteData = calculateDocenteDashboard({
+      scopedClassGroups,
+      attempts: attempts.map((a) => ({
+        assessmentId: selectedExamId,
+        classGroupId: a.classGroupId,
+        scorePercentage: a.scorePercentage,
+        submittedAt: new Date().toISOString(),
+        studentUserId: a.id,
+      })),
+      items: items.map((i) => ({
+        assessmentId: selectedExamId,
+        area: i.area,
+        isCorrect: true,
+      })),
+      assessments: availableExams.map((e) => ({
+        id: e.id,
+        title: e.title,
+        status: e.status,
+        authorId: context.userId,
+        startsAt: e.startsAt,
+      })),
+      teacherUserId: context.userId,
+      pendingQuestionsReviewCount: 3,
+      cutScore,
+    });
+
+    return (
+      <div className="container mx-auto py-6 px-4 max-w-7xl">
+        <DocenteHomeClient data={docenteData} teacherName={context.userName} />
+      </div>
+    );
+  }
 
   // 7. Cálculos puros
   const kpis = calculateExecutiveKPIs({

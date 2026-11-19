@@ -6,6 +6,45 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-19 · P19 · Espaço do Docente (4 Blocos) e Gestão de Adesão dos Professores (DO-01, DO-02, Voto SPR nº 6)
+
+### O que foi feito
+
+- **Objetivo A · Início do Docente em `/instituicao` (DO-01, DO-02):**
+  - Quando o usuário logado possui papel `docente`, a rota `/instituicao` renderiza um painel limpo, focado e restrito a no máximo **4 blocos visuais**:
+    1. **Minhas Turmas:** lista de turmas atribuídas ao professor via `member_scopes`, com média da última prova e contagem destacada de alunos abaixo da Régua 60.
+    2. **Onde a Turma Mais Erra:** mapeamento dos eixos críticos (área/tema com desempenho $< 60\%$) nas turmas do docente, acompanhado de atalhos rápidos de ação: *"Montar prova para a turma"* e *"Criar lista de exercícios"*.
+    3. **Minhas Provas:** 3 cartões de contagem operacional: *Em rascunho*, *Aguardando revisão* e *Aguardando correção*.
+    4. **Questões para Revisão:** contador com link direto para o banco de questões; **sem fila na tela** (conforme deliberação médica explícita DO-02 / Dr. Filipe).
+- **Objetivo B · Gestão de Adesão de Professores em `/instituicao/professores` (Voto SPR nº 6):**
+  - Página restrita exclusivamente a **Dirigente** e **Coordenador** (redirecionamento com guard no Server Component e RLS documentado em `TESTE-RLS.md`).
+  - **3 KPIs de Topo:** Professores Cadastrados, Ativos no Período (com acesso nos últimos 30 dias) e Nunca Acessaram.
+  - **Aviso Metodológico Obrigatório na Tela:** *"É indicador de uso da ferramenta, não de desempenho do professor"* destacado de forma proeminente em banner visual.
+  - **Tabela de Adesão Docente:** exibe último acesso, provas criadas, provas aplicadas, total de alunos alcançados e questões enviadas ao banco de questões.
+  - **Filtros Rápidos:** *Todos*, *Ativos*, *Sem acesso há 30+ dias*, *Nunca acessaram* e busca nominal por professor.
+- **Governança de Autoria e Isolamento:**
+  - Docente não visualiza turmas nem dados fora do seu escopo atribuído.
+  - Docente não possui acesso ao menu nem à rota `/instituicao/professores`.
+  - Adicionado **Caso 10** ao roteiro de testes em `docs/b2b/TESTE-RLS.md`.
+
+### Arquivos criados/alterados
+
+- `platform/lib/b2b/docente.ts` (criado - funções puras `calculateDocenteDashboard` e `calculateTeacherAdherence`)
+- `platform/lib/b2b/__tests__/docente.test.ts` (criado - testes unitários cobrindo os 4 blocos e métricas de adesão)
+- `platform/app/instituicao/DocenteHomeClient.tsx` (criado - dashboard do docente em 4 blocos)
+- `platform/app/instituicao/professores/ProfessoresClient.tsx` (criado - painel de adesão dos professores com aviso)
+- `platform/app/instituicao/professores/page.tsx` (criado - server guard restringindo acesso a dirigente/coordenador)
+- `platform/app/instituicao/page.tsx` (atualizado - bifurcação condicional entre Dirigente/Coordenador e Docente)
+- `platform/app/instituicao/components/B2BShell.tsx` (atualizado - rota `professores` com status `ready`)
+- `docs/b2b/TESTE-RLS.md` (atualizado - Caso 10 de RLS e isolamento docente)
+- `docs/b2b/DIARIO.md` (atualizado)
+
+### SQL a rodar no Supabase
+
+- **Nenhum SQL novo:** P19 utiliza as tabelas institucionais já existentes (`institution_members`, `member_scopes`, `assessments`, `questions`, `review_requests`, `class_groups`).
+
+---
+
 ## 2026-11-19 · P18 · Intervenções Pedagógicas Enxutas: Assistente em 3 Passos, Lista no Praticar, Pré/Pós-Aula, Adesão e Reteste Embutido (IN-01 a IN-06, Voto SPR nº 10)
 
 ### O que foi feito

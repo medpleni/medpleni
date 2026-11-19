@@ -247,3 +247,37 @@ BEGIN;
 ROLLBACK;
 ```
 
+---
+
+### Caso 10: Isolamento de Escopo do Docente e Bloqueio à Página Professores (P19)
+* **Hipótese:** 
+  1. Docente só pode consultar turmas que constam em `member_scopes` (ex: 7º e 8º períodos), retornando 0 linhas para turmas fora do seu escopo (ex: 1º ao 6º ou 9º ao 12º).
+  2. Docente NÃO pode ver outros docentes em `institution_members` exceto os que compartilham a mesma turma via `enrollments`.
+  3. No front-end e middleware, `/instituicao/professores` redireciona imediatamente qualquer usuário com papel `docente` de volta para `/instituicao`.
+* **Consulta de Teste:**
+
+```sql
+BEGIN;
+  SET LOCAL ROLE authenticated;
+  SET LOCAL "request.jwt.claim.sub" = '66666666-6666-6666-6666-666666666601'; -- Docente com escopo P7 e P8
+  SET LOCAL "request.jwt.claim.role" = 'authenticated';
+
+  -- 1. Consulta turmas da instituição
+  SELECT id, code, period FROM public.class_groups;
+  -- RESULTADO ESPERADO: Apenas as 2 turmas atribuídas em member_scopes (P7 e P8).
+  -- Turmas P1..P6 e P9..P12 NUNCA aparecem.
+
+  -- 2. Tentativa de forçar consulta direta a turma fora do escopo (ex: P1)
+  SELECT * FROM public.class_groups WHERE period = 1;
+  -- RESULTADO ESPERADO: 0 linhas.
+
+  -- 3. Tentativa de listar tentativas de alunos de turmas fora do escopo
+  SELECT att.id, att.score_percentage
+  FROM public.attempts att
+  JOIN public.class_groups cg ON cg.id = att.class_group_id
+  WHERE cg.period = 1;
+  -- RESULTADO ESPERADO: 0 linhas.
+ROLLBACK;
+```
+
+
