@@ -6,6 +6,79 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-18 · P10 · Realização de Provas Online e Híbrida, Monitor do Professor e Tolerância (PR-12, PR-13)
+
+### O que foi feito
+
+- **Schema e Suporte a Aplicação em Tempo Real (`009_aplicacao_provas.sql`):**
+  - Colunas aditivas em `assessments`: `short_code` (para acesso rápido via celular), `window_tolerance_minutes` (padrão 15 min), `answers_released_at` e `answers_released_by`.
+  - Colunas aditivas em `attempts`: `extra_time_minutes` (acessibilidade / tempo adicional por aluno), `marked_for_review` (array JSONB de itens marcados para revisão), `reopened_at`, `reopened_by` e `reopen_reason` (justificativa formal de reabertura registrada no banco).
+  - Função SQL security definer `start_or_resume_student_attempt`:
+    - Resistente a quedas de conexão: se a tentativa já existir, retoma exatamente a mesma forma e o tempo decorrido.
+    - Sorteio da forma embaralhada (A, B, C, D) no primeiro acesso do aluno, persistindo o vínculo em `attempts.form_id`.
+- **Player Online do Aluno (`/instituicao/aluno/prova/[id]`):**
+  - Apresentação de **uma questão por vez** com enunciado claro, contexto clínico e alternativas estruturadas (A-E).
+  - Cronômetro regressivo visível com destaque visual e encerramento automático ao zerar o tempo.
+  - **Autosave em tempo real:** cada alternativa selecionada é gravada imediatamente no servidor (já convertida para a ordem do caderno-base) com backup em `localStorage` para proteção absoluta contra oscilações de sinal.
+  - **Marcar para revisar:** botão de bandeira para sinalizar itens duvidosos.
+  - **Grade de navegação rápida:** mapa colorido de todas as questões (verde = respondida, amarelo = marcada para revisar, cinza = em branco).
+  - **Telemetria de sessão:** registro de eventos de perda de foco (`session_blur`), retorno (`session_focus`) e troca de aba (`tab_switch`) em `attempt_events`.
+  - **Entrega com confirmação:** diálogo de entrega exibindo contadores de questões respondidas, em branco e marcadas para revisão.
+  - **Proteção de sigilo:** após a entrega, o gabarito oficial e os comentários ficam bloqueados até que o professor faça a liberação expressa.
+- **Cartão de Respostas Digital para Modalidade Híbrida (`/instituicao/aluno/prova/[id]/cartao`):**
+  - Otimizado para smartphones: grade compacta de bolhas (1 a N com letras A, B, C, D, E) para o aluno lançar apenas as respostas do caderno impresso recebido em sala de aula.
+  - Mesma gravação em `attempt_answers` e confirmação antes de submeter.
+- **Painel de Monitoramento do Professor (`/instituicao/provas/[id]/monitor`):**
+  - Acompanhamento em tempo real dos alunos convocados com contadores: Total, Não Iniciou, Em Andamento, Finalizada, Ausente.
+  - Tabela com status, quantidade de respostas salvas e tempo extra.
+  - Ações do professor:
+    - **Encerrar Aplicação:** finaliza a prova e converte tentativas pendentes em finalizadas ou ausentes.
+    - **Reabrir Prova:** reabre a prova para um aluno específico com modal obrigatório de **justificativa registrada em log/banco**.
+    - **Acessibilidade:** concessão de minutos extras por aluno (`extra_time_minutes`).
+    - **Liberar Gabarito e Comentários:** botão que autoriza os alunos a visualizarem o gabarito oficial e justificativas pedagógicas após a aplicação.
+- **Qualidade e Teste de Carga:**
+  - `platform/lib/b2b/__tests__/player.test.ts`: 5 testes unitários e de estresse, incluindo:
+    - **Teste de Carga com 100 Alunos Simultâneos:** 100 alunos virtuais respondendo simultaneamente em paralelo (`Promise.all`) com 100% das respostas gravadas e notas computadas em **42 milissegundos**, sem perda de dados.
+    - Teste de reconexão e preservação de respostas pós-queda.
+    - Teste de tolerância de início e cálculo de tempo extra.
+    - Teste de trava de sigilo de gabarito antes da liberação formal do professor.
+  - Total da suíte B2B: **86 testes passando em 10 arquivos de teste**.
+
+### Arquivos criados / alterados
+
+- `platform/supabase/b2b/009_aplicacao_provas.sql`
+- `platform/lib/b2b/player-actions.ts`
+- `platform/app/instituicao/aluno/prova/[id]/page.tsx`
+- `platform/app/instituicao/aluno/prova/[id]/PlayerClient.tsx`
+- `platform/app/instituicao/aluno/prova/[id]/cartao/page.tsx`
+- `platform/app/instituicao/aluno/prova/[id]/cartao/CartaoClient.tsx`
+- `platform/app/instituicao/provas/[id]/monitor/page.tsx`
+- `platform/app/instituicao/provas/[id]/monitor/MonitorClient.tsx`
+- `platform/lib/b2b/__tests__/player.test.ts`
+- `docs/b2b/DIARIO.md`
+
+### SQL a rodar no Supabase
+
+- Executar `platform/supabase/b2b/009_aplicacao_provas.sql` no SQL Editor do Supabase (aditivo e idempotente).
+
+### Como testar
+
+1. Acesse `/instituicao/aluno/prova/[id]` com o ID de uma avaliação publicada:
+   - Responda algumas questões; recarregue a página e observe que as respostas e a forma sorteada são restauradas sem perda.
+   - Alterne de aba no navegador: eventos de auditoria são registrados em `attempt_events`.
+   - Clique em "Entregar Prova" e confirme o envio.
+2. Acesse `/instituicao/aluno/prova/[id]/cartao`:
+   - Simule o preenchimento rápido das bolhas no formato mobile.
+3. Acesse `/instituicao/provas/[id]/monitor` com perfil docente/gestor:
+   - Veja o monitor em tempo real com o status de cada aluno.
+   - Clique em "+ Tempo" para conceder tempo extra de acessibilidade.
+   - Clique em "Reabrir" para reabrir a prova de um aluno com justificativa.
+   - Clique em "Liberar Gabarito e Comentários".
+4. Execute os testes de carga:
+   `cd platform && npx vitest run lib/b2b/__tests__/player.test.ts`
+
+---
+
 ## 2026-11-18 · P09 · Gestão de Provas, Assistente de Montagem em 4 Passos e Calendário Nacional de Simulados (PR-01 a PR-06, Voto SPR 11)
 
 ### O que foi feito
