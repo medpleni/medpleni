@@ -6,6 +6,63 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-19 · P18 · Intervenções Pedagógicas Enxutas: Assistente em 3 Passos, Lista no Praticar, Pré/Pós-Aula, Adesão e Reteste Embutido (IN-01 a IN-06, Voto SPR nº 10)
+
+### O que foi feito
+
+- **Dois Tipos Homologados Exclusivos (IN-02 / IN-04 / Voto SPR nº 10):**
+  - Conforme solicitação explícita dos médicos (Dr. Filipe e Dr. Bruno), o módulo em `/instituicao/intervencoes` foi mantido enxuto com apenas duas possibilidades reais:
+    1. **Lista de Exercícios (Principal):** seleção dirigida de questões do banco no eixo diagnosticado com meta quantitativa e prazo, respondida pelos alunos no *Praticar*;
+    2. **Pré e Pós-Aula:** par de avaliações curtas antes e depois de um bloco pedagógico para aferição direta de ganho imediato da turma.
+  - Não foram criados tipos secundários dispersivos nem automações de replicação não votadas.
+- **Assistente em 3 Passos (Wizard · IN-02):**
+  - **Passo 1 · Lacuna:** detecção automática de turmas e eixos com aproveitamento $< 60\%$ nas avaliações recentes, com preenchimento em 1 clique da turma, área médica, nota anterior e avaliação de origem. Permite também seleção opcional de **turma paralela de controle**.
+  - **Passo 2 · Ação:** escolha entre os 2 tipos homologados, definição de título descritivo, meta de questões e prazo final de entrega.
+  - **Passo 3 · Verificação (Reteste Embutido · IN-06):** definição da avaliação subsequente onde será embutida a cota de reteste (padrão: 5 questões ponderadas do mesmo eixo) para comprovação formal de superação da Régua 60.
+- **Painel de Detalhes da Intervenção (IN-01, IN-03, IN-05):**
+  - **Comparativo Antes vs. Reteste:** exibição lado a lado de Antes vs. Pós com cálculo de variação percentual ($\Delta$) e destaque em verde caso o reteste supere 60%.
+  - **Comparação com Turma Paralela:** quando configurada, exibe o diferencial evolutivo da turma que recebeu a intervenção frente à turma de controle sem intervenção.
+  - **Aviso de Grupo Pequeno ($N < 15$):** aviso discreto de interpretação informando que em coortes reduzidas a variação percentual pode ser amplificada.
+  - **Adesão Medida pela Plataforma (IN-05):** taxa geral de conclusão discente (%) e tabela nominal de estudantes com status individual (`concluida`, `em_progresso`, `pendente`), volume de questões respondidas e aproveitamento na lista.
+  - Modal interativo para lançamento e sincronização do resultado verificado no reteste.
+- **Governança de Autoria e Acesso:**
+  - Dirigente e Coordenador podem criar e gerenciar qualquer intervenção da instituição.
+  - Docente pode criar intervenções apenas para turmas sob sua docência direta (`member_scopes.class_group_id`).
+- **Persistência no Banco (`015_intervencoes.sql`):**
+  - Tabelas `interventions` e `intervention_adherences` com chaves estrangeiras, índices e políticas de RLS completas e idempotentes.
+  - Seed de demonstração para a FADEP com os 2 casos de intervenção (uma concluída com reteste e outra em andamento).
+- **Rodapé Padronizado:** Base / Período / Fonte presente em todos os blocos e modais.
+
+### Arquivos criados/alterados
+
+- `platform/supabase/b2b/015_intervencoes.sql` (criado)
+- `platform/lib/b2b/interventions.ts` (criado - tipos e funções puras de adesão, delta e detecção de lacunas)
+- `platform/lib/b2b/__tests__/interventions.test.ts` (criado - 4 testes unitários)
+- `platform/lib/b2b/intervention-actions.ts` (criado - Server Actions para criação, adesão e reteste)
+- `platform/app/instituicao/intervencoes/IntervencoesClient.tsx` (criado)
+- `platform/app/instituicao/intervencoes/page.tsx` (criado)
+- `platform/app/instituicao/components/B2BShell.tsx` (atualizado para status `ready`)
+- `docs/b2b/DIARIO.md` (atualizado)
+
+### SQL a rodar no Supabase
+
+- Executar `platform/supabase/b2b/015_intervencoes.sql` no SQL Editor do Supabase (cria tabelas `interventions`, `intervention_adherences`, políticas de RLS e seed de demonstração).
+
+### Como testar
+
+1. **Testes Unitários:** `cd platform && npx vitest run lib/b2b/__tests__/interventions.test.ts` (4 testes passando) ou suíte total (141 testes em 18 arquivos).
+2. **Intervenções em `/instituicao/intervencoes`:**
+   - Acesse como dirigente ou coordenador.
+   - Veja as intervenções cadastradas nos 2 tipos aprovados: *Lista Dirigida* e *Pré e Pós-Aula*.
+   - Clique em **+ Nova Intervenção** e complete o Wizard em 3 Passos:
+     - No Passo 1, selecione uma das lacunas sugeridas (&lt; 60%) e defina a turma.
+     - No Passo 2, escolha entre Lista de Exercícios e Pré e Pós-Aula.
+     - No Passo 3, defina a avaliação futura de reteste e conclua.
+   - Selecione a intervenção na lista para ver o comparativo Antes vs. Reteste, a comparação com a turma de controle e a adesão medida aluno a aluno.
+   - Clique em **Lançar / Atualizar Reteste** para registrar a nota final e verificar o cálculo de $\Delta$ e a superação da Régua 60.
+
+---
+
 ## 2026-11-19 · P17 · Avaliação Longitudinal: Matriz Currículo × Eixo, Trilha Longitudinal, Marcos ENAMED e Planos de Acompanhamento (AP-01 a AP-04, DCN art. 36-37)
 
 ### O que foi feito
