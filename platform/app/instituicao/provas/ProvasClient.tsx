@@ -846,7 +846,7 @@ export default function ProvasClient({
                                 </span>
                                 {item.has_image && (
                                   <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300">
-                                    📷 Com Imagem
+                                    Com Imagem
                                   </span>
                                 )}
                                 <span className="text-[10px] text-muted-foreground">

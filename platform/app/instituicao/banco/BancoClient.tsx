@@ -264,7 +264,7 @@ export default function BancoClient({
             href="/instituicao/banco/importar"
             className="px-3.5 py-1.5 border border-border rounded-lg hover:bg-muted text-xs font-semibold text-foreground transition-colors shadow-xs"
           >
-            📥 Importar Arquivo
+            Importar Arquivo
           </Link>
           <button
             onClick={() => setActiveTab("nova_questao")}
@@ -627,7 +627,7 @@ export default function BancoClient({
                       </span>
                       {q.has_image && (
                         <span className="text-[10px] px-2 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400">
-                          📷 Imagem
+                          Com Imagem
                         </span>
                       )}
                       {q.b2b_visibility === "institution_private" && (

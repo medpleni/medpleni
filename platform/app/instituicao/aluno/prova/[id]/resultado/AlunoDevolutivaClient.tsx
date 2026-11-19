@@ -112,7 +112,7 @@ export default function AlunoDevolutivaClient({
       {isTeacherViewing && (
         <div className="p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-xl text-xs flex items-center justify-between dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-900">
           <span>
-            👁 Visualizando devolutiva pedagógica individual do estudante: <strong>{student.name}</strong> ({student.classGroupName})
+            Visualizando devolutiva pedagógica individual do estudante: <strong>{student.name}</strong> ({student.classGroupName})
           </span>
           <Link
             href={`/instituicao/provas/${assessment.id}/resultado`}

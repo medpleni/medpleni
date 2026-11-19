@@ -978,7 +978,7 @@ export function LongitudinalClient({
               {/* Descrição da Ação Combinada */}
               <div>
                 <label className="font-semibold text-foreground block mb-1">
-                  Ação Combinada (Ex: lista de exercícios, tutoria, revisão prática):
+                  Ação Combinada (Ex: lista de exercícios, mentoria clínica, revisão prática):
                 </label>
                 <textarea
                   rows={3}
@@ -1151,6 +1151,19 @@ export function LongitudinalClient({
           </div>
         </div>
       )}
+      {/* Rodapé Padronizado Base / Período / Fonte */}
+      <div className="mt-6 p-4 rounded-xl border border-border bg-card text-xs text-muted-foreground flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+          <span><strong>Base:</strong> Matriz curricular de 12 períodos acompanhados longitudinalmente</span>
+          <span className="hidden sm:inline">·</span>
+          <span><strong>Período:</strong> 2026.1 (Ciclo Anual de Acompanhamento)</span>
+          <span className="hidden sm:inline">·</span>
+          <span><strong>Fonte:</strong> Provas somativas, simulados ENAMED e planos de acompanhamento</span>
+        </div>
+        <div>
+          Régua de corte configurada: <strong>60%</strong>
+        </div>
+      </div>
     </div>
   );
 }

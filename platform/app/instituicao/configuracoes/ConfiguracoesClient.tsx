@@ -1517,7 +1517,7 @@ export default function ConfiguracoesClient({
 
             {context.institution.is_demo && (
               <div className="p-2.5 rounded-lg bg-muted text-muted-foreground text-[11px]">
-                ℹ️ Esta instituição está em modo Demonstração. O convite é criado no banco, mas o disparo de e-mail via Resend é desativado.
+                Esta instituição está em modo Demonstração. O convite é criado no banco, mas o disparo de e-mail via Resend é desativado.
               </div>
             )}
 

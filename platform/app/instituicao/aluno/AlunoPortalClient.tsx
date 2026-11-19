@@ -9,6 +9,8 @@ import type {
   EvolutionTimelineResult,
 } from "@/lib/b2b/aluno";
 import { recordPracticeAnswer } from "@/lib/b2b/aluno-actions";
+import type { StudentReadinessEvaluation } from "@/lib/b2b/readiness";
+import { READINESS_DISCLAIMER_TEXT } from "@/lib/b2b/readiness";
 
 export interface StudentPortalExam {
   id: string;
@@ -67,6 +69,7 @@ interface AlunoPortalClientProps {
   interventions: StudentPortalIntervention[];
   practiceQuestions: PracticeQuestion[];
   isDemoStudent?: boolean;
+  readiness?: StudentReadinessEvaluation;
 }
 
 export default function AlunoPortalClient({
@@ -82,6 +85,7 @@ export default function AlunoPortalClient({
   interventions,
   practiceQuestions,
   isDemoStudent = false,
+  readiness,
 }: AlunoPortalClientProps) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<"inicio" | "evolucao" | "areas" | "avaliacoes" | "praticar">(
@@ -191,7 +195,7 @@ export default function AlunoPortalClient({
                 : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
             }`}
           >
-            🎯 Início
+            Início
           </button>
           <button
             onClick={() => setActiveTab("evolucao")}
@@ -201,7 +205,7 @@ export default function AlunoPortalClient({
                 : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
             }`}
           >
-            📈 Minha evolução
+            Minha evolução
           </button>
           <button
             onClick={() => setActiveTab("areas")}
@@ -211,7 +215,7 @@ export default function AlunoPortalClient({
                 : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
             }`}
           >
-            🩺 Resultados por área
+            Resultados por área
           </button>
           <button
             onClick={() => setActiveTab("avaliacoes")}
@@ -221,7 +225,7 @@ export default function AlunoPortalClient({
                 : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
             }`}
           >
-            📝 Minhas avaliações
+            Minhas avaliações
           </button>
           <button
             onClick={() => setActiveTab("praticar")}
@@ -247,7 +251,7 @@ export default function AlunoPortalClient({
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <span className="text-xs uppercase tracking-wider font-bold text-teal-700 dark:text-teal-400 flex items-center gap-1">
-                    <span>💡</span> Próximo passo prioritário
+                    Próximo passo prioritário
                   </span>
                   <span
                     className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${
@@ -281,7 +285,7 @@ export default function AlunoPortalClient({
                   onClick={() => startPracticeForArea(nextStep.priorityArea)}
                   className="px-4 py-2.5 rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-medium text-xs shadow-sm transition-colors flex items-center justify-center gap-2"
                 >
-                  <span>✍️</span> Praticar {nextStep.priorityArea}
+                  Praticar {nextStep.priorityArea}
                 </button>
               </div>
             </div>
@@ -293,7 +297,7 @@ export default function AlunoPortalClient({
             <div className="p-5 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                  <span>📝</span> Provas Abertas ({openExams.length})
+                  Provas Abertas ({openExams.length})
                 </h3>
                 <span className="text-[11px] text-gray-500 dark:text-gray-400">
                   Avaliações institucionais
@@ -335,7 +339,7 @@ export default function AlunoPortalClient({
             <div className="p-5 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                  <span>📋</span> Listas Atribuídas ({pendingInterventions.length})
+                  Listas Atribuídas ({pendingInterventions.length})
                 </h3>
                 <span className="text-[11px] text-gray-500 dark:text-gray-400">
                   Intervenções pedagógicas
@@ -391,7 +395,79 @@ export default function AlunoPortalClient({
             </div>
           </div>
 
-          {/* 1.3 AVISO DE PRIVACIDADE EM LINGUAGEM SIMPLES */}
+          {/* 1.3 INDICADOR DE PRONTIDÃO ACADÊMICA (SE HABILITADO PELA INSTITUIÇÃO) */}
+          {readiness && readiness.isConfigured && (
+            <div className="p-5 rounded-xl border border-teal-200 dark:border-teal-900/50 bg-teal-50/40 dark:bg-teal-950/20 shadow-sm space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-md bg-teal-600 text-white flex items-center justify-center text-xs font-bold">
+                    ✓
+                  </span>
+                  <div>
+                    <h3 className="text-xs font-bold text-gray-900 dark:text-white uppercase tracking-wider">
+                      Indicador de Prontidão Acadêmica
+                    </h3>
+                    <p className="text-[11px] text-gray-500">
+                      Critérios pedagógicos de esforço e desempenho acordados pela sua instituição
+                    </p>
+                  </div>
+                </div>
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-bold ${
+                    readiness.level === "alto"
+                      ? "bg-emerald-100 text-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-300"
+                      : readiness.level === "medio"
+                      ? "bg-amber-100 text-amber-900 dark:bg-amber-950/60 dark:text-amber-300"
+                      : "bg-rose-100 text-rose-900 dark:bg-rose-950/60 dark:text-rose-300"
+                  }`}
+                >
+                  {readiness.levelLabel}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 text-xs text-gray-700 dark:text-gray-300">
+                {readiness.volumeRuleActive && (
+                  <div className="p-3 rounded-lg bg-white dark:bg-gray-900 border border-teal-100 dark:border-teal-900/40">
+                    <div className="font-semibold text-gray-900 dark:text-white flex items-center justify-between">
+                      <span>Meta de Volume de Treino:</span>
+                      <span>{readiness.volumeFulfilled ? "✓ Atingida" : "Em andamento"}</span>
+                    </div>
+                    <div className="text-[11px] text-gray-500 mt-1">
+                      {readiness.questionsAnswered.toLocaleString("pt-BR")} de {readiness.volumeTarget?.toLocaleString("pt-BR")} questões ({readiness.volumeProgressPercent}%)
+                    </div>
+                    {!readiness.volumeFulfilled && (
+                      <div className="text-[11px] text-amber-700 dark:text-amber-400 font-medium mt-0.5">
+                        Faltam {readiness.volumeRemaining.toLocaleString("pt-BR")} questões no ano.
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {readiness.consistencyRuleActive && (
+                  <div className="p-3 rounded-lg bg-white dark:bg-gray-900 border border-teal-100 dark:border-teal-900/40">
+                    <div className="font-semibold text-gray-900 dark:text-white flex items-center justify-between">
+                      <span>Consistência em Simulados:</span>
+                      <span>{readiness.consistencyFulfilled ? "✓ Atingida" : "Em andamento"}</span>
+                    </div>
+                    <div className="text-[11px] text-gray-500 mt-1">
+                      {readiness.qualifyingExamsCount} de {readiness.consistencyTargetExams} simulados com nota ≥ {readiness.consistencyTargetScore}%
+                    </div>
+                    {!readiness.consistencyFulfilled && (
+                      <div className="text-[11px] text-amber-700 dark:text-amber-400 font-medium mt-0.5">
+                        Falta(m) {readiness.consistencyRemaining} simulado(s) qualificado(s).
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div className="text-[10px] text-gray-500 italic pt-1">
+                {READINESS_DISCLAIMER_TEXT}
+              </div>
+            </div>
+          )}
+
+          {/* 1.4 AVISO DE PRIVACIDADE EM LINGUAGEM SIMPLES */}
           <div className="p-5 rounded-xl border border-blue-200 dark:border-blue-900/50 bg-blue-50/50 dark:bg-blue-950/20 shadow-sm space-y-2">
             <div className="flex items-center gap-2 text-xs font-bold text-blue-900 dark:text-blue-300">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -422,7 +498,7 @@ export default function AlunoPortalClient({
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-100 dark:border-gray-800 pb-4">
               <div>
                 <h2 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                  <span>📈</span> Evolução ao Longo do Tempo vs. Média da Turma
+                  Evolução ao Longo do Tempo vs. Média da Turma
                 </h2>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                   Comparação direta das suas notas com a média da coorte. Sem ranking e sem exposição de posição.
@@ -570,7 +646,7 @@ export default function AlunoPortalClient({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-100 dark:border-gray-800 pb-4">
             <div>
               <h2 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <span>🩺</span> Aproveitamento por Área de Formação
+                Aproveitamento por Área de Formação
               </h2>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                 Ordenado por oportunidade de ganho: eixos com menor aproveitamento no topo com ação sugerida.
@@ -647,7 +723,7 @@ export default function AlunoPortalClient({
                     onClick={() => startPracticeForArea(item.area)}
                     className="px-3.5 py-2 rounded-lg bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-teal-700 dark:text-teal-300 border border-gray-200 dark:border-gray-700 font-medium text-xs shrink-0 transition-colors flex items-center justify-center gap-1.5 shadow-sm"
                   >
-                    <span>✍️</span> Praticar este eixo
+                    Praticar este eixo
                   </button>
                 </div>
               );
@@ -664,7 +740,7 @@ export default function AlunoPortalClient({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-100 dark:border-gray-800 pb-4">
             <div>
               <h2 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <span>📝</span> Minhas Avaliações e Provas
+                Minhas Avaliações e Provas
               </h2>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                 Resultados oficiais e opção de revisão pedagógica de erros em modo leitura (sem cronômetro e sem alterar nota).
@@ -712,7 +788,7 @@ export default function AlunoPortalClient({
                         onClick={() => setReviewExam(exam)}
                         className="px-3.5 py-1.5 rounded-lg bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800 font-medium text-xs hover:bg-teal-100 transition-colors flex items-center gap-1.5"
                       >
-                        <span>🔍</span> Revisar Erros (Modo Leitura)
+                        Revisar Erros (Modo Leitura)
                       </button>
                       <Link
                         href={`/instituicao/aluno/prova/${exam.id}/resultado`}
@@ -723,7 +799,7 @@ export default function AlunoPortalClient({
                     </>
                   ) : (
                     <span className="text-[11px] text-gray-400 dark:text-gray-500 italic flex items-center gap-1">
-                      <span>🔒</span> Aguardando liberação do gabarito pelo docente
+                      Aguardando liberação do gabarito pelo docente
                     </span>
                   )}
                 </div>
@@ -926,7 +1002,7 @@ export default function AlunoPortalClient({
             <div className="p-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
               <div>
                 <h3 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                  <span>📖</span> Revisão de Erros: {reviewExam.title}
+                  Revisão de Erros: {reviewExam.title}
                 </h3>
                 <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">
                   Modo Leitura Pedagógico · Sem cronômetro e sem alteração da nota oficial ({reviewExam.studentScore}%)

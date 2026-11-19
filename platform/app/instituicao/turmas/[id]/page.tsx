@@ -4,6 +4,11 @@ import { getB2BUserContext, canAccessClassGroup } from "@/lib/b2b/auth";
 import { createClient } from "@/lib/supabase/server";
 import TurmaDetalheClient from "./TurmaDetalheClient";
 import {
+  DEFAULT_READINESS_CONFIG,
+  calculateClassReadinessDistribution,
+  type ReadinessConfig,
+} from "@/lib/b2b/readiness";
+import {
   calculateClassAggregatedAreasAndScenarios,
   calculateScatterPlotData,
   type StudentProfileData,
@@ -340,6 +345,45 @@ export default async function TurmaDetalhePage({ params }: PageProps) {
       ? Number(((finishedAtt.length / attemptsList.length) * 100).toFixed(1))
       : 100;
 
+  // 7. Prontidão da Turma (P22)
+  const readinessRaw = (context.institution.settings as any)?.readiness;
+  const readinessConfig: ReadinessConfig = {
+    volumeRuleEnabled: readinessRaw?.volumeRuleEnabled ?? DEFAULT_READINESS_CONFIG.volumeRuleEnabled,
+    minQuestionsYear: readinessRaw?.minQuestionsYear ?? DEFAULT_READINESS_CONFIG.minQuestionsYear,
+    consistencyRuleEnabled: readinessRaw?.consistencyRuleEnabled ?? DEFAULT_READINESS_CONFIG.consistencyRuleEnabled,
+    minScorePercent: readinessRaw?.minScorePercent ?? DEFAULT_READINESS_CONFIG.minScorePercent,
+    minExamsCount: readinessRaw?.minExamsCount ?? DEFAULT_READINESS_CONFIG.minExamsCount,
+    levelLabels: readinessRaw?.levelLabels || DEFAULT_READINESS_CONFIG.levelLabels,
+    showToStudents: readinessRaw?.showToStudents ?? DEFAULT_READINESS_CONFIG.showToStudents,
+  };
+
+  const studentsForReadiness = rawStudents.map((st) => {
+    const stAttempts = attemptsList.filter(
+      (a) => a.studentUserId === st.studentUserId && a.status === "finalizada" && a.scorePercentage !== null
+    );
+    return {
+      studentUserId: st.studentUserId,
+      studentName: st.studentName,
+      registration: st.registration,
+      classGroupId: turma.id,
+      classGroupLabel: turma.label,
+      questionsAnsweredCount: trainingCountMap.get(st.studentUserId) || 0,
+      examHistory: stAttempts.map((a) => ({
+        examId: a.assessmentId,
+        examTitle: a.examTitle || "Simulado",
+        date: a.examDate,
+        scorePercentage: a.scorePercentage || 0,
+      })),
+    };
+  });
+
+  const readinessDistribution = calculateClassReadinessDistribution(
+    turma.id,
+    turma.label,
+    studentsForReadiness,
+    readinessConfig
+  );
+
   return (
     <TurmaDetalheClient
       turma={{
@@ -358,6 +402,7 @@ export default async function TurmaDetalhePage({ params }: PageProps) {
       scatterExams={scatterExams}
       studentProfiles={studentProfiles}
       examsApplied={examsApplied}
+      readinessDistribution={readinessDistribution}
     />
   );
 }

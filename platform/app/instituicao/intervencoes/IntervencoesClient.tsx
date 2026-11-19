@@ -1161,6 +1161,19 @@ export function IntervencoesClient({
           </div>
         </div>
       )}
+      {/* Rodapé Padronizado Base / Período / Fonte */}
+      <div className="mt-6 p-4 rounded-xl border border-border bg-card text-xs text-muted-foreground flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+          <span><strong>Base:</strong> {interventions.length} intervenções registradas ({classGroups.length} turmas monitoradas)</span>
+          <span className="hidden sm:inline">·</span>
+          <span><strong>Período:</strong> 2026.1</span>
+          <span className="hidden sm:inline">·</span>
+          <span><strong>Fonte:</strong> Listas de exercícios no Praticar e Provas Pré/Pós-aula</span>
+        </div>
+        <div>
+          Régua de corte configurada: <strong>60%</strong>
+        </div>
+      </div>
     </div>
   );
 }

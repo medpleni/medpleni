@@ -398,14 +398,14 @@ export default function ResultadoClient({
               className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
               title="Exportar Aluno × Item × Alternativa com Mapa de Embaralhamento"
             >
-              📥 Exportar Dados (CSV)
+              Exportar Dados (CSV)
             </button>
             <button
               onClick={() => setIsDictModalOpen(true)}
               className="px-2 py-1.5 text-xs font-medium rounded-lg text-muted-foreground hover:text-foreground transition-colors"
               title="Ver Dicionário de Dados da Exportação"
             >
-              📖 Dicionário
+              Dicionário
             </button>
           </div>
         </div>
@@ -1006,7 +1006,7 @@ export default function ResultadoClient({
                   }}
                   className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
                 >
-                  📘 Guia de Fórmulas &amp; Sinais
+                  Guia de Fórmulas &amp; Sinais
                 </button>
               </div>
             </div>
@@ -1020,7 +1020,9 @@ export default function ResultadoClient({
                     : "bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-300"
                 }`}
               >
-                <span className="text-base">{examPsychometrics.isSampleBelowMinimum ? "🚫" : "⚠️"}</span>
+                <span className="text-xs font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border">
+                  {examPsychometrics.isSampleBelowMinimum ? "Amostra Insuficiente" : "Atenção"}
+                </span>
                 <span className="font-medium">{examPsychometrics.sampleWarningMessage}</span>
               </div>
             )}
@@ -1413,7 +1415,7 @@ export default function ResultadoClient({
                       <div key={adj.id} className="p-2 rounded bg-muted/40 border border-border text-[11px]">
                         <div className="flex items-center justify-between font-semibold">
                           <span>
-                            {adj.actionType === "anular" ? "❌ Anulação de Item" : `🔄 Gabarito: ${adj.previousLetter} ➔ ${adj.newLetter}`}
+                            {adj.actionType === "anular" ? "Anulação de Item" : `Gabarito Retificado: ${adj.previousLetter} ➔ ${adj.newLetter}`}
                           </span>
                           <span className="text-muted-foreground text-[10px]">
                             {new Date(adj.createdAt).toLocaleDateString("pt-BR")}
@@ -1452,7 +1454,10 @@ export default function ResultadoClient({
         <div className="fixed inset-0 bg-background/80 backdrop-blur-xs flex items-center justify-center p-4 z-50">
           <div className="bg-card border border-border rounded-xl max-w-md w-full p-5 shadow-xl space-y-4">
             <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 font-bold text-sm">
-              <span>🔒</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
               <h3>Aviso de Conformidade e Auditoria LGPD</h3>
             </div>
 

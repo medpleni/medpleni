@@ -326,6 +326,31 @@ export default async function CoberturaMatrizPage() {
         <strong style={{ color: "var(--heading-color)" }}>Alinhamento com NDE / DCNs: </strong>
         A representatividade das matrizes nas avaliações internas assegura que os estudantes sejam submetidos à proporcionalidade de conteúdos cobrada no Exame Nacional de Medicina (ENAMED) e atende aos critérios de autoavaliação institucional do Sistema Nacional de Avaliação da Educação Superior (SINAES/MEC).
       </div>
+
+      {/* Rodapé Padronizado Base / Período / Fonte */}
+      <div
+        style={{
+          marginTop: "16px",
+          padding: "12px 16px",
+          borderRadius: "8px",
+          border: "1px solid var(--card-border)",
+          background: "var(--card-bg)",
+          fontSize: "11px",
+          color: "var(--chumbo)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "8px",
+        }}
+      >
+        <div>
+          <span><strong>Base:</strong> Itens de provas somativas e simulados aplicados</span> •{" "}
+          <span><strong>Período:</strong> 2026.1</span> •{" "}
+          <span><strong>Fonte:</strong> Matriz canônica de 7 grandes áreas e classificação taxonômica</span>
+        </div>
+        <div>Alinhamento com DCNs / INEP</div>
+      </div>
     </div>
   );
 }

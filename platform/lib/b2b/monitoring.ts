@@ -406,8 +406,8 @@ export function generateWeeklySummaryText(params: SummaryTextGenerationParams): 
   } = params;
 
   const headerTitle = isExamSpecific
-    ? `📋 *MEDPLENI · RESUMO DA AVALIAÇÃO PARA A COORDENAÇÃO*`
-    : `📋 *MEDPLENI · RESUMO SEMANAL DE ACOMPANHAMENTO*`;
+    ? `[MEDPLENI] RESUMO DA AVALIAÇÃO PARA A COORDENAÇÃO`
+    : `[MEDPLENI] RESUMO SEMANAL DE ACOMPANHAMENTO`;
 
   const contextLine = isExamSpecific
     ? `Avaliação: ${examTitle} · ${institutionName}`
@@ -416,7 +416,7 @@ export function generateWeeklySummaryText(params: SummaryTextGenerationParams): 
   let text = `${headerTitle}\n${contextLine}\n\n`;
 
   // 1. Visão Geral
-  text += `📊 *PANORAMA GERAL*\n`;
+  text += `*PANORAMA GERAL*\n`;
   text += `• Participação: ${participationRate.toFixed(1)}% (${totalStudents} estudantes monitorados)\n`;
   text += `• Média Institucional: ${averageScore.toFixed(1)}% (Régua de Corte: 60%)\n`;
   if (highlightClass) {
@@ -425,7 +425,7 @@ export function generateWeeklySummaryText(params: SummaryTextGenerationParams): 
   text += `\n`;
 
   // 2. Pontos de Atenção
-  text += `⚠️ *PONTOS DE ATENÇÃO ACADÊMICA*\n`;
+  text += `*PONTOS DE ATENÇÃO ACADÊMICA*\n`;
   text += `• Estudantes abaixo de 60%: ${studentsBelowCutCount} discentes\n`;
   text += `• Zona de Decisão (51–60%): ${studentsInDecisionZoneCount} discentes com alto potencial de nivelamento\n`;
 
@@ -442,7 +442,7 @@ export function generateWeeklySummaryText(params: SummaryTextGenerationParams): 
 
   // 3. Lista de Estudantes (opcional sob controle de privacidade)
   if (includeStudentNames && criticalStudents.length > 0) {
-    text += `👤 *ESTUDANTES PRIORITÁRIOS (NIVELAMENTO IMEDIATO)*\n`;
+    text += `*ESTUDANTES PRIORITÁRIOS (NIVELAMENTO IMEDIATO)*\n`;
     criticalStudents.slice(0, 10).forEach((st, idx) => {
       text += `${idx + 1}. ${st.name} (${st.classLabel}) — Média: ${st.score.toFixed(1)}%\n`;
     });
@@ -451,11 +451,11 @@ export function generateWeeklySummaryText(params: SummaryTextGenerationParams): 
     }
     text += `\n`;
   } else if (!includeStudentNames) {
-    text += `🔒 _Nomes individuais omitidos por padrão de privacidade. Visualize no painel de Acompanhamento._\n\n`;
+    text += `_Nomes individuais omitidos por padrão de privacidade. Visualize no painel de Acompanhamento._\n\n`;
   }
 
   // 4. Rodapé
-  text += `📌 *Diretriz:* Recomendada aplicação de listas de nivelamento focadas para as turmas e estudantes na Zona de Decisão.\n`;
+  text += `*Diretriz:* Recomendada aplicação de listas de nivelamento focadas para as turmas e estudantes na Zona de Decisão.\n`;
   text += `Base: MedPleni B2B • Módulo de Acompanhamento Acadêmico`;
 
   return text;

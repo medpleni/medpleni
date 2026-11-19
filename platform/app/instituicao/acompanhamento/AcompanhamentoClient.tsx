@@ -544,7 +544,7 @@ export default function AcompanhamentoClient({
                           </div>
                           {st.notes && (
                             <div style={{ marginTop: "4px", fontSize: "11px", color: "var(--chumbo)", fontStyle: "italic" }}>
-                              📝 &quot;{st.notes}&quot;
+                              &quot;{st.notes}&quot;
                             </div>
                           )}
                         </td>
@@ -1052,7 +1052,7 @@ export default function AcompanhamentoClient({
                 color: "var(--chumbo)",
               }}
             >
-              <div style={{ fontSize: "28px", marginBottom: "8px" }}>🎯</div>
+              <div style={{ fontSize: "14px", fontWeight: 700, marginBottom: "8px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Meta Semanal de Questões</div>
               <div style={{ fontWeight: 600, color: "var(--heading-color)", marginBottom: "4px" }}>
                 Acompanhamento de Meta Semanal Desativado
               </div>
@@ -1398,6 +1398,30 @@ export default function AcompanhamentoClient({
           </div>
         </div>
       )}
+      {/* Rodapé Padronizado Base / Período / Fonte */}
+      <div
+        style={{
+          marginTop: "24px",
+          padding: "12px 16px",
+          borderRadius: "8px",
+          border: "1px solid var(--card-border)",
+          background: "var(--card-bg)",
+          fontSize: "11px",
+          color: "var(--chumbo)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "8px",
+        }}
+      >
+        <div>
+          <span><strong>Base:</strong> {students.length} estudantes acompanhados ({new Set(students.map((s) => s.classGroupId)).size} turmas)</span> •{" "}
+          <span><strong>Período:</strong> 2026.1</span> •{" "}
+          <span><strong>Fonte:</strong> Provas aplicadas, telemetria de treino e registros pedagógicos</span>
+        </div>
+        <div>Régua de corte configurada: <strong>{institution?.cutScore ?? 60}%</strong></div>
+      </div>
     </div>
   );
 }

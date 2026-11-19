@@ -12,6 +12,11 @@ import {
   calculateNextStepRecommendation,
   calculateStudentEvolutionTimeline,
 } from "@/lib/b2b/aluno";
+import {
+  DEFAULT_READINESS_CONFIG,
+  evaluateStudentReadiness,
+  type ReadinessConfig,
+} from "@/lib/b2b/readiness";
 
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -359,6 +364,38 @@ export default async function AlunoPortalPage({ searchParams }: PageProps) {
 
   const initialTab = typeof resolvedSearchParams.tab === "string" ? resolvedSearchParams.tab : "inicio";
 
+  // 9. Prontidão Acadêmica (se liberada para os alunos pela coordenação)
+  const readinessRaw = (context.institution.settings as any)?.readiness;
+  const readinessConfig: ReadinessConfig = {
+    volumeRuleEnabled: readinessRaw?.volumeRuleEnabled ?? DEFAULT_READINESS_CONFIG.volumeRuleEnabled,
+    minQuestionsYear: readinessRaw?.minQuestionsYear ?? DEFAULT_READINESS_CONFIG.minQuestionsYear,
+    consistencyRuleEnabled: readinessRaw?.consistencyRuleEnabled ?? DEFAULT_READINESS_CONFIG.consistencyRuleEnabled,
+    minScorePercent: readinessRaw?.minScorePercent ?? DEFAULT_READINESS_CONFIG.minScorePercent,
+    minExamsCount: readinessRaw?.minExamsCount ?? DEFAULT_READINESS_CONFIG.minExamsCount,
+    levelLabels: readinessRaw?.levelLabels || DEFAULT_READINESS_CONFIG.levelLabels,
+    showToStudents: readinessRaw?.showToStudents ?? DEFAULT_READINESS_CONFIG.showToStudents,
+  };
+
+  const studentReadiness = readinessConfig.showToStudents
+    ? evaluateStudentReadiness(
+        {
+          studentUserId,
+          studentName,
+          registration: "2026101",
+          classGroupId: enrollment?.class_group_id || "cg-8",
+          classGroupLabel: classGroupName,
+          questionsAnsweredCount: 7800,
+          examHistory: finishedExams.map((e) => ({
+            examId: e.id,
+            examTitle: e.title,
+            date: e.date,
+            scorePercentage: e.studentScore || 0,
+          })),
+        },
+        readinessConfig
+      )
+    : undefined;
+
   return (
     <AlunoPortalClient
       studentName={studentName}
@@ -373,6 +410,7 @@ export default async function AlunoPortalPage({ searchParams }: PageProps) {
       interventions={interventions}
       practiceQuestions={practiceQuestions}
       isDemoStudent={!isActualStudent}
+      readiness={studentReadiness}
     />
   );
 }

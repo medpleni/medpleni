@@ -281,6 +281,31 @@ export default async function RelatoriosPage() {
           </p>
         </div>
       </div>
+
+      {/* Rodapé Padronizado Base / Período / Fonte */}
+      <div
+        style={{
+          marginTop: "20px",
+          padding: "12px 16px",
+          borderRadius: "8px",
+          border: "1px solid var(--card-border)",
+          background: "var(--card-bg)",
+          fontSize: "11px",
+          color: "var(--chumbo)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "8px",
+        }}
+      >
+        <div>
+          <span><strong>Base:</strong> Dados consolidados da instituição ({institution.name})</span> •{" "}
+          <span><strong>Período:</strong> 2026.1 (Ciclo Anual CPA/NDE)</span> •{" "}
+          <span><strong>Fonte:</strong> Registros somativos, relatórios executivos e auditorias acadêmicas</span>
+        </div>
+        <div>Insumo Oficial para Comissões MEC/SINAES</div>
+      </div>
     </div>
   );
 }

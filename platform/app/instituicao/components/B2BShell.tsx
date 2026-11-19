@@ -101,6 +101,22 @@ export default function B2BShell({ context, children }: B2BShellProps) {
           ),
         },
         {
+          id: "regua-enamed",
+          label: "Régua ENAMED",
+          href: "/instituicao/regua-enamed",
+          status: "ready",
+          icon: (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M2 12h20" />
+              <path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6" />
+              <path d="M6 12V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5" />
+              <line x1="6" y1="12" x2="6" y2="15" />
+              <line x1="12" y1="12" x2="12" y2="16" />
+              <line x1="18" y1="12" x2="18" y2="15" />
+            </svg>
+          ),
+        },
+        {
           id: "longitudinal",
           label: "Avaliação longitudinal",
           href: "/instituicao/longitudinal",
@@ -133,6 +149,18 @@ export default function B2BShell({ context, children }: B2BShellProps) {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
               <circle cx="12" cy="7" r="4" />
+            </svg>
+          ),
+        },
+        {
+          id: "prontidao",
+          label: "Prontidão acadêmica",
+          href: "/instituicao/prontidao",
+          status: "ready",
+          icon: (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
             </svg>
           ),
         },
@@ -229,6 +257,22 @@ export default function B2BShell({ context, children }: B2BShellProps) {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
               <circle cx="9" cy="7" r="4" />
+            </svg>
+          ),
+        },
+        {
+          id: "regua-enamed",
+          label: "Régua ENAMED",
+          href: "/instituicao/regua-enamed",
+          status: "ready",
+          icon: (
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M2 12h20" />
+              <path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6" />
+              <path d="M6 12V7a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5" />
+              <line x1="6" y1="12" x2="6" y2="15" />
+              <line x1="12" y1="12" x2="12" y2="16" />
+              <line x1="18" y1="12" x2="18" y2="15" />
             </svg>
           ),
         },

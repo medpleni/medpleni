@@ -8,6 +8,8 @@ import {
   type ScatterStudentPoint,
   type StudentProfileData,
 } from "@/lib/b2b/class-groups";
+import type { ClassReadinessDistribution } from "@/lib/b2b/readiness";
+import { READINESS_DISCLAIMER_TEXT } from "@/lib/b2b/readiness";
 import { SCORE_BANDS, getScoreBandCategory } from "@/lib/b2b/executive";
 
 interface ExamRowItem {
@@ -37,6 +39,7 @@ interface TurmaDetalheClientProps {
   scatterExams: ScatterPlotResult;
   studentProfiles: Record<string, StudentProfileData>;
   examsApplied: ExamRowItem[];
+  readinessDistribution?: ClassReadinessDistribution;
 }
 
 export default function TurmaDetalheClient({
@@ -49,8 +52,9 @@ export default function TurmaDetalheClient({
   scatterExams,
   studentProfiles,
   examsApplied,
+  readinessDistribution,
 }: TurmaDetalheClientProps) {
-  const [activeTab, setActiveTab] = useState<"areas_cenarios" | "dispersao" | "estudantes" | "avaliacoes">("areas_cenarios");
+  const [activeTab, setActiveTab] = useState<"areas_cenarios" | "dispersao" | "estudantes" | "avaliacoes" | "prontidao">("areas_cenarios");
   const [xMetric, setXMetric] = useState<"questions" | "exams">("questions");
   const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null);
   const [studentSearch, setStudentSearch] = useState("");
@@ -247,6 +251,24 @@ export default function TurmaDetalheClient({
         >
           Avaliações Aplicadas ({examsApplied.length})
         </button>
+
+        {readinessDistribution && readinessDistribution.isConfigured && (
+          <button
+            onClick={() => setActiveTab("prontidao")}
+            style={{
+              padding: "10px 4px",
+              fontSize: "13px",
+              fontWeight: activeTab === "prontidao" ? 700 : 500,
+              color: activeTab === "prontidao" ? "var(--pulso, #0284C7)" : "var(--chumbo)",
+              borderBottom: activeTab === "prontidao" ? "2px solid var(--pulso, #0284C7)" : "2px solid transparent",
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+            }}
+          >
+            Prontidão da Turma
+          </button>
+        )}
       </div>
 
       {/* ABA 1: ÁREAS E CENÁRIOS AGREGADOS (TC-02, TC-03) */}
@@ -644,7 +666,10 @@ export default function TurmaDetalheClient({
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <span>🔒</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0 }}>
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
               <span>
                 <strong>Acesso a Dados Individuais:</strong> Visível para dirigente, coordenador e professor da própria turma. Todos os acessos individuais são auditados para fins de governança acadêmica e LGPD.
               </span>
@@ -898,6 +923,113 @@ export default function TurmaDetalheClient({
         </div>
       )}
 
+      {/* ABA 5: PRONTIDÃO DA TURMA (P22) */}
+      {activeTab === "prontidao" && readinessDistribution && (
+        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+          <div
+            style={{
+              padding: "16px 20px",
+              borderRadius: "10px",
+              background: "rgba(2, 132, 199, 0.06)",
+              border: "1px solid rgba(2, 132, 199, 0.2)",
+              fontSize: "12px",
+              color: "var(--heading-color)",
+              lineHeight: 1.6,
+            }}
+          >
+            <strong>Aviso de Interpretação:</strong> {READINESS_DISCLAIMER_TEXT}
+          </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+              gap: "16px",
+            }}
+          >
+            <div style={{ padding: "16px", borderRadius: "10px", background: "var(--card-bg)", border: "1px solid var(--card-border)" }}>
+              <span style={{ fontSize: "11px", color: "#059669", fontWeight: 700, textTransform: "uppercase" }}>No caminho</span>
+              <div style={{ fontSize: "24px", fontWeight: 700, color: "var(--heading-color)", margin: "4px 0" }}>
+                {readinessDistribution.highCount} alunos ({readinessDistribution.highPercent}%)
+              </div>
+              <span style={{ fontSize: "11px", color: "var(--chumbo)" }}>Cumpre integralmente as regras</span>
+            </div>
+
+            <div style={{ padding: "16px", borderRadius: "10px", background: "var(--card-bg)", border: "1px solid var(--card-border)" }}>
+              <span style={{ fontSize: "11px", color: "#D97706", fontWeight: 700, textTransform: "uppercase" }}>Em atenção</span>
+              <div style={{ fontSize: "24px", fontWeight: 700, color: "var(--heading-color)", margin: "4px 0" }}>
+                {readinessDistribution.mediumCount} alunos ({readinessDistribution.mediumPercent}%)
+              </div>
+              <span style={{ fontSize: "11px", color: "var(--chumbo)" }}>Cumpre parcialmente os critérios</span>
+            </div>
+
+            <div style={{ padding: "16px", borderRadius: "10px", background: "var(--card-bg)", border: "1px solid var(--card-border)" }}>
+              <span style={{ fontSize: "11px", color: "#DC2626", fontWeight: 700, textTransform: "uppercase" }}>Distante</span>
+              <div style={{ fontSize: "24px", fontWeight: 700, color: "var(--heading-color)", margin: "4px 0" }}>
+                {readinessDistribution.lowCount} alunos ({readinessDistribution.lowPercent}%)
+              </div>
+              <span style={{ fontSize: "11px", color: "var(--chumbo)" }}>Abaixo do esforço e consistência</span>
+            </div>
+          </div>
+
+          {/* BARRA TRICOLOR */}
+          <div style={{ width: "100%", height: "12px", borderRadius: "6px", background: "var(--input-bg)", display: "flex", overflow: "hidden" }}>
+            <div style={{ width: `${readinessDistribution.highPercent}%`, background: "#059669" }} />
+            <div style={{ width: `${readinessDistribution.mediumPercent}%`, background: "#F59E0B" }} />
+            <div style={{ width: `${readinessDistribution.lowPercent}%`, background: "#EF4444" }} />
+          </div>
+
+          {/* TABELA DE ALUNOS COM PRONTIDÃO */}
+          <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: "10px", overflow: "hidden" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12px", textAlign: "left" }}>
+              <thead>
+                <tr style={{ background: "var(--input-bg)", borderBottom: "1px solid var(--card-border)", color: "var(--chumbo)", fontWeight: 600 }}>
+                  <th style={{ padding: "12px 16px" }}>Estudante</th>
+                  <th style={{ padding: "12px 16px", textAlign: "center" }}>Nível de Prontidão</th>
+                  <th style={{ padding: "12px 16px", textAlign: "center" }}>Volume no Ano</th>
+                  <th style={{ padding: "12px 16px", textAlign: "center" }}>Simulados Qualificados</th>
+                  <th style={{ padding: "12px 16px" }}>O que Cumpre & Quanto Falta</th>
+                </tr>
+              </thead>
+              <tbody>
+                {readinessDistribution.students.map((st) => (
+                  <tr key={st.studentUserId} style={{ borderBottom: "1px solid var(--card-border)" }}>
+                    <td style={{ padding: "12px 16px", fontWeight: 600, color: "var(--heading-color)" }}>
+                      <button onClick={() => setSelectedStudentId(st.studentUserId)} style={{ background: "none", border: "none", cursor: "pointer", fontWeight: 600, color: "var(--heading-color)", textAlign: "left" }}>
+                        {st.studentName}
+                      </button>
+                    </td>
+                    <td style={{ padding: "12px 16px", textAlign: "center" }}>
+                      <span style={{
+                        display: "inline-block",
+                        padding: "3px 10px",
+                        borderRadius: "12px",
+                        fontSize: "11px",
+                        fontWeight: 700,
+                        background: st.level === "alto" ? "rgba(5, 150, 105, 0.15)" : st.level === "medio" ? "rgba(217, 119, 6, 0.15)" : "rgba(220, 38, 38, 0.15)",
+                        color: st.level === "alto" ? "#059669" : st.level === "medio" ? "#D97706" : "#DC2626",
+                      }}>
+                        {st.levelLabel}
+                      </span>
+                    </td>
+                    <td style={{ padding: "12px 16px", textAlign: "center", fontFamily: "'IBM Plex Mono', monospace" }}>
+                      {st.questionsAnswered.toLocaleString("pt-BR")} / {st.volumeTarget?.toLocaleString("pt-BR") || "—"} ({st.volumeProgressPercent}%)
+                    </td>
+                    <td style={{ padding: "12px 16px", textAlign: "center", fontFamily: "'IBM Plex Mono', monospace" }}>
+                      {st.qualifyingExamsCount} / {st.consistencyTargetExams || "—"} simulados
+                    </td>
+                    <td style={{ padding: "12px 16px", fontSize: "11px", color: "var(--chumbo)" }}>
+                      <div>{st.rulesFulfilledSummary}</div>
+                      <div style={{ color: "var(--pulso, #0284C7)", fontWeight: 600 }}>{st.missingRequirementsText}</div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
       {/* MODAL PERFIL DO ALUNO COM TRAJETÓRIA E DISPERSÃO INDIVIDUAL (TC-06) */}
       {selectedStudent && (
         <div
@@ -959,6 +1091,21 @@ export default function TurmaDetalheClient({
                 ✕
               </button>
             </div>
+
+            {/* CARD DE PRONTIDÃO DO ESTUDANTE */}
+            {readinessDistribution && readinessDistribution.isConfigured && (() => {
+              const stReadiness = readinessDistribution.students.find((s) => s.studentUserId === selectedStudent.studentUserId);
+              if (!stReadiness) return null;
+              return (
+                <div style={{ padding: "12px 16px", borderRadius: "8px", background: "rgba(2, 132, 199, 0.05)", border: "1px solid rgba(2, 132, 199, 0.15)", marginBottom: "16px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div>
+                    <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--chumbo)", textTransform: "uppercase" }}>Prontidão Acadêmica:</span>
+                    <strong style={{ marginLeft: "8px", color: stReadiness.level === "alto" ? "#059669" : stReadiness.level === "medio" ? "#D97706" : "#DC2626" }}>{stReadiness.levelLabel}</strong>
+                    <div style={{ fontSize: "11px", color: "var(--chumbo)", marginTop: "2px" }}>{stReadiness.rulesFulfilledSummary} · {stReadiness.missingRequirementsText}</div>
+                  </div>
+                </div>
+              );
+            })()}
 
             {/* AVISO EXPLÍCITO SOLICITADO PELO DR. FILIPE NO VOTO TC-06 */}
             <div
@@ -1140,6 +1287,30 @@ export default function TurmaDetalheClient({
           </div>
         </div>
       )}
+      {/* Rodapé Padronizado Base / Período / Fonte */}
+      <div
+        style={{
+          marginTop: "24px",
+          padding: "12px 16px",
+          borderRadius: "8px",
+          border: "1px solid var(--card-border)",
+          background: "var(--card-bg)",
+          fontSize: "11px",
+          color: "var(--chumbo)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "8px",
+        }}
+      >
+        <div>
+          <span><strong>Base:</strong> {turma.totalStudents} estudantes avaliados na turma {turma.label}</span> •{" "}
+          <span><strong>Período:</strong> 2026.1 ({turma.period}º Período)</span> •{" "}
+          <span><strong>Fonte:</strong> Provas e simulados aplicados com folhas de resposta e correção online</span>
+        </div>
+        <div>Régua de corte configurada: <strong>{cutScore}%</strong></div>
+      </div>
     </div>
   );
 }

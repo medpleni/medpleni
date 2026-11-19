@@ -6,6 +6,90 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-19 · P23 · Régua ENAMED e Revisão dos Rótulos (RE-01, RE-02, RE-03 / Seções 0, 1 e 4)
+
+### O que foi feito
+
+- **Módulo Central de Posicionamento — Régua ENAMED (`/instituicao/regua-enamed`):**
+  - Implementada a página institucional da **Régua ENAMED**, tratada pelos médicos decisores como módulo central de posicionamento formativo e preparação em 3 etapas:
+    1. **1ª Etapa · 4º Período:** Ciclo Básico & Transição para o Clínico (Turmas P1 a P4).
+    2. **2ª Etapa · 8º Período:** Ciclo Clínico & Pré-Internato (Turmas P5 a P8).
+    3. **3ª Etapa · 12º Período:** Internato, Conclusão de Curso e Habilitação Profissional / Acesso à Residência (Turmas P9 a P12).
+  - **Quatro Pilares por Etapa:**
+    - **Simulados da Etapa:** total aplicados e agendados, modalidade (papel, online, híbrida), participantes e aproveitamento médio.
+    - **Turmas na Rota:** coortes que prestarão o exame, alunos matriculados e média global.
+    - **Alunos em Atenção:** contagem de estudantes abaixo do corte configurado institucionalmente (`< cutScore`) e estudantes na Zona de Decisão (`51%` a `cutScore`).
+    - **Intervenções em Curso:** listas de exercícios no Praticar e provas pré/pós-aula ativas, com taxa de adesão em tempo real.
+  - **Aviso Obrigatório da 1ª Etapa (INEP):**
+    > *"A matriz oficial do ciclo básico (1ª etapa - 4º período) será incorporada quando o INEP publicar a portaria e edital específico. Atualmente, os simulados e práticas na plataforma utilizam eixos curriculares formativos estruturantes."*
+  - **Arquivo de Conteúdo Regulatório (`platform/lib/b2b/regua-enamed-content.ts`):**
+    - Nenhum número de lei, portaria, data ou peso foi inventado pela IA.
+    - Todos os campos pendentes de homologação oficial estão explicitamente marcados como: `"[a preencher pelo Mario com fonte oficial]"`.
+  - **Reprovação da Função RE-03:**
+    - Retirado qualquer aviso negativo do tipo "não fazemos predição de nota", em cumprimento ao voto médico.
+  - **Navegação (`B2BShell.tsx`):**
+    - Item "Régua ENAMED" adicionado ao menu lateral para dirigentes, coordenadores e docentes.
+
+- **Auditoria de Rótulos em Todo o Módulo B2B (Objetivo B / `docs/b2b/AUDITORIA-ROTULOS.md`):**
+  - **Base / Período / Fonte:** adicionado e padronizado o rodapé em todas as telas com indicadores do módulo institucional (Visão Executiva, Turmas, Detalhe da Turma, Acompanhamento, Sessões Atípicas, Longitudinal, Intervenções, Professores, Prontidão, Régua ENAMED, Turmas × Provas, Cobertura da Matriz, Relatórios e Portal do Aluno).
+  - **Eliminação Total de Emojis:** 53 emojis encontrados em 13 arquivos foram removidos e substituídos por ícones SVG vetoriais limpos e acessíveis.
+  - **Sem "nota ENAMED":** o percentual de acerto nunca é chamado de "nota ENAMED"; utiliza-se "Aproveitamento médio (%)" ou "Percentual de acerto".
+  - **Sem "programática":** termo banido da interface (módulo chama-se exclusivamente "Avaliação longitudinal").
+  - **Sem "Tutor":** referências a "orientação tutorial" e "tutoria" foram substituídas por "orientação pedagógica" e "mentoria clínica / lista de exercícios".
+  - **Régua de Corte Configurável:** corte padrão 60% lido dinamicamente da configuração da instituição (`cut_score`), parametrizando cores, alertas e zonas de decisão.
+
+### Arquivos criados / alterados
+
+- `platform/lib/b2b/regua-enamed-content.ts` (criado)
+- `platform/lib/b2b/regua-enamed.ts` (criado)
+- `platform/lib/b2b/__tests__/regua-enamed.test.ts` (criado — 7 testes unitários)
+- `platform/app/instituicao/regua-enamed/ReguaEnamedClient.tsx` (criado)
+- `platform/app/instituicao/regua-enamed/page.tsx` (criado)
+- `platform/app/instituicao/components/B2BShell.tsx` (atualizado com link da Régua ENAMED)
+- `docs/b2b/AUDITORIA-ROTULOS.md` (criado com relatório detalhado)
+- Arquivos auditados e limpos de emojis / terminologia: `VisaoExecutivaClient.tsx`, `BancoClient.tsx`, `ImportarClient.tsx`, `ProntidaoClient.tsx`, `AcompanhamentoClient.tsx`, `AtypicalSessionsView.tsx`, `TurmasClient.tsx`, `TurmaDetalheClient.tsx`, `LongitudinalClient.tsx`, `IntervencoesClient.tsx`, `MotorClient.tsx`, `AlunoPortalClient.tsx`, `AlunoDevolutivaClient.tsx`, `ProvasClient.tsx`, `CorrecaoClient.tsx`, `ResultadoClient.tsx`, `ConfiguracoesClient.tsx`, `turmas-provas/page.tsx`, `cobertura-matriz/page.tsx`, `relatorios/page.tsx`, `monitoring.ts`.
+
+### SQL a rodar
+
+Nenhum SQL novo necessário para o P23 (utiliza tabelas existentes de turmas, avaliações, tentativas e configurações).
+
+### Como testar
+
+1. **Testes Automatizados:**
+   - `cd platform && npm test` (168 testes passando em 23 suítes).
+   - `cd platform && ./node_modules/.bin/vitest run lib/b2b/__tests__/regua-enamed.test.ts` (7 testes específicos aprovados).
+2. **Navegação na Régua ENAMED:**
+   - Acessar `/instituicao/regua-enamed` logado na instituição demo (FADEP).
+   - Alternar entre as 3 etapas (1ª Etapa · 4º Período, 2ª Etapa · 8º Período, 3ª Etapa · 12º Período).
+   - Verificar na 1ª Etapa o aviso especial do INEP sobre a matriz do ciclo básico.
+   - Clicar em "Marco Regulatório Oficial" e constatar os campos marcados como `[a preencher pelo Mario com fonte oficial]`.
+   - Verificar os 4 KPIs por etapa, as tabelas de simulados aplicados, turmas em rota, intervenções e o rodapé Base / Período / Fonte.
+3. **Auditoria de Rótulos:**
+   - Constatar que não há nenhum emoji em nenhuma tela do B2B.
+   - Constatar a presença de Base / Período / Fonte em todos os painéis.
+
+---
+
+## 2026-11-19 · P22 · Indicador de Prontidão Acadêmica por Regras Explícitas (ESPEC-B2B 4.9)
+
+### O que foi feito
+
+- **Mecanismo de Avaliação de Prontidão (`platform/lib/b2b/readiness.ts`):**
+  - Duas regras independentes ativáveis/desativáveis pela instituição:
+    1. **Volume:** aluno com pelo menos $N$ questões respondidas no ano letivo (referência 10.000, editável).
+    2. **Consistência:** aluno com pelo menos $X\%$ de acerto em pelo menos $Y$ simulados no ano letivo ($X$ e $Y$ editáveis; em branco até a instituição configurar).
+  - Três níveis com rótulos neutros configuráveis (ex.: "No caminho", "Em atenção", "Distante").
+  - Quando os parâmetros estiverem em branco, o indicador **não aparece** na tela (evita falsa precisão).
+  - Texto fixo obrigatório de ressalva metodológica acompanhando sempre o indicador.
+- **Histórico e Calibração (`016_prontidao.sql`):**
+  - Tabela `readiness_snapshots` com RLS para gravação do histórico da avaliação e posterior calibração estatística quando as notas reais do ENAMED forem publicadas.
+- **Painéis:**
+  - `/instituicao/prontidao`: visão institucional e por turma, gráfico de distribuição tricolor e tabela de alunos.
+  - `/instituicao/turmas/[id]`: aba de prontidão agregada por turma.
+  - `/instituicao/aluno`: cartão individual opcional (se `showToStudents === true`).
+
+---
+
 ## 2026-11-19 · P21 · Sinalização de Sessões Atípicas e Gestão Pedagógica (Voto SPR nº 9 / Seção 4.10)
 
 ### O que foi feito

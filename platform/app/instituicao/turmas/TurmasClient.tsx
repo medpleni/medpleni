@@ -568,6 +568,30 @@ export default function TurmasClient({
           </div>
         </div>
       )}
+      {/* Rodapé Padronizado Base / Período / Fonte */}
+      <div
+        style={{
+          marginTop: "24px",
+          padding: "12px 16px",
+          borderRadius: "8px",
+          border: "1px solid var(--card-border)",
+          background: "var(--card-bg)",
+          fontSize: "11px",
+          color: "var(--chumbo)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "8px",
+        }}
+      >
+        <div>
+          <span><strong>Base:</strong> {turmas.reduce((sum, t) => sum + t.totalStudents, 0)} estudantes acompanhados ({turmas.length} turmas)</span> •{" "}
+          <span><strong>Período:</strong> 2026.1</span> •{" "}
+          <span><strong>Fonte:</strong> Provas aplicadas, simulados ENAMED e telemetria de treino</span>
+        </div>
+        <div>Régua de corte configurada: <strong>{institution?.cutScore ?? 60}%</strong></div>
+      </div>
     </div>
   );
 }

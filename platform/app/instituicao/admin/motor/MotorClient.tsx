@@ -193,13 +193,13 @@ export default function MotorClient({
         {/* Abas */}
         <div className="border-t border-border pt-3 flex items-center gap-2 overflow-x-auto text-xs font-semibold">
           {[
-            { key: "painel", label: "📊 Painel & Taxas de Aprovação" },
-            { key: "gerar", label: "⚡ Gerar Lote (3 Modos)" },
+            { key: "painel", label: "Painel & Taxas de Aprovação" },
+            { key: "gerar", label: "Gerar Lote (3 Modos)" },
             {
               key: "amostragem",
-              label: `🔍 Validação por Amostragem (${samplingBatches.length} pendentes)`,
+              label: `Validação por Amostragem (${samplingBatches.length} pendentes)`,
             },
-            { key: "insumos", label: `📚 Insumos & Diretrizes (${inputs.length})` },
+            { key: "insumos", label: `Insumos & Diretrizes (${inputs.length})` },
           ].map((tab) => (
             <button
               key={tab.key}

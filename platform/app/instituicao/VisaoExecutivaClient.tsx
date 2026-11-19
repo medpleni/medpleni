@@ -116,19 +116,19 @@ export default function VisaoExecutivaClient({
               href="/instituicao/turmas-provas"
               className="px-2.5 py-1 rounded-md bg-muted hover:bg-muted/80 text-foreground font-medium text-[11px] transition-colors"
             >
-              📊 Matriz Turmas × Provas
+              Matriz Turmas × Provas
             </Link>
             <Link
               href="/instituicao/cobertura-matriz"
               className="px-2.5 py-1 rounded-md bg-muted hover:bg-muted/80 text-foreground font-medium text-[11px] transition-colors"
             >
-              🎯 Cobertura da Matriz
+              Cobertura da Matriz
             </Link>
             <Link
               href="/instituicao/relatorios"
               className="px-2.5 py-1 rounded-md bg-muted hover:bg-muted/80 text-foreground font-medium text-[11px] transition-colors"
             >
-              📄 Relatórios (CPA / NDE / MEC)
+              Relatórios (CPA / NDE / MEC)
             </Link>
           </div>
 
@@ -166,7 +166,7 @@ export default function VisaoExecutivaClient({
             </div>
             <div className="text-[10px] text-muted-foreground mt-2 flex items-center justify-between">
               <span>{kpis.institutionMeanScore >= institution.cutScore ? "✓ Acima da régua 60" : "⚠ Abaixo do corte"}</span>
-              <span className="text-primary">🔍</span>
+              <span className="text-primary font-mono text-xs">→</span>
             </div>
           </button>
 
@@ -185,7 +185,7 @@ export default function VisaoExecutivaClient({
             </div>
             <div className="text-[10px] text-muted-foreground mt-2 flex items-center justify-between">
               <span>{kpis.studentsBelowCutCount} de {kpis.totalPresent} presentes</span>
-              <span className="text-primary">🔍</span>
+              <span className="text-primary font-mono text-xs">→</span>
             </div>
           </button>
 
@@ -204,7 +204,7 @@ export default function VisaoExecutivaClient({
             </div>
             <div className="text-[10px] text-muted-foreground mt-2 flex items-center justify-between">
               <span>{kpis.totalPresent} presentes ({kpis.totalAbsent} ausentes)</span>
-              <span className="text-primary">🔍</span>
+              <span className="text-primary font-mono text-xs">→</span>
             </div>
           </button>
 
@@ -223,7 +223,7 @@ export default function VisaoExecutivaClient({
             </div>
             <div className="text-[10px] text-muted-foreground mt-2 flex items-center justify-between">
               <span>{kpis.classesBelowCutCount === 0 ? "Nenhuma turma crítica" : "Requer atenção do NDE"}</span>
-              <span className="text-primary">🔍</span>
+              <span className="text-primary font-mono text-xs">→</span>
             </div>
           </button>
 
@@ -242,7 +242,7 @@ export default function VisaoExecutivaClient({
             </div>
             <div className="text-[10px] text-muted-foreground mt-2 flex items-center justify-between">
               <span>{kpis.decisionZoneCount} alunos limítrofes</span>
-              <span className="text-primary">🔍</span>
+              <span className="text-primary font-mono text-xs">→</span>
             </div>
           </button>
         </div>
@@ -448,8 +448,8 @@ export default function VisaoExecutivaClient({
                     : "bg-amber-50/70 border-amber-200 text-amber-900 dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-200"
                 }`}
               >
-                <span className="text-base shrink-0 mt-0.5">
-                  {al.severity === "critical" ? "🚨" : "⚠️"}
+                <span className="shrink-0 mt-0.5 text-xs font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border">
+                  {al.severity === "critical" ? "Crítico" : "Atenção"}
                 </span>
                 <div className="flex-1">
                   <div className="font-bold flex items-center justify-between">

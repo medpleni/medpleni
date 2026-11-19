@@ -301,7 +301,7 @@ export default function CorrecaoClient({
           {/* Menu de Impressão de Cadernos */}
           <div className="relative group">
             <button className="px-3 py-1.5 text-xs font-medium rounded-lg border border-border bg-card hover:bg-muted text-foreground transition-colors flex items-center gap-1.5">
-              <span>📄</span> Imprimir Cadernos
+              Imprimir Cadernos
             </button>
             <div className="absolute right-0 mt-1 hidden group-hover:flex flex-col bg-card border border-border rounded-lg shadow-lg z-30 py-1 w-40 text-xs">
               {["A", "B", "C", "D"].map((code) => (
@@ -408,7 +408,10 @@ export default function CorrecaoClient({
       {activeTab === "batch" && (
         <div className="p-6 rounded-xl border border-dashed border-border bg-card text-center space-y-4">
           <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto text-xl">
-            📷
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+              <circle cx="12" cy="13" r="4" />
+            </svg>
           </div>
           <div className="space-y-1">
             <h3 className="text-sm font-bold text-foreground">

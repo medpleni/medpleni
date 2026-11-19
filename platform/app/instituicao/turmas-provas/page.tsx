@@ -461,6 +461,31 @@ export default async function TurmasProvasPage() {
         <strong style={{ color: "var(--heading-color)" }}>Observação Metodológica: </strong>
         As médias apresentadas por prova refletem instrumentos de avaliação distintos, aplicados em momentos e níveis de dificuldade variados. Conforme a Seção 0 da Especificação B2B, provas não equiparadas por Teoria da Resposta ao Item (TRI) não devem ser comparadas diretamente como se fossem a mesma régua métrica; a evolução temporal indica tendências de rendimento da coorte e aderência ao padrão institucional.
       </div>
+
+      {/* Rodapé Padronizado Base / Período / Fonte */}
+      <div
+        style={{
+          marginTop: "16px",
+          padding: "12px 16px",
+          borderRadius: "8px",
+          border: "1px solid var(--card-border)",
+          background: "var(--card-bg)",
+          fontSize: "11px",
+          color: "var(--chumbo)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "8px",
+        }}
+      >
+        <div>
+          <span><strong>Base:</strong> Matriz de turmas × avaliações aplicadas</span> •{" "}
+          <span><strong>Período:</strong> 2026.1</span> •{" "}
+          <span><strong>Fonte:</strong> Provas e simulados corrigidos pela plataforma</span>
+        </div>
+        <div>Régua de corte configurada: <strong>{context.institution.cut_score ?? 60}%</strong></div>
+      </div>
     </div>
   );
 }

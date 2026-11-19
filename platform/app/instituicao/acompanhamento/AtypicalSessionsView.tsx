@@ -152,7 +152,7 @@ export default function AtypicalSessionsView({
             conversa.&rdquo;
           </p>
           <p className="text-[11px] text-amber-800/80 dark:text-amber-400/80 leading-relaxed pt-0.5">
-            A sinalização algorítmica apoia a orientação tutorial e identifica eventuais hábitos de
+            A sinalização algorítmica apoia a orientação pedagógica pela coordenação e identifica eventuais hábitos de
             estudo ineficazes. Nenhuma sanção disciplinar deve ser fundamentada exclusivamente em
             sinalizações deste painel.
           </p>
@@ -225,7 +225,7 @@ export default function AtypicalSessionsView({
       <div className="p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50/70 dark:bg-gray-800/40 text-xs space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-200 dark:border-gray-700/60 pb-2.5">
           <span className="font-bold text-gray-900 dark:text-white flex items-center gap-1.5">
-            <span>📐</span> Regras Matemáticas de Classificação por Sessão (Transparência Algorítmica)
+            Regras Matemáticas de Classificação por Sessão (Transparência Algorítmica)
           </span>
           <button
             onClick={() => {

@@ -210,19 +210,19 @@ export default function ImportarClient({
               href="/api/b2b/templates/download?type=docx"
               className="px-3 py-1.5 border border-border rounded-lg text-xs font-medium text-foreground hover:bg-muted transition-colors flex items-center gap-1.5"
             >
-              📄 Modelo DOCX
+              Modelo DOCX
             </a>
             <a
               href="/api/b2b/templates/download?type=xlsx"
               className="px-3 py-1.5 border border-border rounded-lg text-xs font-medium text-foreground hover:bg-muted transition-colors flex items-center gap-1.5"
             >
-              📊 Modelo Planilha XLSX
+              Modelo Planilha XLSX
             </a>
             <a
               href="/api/b2b/templates/download?type=csv"
               className="px-3 py-1.5 border border-border rounded-lg text-xs font-medium text-foreground hover:bg-muted transition-colors flex items-center gap-1.5"
             >
-              📑 Modelo CSV
+              Modelo CSV
             </a>
           </div>
         </div>
