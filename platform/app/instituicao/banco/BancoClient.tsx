@@ -252,31 +252,65 @@ export default function BancoClient({
   const reviewQuestions = questions.filter((q) => q.b2b_status === "in_review");
 
   return (
-    <div className="space-y-6">
+    <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "8px 0 40px" }} className="space-y-6">
       {/* Bloco 1: Cabeçalho do Banco */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <PageHeader
-          title="Banco de Questões"
-          subtitle={`Acervo oficial MedPleni e questões privativas de ${context.institution.name}`}
-        />
-        <div className="flex items-center gap-2">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          flexWrap: "wrap",
+          gap: "16px",
+          paddingBottom: "16px",
+          borderBottom: "1px solid var(--card-border)",
+        }}
+      >
+        <div>
+          <h1 style={{ fontSize: "22px", fontWeight: 700, margin: "0 0 4px", color: "var(--heading-color)" }}>
+            Banco de Questões
+          </h1>
+          <p style={{ margin: 0, fontSize: "13px", color: "var(--chumbo)" }}>
+            Acervo oficial MedPleni e questões privativas de {context.institution.name}.
+          </p>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <Link
             href="/instituicao/banco/importar"
-            className="px-3.5 py-1.5 border border-border rounded-lg hover:bg-muted text-xs font-semibold text-foreground transition-colors shadow-xs"
+            style={{
+              padding: "8px 14px",
+              fontSize: "12px",
+              fontWeight: 600,
+              borderRadius: "8px",
+              border: "1px solid var(--card-border)",
+              background: "var(--card-bg)",
+              color: "var(--heading-color)",
+              textDecoration: "none",
+              boxShadow: "var(--card-shadow)",
+            }}
           >
             Importar Arquivo
           </Link>
           <button
             onClick={() => setActiveTab("nova_questao")}
-            className="px-3.5 py-1.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 text-xs font-semibold shadow-xs"
+            style={{
+              padding: "8px 16px",
+              fontSize: "12px",
+              fontWeight: 600,
+              borderRadius: "8px",
+              border: "none",
+              background: "var(--pulso)",
+              color: "#FFFFFF",
+              cursor: "pointer",
+              boxShadow: "0 2px 4px rgba(0, 194, 168, 0.25)",
+            }}
           >
             + Nova Questão
           </button>
         </div>
       </div>
 
-      {/* Bloco 2: Navegação por Abas (Máximo 5 seções) */}
-      <div className="border-b border-border flex items-center gap-2 overflow-x-auto pb-1 text-sm font-medium">
+      {/* Bloco 2: Navegação por Abas Limpa e Moderna */}
+      <div style={{ display: "flex", gap: "24px", borderBottom: "1px solid var(--card-border)", marginBottom: "20px", overflowX: "auto" }}>
         {[
           { key: "visao_geral", label: "Visão Geral & Cobertura" },
           { key: "explorar", label: `Explorar Acervo (${totalCount})` },
@@ -292,11 +326,20 @@ export default function BancoClient({
               setActiveTab(tab.key as TabKey);
               if (tab.key === "explorar") handleApplyFilters(1);
             }}
-            className={`px-4 py-2 rounded-t-lg transition-colors whitespace-nowrap ${
-              activeTab === tab.key
-                ? "bg-card border-t border-x border-border text-primary font-semibold shadow-xs"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-            }`}
+            style={{
+              padding: "10px 4px",
+              fontSize: "13px",
+              fontWeight: activeTab === tab.key ? 700 : 500,
+              color: activeTab === tab.key ? "var(--pulso)" : "var(--chumbo)",
+              borderBottom: activeTab === tab.key ? "2px solid var(--pulso)" : "2px solid transparent",
+              background: "transparent",
+              borderTop: "none",
+              borderLeft: "none",
+              borderRight: "none",
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+              transition: "all 0.15s ease",
+            }}
           >
             {tab.label}
           </button>
@@ -309,22 +352,22 @@ export default function BancoClient({
       {activeTab === "visao_geral" && (
         <div className="space-y-6">
           {/* Sub-bloco A: KPIs Gerais */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="bg-card border border-border rounded-xl p-4 shadow-xs">
-              <div className="text-xs text-muted-foreground font-medium">Publicadas Disponíveis</div>
-              <div className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "14px" }}>
+            <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: "12px", padding: "16px 20px", boxShadow: "var(--card-shadow)" }}>
+              <div style={{ fontSize: "11px", fontWeight: 600, color: "var(--chumbo)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Publicadas Disponíveis</div>
+              <div style={{ fontSize: "24px", fontWeight: 800, color: "#16A34A", marginTop: "4px" }}>
                 {initialOverview.total_published}
               </div>
             </div>
-            <div className="bg-card border border-border rounded-xl p-4 shadow-xs">
-              <div className="text-xs text-muted-foreground font-medium">Em Fila de Revisão</div>
-              <div className="text-2xl font-bold text-amber-500 mt-1">
+            <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: "12px", padding: "16px 20px", boxShadow: "var(--card-shadow)" }}>
+              <div style={{ fontSize: "11px", fontWeight: 600, color: "var(--chumbo)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Em Fila de Revisão</div>
+              <div style={{ fontSize: "24px", fontWeight: 800, color: "#D97706", marginTop: "4px" }}>
                 {initialOverview.total_in_review}
               </div>
             </div>
-            <div className="bg-card border border-border rounded-xl p-4 shadow-xs">
-              <div className="text-xs text-muted-foreground font-medium">Banco Privado Institucional</div>
-              <div className="text-2xl font-bold text-primary mt-1">
+            <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: "12px", padding: "16px 20px", boxShadow: "var(--card-shadow)" }}>
+              <div style={{ fontSize: "11px", fontWeight: 600, color: "var(--chumbo)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Banco Privado Institucional</div>
+              <div style={{ fontSize: "24px", fontWeight: 800, color: "var(--pulso)", marginTop: "4px" }}>
                 {initialOverview.total_private}
               </div>
             </div>

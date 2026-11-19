@@ -1,6 +1,6 @@
 import React from "react";
 import { redirect } from "next/navigation";
-import { getB2BUserContext } from "@/lib/b2b/auth";
+import { getB2BUserContext, DEMO_GUEST_CONTEXT } from "@/lib/b2b/auth";
 import { createClient } from "@/lib/supabase/server";
 import VisaoExecutivaClient from "./VisaoExecutivaClient";
 import DocenteHomeClient from "./DocenteHomeClient";
@@ -17,11 +17,16 @@ interface PageProps {
 }
 
 export default async function InstituicaoHomePage({ searchParams }: PageProps) {
-  const context = await getB2BUserContext();
-  const resolvedSearchParams = await searchParams;
+  let context = null;
+  try {
+    context = await getB2BUserContext();
+  } catch (err) {
+    console.warn("Erro ao buscar contexto B2B:", err);
+  }
 
+  // Fallback para modo demonstração caso não esteja autenticado
   if (!context?.institution?.id) {
-    redirect("/login");
+    context = DEMO_GUEST_CONTEXT;
   }
 
   // Alunos têm portal próprio
@@ -31,45 +36,80 @@ export default async function InstituicaoHomePage({ searchParams }: PageProps) {
 
   const institutionId = context.institution.id;
   const cutScore = context.institution.cut_score || 60;
-  const supabase = await createClient();
+  const resolvedSearchParams = await searchParams;
 
-  // 1. Busca todas as avaliações da instituição aplicadas ou em revisão/corrigidas
-  const { data: dbAssessments } = await supabase
-    .from("assessments")
-    .select("id, title, type, starts_at, status")
-    .eq("institution_id", institutionId)
-    .in("status", ["aplicada", "corrigida", "publicada"])
-    .order("starts_at", { ascending: false });
+  let availableExams: any[] = [];
+  let dbClasses: any[] | null = null;
+  let dbItems: any[] | null = null;
+  let dbAttempts: any[] | null = null;
+  let dbAnswers: any[] | null = null;
 
-  let availableExams = (dbAssessments || []).map((a) => ({
-    id: a.id,
-    title: a.title,
-    type: a.type,
-    startsAt: a.starts_at || new Date().toISOString(),
-    status: a.status,
-  }));
+  try {
+    const supabase = await createClient();
+
+    // 1. Busca todas as avaliações da instituição aplicadas ou em revisão/corrigidas
+    const { data: assessmentsData } = await supabase
+      .from("assessments")
+      .select("id, title, type, starts_at, status")
+      .eq("institution_id", institutionId)
+      .in("status", ["aplicada", "corrigida", "publicada"])
+      .order("starts_at", { ascending: false });
+
+    if (assessmentsData && assessmentsData.length > 0) {
+      availableExams = assessmentsData.map((a) => ({
+        id: a.id,
+        title: a.title,
+        type: a.type,
+        startsAt: a.starts_at || new Date().toISOString(),
+        status: a.status,
+      }));
+    }
+
+    // 2. Busca turmas (class_groups tem period e label)
+    const { data: classesData } = await supabase
+      .from("class_groups")
+      .select("id, label, period")
+      .order("period", { ascending: true });
+    dbClasses = classesData;
+  } catch (err) {
+    console.warn("[InstituicaoHomePage] Aviso ao consultar Supabase, utilizando dados de demonstração:", err);
+  }
 
   if (availableExams.length === 0) {
     availableExams = [
       {
-        id: "asm-demo-2027-1",
-        title: "Simulado Nacional ENAMED 2027.1 (Etapas 4º, 8º e 12º)",
-        type: "simulado_enamed_8",
-        startsAt: "2027-03-20T08:00:00Z",
+        id: "aaaa1111-1111-1111-1111-000000000001",
+        title: "Simulado ENAMED 2026.1 — 1ª Etapa (4º Período)",
+        type: "simulado_enamed_4",
+        startsAt: "2026-04-12T08:00:00Z",
         status: "corrigida",
       },
       {
-        id: "asm-demo-2026-2",
-        title: "Avaliação Somativa Integrada 2026.2",
+        id: "aaaa2222-2222-2222-2222-000000000002",
+        title: "Avaliação Semestral Integrada 2026.1 (Online)",
         type: "prova_regular",
-        startsAt: "2026-11-15T08:00:00Z",
+        startsAt: "2026-05-20T08:00:00Z",
         status: "corrigida",
       },
       {
-        id: "asm-demo-2026-1",
-        title: "Simulado Institucional ENAMED 2026.2",
+        id: "aaaa3333-3333-3333-3333-000000000003",
+        title: "Simulado ENAMED 2026.2 — 2ª Etapa (8º Período)",
         type: "simulado_enamed_8",
-        startsAt: "2026-08-10T08:00:00Z",
+        startsAt: "2026-09-15T08:00:00Z",
+        status: "corrigida",
+      },
+      {
+        id: "aaaa4444-4444-4444-4444-000000000004",
+        title: "Prova Presencial Impressa 2026.2 (Leitura Óptica OMR)",
+        type: "prova_regular",
+        startsAt: "2026-10-18T08:00:00Z",
+        status: "corrigida",
+      },
+      {
+        id: "aaaa7777-7777-7777-7777-000000000007",
+        title: "Simulado Nacional ENAMED 2026.2 — 3ª Etapa (12º Período)",
+        type: "simulado_enamed_12",
+        startsAt: "2026-11-10T08:00:00Z",
         status: "corrigida",
       },
     ];
@@ -80,13 +120,6 @@ export default async function InstituicaoHomePage({ searchParams }: PageProps) {
   const selectedExamId = requestedExamId && availableExams.some((e) => e.id === requestedExamId)
     ? requestedExamId
     : availableExams[0].id;
-
-  // 2. Busca turmas
-  const { data: dbClasses } = await supabase
-    .from("class_groups")
-    .select("id, code, label, period")
-    .eq("institution_id", institutionId)
-    .order("period", { ascending: true });
 
   const classGroups = (dbClasses && dbClasses.length > 0)
     ? dbClasses.map((c) => ({
@@ -109,19 +142,41 @@ export default async function InstituicaoHomePage({ searchParams }: PageProps) {
         { id: "cg-12", label: "MED 12º Período (2024.2 · ENAMED III)", period: 12 },
       ];
 
-  // 3. Busca itens
-  const { data: dbItems } = await supabase
-    .from("assessment_items")
-    .select(`
-      id,
-      order_index,
-      frozen_area,
-      status,
-      weight,
-      assessment_versions!inner ( assessment_id )
-    `)
-    .eq("assessment_versions.assessment_id", selectedExamId)
-    .neq("status", "anulado");
+  // 3. Busca itens, tentativas e respostas com resiliência
+  try {
+    const supabase = await createClient();
+
+    const { data: itemsData } = await supabase
+      .from("assessment_items")
+      .select(`
+        id,
+        order_index,
+        frozen_area,
+        status,
+        weight,
+        assessment_versions!inner ( assessment_id )
+      `)
+      .eq("assessment_versions.assessment_id", selectedExamId)
+      .neq("status", "anulado");
+    dbItems = itemsData;
+
+    const { data: attemptsData } = await supabase
+      .from("attempts")
+      .select("id, student_user_id, class_group_id, status, score_percentage")
+      .eq("assessment_id", selectedExamId);
+    dbAttempts = attemptsData;
+
+    if (attemptsData && attemptsData.length > 0) {
+      const attemptIds = attemptsData.map((a: any) => a.id);
+      const { data: answersData } = await supabase
+        .from("attempt_answers")
+        .select("attempt_id, assessment_item_id, is_correct")
+        .in("attempt_id", attemptIds.slice(0, 100));
+      dbAnswers = answersData;
+    }
+  } catch (err) {
+    console.warn("[InstituicaoHomePage] Aviso ao carregar itens/tentativas:", err);
+  }
 
   let items = (dbItems || []).map((it) => ({
     id: it.id,
@@ -146,13 +201,7 @@ export default async function InstituicaoHomePage({ searchParams }: PageProps) {
     }));
   }
 
-  // 4. Busca tentativas
-  const { data: dbAttempts } = await supabase
-    .from("attempts")
-    .select("id, student_user_id, class_group_id, status, score_percentage")
-    .eq("assessment_id", selectedExamId);
-
-  let attempts = (dbAttempts || []).map((a) => ({
+  let attempts = (dbAttempts || []).map((a: any) => ({
     id: a.id,
     classGroupId: a.class_group_id || "cg-1",
     status: a.status === "corrigida" ? "finalizada" : a.status,
@@ -182,14 +231,7 @@ export default async function InstituicaoHomePage({ searchParams }: PageProps) {
     });
   }
 
-  // 5. Busca respostas
-  const attemptIds = attempts.map((a) => a.id);
-  const { data: dbAnswers } = await supabase
-    .from("attempt_answers")
-    .select("attempt_id, assessment_item_id, is_correct")
-    .in("attempt_id", attemptIds.slice(0, 100));
-
-  let answers = (dbAnswers || []).map((ans) => ({
+  let answers = (dbAnswers || []).map((ans: any) => ({
     attemptId: ans.attempt_id,
     itemId: ans.assessment_item_id,
     isCorrect: ans.is_correct ?? false,

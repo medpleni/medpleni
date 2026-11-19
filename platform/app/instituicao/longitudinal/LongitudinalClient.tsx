@@ -151,56 +151,117 @@ export function LongitudinalClient({
   };
 
   return (
-    <div className="space-y-6">
+    <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "8px 0 40px" }} className="space-y-6">
       {/* Cabeçalho */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-border pb-4">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          flexWrap: "wrap",
+          gap: "16px",
+          paddingBottom: "16px",
+          borderBottom: "1px solid var(--card-border)",
+        }}
+      >
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
-              Avaliação longitudinal
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+            <h1 style={{ fontSize: "22px", fontWeight: 700, margin: 0, color: "var(--heading-color)" }}>
+              Avaliação Longitudinal
             </h1>
-            <span className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-semibold text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+            <span
+              style={{
+                fontSize: "10px",
+                fontWeight: 700,
+                padding: "2px 8px",
+                borderRadius: "9999px",
+                background: "var(--pulso-dim)",
+                color: "var(--pulso)",
+                textTransform: "uppercase",
+              }}
+            >
               DCNs art. 36–37
             </span>
           </div>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p style={{ margin: 0, fontSize: "13px", color: "var(--chumbo)" }}>
             Acompanhamento curricular e progressão por períodos com referência na Régua 60 e marcos do ENAMED.
           </p>
         </div>
 
-        {/* Abas */}
-        <div className="flex items-center gap-1 rounded-lg bg-muted p-1">
+        {/* Abas Modernas com Indicador de Foco */}
+        <div
+          style={{
+            display: "inline-flex",
+            background: "var(--input-bg)",
+            padding: "3px",
+            borderRadius: "8px",
+            border: "1px solid var(--card-border)",
+          }}
+        >
           <button
             onClick={() => setActiveTab("matriz")}
-            className={`rounded-md px-3.5 py-1.5 text-xs font-medium transition-colors ${
-              activeTab === "matriz"
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
+            style={{
+              padding: "6px 14px",
+              fontSize: "12px",
+              fontWeight: 600,
+              border: "none",
+              borderRadius: "6px",
+              cursor: "pointer",
+              background: activeTab === "matriz" ? "var(--card-bg)" : "transparent",
+              color: activeTab === "matriz" ? "var(--heading-color)" : "var(--chumbo)",
+              boxShadow: activeTab === "matriz" ? "var(--card-shadow)" : "none",
+              transition: "all 0.15s ease",
+            }}
           >
             Matriz Currículo × Eixo
           </button>
           <button
             onClick={() => setActiveTab("trilha")}
-            className={`rounded-md px-3.5 py-1.5 text-xs font-medium transition-colors ${
-              activeTab === "trilha"
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
+            style={{
+              padding: "6px 14px",
+              fontSize: "12px",
+              fontWeight: 600,
+              border: "none",
+              borderRadius: "6px",
+              cursor: "pointer",
+              background: activeTab === "trilha" ? "var(--card-bg)" : "transparent",
+              color: activeTab === "trilha" ? "var(--heading-color)" : "var(--chumbo)",
+              boxShadow: activeTab === "trilha" ? "var(--card-shadow)" : "none",
+              transition: "all 0.15s ease",
+            }}
           >
             Trilha Longitudinal
           </button>
           <button
             onClick={() => setActiveTab("planos")}
-            className={`flex items-center gap-1.5 rounded-md px-3.5 py-1.5 text-xs font-medium transition-colors ${
-              activeTab === "planos"
-                ? "bg-background text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
+            style={{
+              padding: "6px 14px",
+              fontSize: "12px",
+              fontWeight: 600,
+              border: "none",
+              borderRadius: "6px",
+              cursor: "pointer",
+              background: activeTab === "planos" ? "var(--card-bg)" : "transparent",
+              color: activeTab === "planos" ? "var(--heading-color)" : "var(--chumbo)",
+              boxShadow: activeTab === "planos" ? "var(--card-shadow)" : "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              transition: "all 0.15s ease",
+            }}
           >
             <span>Planos de Acompanhamento</span>
             {plans.length > 0 && (
-              <span className="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary/10 px-1 text-[10px] font-bold text-primary">
+              <span
+                style={{
+                  fontSize: "10px",
+                  fontWeight: 700,
+                  padding: "1px 6px",
+                  borderRadius: "9999px",
+                  background: "var(--pulso-dim)",
+                  color: "var(--pulso)",
+                }}
+              >
                 {plans.length}
               </span>
             )}

@@ -30,29 +30,59 @@ export default function ProfessoresClient({ summary }: ProfessoresClientProps) {
   });
 
   return (
-    <div className="space-y-6">
+    <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "8px 0 40px" }} className="space-y-6">
       {/* Cabeçalho */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-border pb-4">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          flexWrap: "wrap",
+          gap: "16px",
+          paddingBottom: "16px",
+          borderBottom: "1px solid var(--card-border)",
+        }}
+      >
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
-              Adesão dos professores
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+            <h1 style={{ fontSize: "22px", fontWeight: 700, margin: 0, color: "var(--heading-color)" }}>
+              Adesão dos Professores
             </h1>
-            <span className="inline-flex items-center rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold text-muted-foreground">
+            <span
+              style={{
+                fontSize: "10px",
+                fontWeight: 700,
+                padding: "2px 8px",
+                borderRadius: "9999px",
+                background: "var(--pulso-dim)",
+                color: "var(--pulso)",
+                textTransform: "uppercase",
+              }}
+            >
               Gestão Acadêmica · SPR nº 6
             </span>
           </div>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p style={{ margin: 0, fontSize: "13px", color: "var(--chumbo)" }}>
             Métricas de engajamento e adesão do corpo docente ao ecossistema MedPleni.
           </p>
         </div>
       </div>
 
       {/* AVISO METODOLÓGICO OBRIGATÓRIO (SPR nº 6) */}
-      <div className="rounded-xl border border-blue-200/80 bg-blue-50/60 dark:border-blue-900/60 dark:bg-blue-950/30 p-4 flex items-start gap-3">
-        <span className="text-base mt-0.5">ℹ️</span>
-        <div className="text-xs leading-relaxed text-blue-950 dark:text-blue-200">
-          <strong>Aviso de Interpretação Institucional:</strong> Este painel reflete exclusivamente
+      <div
+        style={{
+          background: "rgba(2, 132, 199, 0.08)",
+          border: "1px solid rgba(2, 132, 199, 0.25)",
+          borderRadius: "12px",
+          padding: "16px 20px",
+          display: "flex",
+          alignItems: "flex-start",
+          gap: "12px",
+        }}
+      >
+        <span style={{ fontSize: "16px", marginTop: "2px", flexShrink: 0 }}>ℹ️</span>
+        <div style={{ fontSize: "12px", lineHeight: 1.6, color: "var(--chumbo)" }}>
+          <strong style={{ color: "var(--heading-color)" }}>Aviso de Interpretação Institucional:</strong> Este painel reflete exclusivamente
           indicadores de <strong>uso e adesão à ferramenta na plataforma</strong> (último login,
           provas montadas, retestes e submissão de questões), e <strong>não</strong> constitui uma
           avaliação de desempenho pedagógico, competência técnica ou mérito docente.
@@ -60,79 +90,95 @@ export default function ProfessoresClient({ summary }: ProfessoresClientProps) {
       </div>
 
       {/* 4 Cards de Resumo */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "14px" }}>
         <div
           onClick={() => setFilterStatus("todos")}
-          className={`rounded-xl border p-3.5 shadow-sm cursor-pointer transition-all ${
-            filterStatus === "todos"
-              ? "border-primary bg-primary/5 ring-1 ring-primary/30"
-              : "border-border bg-card hover:bg-muted/30"
-          }`}
+          style={{
+            background: "var(--card-bg)",
+            border: filterStatus === "todos" ? "2px solid var(--pulso)" : "1px solid var(--card-border)",
+            borderRadius: "12px",
+            padding: "16px 20px",
+            boxShadow: "var(--card-shadow)",
+            cursor: "pointer",
+            transition: "all 0.15s ease",
+          }}
         >
-          <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block">
+          <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--chumbo)", textTransform: "uppercase", letterSpacing: "0.05em", display: "block" }}>
             Cadastrados
           </span>
-          <span className="text-2xl font-bold text-foreground mt-1 block">
+          <span style={{ fontSize: "24px", fontWeight: 800, color: "var(--heading-color)", marginTop: "4px", display: "block" }}>
             {summary.totalRegistered}
           </span>
-          <span className="text-[10px] text-muted-foreground mt-0.5 block">
+          <span style={{ fontSize: "11px", color: "var(--chumbo)", marginTop: "2px", display: "block" }}>
             Docentes no sistema
           </span>
         </div>
 
         <div
           onClick={() => setFilterStatus("active")}
-          className={`rounded-xl border p-3.5 shadow-sm cursor-pointer transition-all ${
-            filterStatus === "active"
-              ? "border-emerald-500 bg-emerald-50/20 ring-1 ring-emerald-500/40"
-              : "border-border bg-card hover:bg-muted/30"
-          }`}
+          style={{
+            background: "var(--card-bg)",
+            border: filterStatus === "active" ? "2px solid #16A34A" : "1px solid var(--card-border)",
+            borderRadius: "12px",
+            padding: "16px 20px",
+            boxShadow: "var(--card-shadow)",
+            cursor: "pointer",
+            transition: "all 0.15s ease",
+          }}
         >
-          <span className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider block">
+          <span style={{ fontSize: "11px", fontWeight: 600, color: "#16A34A", textTransform: "uppercase", letterSpacing: "0.05em", display: "block" }}>
             Ativos no Período
           </span>
-          <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1 block">
+          <span style={{ fontSize: "24px", fontWeight: 800, color: "#16A34A", marginTop: "4px", display: "block" }}>
             {summary.activeInPeriod}
           </span>
-          <span className="text-[10px] text-muted-foreground mt-0.5 block">
+          <span style={{ fontSize: "11px", color: "var(--chumbo)", marginTop: "2px", display: "block" }}>
             Acesso nos últimos 30 dias
           </span>
         </div>
 
         <div
           onClick={() => setFilterStatus("inactive_30_days")}
-          className={`rounded-xl border p-3.5 shadow-sm cursor-pointer transition-all ${
-            filterStatus === "inactive_30_days"
-              ? "border-amber-500 bg-amber-50/20 ring-1 ring-amber-500/40"
-              : "border-border bg-card hover:bg-muted/30"
-          }`}
+          style={{
+            background: "var(--card-bg)",
+            border: filterStatus === "inactive_30_days" ? "2px solid #D97706" : "1px solid var(--card-border)",
+            borderRadius: "12px",
+            padding: "16px 20px",
+            boxShadow: "var(--card-shadow)",
+            cursor: "pointer",
+            transition: "all 0.15s ease",
+          }}
         >
-          <span className="text-[11px] font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider block">
+          <span style={{ fontSize: "11px", fontWeight: 600, color: "#D97706", textTransform: "uppercase", letterSpacing: "0.05em", display: "block" }}>
             Sem Acesso 30+ Dias
           </span>
-          <span className="text-2xl font-bold text-amber-600 dark:text-amber-400 mt-1 block">
+          <span style={{ fontSize: "24px", fontWeight: 800, color: "#D97706", marginTop: "4px", display: "block" }}>
             {summary.inactiveOver30Days}
           </span>
-          <span className="text-[10px] text-muted-foreground mt-0.5 block">
+          <span style={{ fontSize: "11px", color: "var(--chumbo)", marginTop: "2px", display: "block" }}>
             Demanda contato da coordenação
           </span>
         </div>
 
         <div
           onClick={() => setFilterStatus("never_accessed")}
-          className={`rounded-xl border p-3.5 shadow-sm cursor-pointer transition-all ${
-            filterStatus === "never_accessed"
-              ? "border-rose-500 bg-rose-50/20 ring-1 ring-rose-500/40"
-              : "border-border bg-card hover:bg-muted/30"
-          }`}
+          style={{
+            background: "var(--card-bg)",
+            border: filterStatus === "never_accessed" ? "2px solid #DC2626" : "1px solid var(--card-border)",
+            borderRadius: "12px",
+            padding: "16px 20px",
+            boxShadow: "var(--card-shadow)",
+            cursor: "pointer",
+            transition: "all 0.15s ease",
+          }}
         >
-          <span className="text-[11px] font-semibold text-rose-700 dark:text-rose-400 uppercase tracking-wider block">
+          <span style={{ fontSize: "11px", fontWeight: 600, color: "#DC2626", textTransform: "uppercase", letterSpacing: "0.05em", display: "block" }}>
             Nunca Acessaram
           </span>
-          <span className="text-2xl font-bold text-rose-600 dark:text-rose-400 mt-1 block">
+          <span style={{ fontSize: "24px", fontWeight: 800, color: "#DC2626", marginTop: "4px", display: "block" }}>
             {summary.neverAccessed}
           </span>
-          <span className="text-[10px] text-muted-foreground mt-0.5 block">
+          <span style={{ fontSize: "11px", color: "var(--chumbo)", marginTop: "2px", display: "block" }}>
             Pendente onboarding inicial
           </span>
         </div>

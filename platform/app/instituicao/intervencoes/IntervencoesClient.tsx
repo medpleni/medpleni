@@ -216,19 +216,39 @@ export function IntervencoesClient({
   };
 
   return (
-    <div className="space-y-6">
+    <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "8px 0 40px" }} className="space-y-6">
       {/* Cabeçalho */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-border pb-4">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          flexWrap: "wrap",
+          gap: "16px",
+          paddingBottom: "16px",
+          borderBottom: "1px solid var(--card-border)",
+        }}
+      >
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
-              Intervenções pedagógicas
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+            <h1 style={{ fontSize: "22px", fontWeight: 700, margin: 0, color: "var(--heading-color)" }}>
+              Intervenções Pedagógicas
             </h1>
-            <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
+            <span
+              style={{
+                fontSize: "10px",
+                fontWeight: 700,
+                padding: "2px 8px",
+                borderRadius: "9999px",
+                background: "var(--pulso-dim)",
+                color: "var(--pulso)",
+                textTransform: "uppercase",
+              }}
+            >
               Da Lacuna ao Reteste
             </span>
           </div>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p style={{ margin: 0, fontSize: "13px", color: "var(--chumbo)" }}>
             Diagnóstico de lacunas (&lt; 60%), listas dirigidas no Praticar e pré/pós-aula com reteste embutido.
           </p>
         </div>
@@ -239,7 +259,17 @@ export function IntervencoesClient({
               setWizardStep(1);
               setIsWizardOpen(true);
             }}
-            className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-xs font-bold text-primary-foreground shadow-sm hover:bg-primary/90 transition-colors"
+            style={{
+              padding: "8px 16px",
+              fontSize: "12px",
+              fontWeight: 600,
+              borderRadius: "8px",
+              border: "none",
+              background: "var(--pulso)",
+              color: "#FFFFFF",
+              cursor: "pointer",
+              boxShadow: "0 2px 4px rgba(0, 194, 168, 0.25)",
+            }}
           >
             + Nova Intervenção
           </button>
@@ -247,51 +277,51 @@ export function IntervencoesClient({
       </div>
 
       {/* 4 Cards de Resumo */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="rounded-xl border border-border bg-card p-3.5 shadow-sm">
-          <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block">
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "14px" }}>
+        <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: "12px", padding: "16px 20px", boxShadow: "var(--card-shadow)" }}>
+          <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--chumbo)", textTransform: "uppercase", letterSpacing: "0.05em", display: "block" }}>
             Intervenções Ativas
           </span>
-          <span className="text-2xl font-bold text-foreground mt-1 block">
+          <span style={{ fontSize: "24px", fontWeight: 800, color: "var(--heading-color)", marginTop: "4px", display: "block" }}>
             {inProgressCount}
           </span>
-          <span className="text-[10px] text-muted-foreground mt-0.5 block">
+          <span style={{ fontSize: "11px", color: "var(--chumbo)", marginTop: "2px", display: "block" }}>
             {totalCount} registradas no total
           </span>
         </div>
 
-        <div className="rounded-xl border border-border bg-card p-3.5 shadow-sm">
-          <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block">
+        <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: "12px", padding: "16px 20px", boxShadow: "var(--card-shadow)" }}>
+          <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--chumbo)", textTransform: "uppercase", letterSpacing: "0.05em", display: "block" }}>
             Retestadas com Sucesso
           </span>
-          <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1 block">
+          <span style={{ fontSize: "24px", fontWeight: 800, color: "#16A34A", marginTop: "4px", display: "block" }}>
             {completedCount}
           </span>
-          <span className="text-[10px] text-muted-foreground mt-0.5 block">
+          <span style={{ fontSize: "11px", color: "var(--chumbo)", marginTop: "2px", display: "block" }}>
             Régua 60 superada no reteste
           </span>
         </div>
 
-        <div className="rounded-xl border border-border bg-card p-3.5 shadow-sm">
-          <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block">
+        <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: "12px", padding: "16px 20px", boxShadow: "var(--card-shadow)" }}>
+          <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--chumbo)", textTransform: "uppercase", letterSpacing: "0.05em", display: "block" }}>
             Adesão Média Discente
           </span>
-          <span className="text-2xl font-bold text-foreground mt-1 block">
+          <span style={{ fontSize: "24px", fontWeight: 800, color: "var(--heading-color)", marginTop: "4px", display: "block" }}>
             {avgAdherence.toFixed(1)}%
           </span>
-          <span className="text-[10px] text-muted-foreground mt-0.5 block">
+          <span style={{ fontSize: "11px", color: "var(--chumbo)", marginTop: "2px", display: "block" }}>
             Alunos que completaram as metas
           </span>
         </div>
 
-        <div className="rounded-xl border border-border bg-card p-3.5 shadow-sm">
-          <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider block">
+        <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: "12px", padding: "16px 20px", boxShadow: "var(--card-shadow)" }}>
+          <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--chumbo)", textTransform: "uppercase", letterSpacing: "0.05em", display: "block" }}>
             Tipos Homologados
           </span>
-          <span className="text-xs font-bold text-foreground mt-1 block">
+          <span style={{ fontSize: "13px", fontWeight: 700, color: "var(--heading-color)", marginTop: "4px", display: "block" }}>
             Lista de Exercícios &amp; Pré/Pós-Aula
           </span>
-          <span className="text-[10px] text-muted-foreground mt-0.5 block">
+          <span style={{ fontSize: "11px", color: "var(--chumbo)", marginTop: "2px", display: "block" }}>
             Modelo enxuto (SPR / IN-02)
           </span>
         </div>

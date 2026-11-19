@@ -247,8 +247,8 @@ export default function DataTable<T extends Record<string, any>>({
           <thead>
             <tr
               style={{
-                background: "var(--input-bg)",
-                borderBottom: "1px solid var(--sinal)",
+                background: "var(--table-header-bg, #F8FAFC)",
+                borderBottom: "1px solid var(--card-border)",
               }}
             >
               {columns.map((col) => {
@@ -259,12 +259,10 @@ export default function DataTable<T extends Record<string, any>>({
                     key={col.key}
                     onClick={() => handleSort(col.key, isSortable)}
                     style={{
-                      padding: "10px 14px",
-                      fontFamily: "'IBM Plex Mono', monospace",
-                      fontSize: "10px",
-                      letterSpacing: "0.08em",
-                      textTransform: "uppercase",
-                      color: isSorted ? "var(--pulso)" : "var(--chumbo)",
+                      padding: "12px 16px",
+                      fontFamily: "var(--font-body), 'Inter', sans-serif",
+                      fontSize: "12px",
+                      color: isSorted ? "var(--pulso)" : "var(--heading-color)",
                       fontWeight: 600,
                       cursor: isSortable ? "pointer" : "default",
                       userSelect: "none",

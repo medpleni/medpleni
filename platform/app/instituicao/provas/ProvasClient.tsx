@@ -231,20 +231,26 @@ export default function ProvasClient({
   const preChecks: ExamPreCheckResult = runExamPreChecks(matrix, selectedItems);
 
   return (
-    <div className="space-y-6">
+    <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "8px 0 40px" }} className="space-y-6">
       {/* Notificação / Feedback */}
       {feedbackMessage && (
         <div
-          className={`p-4 rounded-lg flex items-center justify-between text-sm ${
-            feedbackMessage.type === "success"
-              ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800"
-              : "bg-rose-50 dark:bg-rose-950/40 text-rose-800 dark:text-rose-300 border border-rose-200 dark:border-rose-800"
-          }`}
+          style={{
+            padding: "12px 16px",
+            borderRadius: "10px",
+            fontSize: "13px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            background: feedbackMessage.type === "success" ? "rgba(22, 163, 74, 0.08)" : "rgba(220, 38, 38, 0.08)",
+            border: feedbackMessage.type === "success" ? "1px solid rgba(22, 163, 74, 0.25)" : "1px solid rgba(220, 38, 38, 0.25)",
+            color: feedbackMessage.type === "success" ? "#16A34A" : "#DC2626",
+          }}
         >
           <span>{feedbackMessage.text}</span>
           <button
             onClick={() => setFeedbackMessage(null)}
-            className="text-xs underline ml-4 hover:opacity-80"
+            style={{ background: "none", border: "none", fontSize: "11px", fontWeight: 700, textDecoration: "underline", cursor: "pointer", color: "inherit" }}
           >
             Fechar
           </button>
@@ -252,19 +258,42 @@ export default function ProvasClient({
       )}
 
       {/* BLOCO 1: Topo e Ações Principais */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-border">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          flexWrap: "wrap",
+          gap: "16px",
+          paddingBottom: "16px",
+          borderBottom: "1px solid var(--card-border)",
+        }}
+      >
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-foreground">
+          <h1 style={{ fontSize: "22px", fontWeight: 700, margin: "0 0 4px", color: "var(--heading-color)" }}>
             Provas e Avaliações
           </h1>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Gestão curricular, montagem assistida por matriz de referência e aplicação de simulados ENAMED
+          <p style={{ margin: 0, fontSize: "13px", color: "var(--chumbo)" }}>
+            Gestão curricular, montagem assistida por matriz de referência e aplicação de simulados ENAMED.
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <button
             onClick={() => setIsTemplatesModalOpen(true)}
-            className="px-3 py-1.5 text-xs font-medium rounded-lg border border-border bg-card hover:bg-muted text-foreground transition-colors flex items-center gap-1.5"
+            style={{
+              padding: "8px 14px",
+              fontSize: "12px",
+              fontWeight: 600,
+              borderRadius: "8px",
+              border: "1px solid var(--card-border)",
+              background: "var(--card-bg)",
+              color: "var(--heading-color)",
+              cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              boxShadow: "var(--card-shadow)",
+            }}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
@@ -279,7 +308,20 @@ export default function ProvasClient({
               setIsWizardOpen(true);
               setWizardStep(1);
             }}
-            className="px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors flex items-center gap-1.5 shadow-sm"
+            style={{
+              padding: "8px 16px",
+              fontSize: "12px",
+              fontWeight: 600,
+              borderRadius: "8px",
+              border: "none",
+              background: "var(--pulso)",
+              color: "#FFFFFF",
+              cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "6px",
+              boxShadow: "0 2px 4px rgba(0, 194, 168, 0.25)",
+            }}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="12" y1="5" x2="12" y2="19" />
@@ -291,57 +333,89 @@ export default function ProvasClient({
       </div>
 
       {/* BLOCO 2: KPIs Executivos */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div className="p-3.5 rounded-lg border border-border bg-card">
-          <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider block">
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "14px" }}>
+        <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: "12px", padding: "16px 20px", boxShadow: "var(--card-shadow)" }}>
+          <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--chumbo)", textTransform: "uppercase", letterSpacing: "0.05em", display: "block" }}>
             Total de Provas
           </span>
-          <span className="text-xl font-bold text-foreground mt-1 block">
+          <span style={{ fontSize: "24px", fontWeight: 800, color: "var(--heading-color)", marginTop: "4px", display: "block" }}>
             {totalExams}
           </span>
         </div>
-        <div className="p-3.5 rounded-lg border border-border bg-card">
-          <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider block">
+        <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: "12px", padding: "16px 20px", boxShadow: "var(--card-shadow)" }}>
+          <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--chumbo)", textTransform: "uppercase", letterSpacing: "0.05em", display: "block" }}>
             Publicadas / Em Andamento
           </span>
-          <span className="text-xl font-bold text-emerald-600 dark:text-emerald-400 mt-1 block">
+          <span style={{ fontSize: "24px", fontWeight: 800, color: "#16A34A", marginTop: "4px", display: "block" }}>
             {publishedCount}
           </span>
         </div>
-        <div className="p-3.5 rounded-lg border border-border bg-card">
-          <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider block">
+        <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: "12px", padding: "16px 20px", boxShadow: "var(--card-shadow)" }}>
+          <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--chumbo)", textTransform: "uppercase", letterSpacing: "0.05em", display: "block" }}>
             Em Revisão / Rascunhos
           </span>
-          <span className="text-xl font-bold text-amber-600 dark:text-amber-400 mt-1 block">
+          <span style={{ fontSize: "24px", fontWeight: 800, color: "#D97706", marginTop: "4px", display: "block" }}>
             {inReviewOrDraftCount}
           </span>
         </div>
-        <div className="p-3.5 rounded-lg border border-border bg-card">
-          <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider block">
+        <div style={{ background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: "12px", padding: "16px 20px", boxShadow: "var(--card-shadow)" }}>
+          <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--chumbo)", textTransform: "uppercase", letterSpacing: "0.05em", display: "block" }}>
             Simulados ENAMED
           </span>
-          <span className="text-xl font-bold text-blue-600 dark:text-blue-400 mt-1 block">
+          <span style={{ fontSize: "24px", fontWeight: 800, color: "var(--pulso)", marginTop: "4px", display: "block" }}>
             {enamedCount}
           </span>
         </div>
       </div>
 
       {/* BLOCO 3: Barra de Filtros e Busca */}
-      <div className="p-3 rounded-lg border border-border bg-card flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
-        <div className="flex-1 max-w-sm">
+      <div
+        style={{
+          background: "var(--card-bg)",
+          border: "1px solid var(--card-border)",
+          borderRadius: "12px",
+          padding: "14px 18px",
+          boxShadow: "var(--card-shadow)",
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "12px",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <div style={{ flex: 1, minWidth: "260px" }}>
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Buscar prova por título..."
-            className="w-full px-3 py-1.5 text-xs rounded-md border border-input bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+            style={{
+              width: "100%",
+              padding: "8px 12px",
+              fontSize: "12px",
+              borderRadius: "8px",
+              border: "1px solid var(--card-border)",
+              background: "var(--input-bg)",
+              color: "var(--heading-color)",
+              outline: "none",
+            }}
           />
         </div>
-        <div className="flex items-center gap-2">
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-2.5 py-1.5 text-xs rounded-md border border-input bg-background text-foreground focus:outline-none"
+            style={{
+              padding: "8px 12px",
+              fontSize: "12px",
+              fontWeight: 500,
+              borderRadius: "8px",
+              border: "1px solid var(--card-border)",
+              background: "var(--input-bg)",
+              color: "var(--heading-color)",
+              cursor: "pointer",
+              outline: "none",
+            }}
           >
             <option value="todos">Todos os status</option>
             <option value="rascunho">Rascunho</option>
@@ -355,7 +429,17 @@ export default function ProvasClient({
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="px-2.5 py-1.5 text-xs rounded-md border border-input bg-background text-foreground focus:outline-none"
+            style={{
+              padding: "8px 12px",
+              fontSize: "12px",
+              fontWeight: 500,
+              borderRadius: "8px",
+              border: "1px solid var(--card-border)",
+              background: "var(--input-bg)",
+              color: "var(--heading-color)",
+              cursor: "pointer",
+              outline: "none",
+            }}
           >
             <option value="todos">Todos os tipos</option>
             <option value="prova_regular">Prova regular</option>
@@ -369,75 +453,109 @@ export default function ProvasClient({
       </div>
 
       {/* BLOCO 4: Lista de Avaliações */}
-      <div className="border border-border rounded-lg bg-card overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-muted/50 border-b border-border text-muted-foreground font-medium">
-              <tr>
-                <th className="py-2.5 px-3">Título / Tipo</th>
-                <th className="py-2.5 px-3">Modalidade</th>
-                <th className="py-2.5 px-3">Turmas Convocadas</th>
-                <th className="py-2.5 px-3">Duração</th>
-                <th className="py-2.5 px-3">Status</th>
-                <th className="py-2.5 px-3 text-right">Ações</th>
+      <div
+        style={{
+          background: "var(--card-bg)",
+          border: "1px solid var(--card-border)",
+          borderRadius: "12px",
+          boxShadow: "var(--card-shadow)",
+          overflow: "hidden",
+        }}
+      >
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12px", textAlign: "left" }}>
+            <thead>
+              <tr style={{ background: "var(--table-header-bg, #F8FAFC)", borderBottom: "1px solid var(--card-border)" }}>
+                <th style={{ padding: "12px 16px", fontWeight: 600, color: "var(--heading-color)" }}>Título / Tipo</th>
+                <th style={{ padding: "12px 16px", fontWeight: 600, color: "var(--heading-color)" }}>Modalidade</th>
+                <th style={{ padding: "12px 16px", fontWeight: 600, color: "var(--heading-color)" }}>Turmas Convocadas</th>
+                <th style={{ padding: "12px 16px", fontWeight: 600, color: "var(--heading-color)" }}>Duração</th>
+                <th style={{ padding: "12px 16px", fontWeight: 600, color: "var(--heading-color)" }}>Status</th>
+                <th style={{ padding: "12px 16px", fontWeight: 600, color: "var(--heading-color)", textAlign: "right" }}>Ações</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border/60">
+            <tbody>
               {filteredAssessments.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-8 text-center text-muted-foreground text-xs">
+                  <td colSpan={6} style={{ padding: "32px", textAlign: "center", color: "var(--chumbo)", fontSize: "12px" }}>
                     Nenhuma avaliação encontrada com os filtros selecionados.
                   </td>
                 </tr>
               ) : (
                 filteredAssessments.map((exam) => {
-                  const statusColors: Record<string, string> = {
-                    rascunho: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
-                    em_revisao: "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300",
-                    aprovada: "bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300",
-                    publicada: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300",
-                    aplicada: "bg-indigo-100 text-indigo-800 dark:bg-indigo-950 dark:text-indigo-300",
-                    corrigida: "bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300",
+                  const getStatusBadge = (st: string) => {
+                    switch (st) {
+                      case "publicada":
+                      case "aplicada":
+                        return { bg: "rgba(34, 197, 94, 0.12)", color: "#16A34A", label: "Publicada" };
+                      case "corrigida":
+                        return { bg: "rgba(2, 132, 199, 0.12)", color: "#0284C7", label: "Corrigida" };
+                      case "em_revisao":
+                        return { bg: "rgba(245, 166, 35, 0.12)", color: "#D97706", label: "Em Revisão" };
+                      case "aprovada":
+                        return { bg: "var(--pulso-dim)", color: "var(--pulso)", label: "Aprovada" };
+                      default:
+                        return { bg: "var(--input-bg)", color: "var(--chumbo)", label: "Rascunho" };
+                    }
                   };
+                  const badge = getStatusBadge(exam.status);
 
                   return (
-                    <tr key={exam.id} className="hover:bg-muted/40 transition-colors">
-                      <td className="py-3 px-3">
-                        <div className="font-semibold text-foreground">{exam.title}</div>
-                        <div className="text-[11px] text-muted-foreground mt-0.5 capitalize">
+                    <tr
+                      key={exam.id}
+                      style={{ borderBottom: "1px solid var(--card-border)", transition: "background 0.15s ease" }}
+                    >
+                      <td style={{ padding: "12px 16px" }}>
+                        <div style={{ fontWeight: 600, color: "var(--heading-color)" }}>{exam.title}</div>
+                        <div style={{ fontSize: "11px", color: "var(--chumbo)", marginTop: "2px", textTransform: "capitalize" }}>
                           {exam.type.replace(/_/g, " ")}
                         </div>
                       </td>
-                      <td className="py-3 px-3 capitalize text-muted-foreground">
+                      <td style={{ padding: "12px 16px", color: "var(--chumbo)", textTransform: "capitalize" }}>
                         {exam.modality}
                       </td>
-                      <td className="py-3 px-3 text-muted-foreground">
+                      <td style={{ padding: "12px 16px", color: "var(--chumbo)" }}>
                         {exam.class_groups_labels && exam.class_groups_labels.length > 0
                           ? exam.class_groups_labels.join(", ")
                           : "Geral da Instituição"}
                       </td>
-                      <td className="py-3 px-3 text-muted-foreground">
+                      <td style={{ padding: "12px 16px", color: "var(--chumbo)" }}>
                         {exam.duration_minutes} min
                       </td>
-                      <td className="py-3 px-3">
+                      <td style={{ padding: "12px 16px" }}>
                         <span
-                          className={`inline-block px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider ${
-                            statusColors[exam.status] || "bg-zinc-100 text-zinc-800"
-                          }`}
+                          style={{
+                            display: "inline-block",
+                            padding: "3px 10px",
+                            borderRadius: "9999px",
+                            fontSize: "11px",
+                            fontWeight: 600,
+                            textTransform: "uppercase",
+                            letterSpacing: "0.04em",
+                            background: badge.bg,
+                            color: badge.color,
+                          }}
                         >
-                          {exam.status.replace("_", " ")}
+                          {badge.label}
                         </span>
                       </td>
-                      <td className="py-3 px-3 text-right">
-                        <div className="inline-flex items-center gap-1.5">
-                          <button
-                            onClick={() => handleDuplicate(exam.id)}
-                            disabled={isPending}
-                            className="px-2 py-1 text-[11px] font-medium rounded border border-border hover:bg-muted text-foreground transition-colors"
-                          >
-                            Duplicar
-                          </button>
-                        </div>
+                      <td style={{ padding: "12px 16px", textAlign: "right" }}>
+                        <button
+                          onClick={() => handleDuplicate(exam.id)}
+                          disabled={isPending}
+                          style={{
+                            padding: "5px 12px",
+                            fontSize: "11px",
+                            fontWeight: 600,
+                            borderRadius: "6px",
+                            border: "1px solid var(--card-border)",
+                            background: "var(--card-bg)",
+                            color: "var(--heading-color)",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Duplicar
+                        </button>
                       </td>
                     </tr>
                   );

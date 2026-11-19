@@ -153,54 +153,90 @@ export default function GovernancaClient({
   };
 
   return (
-    <div className="space-y-6">
+    <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "8px 0 40px" }} className="space-y-6">
       {/* ── 1. CABEÇALHO DO MÓDULO ── */}
-      <div className="bg-card border border-border rounded-xl p-6 shadow-sm">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary mb-2">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              </svg>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          flexWrap: "wrap",
+          gap: "16px",
+          paddingBottom: "16px",
+          borderBottom: "1px solid var(--card-border)",
+        }}
+      >
+        <div>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+            <span
+              style={{
+                fontSize: "10px",
+                fontWeight: 700,
+                padding: "2px 8px",
+                borderRadius: "9999px",
+                background: "var(--pulso-dim)",
+                color: "var(--pulso)",
+                textTransform: "uppercase",
+              }}
+            >
               Conformidade LGPD &amp; Segurança Regulatória
-            </div>
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">
-              Governança, Privacidade e Auditoria
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Painel exclusivo da direção para fiscalização de acessos a dados individuais de alunos,
-              trilha imutável de eventos operacionais e rotinas de retenção e conformidade.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="text-xs px-3 py-1.5 rounded-lg border border-border bg-muted/40 font-mono text-muted-foreground">
-              Trilha: PostgreSQL Imutável (Trigger-protected)
             </span>
           </div>
+          <h1 style={{ fontSize: "22px", fontWeight: 700, margin: "0 0 4px", color: "var(--heading-color)" }}>
+            Governança, Privacidade e Auditoria
+          </h1>
+          <p style={{ margin: 0, fontSize: "13px", color: "var(--chumbo)" }}>
+            Painel exclusivo da direção para fiscalização de acessos a dados individuais de alunos,
+            trilha imutável de eventos operacionais e rotinas de retenção e conformidade.
+          </p>
         </div>
 
-        {/* Abas de Navegação */}
-        <div className="flex items-center gap-1 border-b border-border mt-6 overflow-x-auto text-xs font-semibold">
-          {[
-            { id: "acessos", label: "Acessos a Dados Individuais" },
-            { id: "auditoria", label: "Trilha de Auditoria Imutável" },
-            { id: "privacidade", label: "Privacidade & Dados" },
-            { id: "retencao", label: "Retenção, Anonimização & Exclusão" },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
-              className={`px-4 py-2.5 border-b-2 font-medium transition-colors whitespace-nowrap ${
-                activeTab === tab.id
-                  ? "border-primary text-primary font-bold"
-                  : "border-transparent text-muted-foreground hover:text-foreground hover:border-border"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <span
+            style={{
+              fontSize: "11px",
+              padding: "6px 12px",
+              borderRadius: "8px",
+              border: "1px solid var(--card-border)",
+              background: "var(--input-bg)",
+              fontFamily: "monospace",
+              color: "var(--chumbo)",
+            }}
+          >
+            Trilha: PostgreSQL Imutável (Trigger-protected)
+          </span>
         </div>
+      </div>
+
+      {/* Abas de Navegação Limpas */}
+      <div style={{ display: "flex", gap: "24px", borderBottom: "1px solid var(--card-border)", marginBottom: "20px", overflowX: "auto" }}>
+        {[
+          { id: "acessos", label: "Acessos a Dados Individuais" },
+          { id: "auditoria", label: "Trilha de Auditoria Imutável" },
+          { id: "privacidade", label: "Privacidade & Dados" },
+          { id: "retencao", label: "Retenção, Anonimização & Exclusão" },
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id as any)}
+            style={{
+              padding: "10px 4px",
+              fontSize: "13px",
+              fontWeight: activeTab === tab.id ? 700 : 500,
+              color: activeTab === tab.id ? "var(--pulso)" : "var(--chumbo)",
+              borderBottom: activeTab === tab.id ? "2px solid var(--pulso)" : "2px solid transparent",
+              background: "transparent",
+              borderTop: "none",
+              borderLeft: "none",
+              borderRight: "none",
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+              transition: "all 0.15s ease",
+            }}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
 
       {/* Feedback contextual */}
