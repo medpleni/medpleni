@@ -265,7 +265,7 @@ export default function B2BShell({ context, children }: B2BShellProps) {
       {
         id: "inicio",
         label: "Início",
-        href: "/instituicao",
+        href: "/instituicao/aluno",
         status: "ready",
         icon: (
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -275,10 +275,34 @@ export default function B2BShell({ context, children }: B2BShellProps) {
         ),
       },
       {
+        id: "evolucao",
+        label: "Minha evolução",
+        href: "/instituicao/aluno?tab=evolucao",
+        status: "ready",
+        icon: (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+            <polyline points="17 6 23 6 23 12" />
+          </svg>
+        ),
+      },
+      {
+        id: "areas",
+        label: "Resultados por área",
+        href: "/instituicao/aluno?tab=areas",
+        status: "ready",
+        icon: (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 6v6l4 2" />
+          </svg>
+        ),
+      },
+      {
         id: "avaliacoes",
         label: "Minhas avaliações",
-        href: "/instituicao/avaliacoes",
-        status: "in_progress",
+        href: "/instituicao/aluno?tab=avaliacoes",
+        status: "ready",
         icon: (
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
@@ -290,24 +314,12 @@ export default function B2BShell({ context, children }: B2BShellProps) {
       {
         id: "praticar",
         label: "Praticar",
-        href: "/instituicao/praticar",
-        status: "in_progress",
+        href: "/instituicao/aluno?tab=praticar",
+        status: "ready",
         icon: (
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="9 11 12 14 22 4" />
             <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-          </svg>
-        ),
-      },
-      {
-        id: "evolucao",
-        label: "Minha evolução",
-        href: "/instituicao/evolucao",
-        status: "in_progress",
-        icon: (
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-            <polyline points="17 6 23 6 23 12" />
           </svg>
         ),
       },

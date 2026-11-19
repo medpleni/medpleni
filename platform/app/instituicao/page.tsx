@@ -26,7 +26,7 @@ export default async function InstituicaoHomePage({ searchParams }: PageProps) {
 
   // Alunos têm portal próprio
   if (context.role === "aluno") {
-    redirect("/instituicao/aluno/provas");
+    redirect("/instituicao/aluno");
   }
 
   const institutionId = context.institution.id;

@@ -6,6 +6,55 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-19 · P20 · Área do Aluno Institucional e Prática com Respostas de Treino (AL-01 a AL-05)
+
+### O que foi feito
+
+- **Portal Institucional do Estudante (`/instituicao/aluno`):**
+  - Implementado portal completo para os alunos matriculados na instituição, convivendo harmonicamente com a experiência B2C.
+  - **Início ("Próximo passo" com o porquê · AL-01):**
+    - Card de destaque que identifica o eixo médico de menor aproveitamento (maior oportunidade de ganho) e fornece a justificativa clara (*porquê*) e a recomendação de ação imediata.
+    - Bloco de **Provas Abertas** agendadas com link de acesso rápido ao player da avaliação.
+    - Bloco de **Listas Atribuídas (Intervenções)** pendentes, exibindo meta de questões, prazo e barra de progresso discente.
+    - **Aviso de Privacidade em Linguagem Simples:** esclarece ao estudante com total transparência o que a faculdade e os professores enxergam (notas, aproveitamento por área, volume de questões praticadas e listas de exercícios), frisando que **não há ranking público entre colegas**.
+  - **Minha Evolução (Evolução Pessoal vs. Média da Turma · AL-02):**
+    - Gráfico comparativo de notas ao longo do tempo (provas/simulados em ordem cronológica).
+    - Apresenta a nota individual do aluno comparada à linha de referência da média da turma e à linha tracejada da Régua 60.
+    - **Garantia explícita:** estritamente **sem ranking e sem posição** (conforme deliberação médica AL-02).
+  - **Resultados por Área (Ordenados por Oportunidade de Ganho · AL-03):**
+    - Lista de áreas médicas ordenada de forma crescente pelo percentual de acerto (menor aproveitamento primeiro, indicando maior margem de evolução).
+    - Barra visual colorida por status (<51% Crítico, 51–60% Zona de Decisão, $\ge 60\%$ Seguro), contagem de questões e ação sugerida por linha com atalho de 1 clique para praticar o eixo.
+  - **Minhas Avaliações & Revisar Erros em Modo Leitura (AL-04):**
+    - Histórico de provas realizadas com nota, média da turma e contagem de erros.
+    - Botão **"Revisar erros" em modo leitura** pedagógico: sem cronômetro, sem alteração de nota e somente disponível quando o gabarito foi liberado pelo docente/coordenação (exibe etiqueta com cadeado quando pendente). Modal interativo com enunciado, gabarito e comentários detalhados.
+  - **Praticar & Respostas de Treino (AL-05):**
+    - Suporte a dois modos: listas de exercícios atribuídas (intervenções) ou prática dirigida por eixo médico.
+    - Sessão de prática com feedback imediato (correto/incorreto) e justificativa pedagógica da questão.
+    - **Persistência em `user_answers`:** as respostas de prática do estudante são gravadas diretamente na tabela `user_answers` do B2C (e atualizam `intervention_adherences`), alimentando em tempo real o volume de questões utilizado nos gráficos de dispersão da gestão e das turmas!
+- **Escopo e Restrições Deliberadas:**
+  - Sem "plano até a somativa" (função AL-06 reprovada).
+  - Sem agenda (função AL-07 postergada).
+- **Testes e Build:**
+  - Testes unitários puros cobrindo ordenação por oportunidade de ganho, cálculo do próximo passo e evolução cronológica sem ranking (`platform/lib/b2b/__tests__/aluno.test.ts`).
+  - Todos os 20 arquivos de testes (146 testes) e o build de produção do Next.js aprovados com sucesso.
+
+### Arquivos criados/alterados
+
+- `platform/lib/b2b/aluno.ts` (criado - funções de ordenação de áreas, próximo passo com porquê e evolução temporal sem ranking)
+- `platform/lib/b2b/__tests__/aluno.test.ts` (criado - 3 testes unitários)
+- `platform/lib/b2b/aluno-actions.ts` (criado - Server Action `recordPracticeAnswer` integrando com `user_answers` e `intervention_adherences`)
+- `platform/app/instituicao/aluno/AlunoPortalClient.tsx` (criado - cliente do portal com 5 abas, player de prática e modal de revisão de erros)
+- `platform/app/instituicao/aluno/page.tsx` (criado - Server Component de dados do aluno)
+- `platform/app/instituicao/page.tsx` (atualizado - redirecionamento do aluno para `/instituicao/aluno`)
+- `platform/app/instituicao/components/B2BShell.tsx` (atualizado - navegação do aluno para abas do portal institucional)
+- `docs/b2b/DIARIO.md` (atualizado)
+
+### SQL a rodar no Supabase
+
+- **Nenhum SQL novo:** O portal do aluno utiliza as tabelas existentes (`user_answers`, `assessment_attempts`, `assessments`, `interventions`, `intervention_adherences`, `questions`).
+
+---
+
 ## 2026-11-19 · P19 · Espaço do Docente (4 Blocos) e Gestão de Adesão dos Professores (DO-01, DO-02, Voto SPR nº 6)
 
 ### O que foi feito
