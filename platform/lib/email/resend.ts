@@ -2,7 +2,8 @@ import { Resend } from "resend";
 
 const apiKey = process.env.RESEND_API_KEY;
 
-export const resend = new Resend(apiKey);
+// Em tempo de build no Vercel/CI ou sem chave configurada, usa dummy para não quebrar a compilação
+export const resend = new Resend(apiKey || "re_dummy_for_build_environment");
 
 function cleanFromEmail(raw?: string): string {
   if (!raw) return "MedPleni <noreply@medpleni.com>";
@@ -44,6 +45,10 @@ export async function sendEmail({
   emailType = "notification",
   sentBy = null,
 }: SendEmailOptions) {
+  if (!process.env.RESEND_API_KEY) {
+    console.warn("[Resend]: RESEND_API_KEY não configurada no ambiente. E-mail ignorado.");
+    return { success: false, error: "RESEND_API_KEY não configurada no ambiente" };
+  }
   try {
     const sanitizedFrom = cleanFromEmail(from);
     const result = await resend.emails.send({
