@@ -139,19 +139,31 @@ BEGIN
     ) ON CONFLICT (id) DO NOTHING;
   END LOOP;
 
-  -- 5. Vincula turmas convocadas em assessment_targets para Simulado 3
+  -- 5. Vincula turmas convocadas em assessment_targets para os 3 simulados
   FOR v_period IN 1..12 LOOP
-    INSERT INTO public.assessment_targets (assessment_id, class_group_id)
-    VALUES (v_exam3_id, v_class_ids[v_period])
-    ON CONFLICT DO NOTHING;
+    IF NOT EXISTS (
+      SELECT 1 FROM public.assessment_targets 
+      WHERE assessment_id = v_exam3_id AND class_group_id = v_class_ids[v_period]
+    ) THEN
+      INSERT INTO public.assessment_targets (assessment_id, target_type, class_group_id)
+      VALUES (v_exam3_id, 'class_group', v_class_ids[v_period]);
+    END IF;
 
-    INSERT INTO public.assessment_targets (assessment_id, class_group_id)
-    VALUES (v_exam1_id, v_class_ids[v_period])
-    ON CONFLICT DO NOTHING;
+    IF NOT EXISTS (
+      SELECT 1 FROM public.assessment_targets 
+      WHERE assessment_id = v_exam1_id AND class_group_id = v_class_ids[v_period]
+    ) THEN
+      INSERT INTO public.assessment_targets (assessment_id, target_type, class_group_id)
+      VALUES (v_exam1_id, 'class_group', v_class_ids[v_period]);
+    END IF;
 
-    INSERT INTO public.assessment_targets (assessment_id, class_group_id)
-    VALUES (v_exam2_id, v_class_ids[v_period])
-    ON CONFLICT DO NOTHING;
+    IF NOT EXISTS (
+      SELECT 1 FROM public.assessment_targets 
+      WHERE assessment_id = v_exam2_id AND class_group_id = v_class_ids[v_period]
+    ) THEN
+      INSERT INTO public.assessment_targets (assessment_id, target_type, class_group_id)
+      VALUES (v_exam2_id, 'class_group', v_class_ids[v_period]);
+    END IF;
   END LOOP;
 
   -- 6. Cria Tentativas (Attempts) e Respostas reais para os alunos de todas as 12 turmas
