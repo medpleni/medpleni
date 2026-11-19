@@ -6,6 +6,110 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-19 · P12 · Resultados da Prova, Fechamento de Correção, Eixos Temáticos e Devolutiva do Aluno (PR-08, PR-10, TC-07)
+
+### O que foi feito
+
+- **Schema e Auditoria de Resultados (`010_resultados_auditoria.sql`):**
+  - Colunas aditivas em `assessment_items` para congelamento dos 4 eixos taxonômicos no momento da publicação: `frozen_area`, `frozen_cenario`, `frozen_tema` e `frozen_competencia`.
+  - Tabela de auditoria `assessment_item_adjustments`: rastreabilidade completa de anulações de itens e trocas de gabarito (ID da prova, versão, item, usuário docente/coordenador, tipo de ajuste, justificativa obrigatória, valor anterior e novo valor).
+  - Políticas de RLS garantindo que apenas docentes autorizados, coordenadores e dirigentes da instituição possam consultar o histórico e efetuar ajustes.
+- **Motor Estatístico e Psicométrico (`platform/lib/b2b/results.ts`):**
+  - **Interpolação Linear Exata de Percentis:** Implementação do método padrão `PERCENTILE.INC` (Excel / R tipo 7 / NumPy linear), calculando Mediana (P50), Quartil 1 (P25) e Quartil 3 (P75) com precisão decimal estrita.
+  - **Resumo Estatístico Institucional:** Cálculo de presentes, ausentes, média, mediana, P25, P75 e percentual de reprovação abaixo da nota de corte (< 60%).
+  - **Rodapé Padronizado:** Inclusão obrigatória da tripla *Base / Período / Fonte* (ex: "Base: Prova Regular • Período: 2026.1 • Fonte: MedPleni B2B").
+  - **Curva de Distribuição de Notas em Faixas de 5 Pontos:** 20 faixas uniformes (0–5%, ..., 95–100%) com identificação da nota mínima, nota máxima, linha de corte em 60% e destaque visual para o bucket da mediana, com suporte a filtro dinâmico por turma.
+  - **Rendimento por Eixos (PR-08 & TC-07):**
+    - Agrupamento dinâmico em 4 abas: *Grande Área*, *Cenário*, *Tema* e *Competência* (apenas eixos presentes nos itens congelados da prova são exibidos).
+    - Métricas por categoria: quantidade de questões ($k$), acertos médios e rendimento percentual.
+    - **Alerta de Amostra Pequena:** Exibição obrigatória de badge de cautela para qualquer categoria com $k < 5$ questões (*"Amostra pequena (< 5 questões): sujeito a oscilação estatística"*).
+    - **Ajuste TC-07:** Coluna fixa e card em destaque exibindo o Rendimento Total Geral da Prova lado a lado em todos os eixos para ancoragem comparativa direta.
+  - **Tabela Turmas × Resultado:** Total de inscritos, presentes, ausentes, média, mediana, taxa < 60% e variação ($\Delta$) em relação à média geral da prova.
+  - **Tabela Alunos × Resultado e Governança LGPD:**
+    - Aluno, RA, turma, forma sorteada (A–D), acertos brutos, nota percentual e faixas de desempenho (*Até 50%*, *51–60%*, *61–70%*, *71%+*).
+    - Variação ($\Delta$) em relação à prova anterior do mesmo tipo, acompanhada do aviso mandatário: *"Atenção: provas diferentes possuem graus de dificuldade distintos e não utilizam a mesma régua métrica."*
+    - Modal de visualização individual com aviso de conformidade LGPD e registro automático em `individual_access_log`.
+  - **Exportação Aluno × Item × Alternativa Marcada (PR-10):**
+    - Geração de microdados em CSV com codificação UTF-8 BOM (compatibilidade nativa com Microsoft Excel e R) e formato XLSX.
+    - Exportação contendo a resposta marcada na forma embaralhada e o mapeamento canônico correspondente no caderno-base.
+    - Dicionário de dados completo anexado e exportável.
+- **Ações de Fechamento de Correção (`platform/lib/b2b/results-actions.ts`):**
+  - `annulAssessmentItemAction`: anula item com justificativa registrada em auditoria e executa o recálculo imediato de todas as tentativas finalizadas.
+  - `changeItemCorrectOptionAction`: altera alternativa correta com justificativa em auditoria e recalcula automaticamente todas as notas.
+  - `markAbsentStudentsAction`: converte tentativas não iniciadas de alunos convocados para o status `ausente`.
+  - `closeAssessmentCorrectionAction`: fecha formalmente a avaliação com status `corrigida`.
+- **Interface Docente / Coordenação (`/instituicao/provas/[id]/resultado`):**
+  - Organizada em no máximo 5 blocos visuais intuitivos com a paleta médica sóbria MedPleni:
+    1. Cabeçalho com status, metadados da prova, botão de exportação PR-10 e botão de fechamento da correção.
+    2. Resumo Estatístico em cards com rodapé canônico *Base / Período / Fonte*.
+    3. Curva de Distribuição das Notas (20 faixas) com filtro seletor de turma.
+    4. Desempenho por Eixos com abas de eixos, alerta $k < 5$ e coluna fixa de Rendimento Geral (TC-07).
+    5. Tabelas consolidadas: *Turmas × Resultado*, *Alunos × Resultado* e histórico de ajustes auditados.
+- **Devolutiva Pedagógica ao Aluno (`/instituicao/aluno/prova/[id]/resultado`):**
+  - Bloqueio estrito até a liberação expressa do professor (`answers_released_at IS NOT NULL`).
+  - Nota pessoal e rendimento por área apresentados de forma formativa (sem rankings competitivos públicos entre colegas).
+  - Modo de leitura e revisão de erros (sem cronômetro e sem permissão de edição de respostas), exibindo alternativas, gabarito e comentário pedagógico.
+- **Qualidade, Validação e Conciliação Independente:**
+  - Suite de testes unitários `lib/b2b/__tests__/results.test.ts` com 8 testes validando conciliação com planilha independente, percentis, curvas de frequência, alertas de amostra pequena, recalculo pós-anulação e exportação PR-10.
+  - Total da suíte B2B: **98/98 testes passando em 11 arquivos de teste**.
+  - TypeScript compilado com 0 erros (`tsc --noEmit`).
+  - ESLint verificado com 0 warnings e 0 erros.
+  - Build de produção Next.js finalizado com sucesso (**51 rotas compiladas**).
+
+### Anexo: Conciliação Exata com Planilha Independente (Turma Demo - 36 Alunos)
+
+| Métrica Estatística | Planilha Externa (Excel / R) | Plataforma MedPleni B2B | Status |
+| :--- | :--- | :--- | :--- |
+| **Amostra de Presentes** | 36 alunos | 36 alunos | Conciliado (100%) |
+| **Ausentes** | 0 alunos | 0 alunos | Conciliado (100%) |
+| **Média Bruta de Acertos** | 6.9167 acertos (de 10) | 6.92 acertos | Conciliado (100%) |
+| **Média Percentual** | 69.1667% $\to$ 69.17% | 69.17% | Conciliado (100%) |
+| **Mediana (P50 - PERCENTILE.INC)** | 70.00% | 70.00% | Conciliado (100%) |
+| **Primeiro Quartil (P25)** | 60.00% | 60.00% | Conciliado (100%) |
+| **Terceiro Quartil (P75)** | 80.00% | 80.00% | Conciliado (100%) |
+| **Taxa Abaixo do Corte (< 60%)** | 6 de 36 (16.6667%) $\to$ 16.67% | 16.67% | Conciliado (100%) |
+| **Nota Mínima (Extremo)** | 40.00% | 40.00% | Conciliado (100%) |
+| **Nota Máxima (Extremo)** | 100.00% | 100.00% | Conciliado (100%) |
+| **Eixo Cirurgia Geral ($k = 3$)** | Média 63.89% (Alerta $k < 5$) | Média 63.89% (Alerta $k < 5$) | Conciliado (100%) |
+| **Eixo Pediatria ($k = 2$)** | Média 76.39% (Alerta $k < 5$) | Média 76.39% (Alerta $k < 5$) | Conciliado (100%) |
+| **Eixo Clínica Médica ($k = 5$)** | Média 69.44% (Sem alerta) | Média 69.44% (Sem alerta) | Conciliado (100%) |
+| **Total Geral ao Lado (TC-07)** | 69.17% | 69.17% | Conciliado (100%) |
+| **Recálculo pós-anulação Item 1** | Nova média: 75.83%, P50: 77.78% | Nova média: 75.83%, P50: 77.78% | Conciliado (100%) |
+
+### Arquivos criados / alterados
+
+- `platform/supabase/b2b/010_resultados_auditoria.sql` (criado)
+- `platform/lib/b2b/results.ts` (criado)
+- `platform/lib/b2b/results-actions.ts` (criado)
+- `platform/lib/b2b/__tests__/results.test.ts` (criado)
+- `platform/app/instituicao/provas/[id]/resultado/page.tsx` (criado)
+- `platform/app/instituicao/provas/[id]/resultado/ResultadoClient.tsx` (criado)
+- `platform/app/instituicao/aluno/prova/[id]/resultado/page.tsx` (criado)
+- `platform/app/instituicao/aluno/prova/[id]/resultado/AlunoDevolutivaClient.tsx` (criado)
+- `platform/lib/b2b/__tests__/omr.test.ts` (corrigido import path)
+- `docs/b2b/DIARIO.md` (atualizado)
+
+### SQL a rodar no Supabase
+
+Arquivo: `platform/supabase/b2b/010_resultados_auditoria.sql` (100% aditivo e idempotente).
+
+### Como testar
+
+1. **Testes automatizados com conciliação estatística:**
+   `cd platform && npx vitest run lib/b2b/__tests__/results.test.ts`
+2. **Suíte completa de testes B2B:**
+   `cd platform && npx vitest run lib/b2b/__tests__/` (98/98 testes passando)
+3. **TypeScript e ESLint:**
+   `cd platform && npx tsc --noEmit && npx eslint lib/b2b/results.ts lib/b2b/results-actions.ts`
+4. **Build de produção Next.js:**
+   `cd platform && npm run build` (51 rotas compiladas)
+5. **Tela de Resultado do Docente/Coordenação:**
+   Acessar `/instituicao/provas/[id]/resultado` e testar os filtros de turma, abas de eixos com alerta $k < 5$, ajuste de anulação/gabarito e download do CSV/XLSX PR-10.
+6. **Tela de Devolutiva do Aluno:**
+   Acessar `/instituicao/aluno/prova/[id]/resultado` e verificar bloqueio pré-liberação e visualização pedagógica em modo leitura.
+
+---
+
 ## 2026-11-19 · P11 · Correção de Prova em Papel, Leitura Óptica OMR, Homologação e Conferência Lado a Lado (PR-07, PR-11)
 
 ### O que foi feito

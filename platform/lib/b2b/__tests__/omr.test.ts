@@ -32,7 +32,7 @@ import {
   generateBookletPrintHTML,
   generateAnswerSheetPrintHTML,
 } from "../omr/sheet-pdf-generator";
-import type { OptionLetter } from "../../assessments";
+import type { OptionLetter } from "../assessments";
 import type { CornerMarkers, Point2D, SheetQRPayload } from "../omr/omr-types";
 
 // Utilitário para gerar buffers sintéticos de teste de alta fidelidade
