@@ -6,6 +6,61 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-18 · P09 · Gestão de Provas, Assistente de Montagem em 4 Passos e Calendário Nacional de Simulados (PR-01 a PR-06, Voto SPR 11)
+
+### O que foi feito
+
+- **Schema e Suporte a Modelos Mensais (`008_provas.sql`):**
+  - Colunas aditivas em `assessments`: `is_template`, `template_month` (ex: '2027-03'), `template_edition`, `reviewer_id`, `review_notes` e `source_assessment_id`.
+  - Função SQL security definer `get_already_applied_questions(p_class_group_ids)`: identifica com rapidez se uma questão já foi utilizada em avaliações anteriores para as turmas selecionadas, emitindo o alerta visual amarelo no momento da montagem.
+  - RLS para modelos (`is_template = true`): qualquer instituição pode ler os simulados-modelo oficiais da MedPleni.
+  - Seed de simulados-modelo nacionais da MedPleni para Março/Abril 2027 (100 itens cobrindo as 7 áreas do INEP).
+- **Assistente de Montagem em 4 Passos (`/instituicao/provas`):**
+  - **Passo 1 (Definição):** Título, tipo (incluindo Simulado ENAMED 4º, 8º e 12º período), modalidade (`online`, `papel`, `hibrida`), duração, janela de aplicação, turmas convocadas e **edição compartilhada** entre professores (seleção de coautores da faculdade).
+  - **Passo 2 (Matriz):** Distribuição de questões por área (as 7 áreas canônicas), curva de dificuldade (% fácil, % média, % difícil) e cota mínima de questões com imagem. Botão **"Carregar Matriz Padrão INEP"** para carregar com 1 clique a distribuição oficial de 100 itens para o ENAMED.
+  - **Passo 3 (Seleção Assistida - PR-03):** Executa a seleção assistida que monta uma prova de 100 questões em poucos milissegundos respeitando todas as cotas. Itens exibem badges de Área, Dificuldade, Imagem, Origem e **aviso amarelo destacado de questão já aplicada à mesma turma**.
+  - **Passo 4 (Revisão Única e Publicação - PR-04 / PR-06):** Painel de checagens automáticas (matriz cumprida, gabaritos preenchidos, sem duplicatas, cota de imagens). Designação de Revisor único com opção de o revisor ver apenas itens da sua área ou todas. Opções: "Salvar Rascunho", "Enviar para Revisão" ou "Aprovar e Publicar Agora" (gerando as 4 Formas A, B, C, D e congelando o caderno).
+- **Calendário de Simulados Prontos da MedPleni:**
+  - Modal com os simulados nacionais mensais pré-fabricados.
+  - Botão **"Adotar com 1 Clique"**: clona a prova inteira para a instituição mantendo a matriz oficial e o caderno.
+- **Duplicação de Avaliação Existente:**
+  - Ação de duplicar qualquer prova existente da faculdade para reaproveitamento ágil.
+- **Lista de Provas e KPIs:**
+  - Tabela completa de avaliações com status coloridos, turmas convocadas, modalidade e ações. Dirigente tem visão de todas.
+  - Menu do B2B atualizado: rota `/instituicao/provas` marcada como ativa (`status: "ready"`).
+- **Qualidade e Testes:**
+  - `platform/lib/b2b/__tests__/exams.test.ts`: 7 testes unitários cobrindo matrizes do INEP, checagens automáticas pré-publicação e teste de estresse de montagem de prova de 100 itens em menos de 10 milissegundos.
+  - Suíte total B2B: **81 testes unitários passando em 9 arquivos de teste**.
+
+### Arquivos criados / alterados
+
+- `platform/supabase/b2b/008_provas.sql`
+- `platform/lib/b2b/exams-types.ts`
+- `platform/lib/b2b/exams-checker.ts`
+- `platform/lib/b2b/exams-actions.ts`
+- `platform/app/instituicao/provas/page.tsx`
+- `platform/app/instituicao/provas/ProvasClient.tsx`
+- `platform/app/instituicao/components/B2BShell.tsx`
+- `platform/lib/b2b/__tests__/exams.test.ts`
+- `docs/b2b/DIARIO.md`
+
+### SQL a rodar no Supabase
+
+- Executar `platform/supabase/b2b/008_provas.sql` no SQL Editor do Supabase (aditivo e idempotente).
+
+### Como testar
+
+1. Acesse `/instituicao/provas`.
+2. Clique em **"Nova Prova (Assistente)"**:
+   - No Passo 1, digite o título, selecione "Simulado ENAMED 12º Período" e marque turmas.
+   - No Passo 2, clique em "Carregar Matriz Padrão INEP" para preencher automaticamente as 100 questões nas 7 áreas.
+   - No Passo 3, clique em "Executar Seleção Assistida": em instantes as 100 questões são preenchidas com verificação de reuso.
+   - No Passo 4, veja as checagens pré-publicação todas em verde e clique em "Salvar Rascunho" ou "Aprovar e Publicar Agora".
+3. Clique em **"Simulados Prontos MedPleni"** e adote o Simulado de Março com 1 clique.
+4. Na tabela de provas, clique em **"Duplicar"** em qualquer item.
+
+---
+
 ## 2026-11-18 · P08 · Modelo de Dados de Avaliações Institucionais (007_avaliacoes.sql e lib/b2b/assessments.ts)
 
 ### O que foi feito
