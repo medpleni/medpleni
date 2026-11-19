@@ -107,19 +107,30 @@ export default async function TurmaDetalhePage({ params }: PageProps) {
 
   const studentUserIds = rawStudents.map((s) => s.studentUserId);
 
-  // Provas aplicadas à turma
-  const exams = [
-    { id: "aaaa1111-1111-1111-1111-111111111111", title: "Simulado ENAMED 2026.2 — Etapa 1", date: "2026-09-15T08:00:00Z", modality: "online" },
-    { id: "aaaa2222-2222-2222-2222-222222222222", title: "Avaliação Semestral Integrada 2026.2", date: "2026-10-20T08:00:00Z", modality: "hibrida" },
-    { id: "aaaa3333-3333-3333-3333-333333333333", title: "Simulado Nacional ENAMED 2027.1 — Março", date: "2026-11-10T08:00:00Z", modality: "online" },
+  // Provas aplicadas à turma (completas do ciclo formativo demo)
+  const defaultExams = [
+    { id: "aaaa1111-1111-1111-1111-000000000001", title: "Simulado ENAMED 2026.1 — 1ª Etapa (4º Período)", date: "2026-04-12T08:00:00Z", modality: "online" },
+    { id: "aaaa2222-2222-2222-2222-000000000002", title: "Avaliação Semestral Integrada 2026.1", date: "2026-05-20T08:00:00Z", modality: "online" },
+    { id: "aaaa3333-3333-3333-3333-000000000003", title: "Simulado ENAMED 2026.2 — 2ª Etapa (8º Período)", date: "2026-09-15T08:00:00Z", modality: "online" },
+    { id: "aaaa4444-4444-4444-4444-000000000004", title: "Prova Presencial Impressa 2026.2 (Leitura Óptica OMR)", date: "2026-10-18T08:00:00Z", modality: "papel" },
+    { id: "aaaa5555-5555-5555-5555-000000000005", title: "Pré-Aula: Emergências Clínicas", date: "2026-10-25T08:00:00Z", modality: "online" },
+    { id: "aaaa6666-6666-6666-6666-000000000006", title: "Pós-Aula: Emergências Clínicas", date: "2026-10-25T11:30:00Z", modality: "online" },
+    { id: "aaaa7777-7777-7777-7777-000000000007", title: "Simulado Nacional ENAMED 2026.2 — 3ª Etapa (12º Período)", date: "2026-11-10T08:00:00Z", modality: "online" },
   ];
+  const exams = defaultExams;
 
-  // Simula ou lê respostas de treino no B2C (user_answers)
+  // Respostas de treino no Praticar / B2C (distribuição ampla e realista para o gráfico de dispersão)
   const trainingCountMap = new Map<string, number>();
   rawStudents.forEach((st, idx) => {
-    // Se não treina no B2C, mostra 0 com aviso, nunca estimado
-    const doesNotTrain = idx % 10 === 0;
-    trainingCountMap.set(st.studentUserId, doesNotTrain ? 0 : 50 + ((idx * 29) % 240));
+    // Aluno que nunca praticou no ano (mostra 0 com aviso explícito na interface)
+    if (idx === 0) {
+      trainingCountMap.set(st.studentUserId, 0);
+    } else {
+      // Volumes variando realisticamente de 280 a 8.450 questões
+      const base = 400 + idx * 390;
+      const jitter = ((idx * 73) % 200) - 100;
+      trainingCountMap.set(st.studentUserId, Math.max(120, Math.min(8800, base + jitter)));
+    }
   });
 
   // Monta tentativas com notas

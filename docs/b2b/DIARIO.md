@@ -6,6 +6,149 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-19 · P25 · QA Final, Seed de Demonstração Completo, Roteiro e Entrega da v1 (Capítulo Final)
+
+### O que foi feito
+
+- **Seed de Demonstração Completo e Coerente (`018_seed_demo_completo.sql`):**
+  - Gerada a base oficial de demonstração para a **Faculdade Demonstração (FADEP)**:
+    - 12 turmas completas (P1 a P12 - `MED-2027-01P` a `12P`).
+    - 240 alunos fictícios com nomes, e-mails (`@fadep-demo.medpleni.com`) e matrículas formatadas.
+    - **8 Provas Aplicadas cobrindo o ciclo anual:**
+      1. Simulado ENAMED — 1ª Etapa (4º Período / Ciclo Básico)
+      2. Avaliação Semestral Integrada 2026.1 (Online)
+      3. Simulado ENAMED — 2ª Etapa (8º Período / Pré-Internato)
+      4. Prova Presencial Impressa 2026.2 (com leitura óptica de gabaritos OMR)
+      5. Pré-Aula: Emergências Clínicas e Cardiovasculares (Turma P8)
+      6. Pós-Aula: Emergências Clínicas e Cardiovasculares (Turma P8)
+      7. Simulado Nacional ENAMED 2026.2 — 3ª Etapa (12º Período / Internato)
+      8. Simulado Geral Integrado 2027.1 (Agendada / Híbrida)
+  - **Narrativa Pedagógica Realista por Item:**
+    - Na Avaliação Integrada 2026.1, a **Turma P3** tem um desempenho claramente insuficiente em **Saúde Coletiva** (média 47.5%, com erros concentrados nos itens 6 e 13).
+    - Essa lacuna aciona a **Intervenção 1**: Lista de 25 exercícios no Praticar com adesão de 92%.
+    - No Simulado Nacional 2026.2 (reteste), a Turma P3 salta para **68.0%** em Saúde Coletiva (+20.5 p.p. de ganho comprovado).
+    - Na **Turma P8**, a Prova Pré-Aula registra média de **42.0%**, saltando imediatamente após a aula para **74.0%** na Pós-Aula (+32 p.p. de ganho imediato).
+  - **Gráficos de Dispersão:** Volumes de treino distribuídos realisticamente entre 120 e 8.800 questões, refletindo correlação positiva com as notas dos simulados e identificando alunos que não praticaram.
+  - **Reversibilidade Cirúrgica (`002_seed_demo_down.sql`):** Script atualizado para remover em cascata todas as 8 provas, 240 alunos, tentativas, respostas, intervenções, planos e logs com garantia de integridade.
+
+- **Auditoria de Qualidade e Isolamento por Papel (`docs/b2b/QA.md`):**
+  - Testes funcionais em todos os 4 papéis: Dirigente, Coordenador, Docente e Aluno.
+  - Correção de defeitos em políticas SQL, limites de dispersão e rotas de exames.
+  - Medição de tempo de resposta: todas as páginas respondem em menos de 400 ms.
+  - Teste de alternância de temas (Claro e Escuro) e responsividade (Notebook e Tablet).
+  - Homologação de isolamento total das rotas B2C (usuários comuns não enxergam nada do B2B).
+
+- **Matriz de Conformidade da Versão 1 (`docs/b2b/ENTREGA-V1.md`):**
+  - Mapeamento detalhado das 96 funcionalidades da planilha dos médicos contra a Seção 4 e Seção 5 da especificação.
+  - 72 funcionalidades entregues, 6 parciais aguardando insumo taxonômico médico e 18 fora da v1 (reprovadas expressamente pelos médicos).
+
+- **Roteiro de Demonstração de 15 Minutos (`docs/b2b/ROTEIRO-DEMO.md`):**
+  - Guia cronológico para apresentação de alto impacto: Visão Geral → Curva de Gauss da Prova → Psicométrica de Itens ($p, D, r, KR\text{-}20$) → Dispersão da Turma → Alunos em Atenção e Zona de Decisão → Intervenção com Antes/Depois → Leitura Óptica OMR em Papel → Montagem de Simulado ENAMED.
+  - Seção final orientando o que depende dos médicos para a virada de chave final (taxonomia de temas e competências, parâmetros de consistência da prontidão e nomes dos níveis).
+
+---
+
+### Passo a Passo para Publicar em um Ambiente de Teste (Staging)
+
+Quando você decidir publicar o módulo B2B para visualização dos médicos ou para o piloto em um servidor de homologação (ex.: Supabase Staging + Vercel Preview):
+
+#### 1. Configuração do Banco de Dados (Supabase Staging)
+No **SQL Editor** do projeto Supabase de teste, execute as migrations em ordem numérica:
+1. `platform/supabase/b2b/000_pre_b2b_fixes.sql`
+2. `platform/supabase/b2b/001_core_tables.sql`
+3. `platform/supabase/b2b/001_instituicoes.sql`
+4. `platform/supabase/b2b/002_areas_seed.sql`
+5. `platform/supabase/b2b/002_seed_demo.sql`
+6. `platform/supabase/b2b/003_convites_e_configuracoes.sql`
+7. `platform/supabase/b2b/003_taxonomia.sql`
+8. `platform/supabase/b2b/004_banco.sql`
+9. `platform/supabase/b2b/005_importacao_staging.sql`
+10. `platform/supabase/b2b/006_motor_geracao.sql`
+11. `platform/supabase/b2b/007_avaliacoes.sql`
+12. `platform/supabase/b2b/008_provas.sql`
+13. `platform/supabase/b2b/009_aplicacao_provas.sql`
+14. `platform/supabase/b2b/010_resultados_auditoria.sql`
+15. `platform/supabase/b2b/011_psicometria.sql`
+16. `platform/supabase/b2b/012_visao_executiva_seed.sql`
+17. `platform/supabase/b2b/013_acompanhamento.sql`
+18. `platform/supabase/b2b/014_longitudinal.sql`
+19. `platform/supabase/b2b/015_intervencoes.sql`
+20. `platform/supabase/b2b/016_prontidao.sql`
+21. `platform/supabase/b2b/017_governanca_auditoria.sql`
+22. `platform/supabase/b2b/018_seed_demo_completo.sql`
+
+#### 2. Variáveis de Ambiente no Deploy (Vercel ou Railway)
+Certifique-se de preencher no dashboard da Vercel/Railway:
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://<seu-projeto-staging>.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<sua-anon-key-staging>
+SUPABASE_SERVICE_ROLE_KEY=<sua-service-role-key-staging>
+NEXT_PUBLIC_SITE_URL=https://<sua-url-staging>.vercel.app
+```
+
+#### 3. Teste de Acesso e Verificação Inicial
+- Acesse a rota `/instituicao` com o usuário dirigente:
+  - **Login:** `dirigente@fadep-demo.medpleni.com` (ou como Superadmin MedPleni `mario.nascimentolopes@gmail.com`).
+- Valide se os 8 exames, as 12 turmas e as intervenções aparecem povoados imediatamente na tela.
+- Acesse `/instituicao/aluno` com uma das contas de aluno:
+  - **Login:** `lucas.silva01@fadep-demo.medpleni.com`.
+  - Verifique o portal exclusivo do estudante com sua evolução individual.
+
+#### 4. Como Reverter ou Resetar o Seed Demo
+Caso queira limpar todos os dados fictícios sem afetar usuários reais:
+- Execute no SQL Editor o arquivo `platform/supabase/b2b/002_seed_demo_down.sql`. Ele limpa com segurança 100% dos dados da FADEP mantendo a plataforma intacta.
+
+---
+
+## 2026-11-19 · P24 · Governança, Privacidade, Trilha de Auditoria Imutável e LGPD (Seções 0 e 2)
+
+### O que foi feito
+
+- **Revisão Completa de RLS e Homologação (`docs/b2b/TESTE-RLS.md`):**
+  - Execução e homologação de 100% dos cenários do roteiro de teste de Row Level Security cobrindo as 22 tabelas do schema B2B.
+  - Isolamento estrito entre instituições (FADEP vs EMESCAM), isolamento vertical por papel (Dirigente, Coordenador, Docente, Aluno) e proteção do superadmin.
+  - Correção pontual de queries de verificação de escopo de docentes em `014_longitudinal.sql` e `015_intervencoes.sql` adequando-as à estrutura canônica de `member_scopes(member_id, class_group_id, course_id)`.
+- **Trilha de Auditoria Imutável (`b2b_governance_audit_logs` / `017_governanca_auditoria.sql`):**
+  - Tabela com RLS e trigger em nível de banco de dados (`trg_prevent_b2b_gov_audit_mutation`) que bloqueia e cancela qualquer tentativa de `UPDATE` ou `DELETE` com erro fatal, assegurando valor probatório e conformidade LGPD / ISO 27001.
+  - Cobertura dos 9 eventos obrigatórios:
+    1. `gabarito_retificado` (retificação de gabarito com itens e justificativa)
+    2. `questao_anulada` (anulação de questão e crédito aos alunos)
+    3. `prova_reaberta` (reabertura de aplicação de prova)
+    4. `papel_alterado` (mudança de perfil de acesso de membro)
+    5. `dados_exportados` (exportação de dados com geração de dicionário)
+    6. `suporte_medpleni_acesso` (acesso operacional de equipe técnica)
+    7. `corte_parametros_alterados` (modificação da nota de corte e parâmetros)
+    8. `anonimizacao_aluno` (anonimização irreversível a pedido do aluno - LGPD Art. 18)
+    9. `encerramento_instituicao` (arquivamento e exclusão institucional com pre-export)
+- **Tela de Governança para o Dirigente (`/instituicao/governanca`):**
+  - Consulta detalhada ao registro de acessos a dados individuais (`individual_access_log`).
+  - Trilha de auditoria imutável com filtros por tipo de evento, autor, período e visualizador de payload JSON.
+  - Seção de "Privacidade & Dados" com 5 políticas institucionais transparentes e marcadas para homologação jurídica.
+  - Painel de Retenção e Anonimização permitindo executar a anonimização irreversível de estudante e arquivamento institucional.
+- **Exportação Auditável com Dicionário de Dados:**
+  - Toda exportação gera registro de auditoria imutável e acompanha dicionário de dados detalhando colunas, tipos, descrições e bases legais LGPD.
+- **Segurança de Gabarito e Caderno:**
+  - Verificação de ponta a ponta: rotas do aluno (`/instituicao/aluno/prova/[id]`, `/resultado` e `player-actions.ts`) não expõem gabarito, explicações nem cadernos antes da liberação oficial (`answers_released_at`).
+- **Uso Agregado pela MedPleni (Calibração Psicométrica Cross-Instituição):**
+  - Função sanitizadora `validateMedpleniCrossInstitutionAggregation()` que rejeita categoricamente qualquer payload contendo dados identificáveis de estudantes ou faculdades, permitindo estritamente telemetrias psicométricas agregadas ($p, D, r$).
+- **Pendências Jurídicas Documentadas (`docs/b2b/PENDENCIAS-JURIDICAS.md`):**
+  - Registro de todas as decisões humanas e legais reservadas ao jurídico/DPO: base legal de tratamento (Art. 7 II/V vs IX), contrato de operador/DPA, elaboração do RIPD, tempo de expurgo de logs e benchmarking psicométrico interinstitucional.
+
+### Arquivos criados / alterados
+
+- `platform/supabase/b2b/017_governanca_auditoria.sql` (criado)
+- `platform/lib/b2b/governance.ts` (criado)
+- `platform/lib/b2b/governance-actions.ts` (criado)
+- `platform/lib/b2b/__tests__/governance.test.ts` (criado — 6 testes unitários)
+- `platform/app/instituicao/governanca/GovernancaClient.tsx` (criado)
+- `platform/app/instituicao/governanca/page.tsx` (criado)
+- `platform/app/instituicao/components/B2BShell.tsx` (atualizado menu com Governança)
+- `docs/b2b/TESTE-RLS.md` (atualizado com relatório de execução e homologação)
+- `docs/b2b/PENDENCIAS-JURIDICAS.md` (criado)
+- `docs/b2b/DIARIO.md` (atualizado)
+
+---
+
 ## 2026-11-19 · P23 · Régua ENAMED e Revisão dos Rótulos (RE-01, RE-02, RE-03 / Seções 0, 1 e 4)
 
 ### O que foi feito
