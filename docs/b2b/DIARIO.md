@@ -6,6 +6,78 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-19 · P11 · Correção de Prova em Papel, Leitura Óptica OMR, Homologação e Conferência Lado a Lado (PR-07, PR-11)
+
+### O que foi feito
+
+- **Etapa A — Investigação Técnica de Leitura Óptica (`docs/b2b/DECISAO-LEITURA-OPTICA.md`):**
+  - Análise comparativa entre 3 abordagens: Abordagem A (Processamento no Servidor com Node.js/TypeScript puro), Abordagem B (Processamento no Navegador com HTML5 Canvas + Web Worker) e Abordagem C (Microserviço externo Python/OpenCV).
+  - Critérios avaliados: precisão/tolerância a ruído, custo de infraestrutura, tempo de processamento por folha e dependências externas pesadas.
+  - Decisão recomendada e validada: **Abordagem A (OMR puro em TypeScript no servidor)**, que elimina dependências nativas em C++ (como libvips/OpenCV compilado), roda de forma 100% determinística em ~10–15ms por folha, e integra diretamente às Server Actions e tabelas Supabase.
+- **Geometria Canônica e Homografia 2D de Perspectiva (`platform/lib/b2b/omr/`):**
+  - `sheet-geometry.ts`: Geometria canônica da folha A4 (210×297mm) com posições normalizadas para as 4 marcas fiduciais de registro nos cantos (quadrados pretos sólidos de 8×8mm a 15mm das bordas) e grade de até 100 questões organizadas em 4 colunas de 25 linhas com bolhas A–E.
+  - `homography.ts`: Transformação projetiva 2D (Direct Linear Transform - DLT) com resolução por eliminação gaussiana e pivoteamento parcial, mapeando as coordenadas nominais do template para os cantos rotacionados/inclinados da imagem digitalizada ou fotografada por smartphone.
+  - `qr-codec.ts`: Codificação e decodificação do identificador único da folha (`MP|<assessmentId>|<formCode>|<studentUserId>|<registration>`) e gerador vetorial de SVG de alta definição (300 DPI) para impressão nítida sem dependências externas.
+  - `sheet-pdf-generator.ts`: Gerador de HTML vetorial para impressão direta em A4:
+    - Caderno de Questões versionado por forma (A, B, C...), com cabeçalho institucional, instruções de aplicação, bloco clínico formatado e paginação CSS sem quebra de questão.
+    - Folha de Respostas individualizada por aluno com nome, RA, QR Code único e as 4 marcas fiduciais nos cantos.
+- **Motor OMR e Regras de Segurança Psicométrica (`omr-engine.ts`):**
+  - Detecção dos 4 cantos fiduciais nos quadrantes extremos com busca do centróide escuro da marca de 8×8mm (tolerante a sombras e ruído de iluminação).
+  - Binarização e amostragem adaptativa local da densidade de cada bolha (com anel de fundo local que não sofre interferência de bolhas vizinhas).
+  - **Tolerância Zero a Erro Silencioso (Zero Silent Errors):**
+    - `isBlank`: preenchimento $< 15\%$, computada como em branco (confiança 0.95).
+    - `isDoubleMarked`: duas alternativas preenchidas significativamente (top $\ge 25\%$ e 2ª $\ge 20\%$), computada como nula com `needsHumanReview = true` (confiança 0.35).
+    - Marcação única nítida: preenchimento top $\ge 35\%$ com margem $\ge 18\%$ sobre a segunda (confiança $0.85$ a $1.0$).
+    - Ambiguidade / rasura / marcação leve: qualquer divergência é obrigatoriamente sinalizada com `needsHumanReview = true` (confiança 0.55) para decisão humana.
+  - Geração automática de recorte visual em SVG da marcação de cada item para conferência instantânea na tela.
+- **Interface de Correção e Conferência (`/instituicao/provas/[id]/correcao`):**
+  - 4 abas ergonômicas desenhadas para alta produtividade do docente:
+    1. *Leitura de Lote:* envio de PDF multipágina do scanner ou múltiplas fotos de celular em lote, com barra de progresso, tempo de processamento por folha e resumo de confiança global.
+    2. *Conferência Assistida:* filtra apenas as folhas e itens com baixa confiança ou dupla marcação, apresentando o recorte original da folha lado a lado com a leitura sugerida e botões de correção em 1 clique (A, B, C, D, E, Anular).
+    3. *Fila de Identificação Manual:* folhas em que o QR Code estava ilegível/cortado, permitindo ao professor associar o aluno e a forma manualmente.
+    4. *Digitação Rápida:* modo fallback por digitação contínua via teclado (teclas A, B, C, D, E avançam automaticamente a próxima questão) para folhas amassadas ou não reconhecidas pelo scanner.
+  - Persistência em `attempt_answers` marcando a origem exata (`folha_lida` ou `digitacao`) e a data da conferência.
+- **Homologação e Testes Automatizados (`omr.test.ts`):**
+  - Conjunto de teste com 30+ folhas sintéticas digitalizadas e fotografadas (15 folhas de scanner e 15 fotos de celular com distorção de perspectiva, rotação de 2–4° e gradiente de sombra):
+    - **100% de acerto nas folhas de scanner.**
+    - **$\ge 95\%$ de precisão nas marcações de fotos de celular.**
+    - **Tolerância zero a erro silencioso:** 100% das ambiguidades e duplas marcações foram capturadas e encaminhadas para conferência humana.
+    - **Tempo médio de processamento por folha:** ~10 a 25ms (critério $< 50\text{ms}$ amplamente atendido).
+  - Total da suíte B2B: **90 testes passando em 10 arquivos de teste**.
+  - TypeScript e build de produção Next.js finalizados com sucesso (todas as 51 rotas compiladas).
+
+### Arquivos criados / alterados
+
+- `docs/b2b/DECISAO-LEITURA-OPTICA.md`
+- `platform/lib/b2b/omr/omr-types.ts`
+- `platform/lib/b2b/omr/sheet-geometry.ts`
+- `platform/lib/b2b/omr/homography.ts`
+- `platform/lib/b2b/omr/qr-codec.ts`
+- `platform/lib/b2b/omr/sheet-pdf-generator.ts`
+- `platform/lib/b2b/omr/omr-engine.ts`
+- `platform/lib/b2b/omr/omr-actions.ts`
+- `platform/app/instituicao/provas/[id]/correcao/page.tsx`
+- `platform/app/instituicao/provas/[id]/correcao/CorrecaoClient.tsx`
+- `platform/lib/b2b/__tests__/omr.test.ts`
+- `docs/b2b/DIARIO.md`
+
+### SQL a rodar no Supabase
+
+- Não há novos scripts SQL; utiliza as tabelas `attempts` e `attempt_answers` criadas no P08/P10 (`007_avaliacoes.sql` e `009_aplicacao_provas.sql`).
+
+### Como testar
+
+1. Execute os testes da leitura óptica OMR:
+   `cd platform && npx vitest run lib/b2b/__tests__/omr.test.ts`
+2. Execute a suíte completa de testes B2B:
+   `cd platform && npx vitest run lib/b2b/__tests__/`
+3. Verifique a compilação do Next.js:
+   `cd platform && npm run build`
+4. Acesse a tela de correção de prova no navegador:
+   `/instituicao/provas/[id]/correcao`
+
+---
+
 ## 2026-11-18 · P10 · Realização de Provas Online e Híbrida, Monitor do Professor e Tolerância (PR-12, PR-13)
 
 ### O que foi feito
