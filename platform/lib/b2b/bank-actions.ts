@@ -319,6 +319,37 @@ export async function getQuestionFullDetails(questionId: string): Promise<B2BQue
     a.letter.localeCompare(b.letter)
   );
 
+  // Busca histórico de desempenho psicométrico por aplicação (PR-09 / QB-12)
+  const { data: rawPerfs } = await supabase
+    .from("question_exam_performances")
+    .select("id, assessment_id, exam_title, sample_size, facility_p, discrimination_d, point_biserial_r, flags, applied_at")
+    .eq("question_id", questionId)
+    .order("applied_at", { ascending: false });
+
+  interface RawPerfRow {
+    id: string;
+    assessment_id: string;
+    exam_title: string;
+    sample_size: number;
+    facility_p: number | null;
+    discrimination_d: number | null;
+    point_biserial_r: number | null;
+    flags: string[];
+    applied_at: string;
+  }
+
+  const application_performances = ((rawPerfs || []) as unknown as RawPerfRow[]).map((p) => ({
+    id: p.id,
+    assessment_id: p.assessment_id,
+    exam_title: p.exam_title,
+    sample_size: p.sample_size,
+    facility_p: p.facility_p !== null ? Number(p.facility_p) : null,
+    discrimination_d: p.discrimination_d !== null ? Number(p.discrimination_d) : null,
+    point_biserial_r: p.point_biserial_r !== null ? Number(p.point_biserial_r) : null,
+    flags: Array.isArray(p.flags) ? p.flags : [],
+    applied_at: p.applied_at,
+  }));
+
   return {
     id: q.id,
     statement: q.statement,
@@ -345,6 +376,7 @@ export async function getQuestionFullDetails(questionId: string): Promise<B2BQue
     options,
     reviews,
     versions: q.question_versions || [],
+    application_performances,
   };
 }
 

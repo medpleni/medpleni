@@ -1084,6 +1084,75 @@ export default function BancoClient({
                   </div>
                 </div>
 
+                {/* Histórico de Desempenho por Aplicação (PR-09 / QB-12) */}
+                <div className="p-3 rounded-lg border border-border space-y-2">
+                  <div className="text-xs font-semibold text-foreground flex items-center justify-between">
+                    <span>Histórico de Desempenho por Aplicação</span>
+                    <span className="text-[10px] font-normal text-muted-foreground">
+                      {selectedQuestionDetails.application_performances?.length || 0} registro(s)
+                    </span>
+                  </div>
+
+                  {selectedQuestionDetails.application_performances &&
+                  selectedQuestionDetails.application_performances.length > 0 ? (
+                    <div className="overflow-x-auto max-h-40 overflow-y-auto">
+                      <table className="w-full text-[11px] text-left">
+                        <thead>
+                          <tr className="border-b border-border text-muted-foreground font-medium">
+                            <th className="pb-1">Avaliação</th>
+                            <th className="pb-1 text-center">Amostra (n)</th>
+                            <th className="pb-1 text-center">Facilidade (p)</th>
+                            <th className="pb-1 text-center">Discriminação (D)</th>
+                            <th className="pb-1 text-center">Ponto-Bisserial (r)</th>
+                            <th className="pb-1 text-right">Sinais</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-border/50">
+                          {selectedQuestionDetails.application_performances.map((perf) => (
+                            <tr key={perf.id} className="hover:bg-muted/30">
+                              <td className="py-1.5 font-medium text-foreground truncate max-w-[140px]" title={perf.exam_title}>
+                                {perf.exam_title}
+                              </td>
+                              <td className="py-1.5 text-center text-muted-foreground">
+                                {perf.sample_size}
+                              </td>
+                              <td className="py-1.5 text-center font-semibold text-foreground">
+                                {perf.facility_p !== null ? (perf.facility_p * 100).toFixed(1) + "%" : "—"}
+                              </td>
+                              <td className="py-1.5 text-center text-foreground">
+                                {perf.discrimination_d !== null ? perf.discrimination_d.toFixed(2) : "—"}
+                              </td>
+                              <td className="py-1.5 text-center text-foreground">
+                                {perf.point_biserial_r !== null ? perf.point_biserial_r.toFixed(2) : "—"}
+                              </td>
+                              <td className="py-1.5 text-right">
+                                {perf.flags && perf.flags.length > 0 ? (
+                                  <div className="flex flex-wrap gap-1 justify-end">
+                                    {perf.flags.map((flag) => (
+                                      <span
+                                        key={flag}
+                                        className="inline-block px-1.5 py-0.5 rounded text-[9px] font-medium bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300"
+                                      >
+                                        {flag.replace(/_/g, " ")}
+                                      </span>
+                                    ))}
+                                  </div>
+                                ) : (
+                                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">Normal</span>
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <p className="text-[11px] text-muted-foreground italic">
+                      Esta questão ainda não possui dados históricos de aplicação consolidada.
+                    </p>
+                  )}
+                </div>
+
                 <div className="flex items-center justify-between pt-2 border-t border-border">
                   <button
                     onClick={() => {

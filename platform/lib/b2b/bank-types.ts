@@ -58,6 +58,19 @@ export interface B2BQuestionFull extends B2BQuestionSummary {
   options: QuestionOptionItem[];
   reviews: QuestionReviewItem[];
   versions: QuestionVersionItem[];
+  application_performances?: QuestionApplicationPerformanceItem[];
+}
+
+export interface QuestionApplicationPerformanceItem {
+  id: string;
+  assessment_id: string;
+  exam_title: string;
+  sample_size: number;
+  facility_p: number | null;
+  discrimination_d: number | null;
+  point_biserial_r: number | null;
+  flags: string[];
+  applied_at: string;
 }
 
 export interface QuestionReviewItem {

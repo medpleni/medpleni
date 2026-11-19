@@ -14,6 +14,12 @@ import {
   type ExportStudentItemDetail,
 } from "@/lib/b2b/results";
 import {
+  calculateExamPsychometrics,
+  type ExamItemInput,
+  type StudentExamAttemptInput,
+  type ItemPsychometricsResult,
+} from "@/lib/b2b/psychometrics";
+import {
   annulAssessmentItemAction,
   changeItemCorrectOptionAction,
   markAbsentStudentsAction,
@@ -25,12 +31,17 @@ import type { OptionLetter } from "@/lib/b2b/assessments";
 interface ItemData {
   id: string;
   orderIndex: number;
+  questionId?: string | null;
   statement: string;
   clinicalContext?: string | null;
   correctLetter: string;
+  explanation?: string | null;
   status: string;
   weight: number;
   area: string;
+  cenario?: string | null;
+  tema?: string | null;
+  competencia?: string | null;
   options: Array<{ letter: string; text: string; is_correct: boolean }>;
 }
 
@@ -56,6 +67,13 @@ interface ResultadoClientProps {
     cutScore: number;
   };
   items: ItemData[];
+  rawAttempts?: Array<{ id: string; studentUserId: string; status: string }>;
+  rawAnswers?: Array<{
+    attemptId: string;
+    assessmentItemId: string;
+    markedBaseLetter: string | null;
+    isCorrect: boolean;
+  }>;
   summaryStats: AssessmentSummaryStats;
   scoreDistribution: ScoreDistributionBucket[];
   axesPerformance: AxisPerformanceResult[];
@@ -69,6 +87,8 @@ interface ResultadoClientProps {
 export default function ResultadoClient({
   assessment,
   items,
+  rawAttempts = [],
+  rawAnswers = [],
   summaryStats: initialSummary,
   scoreDistribution: initialDistribution,
   axesPerformance,
@@ -78,6 +98,9 @@ export default function ResultadoClient({
   adjustments,
   exportRecords,
 }: ResultadoClientProps) {
+  // Aba principal: 'geral' (Visão Geral da Prova) ou 'questoes' (Análise das Questões PR-09 / QB-12)
+  const [mainTab, setMainTab] = useState<"geral" | "questoes">("geral");
+
   // Filtro de turma para a curva de distribuição e estatísticas
   const [selectedClassGroupId, setSelectedClassGroupId] = useState<string>("all");
 
@@ -86,6 +109,12 @@ export default function ResultadoClient({
     axesPerformance.length > 0 ? axesPerformance[0].axisType : "area"
   );
   const [detailSubTab, setDetailSubTab] = useState<"turmas" | "alunos">("turmas");
+
+  // Filtros da aba de análise das questões
+  const [filterOnlySignals, setFilterOnlySignals] = useState(false);
+  const [selectedPsychItem, setSelectedPsychItem] = useState<ItemPsychometricsResult | null>(null);
+  const [isFormulasModalOpen, setIsFormulasModalOpen] = useState(false);
+  const [selectedFormulaTopic, setSelectedFormulaTopic] = useState<"geral" | "p" | "d" | "r" | "kr20">("geral");
 
   // Filtros da tabela de alunos
   const [studentSearch, setStudentSearch] = useState("");
@@ -111,6 +140,49 @@ export default function ResultadoClient({
   const [isMarkingAbsent, setIsMarkingAbsent] = useState(false);
   const [isClosingCorrection, setIsClosingCorrection] = useState(false);
   const [generalFeedback, setGeneralFeedback] = useState<string | null>(null);
+
+  // ─── ANÁLISE PSICOMÉTRICA PURA (PR-09 / QB-12) ─────────────────────────────
+  const examPsychometrics = useMemo(() => {
+    const answersByAttempt = new Map<string, Map<string, string | null>>();
+    rawAnswers.forEach((ans) => {
+      const map = answersByAttempt.get(ans.attemptId) || new Map<string, string | null>();
+      map.set(ans.assessmentItemId, ans.markedBaseLetter);
+      answersByAttempt.set(ans.attemptId, map);
+    });
+
+    const attemptsInput: StudentExamAttemptInput[] = rawAttempts.map((att) => ({
+      studentUserId: att.studentUserId,
+      status: att.status,
+      answers: answersByAttempt.get(att.id) || new Map(),
+    }));
+
+    const itemsInput: ExamItemInput[] = items.map((it) => ({
+      id: it.id,
+      orderIndex: it.orderIndex,
+      questionId: it.questionId,
+      statement: it.statement,
+      clinicalContext: it.clinicalContext,
+      correctLetter: it.correctLetter,
+      explanation: it.explanation,
+      status: it.status,
+      area: it.area,
+      cenario: it.cenario,
+      tema: it.tema,
+      competencia: it.competencia,
+      options: it.options,
+    }));
+
+    return calculateExamPsychometrics({
+      items: itemsInput,
+      attempts: attemptsInput,
+    });
+  }, [items, rawAttempts, rawAnswers]);
+
+  // Itens psicométricos filtrados por "Só as com sinal"
+  const displayedPsychItems = useMemo(() => {
+    if (!filterOnlySignals) return examPsychometrics.items;
+    return examPsychometrics.items.filter((item) => item.hasSignal);
+  }, [examPsychometrics, filterOnlySignals]);
 
   // ─── CÁLCULOS FILTRADOS POR TURMA ──────────────────────────────────────────
   const filteredStudents = useMemo(() => {
@@ -345,6 +417,44 @@ export default function ResultadoClient({
         )}
       </div>
 
+      {/* ─── NAVEGAÇÃO PRINCIPAL: VISÃO GERAL VS ANÁLISE DAS QUESTÕES ─── */}
+      <div className="flex items-center gap-2 border-b border-border pb-2">
+        <button
+          onClick={() => setMainTab("geral")}
+          className={`px-4 py-2 text-xs font-bold rounded-lg transition-colors flex items-center gap-2 ${
+            mainTab === "geral"
+              ? "bg-primary text-primary-foreground shadow-xs"
+              : "bg-muted text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <span>Visão Geral &amp; Distribuição</span>
+        </button>
+
+        <button
+          onClick={() => setMainTab("questoes")}
+          className={`px-4 py-2 text-xs font-bold rounded-lg transition-colors flex items-center gap-2 ${
+            mainTab === "questoes"
+              ? "bg-primary text-primary-foreground shadow-xs"
+              : "bg-muted text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <span>Análise das Questões (PR-09 / QB-12)</span>
+          {examPsychometrics.itemsWithSignalsCount > 0 && (
+            <span
+              className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
+                mainTab === "questoes"
+                  ? "bg-amber-400 text-amber-950"
+                  : "bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-200"
+              }`}
+            >
+              {examPsychometrics.itemsWithSignalsCount} com sinal
+            </span>
+          )}
+        </button>
+      </div>
+
+      {mainTab === "geral" ? (
+        <>
       {/* ─── BLOCO 2: RESUMO ESTATÍSTICO COM RODAPÉ BASE/PERÍODO/FONTE ─── */}
       <div className="bg-card border border-border rounded-xl p-5 shadow-xs">
         <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
@@ -832,6 +942,362 @@ export default function ResultadoClient({
           </div>
         )}
       </div>
+      </>
+      ) : (
+        /* ─── ABA ANÁLISE DAS QUESTÕES (PR-09 / QB-12) ─── */
+        <div className="space-y-6">
+          {/* BLOCO 1: CONFIABILIDADE DA PROVA (KR-20) E AVISOS DE AMOSTRA */}
+          <div className="bg-card border border-border rounded-xl p-5 shadow-xs">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-4">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
+                    Consistência Interna &amp; Confiabilidade (PR-09)
+                  </span>
+                  {examPsychometrics.kr20 !== null && (
+                    <span
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                        examPsychometrics.kr20 >= 0.8
+                          ? "bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300"
+                          : examPsychometrics.kr20 >= 0.7
+                          ? "bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/40 dark:text-blue-300"
+                          : examPsychometrics.kr20 >= 0.6
+                          ? "bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300"
+                          : "bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/40 dark:text-rose-300"
+                      }`}
+                    >
+                      {examPsychometrics.kr20 >= 0.8
+                        ? "Excelente"
+                        : examPsychometrics.kr20 >= 0.7
+                        ? "Boa"
+                        : examPsychometrics.kr20 >= 0.6
+                        ? "Moderada"
+                        : "Baixa"}
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-baseline gap-3">
+                  <h2 className="text-2xl font-black text-foreground">
+                    KR-20 = {examPsychometrics.kr20 !== null ? examPsychometrics.kr20.toFixed(2) : "—"}
+                  </h2>
+                  <span className="text-xs text-muted-foreground font-mono">
+                    (k = {examPsychometrics.validItemsCount} válidas • n = {examPsychometrics.sampleSize} alunos)
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground mt-1 max-w-2xl leading-relaxed">
+                  {examPsychometrics.kr20Interpretation}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 flex-wrap">
+                <button
+                  onClick={() => {
+                    setSelectedFormulaTopic("kr20");
+                    setIsFormulasModalOpen(true);
+                  }}
+                  className="px-3 py-1.5 text-xs font-semibold rounded-lg border border-border bg-background hover:bg-muted text-foreground transition-colors"
+                >
+                  ℹ Como o KR-20 é calculado?
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedFormulaTopic("geral");
+                    setIsFormulasModalOpen(true);
+                  }}
+                  className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                >
+                  📘 Guia de Fórmulas &amp; Sinais
+                </button>
+              </div>
+            </div>
+
+            {/* Aviso de Amostra Pequena / Abaixo do Mínimo */}
+            {examPsychometrics.sampleWarningMessage && (
+              <div
+                className={`mt-4 p-3 rounded-lg border text-xs flex items-center gap-2.5 ${
+                  examPsychometrics.isSampleBelowMinimum
+                    ? "bg-rose-50 border-rose-200 text-rose-800 dark:bg-rose-950/40 dark:border-rose-800 dark:text-rose-300"
+                    : "bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-300"
+                }`}
+              >
+                <span className="text-base">{examPsychometrics.isSampleBelowMinimum ? "🚫" : "⚠️"}</span>
+                <span className="font-medium">{examPsychometrics.sampleWarningMessage}</span>
+              </div>
+            )}
+
+            {/* Grid com métricas da prova */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 pt-4 border-t border-border/60 text-xs">
+              <div className="p-2.5 rounded-lg bg-muted/30 border border-border">
+                <div className="text-[10px] text-muted-foreground">Média de Acertos Válidos</div>
+                <div className="text-base font-bold text-foreground mt-0.5">
+                  {examPsychometrics.meanScore} de {examPsychometrics.validItemsCount}
+                </div>
+              </div>
+              <div className="p-2.5 rounded-lg bg-muted/30 border border-border">
+                <div className="text-[10px] text-muted-foreground">Variância Populacional (σ²)</div>
+                <div className="text-base font-bold text-foreground mt-0.5">
+                  {examPsychometrics.scoreVariance.toFixed(2)}
+                </div>
+              </div>
+              <div className="p-2.5 rounded-lg bg-muted/30 border border-border">
+                <div className="text-[10px] text-muted-foreground">Itens com Sinal Psicométrico</div>
+                <div className="text-base font-bold text-foreground mt-0.5">
+                  {examPsychometrics.itemsWithSignalsCount} de {examPsychometrics.totalItems} (
+                  {examPsychometrics.totalItems > 0
+                    ? ((examPsychometrics.itemsWithSignalsCount / examPsychometrics.totalItems) * 100).toFixed(0)
+                    : 0}
+                  %)
+                </div>
+              </div>
+              <div className="p-2.5 rounded-lg bg-muted/30 border border-border">
+                <div className="text-[10px] text-muted-foreground">Itens Anulados / Válidos</div>
+                <div className="text-base font-bold text-foreground mt-0.5">
+                  {examPsychometrics.annulledItemsCount} anulado(s) • {examPsychometrics.validItemsCount} válido(s)
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* BLOCO 2: TABELA DE QUESTÕES COM FILTRO E SINAIS */}
+          <div className="bg-card border border-border rounded-xl p-5 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+              <div>
+                <h3 className="text-sm font-bold text-foreground uppercase tracking-wider">
+                  Tabela Psicométrica por Questão
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  Clique em qualquer questão para abrir o enunciado completo, alternativas, gabarito e análise clínica.
+                </p>
+              </div>
+
+              {/* Controles de Filtro */}
+              <div className="flex items-center gap-3">
+                <label className="flex items-center gap-2 cursor-pointer select-none text-xs font-semibold text-foreground px-2.5 py-1.5 rounded-lg border border-border bg-background hover:bg-muted transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={filterOnlySignals}
+                    onChange={(e) => setFilterOnlySignals(e.target.checked)}
+                    className="w-3.5 h-3.5 rounded border-border text-primary focus:ring-primary"
+                  />
+                  <span>Só as com sinal ({examPsychometrics.itemsWithSignalsCount})</span>
+                </label>
+
+                <span className="text-xs text-muted-foreground">
+                  Exibindo {displayedPsychItems.length} de {examPsychometrics.totalItems} questões
+                </span>
+              </div>
+            </div>
+
+            {/* Tabela de Itens */}
+            <div className="border border-border rounded-lg overflow-x-auto">
+              <table className="w-full text-xs text-left">
+                <thead className="bg-muted/60 text-muted-foreground font-semibold border-b border-border">
+                  <tr>
+                    <th className="py-2.5 px-3">Questão</th>
+                    <th className="py-2.5 px-3">Classificação</th>
+                    <th className="py-2.5 px-3 text-center">
+                      <button
+                        onClick={() => {
+                          setSelectedFormulaTopic("p");
+                          setIsFormulasModalOpen(true);
+                        }}
+                        className="hover:underline inline-flex items-center gap-1 font-semibold"
+                        title="Ver fórmula do Índice de Facilidade"
+                      >
+                        Facilidade (p) ℹ
+                      </button>
+                    </th>
+                    <th className="py-2.5 px-3 text-center">
+                      <button
+                        onClick={() => {
+                          setSelectedFormulaTopic("d");
+                          setIsFormulasModalOpen(true);
+                        }}
+                        className="hover:underline inline-flex items-center gap-1 font-semibold"
+                        title="Ver fórmula do Índice de Discriminação"
+                      >
+                        Discriminação (D) ℹ
+                      </button>
+                    </th>
+                    <th className="py-2.5 px-3 text-center">
+                      <button
+                        onClick={() => {
+                          setSelectedFormulaTopic("r");
+                          setIsFormulasModalOpen(true);
+                        }}
+                        className="hover:underline inline-flex items-center gap-1 font-semibold"
+                        title="Ver fórmula da Ponto-Bisserial Corrigida"
+                      >
+                        Ponto-Bisserial (r) ℹ
+                      </button>
+                    </th>
+                    <th className="py-2.5 px-3 text-center min-w-[160px]">
+                      Distribuição de Respostas (A–E)
+                    </th>
+                    <th className="py-2.5 px-3 text-center min-w-[140px]">Sinais Psicométricos</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {displayedPsychItems.map((item) => (
+                    <tr
+                      key={item.itemId}
+                      onClick={() => setSelectedPsychItem(item)}
+                      className="hover:bg-muted/30 cursor-pointer transition-colors"
+                    >
+                      {/* Questão */}
+                      <td className="py-2.5 px-3">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-foreground hover:text-primary transition-colors">
+                            Q{item.orderIndex < 10 ? `0${item.orderIndex}` : item.orderIndex}
+                          </span>
+                          {item.isAnulado && (
+                            <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                              Anulada
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[11px] text-muted-foreground truncate max-w-[200px]" title={item.statement}>
+                          {item.statement}
+                        </p>
+                      </td>
+
+                      {/* Classificação */}
+                      <td className="py-2.5 px-3">
+                        <span className="font-medium text-foreground block">{item.area}</span>
+                        {item.tema && (
+                          <span className="text-[10px] text-muted-foreground block truncate max-w-[150px]">
+                            {item.tema}
+                          </span>
+                        )}
+                      </td>
+
+                      {/* Facilidade (p) */}
+                      <td className="py-2.5 px-3 text-center">
+                        {item.facilityIndex !== null ? (
+                          <div>
+                            <span
+                              className={`font-bold block ${
+                                item.facilityIndex > 0.9
+                                  ? "text-sky-600 dark:text-sky-400"
+                                  : item.facilityIndex < 0.2
+                                  ? "text-amber-600 dark:text-amber-400"
+                                  : "text-foreground"
+                              }`}
+                            >
+                              {(item.facilityIndex * 100).toFixed(1)}%
+                            </span>
+                            <span className="text-[10px] text-muted-foreground font-mono">
+                              p = {item.facilityIndex.toFixed(2)}
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="text-muted-foreground">—</span>
+                        )}
+                      </td>
+
+                      {/* Discriminação (D) */}
+                      <td className="py-2.5 px-3 text-center">
+                        {item.discriminationIndex !== null ? (
+                          <span
+                            className={`font-bold ${
+                              item.discriminationIndex >= 0.4
+                                ? "text-emerald-600 dark:text-emerald-400"
+                                : item.discriminationIndex >= 0.2
+                                ? "text-foreground"
+                                : item.discriminationIndex >= 0
+                                ? "text-amber-600 dark:text-amber-400"
+                                : "text-rose-600 dark:text-rose-400"
+                            }`}
+                          >
+                            {item.discriminationIndex > 0 ? "+" : ""}
+                            {item.discriminationIndex.toFixed(2)}
+                          </span>
+                        ) : (
+                          <span className="text-muted-foreground text-[11px]" title="Amostra < 10 ou item anulado">
+                            —
+                          </span>
+                        )}
+                      </td>
+
+                      {/* Ponto-Bisserial Corrigida (r) */}
+                      <td className="py-2.5 px-3 text-center">
+                        {item.correctedPointBiserial !== null ? (
+                          <span
+                            className={`font-bold ${
+                              item.correctedPointBiserial >= 0.3
+                                ? "text-emerald-600 dark:text-emerald-400"
+                                : item.correctedPointBiserial >= 0.2
+                                ? "text-foreground"
+                                : item.correctedPointBiserial >= 0
+                                ? "text-orange-600 dark:text-orange-400"
+                                : "text-rose-600 dark:text-rose-400"
+                            }`}
+                          >
+                            {item.correctedPointBiserial > 0 ? "+" : ""}
+                            {item.correctedPointBiserial.toFixed(2)}
+                          </span>
+                        ) : (
+                          <span className="text-muted-foreground text-[11px]" title="Variância zero ou amostra < 10">
+                            —
+                          </span>
+                        )}
+                      </td>
+
+                      {/* Barras de Alternativas (A–E) */}
+                      <td className="py-2.5 px-3">
+                        <div className="flex items-center gap-1 justify-center">
+                          {item.optionFrequencies.map((opt) => (
+                            <div
+                              key={opt.letter}
+                              className={`flex flex-col items-center justify-end p-1 rounded min-w-[28px] text-[10px] transition-transform hover:scale-105 ${
+                                opt.isCorrect
+                                  ? "bg-emerald-100 border border-emerald-300 text-emerald-900 font-bold dark:bg-emerald-950/60 dark:border-emerald-700 dark:text-emerald-200"
+                                  : opt.letter === item.dominantDistractorLetter
+                                  ? "bg-purple-100 border border-purple-300 text-purple-900 font-bold dark:bg-purple-950/60 dark:border-purple-700 dark:text-purple-200"
+                                  : "bg-muted/60 text-muted-foreground"
+                              }`}
+                              title={`${opt.letter}: ${opt.count} aluno(s) (${opt.percentage}%) ${
+                                opt.isCorrect ? "— GABARITO OFICIAL" : ""
+                              }`}
+                            >
+                              <span className="font-mono">
+                                {opt.letter}
+                                {opt.isCorrect && "✓"}
+                              </span>
+                              <span className="text-[9px] font-mono mt-0.5">{opt.percentage.toFixed(0)}%</span>
+                            </div>
+                          ))}
+                        </div>
+                      </td>
+
+                      {/* Sinais */}
+                      <td className="py-2.5 px-3 text-center">
+                        {item.flags.length > 0 ? (
+                          <div className="flex flex-wrap gap-1 justify-center">
+                            {item.flags.map((flag) => (
+                              <span
+                                key={flag.type}
+                                className={`inline-block px-1.5 py-0.5 rounded text-[10px] font-bold border ${flag.badgeClass}`}
+                                title={flag.description}
+                              >
+                                {flag.shortLabel}
+                              </span>
+                            ))}
+                          </div>
+                        ) : (
+                          <span className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
+                            ✓ Equilibrado
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ─── MODAL 1: AJUSTAR QUESTÃO (ANULAR / TROCAR GABARITO) ─── */}
       {isAdjustModalOpen && (
@@ -1061,6 +1527,404 @@ export default function ResultadoClient({
                 className="px-4 py-1.5 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── MODAL 4: DETALHES DA QUESTÃO E DEVOLUTIVA PSICOMÉTRICA (PR-09 / QB-12) ─── */}
+      {selectedPsychItem && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-card border border-border rounded-xl max-w-3xl w-full p-5 shadow-xl space-y-4 max-h-[90vh] flex flex-col">
+            {/* Cabeçalho */}
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="font-bold text-sm text-foreground">
+                  Questão {selectedPsychItem.orderIndex < 10 ? `0${selectedPsychItem.orderIndex}` : selectedPsychItem.orderIndex}
+                </span>
+                <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-muted text-foreground">
+                  {selectedPsychItem.area}
+                </span>
+                {selectedPsychItem.tema && (
+                  <span className="text-xs text-muted-foreground">• {selectedPsychItem.tema}</span>
+                )}
+                {selectedPsychItem.isAnulado && (
+                  <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                    Item Anulado
+                  </span>
+                )}
+              </div>
+              <button
+                onClick={() => setSelectedPsychItem(null)}
+                className="text-muted-foreground hover:text-foreground text-sm font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Corpo rolável */}
+            <div className="overflow-y-auto space-y-4 pr-1 flex-1 text-xs">
+              {/* Contexto Clínico se houver */}
+              {selectedPsychItem.clinicalContext && (
+                <div className="p-3 rounded-lg bg-muted/40 border border-border italic text-muted-foreground leading-relaxed">
+                  {selectedPsychItem.clinicalContext}
+                </div>
+              )}
+
+              {/* Enunciado */}
+              <div className="p-3.5 rounded-lg border border-border bg-card space-y-1">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Enunciado:
+                </div>
+                <p className="text-foreground text-xs leading-relaxed whitespace-pre-line font-medium">
+                  {selectedPsychItem.statement}
+                </p>
+              </div>
+
+              {/* Alternativas e Frequências */}
+              <div className="space-y-2">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Alternativas &amp; Distribuição de Escolhas dos Alunos:
+                </div>
+                <div className="space-y-1.5">
+                  {items
+                    .find((it) => it.id === selectedPsychItem.itemId)
+                    ?.options.map((opt) => {
+                      const freq = selectedPsychItem.optionFrequencies.find(
+                        (f) => f.letter.toUpperCase() === opt.letter.toUpperCase()
+                      );
+                      const isCorrect = opt.letter.toUpperCase() === selectedPsychItem.correctLetter.toUpperCase();
+                      const isDominant = opt.letter === selectedPsychItem.dominantDistractorLetter;
+
+                      return (
+                        <div
+                          key={opt.letter}
+                          className={`p-2.5 rounded-lg border transition-colors ${
+                            isCorrect
+                              ? "bg-emerald-50/80 border-emerald-300 dark:bg-emerald-950/30 dark:border-emerald-800"
+                              : isDominant
+                              ? "bg-purple-50/80 border-purple-300 dark:bg-purple-950/30 dark:border-purple-800"
+                              : "bg-muted/20 border-border"
+                          }`}
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex items-start gap-2">
+                              <span
+                                className={`font-mono font-bold px-1.5 py-0.5 rounded text-[11px] ${
+                                  isCorrect
+                                    ? "bg-emerald-600 text-white"
+                                    : isDominant
+                                    ? "bg-purple-600 text-white"
+                                    : "bg-muted text-muted-foreground"
+                                }`}
+                              >
+                                {opt.letter}
+                              </span>
+                              <span className="text-foreground leading-snug">{opt.text}</span>
+                            </div>
+
+                            <div className="text-right shrink-0">
+                              <span className="font-bold text-foreground block">
+                                {freq ? `${freq.percentage}%` : "0%"}
+                              </span>
+                              <span className="text-[10px] text-muted-foreground block">
+                                {freq ? `${freq.count} aluno(s)` : "0"}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="mt-1 flex items-center gap-2">
+                            {isCorrect && (
+                              <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400">
+                                ✓ GABARITO OFICIAL
+                              </span>
+                            )}
+                            {isDominant && (
+                              <span className="text-[10px] font-bold text-purple-700 dark:text-purple-400">
+                                ⚠ DISTRATOR DOMINANTE (mais assinalado que o gabarito)
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+
+              {/* Devolutiva / Comentário */}
+              {selectedPsychItem.explanation && (
+                <div className="p-3 rounded-lg bg-sky-50/60 border border-sky-200 dark:bg-sky-950/30 dark:border-sky-800 space-y-1">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-sky-800 dark:text-sky-300">
+                    Comentário Pedagógico / Devolutiva:
+                  </div>
+                  <p className="text-sky-900 dark:text-sky-200 text-xs leading-relaxed whitespace-pre-line">
+                    {selectedPsychItem.explanation}
+                  </p>
+                </div>
+              )}
+
+              {/* Painel de Métricas Psicométricas da Questão */}
+              <div className="p-3 rounded-lg border border-border bg-muted/30 space-y-2">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Diagnóstico Psicométrico do Item nesta Prova:
+                </div>
+                <div className="grid grid-cols-3 gap-3 text-center">
+                  <div className="p-2 rounded bg-background border border-border">
+                    <div className="text-[10px] text-muted-foreground">Facilidade (p)</div>
+                    <div className="text-sm font-bold text-foreground mt-0.5">
+                      {selectedPsychItem.facilityIndex !== null
+                        ? `${(selectedPsychItem.facilityIndex * 100).toFixed(1)}% (p = ${selectedPsychItem.facilityIndex})`
+                        : "—"}
+                    </div>
+                  </div>
+                  <div className="p-2 rounded bg-background border border-border">
+                    <div className="text-[10px] text-muted-foreground">Discriminação (D)</div>
+                    <div className="text-sm font-bold text-foreground mt-0.5">
+                      {selectedPsychItem.discriminationIndex !== null
+                        ? selectedPsychItem.discriminationIndex.toFixed(2)
+                        : "—"}
+                    </div>
+                  </div>
+                  <div className="p-2 rounded bg-background border border-border">
+                    <div className="text-[10px] text-muted-foreground">Ponto-Bisserial (r)</div>
+                    <div className="text-sm font-bold text-foreground mt-0.5">
+                      {selectedPsychItem.correctedPointBiserial !== null
+                        ? selectedPsychItem.correctedPointBiserial.toFixed(2)
+                        : "—"}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Sinais Ativos */}
+                {selectedPsychItem.flags.length > 0 ? (
+                  <div className="mt-2 space-y-1">
+                    <div className="text-[10px] font-semibold text-muted-foreground">
+                      Sinais e Alertas Identificados:
+                    </div>
+                    <div className="space-y-1">
+                      {selectedPsychItem.flags.map((flag) => (
+                        <div
+                          key={flag.type}
+                          className={`p-2 rounded border text-xs flex items-start gap-2 ${flag.badgeClass}`}
+                        >
+                          <span className="font-bold shrink-0">{flag.shortLabel}:</span>
+                          <span>{flag.description}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-[11px] text-emerald-700 dark:text-emerald-400 font-medium">
+                    ✓ Item psicometricamente equilibrado: discriminação satisfatória e distribuição coerente de distratores.
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Rodapé do Modal */}
+            <div className="flex items-center justify-between border-t border-border pt-3">
+              <button
+                onClick={() => {
+                  setSelectedFormulaTopic("geral");
+                  setIsFormulasModalOpen(true);
+                }}
+                className="text-xs text-primary hover:underline font-medium"
+              >
+                Como esses indicadores são calculados?
+              </button>
+              <button
+                onClick={() => setSelectedPsychItem(null)}
+                className="px-4 py-1.5 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
+              >
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── MODAL 5: GUIA EXPLICATIVO DE FÓRMULAS E CRITÉRIOS (DR. FILIPE / DR. BRUNO) ─── */}
+      {isFormulasModalOpen && (
+        <div className="fixed inset-0 bg-background/80 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-card border border-border rounded-xl max-w-2xl w-full p-5 shadow-xl space-y-4 max-h-[85vh] flex flex-col">
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <div>
+                <h3 className="font-bold text-sm text-foreground">
+                  Como são calculados os indicadores psicométricos
+                </h3>
+                <p className="text-[11px] text-muted-foreground">
+                  Fórmulas e definições conforme ESPEC-B2B.md (Seção 6) e aprovações médicas (Dr. Filipe e Dr. Bruno).
+                </p>
+              </div>
+              <button
+                onClick={() => setIsFormulasModalOpen(false)}
+                className="text-muted-foreground hover:text-foreground text-sm font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Abas internas do guia de fórmulas */}
+            <div className="flex items-center gap-1 border-b border-border pb-2 overflow-x-auto text-xs">
+              <button
+                onClick={() => setSelectedFormulaTopic("geral")}
+                className={`px-2.5 py-1 rounded font-medium ${
+                  selectedFormulaTopic === "geral" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"
+                }`}
+              >
+                Visão Geral
+              </button>
+              <button
+                onClick={() => setSelectedFormulaTopic("p")}
+                className={`px-2.5 py-1 rounded font-medium ${
+                  selectedFormulaTopic === "p" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"
+                }`}
+              >
+                Facilidade (p)
+              </button>
+              <button
+                onClick={() => setSelectedFormulaTopic("d")}
+                className={`px-2.5 py-1 rounded font-medium ${
+                  selectedFormulaTopic === "d" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"
+                }`}
+              >
+                Discriminação (D)
+              </button>
+              <button
+                onClick={() => setSelectedFormulaTopic("r")}
+                className={`px-2.5 py-1 rounded font-medium ${
+                  selectedFormulaTopic === "r" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"
+                }`}
+              >
+                Ponto-Bisserial (r)
+              </button>
+              <button
+                onClick={() => setSelectedFormulaTopic("kr20")}
+                className={`px-2.5 py-1 rounded font-medium ${
+                  selectedFormulaTopic === "kr20" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"
+                }`}
+              >
+                KR-20
+              </button>
+            </div>
+
+            {/* Conteúdo rolável */}
+            <div className="overflow-y-auto space-y-3 pr-1 flex-1 text-xs leading-relaxed text-muted-foreground">
+              {selectedFormulaTopic === "geral" && (
+                <div className="space-y-3">
+                  <p>
+                    A plataforma MedPleni utiliza os parâmetros clássicos da psicometria educacional e do Guia de Itens do INEP para avaliar a qualidade técnica das provas e de cada questão individual.
+                  </p>
+                  <div className="p-3 rounded-lg border border-border bg-muted/30 space-y-1.5">
+                    <div className="font-bold text-foreground text-xs">Critérios e Amostras:</div>
+                    <ul className="list-disc pl-4 space-y-1">
+                      <li>
+                        <strong>Amostra pequena (n &lt; 30):</strong> A plataforma calcula os indicadores normalmente, mas exibe aviso visual destacando risco de flutuação estatística.
+                      </li>
+                      <li>
+                        <strong>Amostra insuficiente (n &lt; 10):</strong> Para n &lt; 10, o cálculo de Discriminação (D), Ponto-Bisserial (r) e KR-20 é desabilitado para evitar distorções graves.
+                      </li>
+                      <li>
+                        <strong>Itens anulados:</strong> Saem integralmente do cálculo de consistência (KR-20) e do escore total dos alunos, não penalizando a turma.
+                      </li>
+                    </ul>
+                  </div>
+                  <p className="text-[11px] text-primary">
+                    O documento completo com as fórmulas teóricas e o exemplo numérico resolvido passo a passo está disponível em <code className="font-mono bg-muted px-1 py-0.5 rounded">docs/b2b/FORMULAS.md</code>.
+                  </p>
+                </div>
+              )}
+
+              {selectedFormulaTopic === "p" && (
+                <div className="space-y-3">
+                  <div className="p-3 rounded-lg bg-muted border border-border font-mono text-center text-foreground font-bold text-sm">
+                    p = (Acertos no Item) ÷ (Total de Alunos da Amostra)
+                  </div>
+                  <div className="space-y-2">
+                    <div className="font-bold text-foreground">Como é calculado:</div>
+                    <p>
+                      O Índice de Facilidade (p) mede a proporção de alunos que responderam corretamente ao item. Varia entre 0,00 (0% de acerto) e 1,00 (100% de acerto).
+                    </p>
+                    <div className="font-bold text-foreground">Interpretação:</div>
+                    <ul className="list-disc pl-4 space-y-1">
+                      <li><strong>p &gt; 0,90 (Muito Fácil):</strong> Quase todos os estudantes acertam. Contribui pouco para discriminar níveis de proficiência.</li>
+                      <li><strong>0,40 ≤ p ≤ 0,70 (Faixa Ideal):</strong> Dificuldade média adequada, onde o item atinge seu maior potencial discriminativo.</li>
+                      <li><strong>p &lt; 0,20 (Muito Difícil):</strong> Menos de 20% de acertos. Recomenda-se analisar se houve excesso de complexidade ou ambiguidade.</li>
+                    </ul>
+                  </div>
+                </div>
+              )}
+
+              {selectedFormulaTopic === "d" && (
+                <div className="space-y-3">
+                  <div className="p-3 rounded-lg bg-muted border border-border font-mono text-center text-foreground font-bold text-sm">
+                    D = p(27% Superior) − p(27% Inferior)
+                  </div>
+                  <div className="space-y-2">
+                    <div className="font-bold text-foreground">Como é calculado:</div>
+                    <p>
+                      Conforme a clássica técnica de Kelley (1939), ordenam-se os alunos da prova por nota total e selecionam-se os 27% com melhor desempenho (grupo superior) e os 27% com menor desempenho (grupo inferior). O índice D é a diferença entre a taxa de acerto desses dois grupos.
+                    </p>
+                    <div className="font-bold text-foreground">Interpretação:</div>
+                    <ul className="list-disc pl-4 space-y-1">
+                      <li><strong>D ≥ 0,40:</strong> Discriminação excelente. Item de alto valor seletivo.</li>
+                      <li><strong>0,20 ≤ D &lt; 0,40:</strong> Discriminação boa a moderada.</li>
+                      <li><strong>D &lt; 0,20:</strong> Discriminação fraca.</li>
+                      <li><strong>D &lt; 0 (Discriminação Negativa):</strong> Crítico. Alunos mais fracos acertaram mais que os alunos com melhor nota geral. Indica pegadinha involuntária ou erro de gabarito.</li>
+                    </ul>
+                  </div>
+                </div>
+              )}
+
+              {selectedFormulaTopic === "r" && (
+                <div className="space-y-3">
+                  <div className="p-3 rounded-lg bg-muted border border-border font-mono text-center text-foreground font-bold text-sm">
+                    r = Pearson(Acerto no Item, Nota Total sem o Item)
+                  </div>
+                  <div className="space-y-2">
+                    <div className="font-bold text-foreground">Como é calculado:</div>
+                    <p>
+                      Calcula a correlação de Pearson entre o vetor binário de acerto (0 ou 1) e o total de acertos nas outras questões da prova. A correção (exclusão do próprio item do total) é essencial para evitar falsa correlação espúria e auto-inflação estatística.
+                    </p>
+                    <div className="font-bold text-foreground">Interpretação:</div>
+                    <ul className="list-disc pl-4 space-y-1">
+                      <li><strong>r ≥ 0,30:</strong> Excelente coerência interna. O item caminha na mesma direção da prova.</li>
+                      <li><strong>0,00 ≤ r &lt; 0,20 (Discriminação Baixa):</strong> O item pouco contribui para a régua da prova.</li>
+                      <li><strong>r &lt; 0 (Discriminação Negativa):</strong> Alerta crítico. Deve ser inspecionado imediatamente pelo docente responsável.</li>
+                    </ul>
+                  </div>
+                </div>
+              )}
+
+              {selectedFormulaTopic === "kr20" && (
+                <div className="space-y-3">
+                  <div className="p-3 rounded-lg bg-muted border border-border font-mono text-center text-foreground font-bold text-sm">
+                    KR-20 = [k / (k − 1)] × [1 − (Σ pᵢ(1 − pᵢ)) / σ²]
+                  </div>
+                  <div className="space-y-2">
+                    <div className="font-bold text-foreground">Como é calculado:</div>
+                    <p>
+                      A fórmula Kuder-Richardson 20 afere a consistência interna da avaliação como um todo (equivalente ao Alfa de Cronbach para itens dicotômicos de acerto e erro). Compara a soma das variâncias dos itens com a variância populacional da nota total (σ²).
+                    </p>
+                    <div className="font-bold text-foreground">Interpretação e Leitura:</div>
+                    <ul className="list-disc pl-4 space-y-1">
+                      <li><strong>KR-20 ≥ 0,80:</strong> Excelente confiabilidade e consistência interna.</li>
+                      <li><strong>0,70 ≤ KR-20 &lt; 0,80:</strong> Boa confiabilidade, amplamente recomendada para avaliações somativas e decisões de aprovação.</li>
+                      <li><strong>0,60 ≤ KR-20 &lt; 0,70:</strong> Confiabilidade moderada, aceitável para testes formativos e diagnósticos.</li>
+                      <li><strong>KR-20 &lt; 0,60:</strong> Baixa confiabilidade. A prova possui itens contraditórios ou grande dispersão de respostas.</li>
+                    </ul>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center justify-end border-t border-border pt-3">
+              <button
+                onClick={() => setIsFormulasModalOpen(false)}
+                className="px-4 py-1.5 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90"
+              >
+                Entendido
               </button>
             </div>
           </div>

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getB2BUserContext } from "@/lib/b2b/auth";
 import { createClient } from "@/lib/supabase/server";
 import ResultadoClient from "./ResultadoClient";
+import { syncExamPsychometricsToBankAction } from "@/lib/b2b/psychometrics-actions";
 import {
   calculateExamSummaryStats,
   calculateScoreDistribution,
@@ -25,6 +26,7 @@ interface PageProps {
 interface AssessmentItemRow {
   id: string;
   order_index: number;
+  question_id?: string | null;
   frozen_statement: string;
   frozen_clinical_context?: string | null;
   frozen_options: Array<{ letter: string; text: string; is_correct: boolean }>;
@@ -130,6 +132,7 @@ export default async function ResultadoPage({ params }: PageProps) {
     .select(`
       id,
       order_index,
+      question_id,
       frozen_statement,
       frozen_clinical_context,
       frozen_options,
@@ -349,6 +352,15 @@ export default async function ResultadoPage({ params }: PageProps) {
     previousExamTitle: previousExam?.title || null,
   });
 
+  // Sincroniza métricas psicométricas com o Banco de Questões se a prova já foi aplicada ou corrigida
+  if (["aplicada", "corrigida"].includes(assessment.status)) {
+    try {
+      await syncExamPsychometricsToBankAction(assessment.id);
+    } catch {
+      // Falha não-bloqueante de sincronização
+    }
+  }
+
   return (
     <ResultadoClient
       assessment={{
@@ -363,13 +375,29 @@ export default async function ResultadoPage({ params }: PageProps) {
       items={items.map((it) => ({
         id: it.id,
         orderIndex: it.order_index,
+        questionId: it.question_id || null,
         statement: it.frozen_statement,
         clinicalContext: it.frozen_clinical_context,
         correctLetter: it.frozen_correct_letter,
+        explanation: it.frozen_explanation || null,
         status: it.status,
         weight: Number(it.weight || 1),
         area: it.frozen_area || "Clínica Médica",
+        cenario: it.frozen_cenario || null,
+        tema: it.frozen_tema || null,
+        competencia: it.frozen_competencia || null,
         options: it.frozen_options || [],
+      }))}
+      rawAttempts={attempts.map((a) => ({
+        id: a.id,
+        studentUserId: a.student_user_id,
+        status: a.status,
+      }))}
+      rawAnswers={answers.map((ans) => ({
+        attemptId: ans.attempt_id,
+        assessmentItemId: ans.assessment_item_id,
+        markedBaseLetter: ans.marked_base_letter || null,
+        isCorrect: Boolean(ans.is_correct),
       }))}
       summaryStats={summaryStats}
       scoreDistribution={scoreDistribution}

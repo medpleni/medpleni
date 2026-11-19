@@ -6,6 +6,98 @@ Formato de cada entrada:
 
 ---
 
+## 2026-11-19 · P13 · Análise Psicométrica das Questões, KR-20, Ponto-Bisserial Corrigida, Fórmulas e Histórico no Banco (PR-09, QB-12)
+
+### O que foi feito
+
+- **Schema e Histórico de Aplicações no Banco (`011_psicometria.sql`):**
+  - Criação da tabela `question_exam_performances` para rastreabilidade de desempenho psicométrico por aplicação (prova, data, tamanho de amostra, facilidade $p$, discriminação $D$, ponto-bisserial $r$, contagens de distratores e flags).
+  - Índices de alta performance em `question_id` e `assessment_id` e chave única composta `(question_id, assessment_id)`.
+  - Políticas de RLS de isolamento institucional garantindo consulta e sincronização seguras.
+- **Configuração Psicométrica Centralizada (`platform/lib/b2b/psychometrics-config.ts`):**
+  - Centralização de todos os limites e tamanhos mínimos de amostra definidos na Seção 6 da `ESPEC-B2B.md`:
+    - Amostra pequena: $n < 30$ (aviso visual).
+    - Amostra insuficiente: $n < 10$ (desabilita $D, r$, KR-20).
+    - Proporção dos grupos de corte: $0{,}27$ (27% superior e 27% inferior).
+    - Muito fácil ($p > 0{,}90$), Muito difícil ($p < 0{,}20$), Discriminação negativa ($r < 0{,}00$), Discriminação baixa ($0 \le r < 0{,}20$) e Distrator dominante (distrator com frequência superior ao gabarito).
+- **Motor Psicométrico Puro (`platform/lib/b2b/psychometrics.ts`):**
+  - `calculateFacilityIndex`: proporção de acertos ($p = \text{acertos} / n$).
+  - `calculateDiscriminationIndex`: técnica clássica de Kelley com $n_{27} = \text{round}(0{,}27 \times n)$ e $D = p_{\text{sup}} - p_{\text{inf}}$.
+  - `calculateCorrectedPointBiserial`: correlação produto-momento de Pearson entre o vetor dicotômico do item e a nota total nas outras questões válidas ($X_{-i} = X - y_i$), evitando auto-inflação espúria.
+  - `calculatePopulationVariance`: variância populacional exata ($\sigma^2$).
+  - `calculateKR20`: fórmula Kuder-Richardson 20 com variância populacional dos acertos válidos.
+  - `getKR20Interpretation`: frase didática de diagnóstico da prova para leitura imediata na tela.
+  - `calculateOptionFrequencies`: percentuais e contagens de todas as alternativas e respostas em branco.
+  - `evaluateItemFlags`: avaliação das 5 flags com metadados de severidade.
+  - `calculateExamPsychometrics`: orquestrador com suporte a casos de borda e exclusão de itens anulados.
+- **Documento Técnico para Revisão Médica (`docs/b2b/FORMULAS.md`):**
+  - Documentação completa com as fórmulas matemáticas, justificativas de cada métrica, referências bibliográficas (Kelley, Kuder-Richardson, Ebel, Crocker & Algina, Nunnally, INEP) e **exemplo numérico resolvido passo a passo à mão** (10 alunos e 4 itens, com cada etapa aritmética explicitada).
+- **Sincronização com o Banco de Questões (`platform/lib/b2b/psychometrics-actions.ts`):**
+  - Server Action `syncExamPsychometricsToBankAction` que calcula e atualiza as métricas da avaliação para cada questão cadastrada no banco:
+    - Upsert em `question_exam_performances`.
+    - Atualização ponderada de `questions.historical_facility_p`, `questions.historical_point_biserial_r` e incremento de `times_used_in_exams`.
+  - Exibição do "Histórico de Desempenho por Aplicação" na Ficha da Questão em `/instituicao/banco`.
+- **Interface da Aba "Análise das Questões" (`/instituicao/provas/[id]/resultado`):**
+  - Seletor de abas principal no topo: *Visão Geral & Distribuição* vs. *Análise das Questões (PR-09 / QB-12)*.
+  - **Bloco de Confiabilidade (KR-20):** Leitura em uma frase com badge de qualidade, totalizador de itens e botão "Como o KR-20 é calculado?".
+  - **Avisos de Amostra:** Alerta amarelo para $n < 30$ e banner de suspensão temporária de $D, r$, KR-20 para $n < 10$.
+  - **Barra de Ferramentas:** Toggle "Só as com sinal ({k})" e botão de abertura do Guia de Fórmulas.
+  - **Tabela Psicométrica por Questão:** Nº do item, Área/Tema, Facilidade ($p$), Discriminação ($D$), Ponto-Bisserial ($r$), Barras horizontais de A–E com a correta destacada em verde com ✓ e etiquetas de sinal.
+  - **Modal de Detalhes da Questão:** Clique na questão abre modal com enunciado completo, contexto clínico, alternativas com porcentagens de escolha, gabarito destacado, devolutiva pedagógica e painel psicométrico.
+  - **Modal Explicativo Didático:** Modal com abas para cada indicador explicando a fórmula e a interpretação em linguagem simples.
+- **Testes Automatizados e Qualidade:**
+  - Suite `lib/b2b/__tests__/psychometrics.test.ts` com 10 testes cobrindo:
+    1. Bate 100% com o cálculo manual documentado ($n = 10, k = 4$).
+    2. Caso de borda: todos acertam ($p = 1{,}0$, $r = \text{null}$, flag Muito fácil).
+    3. Caso de borda: todos erram ($p = 0{,}0$, $r = \text{null}$, flag Muito difícil).
+    4. Caso de borda: variância total zero ($\sigma^2 = 0 \implies \text{KR-20} = \text{null}$).
+    5. Caso de borda: itens anulados são excluídos de $k$ e de KR-20.
+    6. Amostra menor que o mínimo ($n < 10 \implies D, r$, KR-20 são nulos).
+    7. Amostra pequena ($10 \le n < 30 \implies$ exibe aviso).
+    8. Sinal de Discriminação negativa ($r < 0$).
+    9. Sinal de Distrator dominante (alternativa errada mais marcada que o gabarito).
+    10. Validação direta de todas as funções puras individuais.
+  - Total da suíte B2B: **108/108 testes passando em 12 arquivos de teste**.
+  - TypeScript compilado com 0 erros (`tsc --noEmit`).
+  - ESLint verificado com 0 erros e 0 warnings.
+  - Build de produção Next.js finalizado com sucesso (**51 rotas compiladas**).
+
+### Arquivos criados / alterados
+
+- `platform/supabase/b2b/011_psicometria.sql` (criado)
+- `platform/lib/b2b/psychometrics-config.ts` (criado)
+- `platform/lib/b2b/psychometrics.ts` (criado)
+- `platform/lib/b2b/psychometrics-actions.ts` (criado)
+- `platform/lib/b2b/__tests__/psychometrics.test.ts` (criado)
+- `docs/b2b/FORMULAS.md` (criado)
+- `platform/lib/b2b/bank-types.ts` (atualizado com `QuestionApplicationPerformanceItem`)
+- `platform/lib/b2b/bank-actions.ts` (atualizado para carregar histórico de aplicações)
+- `platform/app/instituicao/banco/BancoClient.tsx` (atualizado com tabela de histórico na Ficha da Questão)
+- `platform/app/instituicao/provas/[id]/resultado/page.tsx` (atualizado com question_id e sincronização com banco)
+- `platform/app/instituicao/provas/[id]/resultado/ResultadoClient.tsx` (atualizado com aba Análise das Questões, KR-20, tabela psicométrica e modais)
+- `docs/b2b/DIARIO.md` (atualizado)
+
+### SQL a rodar no Supabase
+
+Arquivo: `platform/supabase/b2b/011_psicometria.sql` (100% aditivo e idempotente).
+
+### Como testar
+
+1. **Testes automatizados psicométricos:**
+   `cd platform && npx vitest run lib/b2b/__tests__/psychometrics.test.ts`
+2. **Suíte completa B2B:**
+   `cd platform && npx vitest run lib/b2b/__tests__/` (108/108 testes passando)
+3. **Verificação TypeScript e ESLint:**
+   `cd platform && npx tsc --noEmit && npx eslint lib/b2b/psychometrics.ts lib/b2b/psychometrics-config.ts lib/b2b/__tests__/psychometrics.test.ts`
+4. **Build de produção Next.js:**
+   `cd platform && npm run build`
+5. **Tela de Análise das Questões:**
+   Acessar `/instituicao/provas/[id]/resultado`, clicar na aba "Análise das Questões (PR-09 / QB-12)", conferir o KR-20 com frase diagnóstica, testar o filtro "Só as com sinal", clicar em uma questão para ver o enunciado e a distribuição das alternativas, e abrir o modal "Como são calculadas as fórmulas".
+6. **Ficha da Questão no Banco:**
+   Acessar `/instituicao/banco`, clicar na ficha de uma questão aplicada e conferir a tabela "Histórico de Desempenho por Aplicação".
+
+---
+
 ## 2026-11-19 · P12 · Resultados da Prova, Fechamento de Correção, Eixos Temáticos e Devolutiva do Aluno (PR-08, PR-10, TC-07)
 
 ### O que foi feito
