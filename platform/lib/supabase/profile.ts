@@ -5,7 +5,15 @@ export interface ProfileRow {
   id: string;
   full_name: string;
   email: string;
-  role: "student" | "admin" | "mentor";
+  role:
+    | "student"
+    | "docente"
+    | "financeiro"
+    | "suporte"
+    | "desenvolvedor"
+    | "superadmin"
+    | "admin"
+    | "mentor";
   plan: Plano;
   sub_brand: SubBrand;
   target_exams: string[];

@@ -209,7 +209,6 @@ export async function createAdminQuestion(
         difficulty: questionData.dificuldade,
         institution: questionData.instituicao,
         year: questionData.ano,
-        correct_option: questionData.gabarito,
         explanation: questionData.explicacao,
         tags: questionData.tags || [],
       })
@@ -262,7 +261,7 @@ export async function updateStudentPlanManually(
 
     const { error } = await supabase
       .from("profiles")
-      .update({ plano: newPlan, updated_at: new Date().toISOString() })
+      .update({ plan: newPlan, updated_at: new Date().toISOString() })
       .eq("id", studentId);
 
     if (error) throw error;

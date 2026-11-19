@@ -138,6 +138,44 @@ export async function POST(
             updated_at: new Date().toISOString(),
           })
           .eq("id", targetUserId);
+
+        // Vínculo Institucional B2B (se o convite for institucional)
+        if (invite.institution_id && invite.b2b_role) {
+          try {
+            const { data: memberData } = await supabase
+              .from("institution_members")
+              .upsert(
+                {
+                  institution_id: invite.institution_id,
+                  user_id: targetUserId,
+                  role: invite.b2b_role,
+                  is_active: true,
+                  updated_at: new Date().toISOString(),
+                },
+                { onConflict: "institution_id,user_id" }
+              )
+              .select("id")
+              .single();
+
+            if (memberData && Array.isArray(invite.b2b_scopes) && invite.b2b_scopes.length > 0) {
+              for (const scopeId of invite.b2b_scopes) {
+                if (invite.b2b_role === "coordenador") {
+                  await supabase.from("member_scopes").insert({
+                    member_id: memberData.id,
+                    course_id: scopeId,
+                  });
+                } else if (invite.b2b_role === "docente") {
+                  await supabase.from("member_scopes").insert({
+                    member_id: memberData.id,
+                    class_group_id: scopeId,
+                  });
+                }
+              }
+            }
+          } catch (b2bErr) {
+            console.warn("[Aviso ao vincular membro B2B pelo convite]:", b2bErr);
+          }
+        }
       }
 
       // Marca o convite como aceito
